@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  abo: A
+  rh: neg
+  comment: MyString
+  full: A-
+
+two:
+  abo: O
+  rh: +
+  comment: MyString
+  full: O+

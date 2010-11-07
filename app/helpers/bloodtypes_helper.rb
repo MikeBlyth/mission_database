@@ -1,0 +1,2 @@
+module BloodtypesHelper
+end

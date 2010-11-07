@@ -1,0 +1,51 @@
+require 'test_helper'
+
+class PersonnelDetailsControllerTest < ActionController::TestCase
+  setup do
+    @personnel_detail = personnel_details(:one)
+  end
+
+  test "should get index" do
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:personnel_details)
+  end
+
+  test "should get new" do
+# need to set id = 1 (through :member_id) so that this record will have parent member
+# since name is displayed on the form
+    get :new, :member_id=>1
+    assert_response :success
+  end
+
+  test "should create personnel_detail" do
+    assert_difference('PersonnelDetail.count') do
+      post :create, :personnel_detail => @personnel_detail.attributes
+    end
+
+    assert_redirected_to personnel_detail_path(assigns(:personnel_detail))
+  end
+
+  test "should show personnel_detail" do
+    get :show, :id => @personnel_detail.to_param
+    assert_response :success
+  end
+
+  test "should get edit" do
+    get :edit, :id => @personnel_detail.to_param
+    assert_response :success
+  end
+
+  test "should update personnel_detail" do
+    put :update, :id => @personnel_detail.to_param, :personnel_detail => @personnel_detail.attributes
+    assert_redirected_to personnel_detail_path(assigns(:personnel_detail))
+  end
+
+  test "should destroy personnel_detail" do
+    assert_difference('PersonnelDetail.count', -1) do
+      delete :destroy, :id => @personnel_detail.to_param
+    end
+
+    assert_redirected_to personnel_details_path
+  end
+end

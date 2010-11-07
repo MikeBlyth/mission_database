@@ -1,0 +1,30 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  date: 2010-10-05
+  purpose: MyString
+  return_date: 2010-10-05
+  flight: MyString
+  member_id: 68
+  origin: Abuja
+  destination: London
+  guesthouse: Baptist
+  total_passengers: '3'
+  other_travelers: Barb, Luke 
+  with_spouse: true
+  with_children: true
+  baggage: '88'
+  
+two:
+  date: 2010-10-05
+  purpose: MyString
+  return_date: 2010-10-05
+  flight: MyString
+  member_id: 69
+  origin: Abuja
+  destination: London
+  guesthouse: Baptist
+  total_passengers: 3
+  other_travelers: Barb, Luke 
+  with_spouse: true
+  with_children: true

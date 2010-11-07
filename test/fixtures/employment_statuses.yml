@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  description: Career
+  code: 5
+
+two:
+  id: 2
+  description: STA
+  code: 10

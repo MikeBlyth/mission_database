@@ -1,0 +1,65 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  last_name: Blyth
+  first_name: Michael
+  short_name: Mike
+  middle_name: John
+  sex: M
+  family_id: 1
+  birth_date: 1953-03-16
+  spouse_id: 2
+  country_id: 2
+  bloodtype_id: 1
+  allergies: none
+  medical_facts: h/o melanoma
+  medications: sertraline
+  status_id: 1
+  ministry_comment: ministry comment
+  qualifications: Pediatrician
+  date_active: 1991-08-23
+  ministry_id: 1
+  education_id: 2
+  location_id: 1
+  employment_status_id: 1
+
+two:
+  id: 2
+  last_name: Blyth
+  first_name: Barbara
+  middle_name: Beckon
+  short_name: Barb
+  sex: F
+  family_id: 1
+  birth_date: 1946-04-30
+  spouse_id: 1
+  country_id: 2
+  bloodtype_id: 2
+  allergies: none
+  medical_facts: 
+  medications: mefloquine
+  status_id: 2
+  ministry_comment: foster care
+  qualifications: BS Music
+  date_active: 1991-08-23
+  ministry_id: 2
+  education_id: 1
+  location_id: 2
+  employment_status_id: 2
+  
+three:
+  id: 3
+  last_name: Johnson
+  first_name: Timothy
+  middle_name: 
+  short_name: Tim
+  sex: M
+  family_id: 3
+  birth_date: 1946-04-30
+  spouse_id: 
+  country_id: 2
+  bloodtype_id: 2
+  allergies: none
+  medical_facts: 
+  medications: mefloquine  

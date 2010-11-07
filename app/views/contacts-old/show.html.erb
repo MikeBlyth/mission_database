@@ -1,0 +1,54 @@
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Contact for:</b>
+ <%= @contact.member.full_name %>
+</p>
+
+<p>
+  <b>Email:</b>
+  <%= @contact.email_1 %>;  <%= @contact.email_2 %>
+</p>
+
+<p>
+  <b>Phone:</b>
+  <%= @contact.phone_1 %>;  <%= @contact.phone_2 %>
+</p>
+
+<p>
+  <b>Blog:</b>
+  <%= @contact.blog %>
+</p>
+
+<p>
+  <b>Website:</b>
+  <%= @contact.other_website %>
+</p>
+
+<p>
+  <b>Photo site:</b>
+  <%= @contact.photos %>
+</p>
+
+<p>
+  <b>Facebook:</b>
+  <%= @contact.facebook %>
+</p>
+
+<p>
+  <b>Contact name:</b>
+  <%= @contact.contact_name %>
+</p>
+<b>Contact type:</b>
+  <%= @contact.contact_type.description %>
+</p>
+
+<p>
+  <b>Address:</b><br>
+  <%= simple_format(@contact.address) %>
+</p>
+
+
+<%= link_to 'Edit', edit_contact_path(@contact) %> |
+<%= link_to 'Back', contacts_path %>

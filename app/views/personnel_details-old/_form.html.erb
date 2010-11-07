@@ -1,0 +1,61 @@
+<% @statuses = StatusCode.find(:all, :order => :description) %>
+<% @location_codes = Location.find(:all, :order => :code) %>
+<% @educations = Education.find(:all, :order => :code) %>
+<% @ministries = MinistryCode.find(:all, :order => :code) %>
+<% @employment_statuses = EmploymentStatusCode.find(:all, :order => :code) %>
+
+<%= form_for(@personnel_detail) do |f| %>
+  <% if @personnel_detail.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@personnel_detail.errors.count, "error") %> prohibited this personnel_detail from being saved:</h2>
+
+      <ul>
+      <% @personnel_detail.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="field">
+    <%= f.label :status_id %><br />
+    <%= collection_select(:personnel_detail, :status_id, @statuses, :id, :description, 
+         options ={:prompt => "Select status"}) %>  
+  </div>
+  <div class="field">
+    <%= f.label :ministry_id %><br />
+    <%= collection_select(:personnel_detail, :ministry_id, @ministries, :id, :code_with_description, 
+         options ={:prompt => "Select status"}) %>  
+  </div>
+  <div class="field">
+    <%= f.label :ministry_comment %><br />
+    <%= f.text_field :ministry_comment %>
+  </div>
+  <div class="field">
+    <%= f.label :education_id %><br />
+    <%= collection_select(:personnel_detail, :education_id, @educations, :id, :code_with_description, 
+         options ={:prompt => "Select"}) %>  
+  </div>
+  <div class="field">
+    <%= f.label :qualifications %><br />
+    <%= f.text_field :qualifications %>
+  </div>
+  <div class="field">
+    <%= f.label :location_id %><br />
+    <%= f.collection_select(:location_id, @location_codes, :id, :code_with_description, 
+         options ={:prompt => "Select"}) %>  
+  </div>
+  <div class="field">
+    <%= f.label :employment_status_id %><br />
+    <%= f.collection_select(:employment_status_id, @employment_statuses, :id, :code_with_description, 
+         options ={:prompt => "Select"}) %>  
+  </div>
+  <div class="field">
+    <%= f.label :date_active %><br />
+    <%= f.date_select :date_active, :start_year => 1940, :end_year=>Time.now.year %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

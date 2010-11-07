@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Abo:</b>
+  <%= @bloodtype.abo %>
+</p>
+
+<p>
+  <b>Rh:</b>
+  <%= @bloodtype.rh %>
+</p>
+
+<p>
+  <b>Comment:</b>
+  <%= @bloodtype.comment %>
+</p>
+
+<p>
+  <b>Full:</b>
+  <%= @bloodtype.full %>
+</p>
+
+
+<%= link_to 'Edit', edit_bloodtype_path(@bloodtype) %> |
+<%= link_to 'Back', bloodtypes_path %>

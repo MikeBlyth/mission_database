@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  code: 1
+  description: self
+
+two:
+  id: 2
+  code: 10
+  description: friend

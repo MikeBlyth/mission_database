@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  name: Jos
+  state: Plateau
+  country: Nigeria
+  latitude: 10.1
+  longitude: -9.0
+  
+two:
+  id: 2
+  name: Kaduna
+  state: Kaduna
+  country: Nigeria
+  latitude: -9.1
+  longitude: 10.0
+  
+Kano:
+  id: 3
+  name: Kano
+  state: Kano
+  country: Nigeria
+  latitude: 7.1
+  longitude: 10.0

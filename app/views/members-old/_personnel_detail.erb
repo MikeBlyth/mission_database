@@ -1,0 +1,43 @@
+<p>
+  <b>Status:</b>
+  <%= personnel_detail.status.description %>
+</p>
+
+<p>
+  <b>Ministry:</b>
+  <%= personnel_detail.ministry.description %>
+</p>
+
+<p>
+  <b>Ministry comment:</b>
+  <%= personnel_detail.ministry_comment %>
+</p>
+
+<p>
+  <b>Education level:</b>
+  <%= personnel_detail.education.description %>
+</p>
+
+<p>
+  <b>Educational qualifications:</b>
+  <%= personnel_detail.qualifications %>
+</p>
+
+<p>
+  <b>Field location:</b>
+  <%= personnel_detail.location.description %>
+</p>
+
+<p>
+  <b>Missionary status:</b>
+  <%= personnel_detail.employment_status.description %>
+</p>
+
+<p>
+  <b>Date active:</b>
+  <%= personnel_detail.date_active %>
+</p>
+
+
+<%= link_to 'Edit Personnel Details', edit_personnel_detail_path(personnel_detail) %> |
+<%= link_to 'Back', personnel_details_path %>

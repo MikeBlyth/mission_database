@@ -1,0 +1,38 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  member: 1
+  email_1: abc_def@xyz.com
+  email_2: 
+  phone_1: 803-384-4286
+  phone_2: +44 807 332 488
+  blog: MyString
+  other_website: MyString
+  skype: MyString
+  photos: MyString
+  facebook: MyString
+  contact_name: MyString
+  address: MyString
+  contact_type_id: 1
+  email_public: true
+  phone_public: false
+  skype_public: true
+
+two: 
+  member_id: 2
+  member: 2
+  email_1: 
+  email_2: 
+  phone_1: 
+  phone_2: 
+  blog: MyString
+  other_website: MyString
+  skype: MyString
+  photos: MyString
+  facebook: MyString
+  contact_name: MyString
+  address: MyString
+  contact_type_id: 2
+  email_public: true
+  phone_public: false
+  skype_public: false

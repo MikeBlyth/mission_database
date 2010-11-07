@@ -1,0 +1,31 @@
+<h1>Countries</h1>
+<p>This lists <em>all</em> the countries available to the system, but only a few are shown 
+  in the drop-down menus, since most will never be needed. The ones shown in <span class='included_false'>light 
+  color like this</span> are not currently available in the menus. To cause one of them to be included on the
+  drop-down menus, 
+  just edit the country in <em>this</em> list and tick the "Include" box.</p>
+  <p>To add a completely <em>new</em> country to this list, click <%= link_to 'here', new_country_path %> or on the link at the bottom of the 
+  page. This should very rarely be necessary, since almost every existing country (as of 2010)
+  is already included here.</p>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Nationality</th>
+    <th>Code</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @countries.each do |country| %>
+  <tr class='included_<%= country.include_in_selection %>'>
+    <td><%= country.name %></td>
+    <td><%= country.nationality %></td>
+    <td><%= country.code %></td>
+    <td><%= link_to 'Edit', edit_country_path(country) %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Country', new_country_path %>

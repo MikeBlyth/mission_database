@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="installedFeatures">
+		<item value="com.aptana.feature.rcp:3.0.0.201009021133-7k7aBiFG4Chwf535hRP2aGuLKT0d"/>
+		<item value="com.aptana.feature.studio:3.0.0.201009021130-7C7B37MPQDToSlgikYz-Zbyc4s6B"/>
+		<item value="com.aptana.feature:3.0.0.1283451276-8P48c9RFh3jAXECR040234A45598"/>
+		<item value="com.aptana.php.feature:3.0.0.1282933123-7D--7BBTCRGC9GH09Q59dASGi4kB"/>
+		<item value="com.collabnet.subversion.merge.feature:2.1.0"/>
+		<item value="com.sun.jna:3.2.3"/>
+		<item value="org.eclipse.help:1.2.0.v20100427-7e7jEKFEx2XlnZinYPtgz03"/>
+		<item value="org.eclipse.mylyn.bugzilla_feature:3.4.2.v20100916-0100-e3x-7D773BgJ9DH9fCc4CICE1"/>
+		<item value="org.eclipse.mylyn.context_feature:3.4.2.v20100916-0100-e3x-777718s73533L3L135331"/>
+		<item value="org.eclipse.mylyn_feature:3.4.2.v20100916-0100-e3x-7Z7f77FBBoPbPQeUoFeZXJ8"/>
+		<item value="org.eclipse.platform:3.6.0.v20100602-9gF78GpqFt6trOGhL60z0oEx3fz-JKNwxPY"/>
+		<item value="org.eclipse.rcp:3.6.0.v20100519-9OArFKvFtsd7WLUKh-DcYTS"/>
+		<item value="org.eclipse.team.svn.mylyn:0.7.9.I20100512-1900"/>
+		<item value="org.eclipse.team.svn:0.7.9.I20100512-1900"/>
+		<item value="org.polarion.eclipse.team.svn.connector.javahl16.win32:2.2.2.I20100512-1900"/>
+		<item value="org.polarion.eclipse.team.svn.connector.javahl16:2.2.2.I20100512-1900"/>
+		<item value="org.polarion.eclipse.team.svn.connector:2.2.2.I20100512-1900"/>
+		<item value="org.python.pydev.django_templates.feature:1.6.2.2010090111"/>
+		<item value="org.python.pydev.feature:1.6.2.2010090111"/>
+		<item value="org.tigris.subversion.clientadapter.feature:1.6.12"/>
+		<item value="org.tigris.subversion.clientadapter.javahl.feature:1.6.12"/>
+		<item value="org.tigris.subversion.clientadapter.svnkit.feature:1.6.12"/>
+		<item value="org.tigris.subversion.subclipse.graph.feature:1.0.8"/>
+		<item value="org.tigris.subversion.subclipse.mylyn:3.0.0"/>
+		<item value="org.tigris.subversion.subclipse:1.6.13"/>
+	</list>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="197" key="DIALOG_Y_ORIGIN"/>
+		<item value="290" key="DIALOG_X_ORIGIN"/>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+</section>
