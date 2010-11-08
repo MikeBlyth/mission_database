@@ -1,4 +1,13 @@
 SIM::Application.routes.draw do
+  get "welcome/show"
+# for jquery_ui autocomplete test
+get "welcome/show"
+get "welcome/autocomplete_brand_name"
+
+root :to => "welcome#show"
+# ------
+
+
 #=begin
 #  devise_for :users
   resources :bloodtypes do as_routes end

@@ -11,6 +11,7 @@ gem 'mysql'
 gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 gem 'prawn', :git => "git://github.com/sandal/prawn", :submodules => true
 gem 'haml' 
+gem 'rails3-jquery-autocomplete'
 group :development, :test do
   gem "rspec-rails", ">= 2.0.0"
   gem "cucumber-rails", ">= 0.3.2"

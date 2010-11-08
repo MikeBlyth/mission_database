@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101106084435) do
+ActiveRecord::Schema.define(:version => 20101108210404) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -22,6 +22,12 @@ ActiveRecord::Schema.define(:version => 20101106084435) do
   end
 
   add_index "bloodtypes", ["full"], :name => "index_bloodtypes_on_full", :unique => true
+
+  create_table "brands", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cities", :force => true do |t|
     t.string   "name"
@@ -124,12 +130,6 @@ ActiveRecord::Schema.define(:version => 20101106084435) do
     t.datetime "updated_at"
   end
 
-  create_table "family_ids", :force => true do |t|
-    t.string  "family"
-    t.integer "father_id"
-    t.integer "nationality"
-  end
-
   create_table "home_address", :primary_key => "ID", :force => true do |t|
     t.string "SIM ID",        :limit => 6
     t.string "home_address"
@@ -192,6 +192,13 @@ ActiveRecord::Schema.define(:version => 20101106084435) do
 
   add_index "members", ["bloodtype_id"], :name => "fk_bloodtypes"
   add_index "members", ["country_id"], :name => "fk_countries"
+
+  create_table "members_travels", :id => false, :force => true do |t|
+    t.integer  "member_id"
+    t.integer  "travel_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "ministries", :force => true do |t|
     t.string   "description"
@@ -336,19 +343,5 @@ ActiveRecord::Schema.define(:version => 20101106084435) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
-
-  create_table "wives", :primary_key => "family_id", :force => true do |t|
-    t.string  "lastname"
-    t.string  "Husband",                :limit => 20
-    t.string  "Wife"
-    t.integer "Wife_id",                              :default => 0, :null => false
-    t.string  "StatusCode",             :limit => 1
-    t.integer "MinistryCode",           :limit => 2
-    t.date    "BIRTHDAY"
-    t.integer "miss_status_id"
-    t.string  "Missionary Status Code", :limit => 3
-  end
-
-  add_index "wives", ["Wife_id"], :name => "WifeIndex", :unique => true
 
 end
