@@ -1,5 +1,5 @@
 class WelcomeController < ApplicationController
-autocomplete :brand, :name
+autocomplete :country, :name
 
   def show
   end

@@ -3,6 +3,7 @@ SIM::Application.routes.draw do
 # for jquery_ui autocomplete test
 get "welcome/show"
 get "welcome/autocomplete_brand_name"
+get "welcome/autocomplete_country_name"
 
 root :to => "welcome#show"
 # ------
