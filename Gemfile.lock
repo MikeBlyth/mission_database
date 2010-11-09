@@ -62,6 +62,7 @@ GEM
       term-ansicolor (~> 1.0.5)
     haml (3.0.23)
     i18n (0.4.2)
+    jrails (0.6.0)
     json (1.4.6-x86-mingw32)
     mail (2.2.9)
       activesupport (>= 2.3.6)
@@ -121,6 +122,7 @@ DEPENDENCIES
   calendar_date_select!
   cucumber-rails (>= 0.3.2)
   haml
+  jrails
   mysql
   prawn (>= 0.10.0)!
   rails (= 3.0.0)
