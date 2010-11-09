@@ -1,4 +1,6 @@
 SIM::Application.routes.draw do
+  resources :jqueries do as_routes end
+
   get "welcome/show"
 # for jquery_ui autocomplete test
 get "welcome/show"

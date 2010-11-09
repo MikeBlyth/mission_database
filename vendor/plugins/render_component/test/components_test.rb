@@ -14,7 +14,7 @@ class CallersController < ActionController::Base
     render_component(:controller => "callees", :action => "being_called")
   end
 
-  def calling_from_controller_with_different_status
+  def calling_from_controller_with_different_status_code
     render_component(:controller => "callees", :action => "blowing_up")
   end
 
@@ -93,9 +93,9 @@ class ComponentsTest < ActionController::IntegrationTest #ActionController::Test
     assert_equal "David of the House, speaking", @response.body
   end
 
-  def test_calling_from_controller_with_different_status
-    get '/callers/calling_from_controller_with_different_status'
-    assert_equal 500, @response.response
+  def test_calling_from_controller_with_different_status_code
+    get '/callers/calling_from_controller_with_different_status_code'
+    assert_equal 500, @response.response_code
   end
  
   def test_calling_from_template
