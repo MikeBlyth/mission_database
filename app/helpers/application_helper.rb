@@ -18,5 +18,14 @@ class Fixnum
       a + g[c]
     end
   end
+
+  # Add methods blank? and empty? and make them false for all Fixnum
+  def blank?
+    return false
+  end
+
+  def empty?
+    return false
+  end
 end
 

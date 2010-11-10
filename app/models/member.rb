@@ -62,7 +62,6 @@ class Member < ActiveRecord::Base
   # (What if someone else deletes the spouse --- don't ever delete anyone :-)
     if !spouse_id.nil?
       begin
-  logger.error "***Updating spouse #{spouse.id} to #{id}"
         if spouse.spouse_id != self.id
           spouse.update_attributes(:spouse_id => self.id, :family_id => self.family_id)
         end 
@@ -94,7 +93,6 @@ class Member < ActiveRecord::Base
   end
 
   def full_name_short
-puts "** #{self.full_name} or #{self.short_name}"
     if short_name.blank?
       s = first_name + " " + last_name
     else
@@ -114,8 +112,6 @@ puts "** #{self.full_name} or #{self.short_name}"
   # * :initial => _boolean_ default false; use the initial instead of whole _middle_ name
   # * :middle => _boolean_ default true; include the middle name (or initial)
   def last_name_first(options={})
-#logger.error "***** #{last_name}, #{first_name}, #{short_name}."
-logger.error "#{self} with attr #{self.attributes}"
     if options[:short] && !short_name.blank?   # use the short form of first name if it's defined
       first = short_name
     else

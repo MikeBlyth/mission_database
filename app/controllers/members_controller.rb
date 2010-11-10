@@ -43,6 +43,23 @@ helper :countries
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
 
+  # Form may return the country name or id, so may need to convert to ID before validating
+  def country_lookup
+    country = params[:record][:country]
+    unless (country.to_i > 0)or country.blank? 
+      params[:record][:country] = Country.find_by_name(country).id
+    end
+  end
+
+  def update
+    country_lookup
+    super
+  end
+
+  def create
+    country_lookup
+    super
+  end
 
 # criteria based on the filter set in application_controller. 
 # it would better to somehow have these defined other than hard-coding the numbers, if the 
@@ -64,9 +81,9 @@ helper :countries
     else
       ['true']
     end
-#    logger.error "****** selector = #{selector}"
-#    logger.error "****** session[:filter].class = #{session[:filter].class}"
+
     selector
-  end
+  end  
   
 end
+  
