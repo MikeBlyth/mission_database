@@ -1,10 +1,6 @@
 class MembersController < ApplicationController
 helper :countries
-
-  # Return a list of family ids with the likely family head of each
-  def self.families 
-  
-  end
+before_save :get_country_id
 
   active_scaffold :member do |config|
     config.label = "Members"
@@ -25,7 +21,7 @@ helper :countries
     config.columns[:country].actions_for_association_links = []
     config.columns[:spouse].actions_for_association_links = [:show]
 #    config.delete.link = false
-    config.columns[:country].form_ui = :select 
+ #   config.columns[:country].form_ui = :select 
     config.columns[:bloodtype].form_ui = :select 
     config.columns[:spouse].form_ui = :select 
     config.columns[:family].form_ui = :select 
@@ -74,4 +70,9 @@ helper :countries
     selector
   end
   
+  # Be sure we have the id for a valid country -- convert from name if needed
+  def get_country_id
+    
+  end  
+
 end
