@@ -23,50 +23,26 @@
   <script>
   $(function() {
     var availableTags = [
-      "UK",
-      "New Zealand",
-      "Australia",
-      "United States",
-      "Denmark",
-      "Netherlands",
-      "Korea",
-      "Ireland",
-      "Singapore",
-      "Malaysia"
+    'Korea',
+    'New Zealand',
+    'UK',
+    'USA',
+    'Singapore'
     ];
-    alert('Defining jquery hooks')
-
-
-    $( "h4" ).live("click", function(){
-      alert("ok!");
-    });
 
     $( "h5" ).live("click", function(){
       $("h5").addClass("test");
-      $( ".country_input" ).autocomplete({
-        source: availableTags
-        });
-      alert("ok!");
+      alert("JQuery UI addClass on h5 ok!");
     });
 
     $( ".country_input" ).live("click", function(){
-      $(this).addClass("test");
       $(this).autocomplete({
-        source: availableTags
+        source: "autocomplete_searches/index.js"
         });
-      alert("794 ok!");
     });
       
-    $('#actest').autocomplete({
-        source: availableTags
-        });
-
-    $( "#record_name_7794_country" ).autocomplete({
-      source: availableTags
-    });
   });
   </script>
-
 
 </head>
 <body>

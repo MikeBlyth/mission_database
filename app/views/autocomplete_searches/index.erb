@@ -1,0 +1,8 @@
+<h1>AutocompleteSearches#Index</h1>
+
+<% data = [] %>
+<% @countries.each do |p| %>
+  <% data << {:label => "#{h(p.name)}", :value => "#{h(p.id)}" } %>
+<% end %>
+    <%= data.to_json %>
+

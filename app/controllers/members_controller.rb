@@ -1,6 +1,5 @@
 class MembersController < ApplicationController
 helper :countries
-before_save :get_country_id
 
   active_scaffold :member do |config|
     config.label = "Members"
@@ -70,9 +69,4 @@ before_save :get_country_id
     selector
   end
   
-  # Be sure we have the id for a valid country -- convert from name if needed
-  def get_country_id
-    
-  end  
-
 end

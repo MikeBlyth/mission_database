@@ -1,4 +1,6 @@
 SIM::Application.routes.draw do
+  get "autocomplete_searches/Index"
+
   resources :jqueries do as_routes end
 
   get "welcome/show"
