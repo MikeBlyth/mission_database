@@ -4,13 +4,13 @@ helper :countries
   active_scaffold :member do |config|
     config.label = "Members"
     list.columns = [:last_name, :first_name, :middle_name, :short_name, :sex,
-          :birth_date, :spouse, :country_name, :status, :contacts, :travels, :terms]
+          :birth_date, :spouse, :country, :status, :contacts, :travels, :terms]
     list.columns.exclude :travel,
                           :bloodtype, :allergies, :medical_facts, :medications
     list.sorting = {:last_name => 'ASC'}
     show.columns = create.columns = update.columns = 
         [:last_name, :first_name, :middle_name, :short_name, :sex,
-          :birth_date,  :spouse, :country, :country_name,
+          :birth_date,  :spouse, :country_name, :country,
           :date_active, :status, :family, :family_head,
           :ministry, :ministry_comment, 
           :location, :education, :qualifications,
@@ -18,7 +18,6 @@ helper :countries
           :bloodtype, :allergies, :medications
           ]
     config.columns[:country].actions_for_association_links = []
-    config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]
 #    config.delete.link = false
  #   config.columns[:country].form_ui = :select 
@@ -37,7 +36,7 @@ helper :countries
     config.columns[:contacts].collapsed = true
   #  config.columns[:family].actions_for_association_links = []
     config.nested.add_scoped_link(:family) 
- 
+    
    config.actions.exclude :search
    config.actions.add :field_search
    config.field_search.human_conditions = true
@@ -46,18 +45,17 @@ helper :countries
 
   # Form may return the country name or id, so may need to convert to ID before validating
   def country_lookup
- #   country = params[:record][:country]
- #   unless (country.to_i > 0)or country.blank? 
- #     params[:record][:country] = Country.find_by_name(country).id
- #   end
-    country_id = Country.find_by_name(params[:record][:country_name]).id
-    params[:record][:country] = country_id
-
+    country_name = params[:record][:country_name]
+    params[:record][:country] = Country.find_by_name(country_name).id
     params[:record].delete(:country_name)
+    puts "******** Country name #{country_name} => #{params[:record][:country]} "    
   end
 
   def update
+ puts params[:record]
+ puts "Country id = #{params[:record][:country]} before"
     country_lookup
+ puts "Country id = #{params[:record][:country]} after-"
     super
   end
 

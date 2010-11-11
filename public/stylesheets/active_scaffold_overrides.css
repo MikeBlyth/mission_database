@@ -76,3 +76,7 @@ h2 {
   color: red;
   background: blue;
 }
+
+.hidden {
+  display: none;
+}

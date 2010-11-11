@@ -11,8 +11,8 @@ module MembersHelper
     end  
   end
 
-  def country_form_column(record, params)
-logger.error "********Country input: params=#{params}, record=#{record}"
-    text_field_tag 'record[country]', record.country_id,  :id=>params[:id], :class=> :country_input
-  end
+#  def country_form_column(record, params)
+#    text_field_tag 'record[country]', record.country_id,  :id=>params[:id], :class=> :country_input
+#  end
+
 end
