@@ -10,7 +10,7 @@ helper :countries
     list.sorting = {:last_name => 'ASC'}
     show.columns = create.columns = update.columns = 
         [:last_name, :first_name, :middle_name, :short_name, :sex,
-          :birth_date,  :spouse, :country, :country_name,
+          :birth_date,  :spouse, :country_name,
           :date_active, :status, :family, :family_head,
           :ministry, :ministry_comment, 
           :location, :education, :qualifications,
@@ -44,7 +44,8 @@ helper :countries
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
 
-  # Form may return the country name or id, so may need to convert to ID before validating
+=begin
+ # Form may return the country name or id, so may need to convert to ID before validating
   def country_lookup
  #   country = params[:record][:country]
  #   unless (country.to_i > 0)or country.blank? 
@@ -65,6 +66,7 @@ helper :countries
     country_lookup
     super
   end
+=end
 
 # criteria based on the filter set in application_controller. 
 # it would better to somehow have these defined other than hard-coding the numbers, if the 

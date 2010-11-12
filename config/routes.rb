@@ -1,15 +1,23 @@
 SIM::Application.routes.draw do
-  get "autocomplete_searches/Index"
+
+  match 'countries_autocomplete/index'
+  match 'autocomplete_searches/index'
+  match 'reports/:action(.:format)' => 'reports#:action'
+  
+# match 'reports/bloodtypes' => 'reports#bloodtypes'
+#match 'reports/birthdays' => 'reports#birthdays'
+#match 'reports/birthday_calendar' => 'reports#birthday_calendar'
+#match 'reports/tabletest' => 'reports#tabletest'
+#match 'reports/multi_col_test' => 'reports#multi_col_test'
+
 
   resources :jqueries do as_routes end
 
-  get "welcome/show"
 # for jquery_ui autocomplete test
 get "welcome/show"
 get "welcome/autocomplete_brand_name"
 get "welcome/autocomplete_country_name"
 
-root :to => "welcome#show"
 # ------
 
 
@@ -33,7 +41,7 @@ root :to => "welcome#show"
   resources :terms do as_routes end
   resources :travels do as_routes end
 
-  get "home/index"
+  get "members/index"
 #=end
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -85,12 +93,15 @@ match 'admin/set_member_filter' => 'application#set_member_filter'
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-root :to => "home#index"
+root :to => "members#index"
 
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
-   match ':controller(/:action(/:id(.:format)))'
-   match ':controller(/:action(.:format))'
+
+ #  match ':controller(/:action(/:id(.:format)))'
+ #  match ':controller(/:action(.:format))'
+
+  
 end

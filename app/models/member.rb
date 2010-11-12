@@ -49,6 +49,11 @@ class Member < ActiveRecord::Base
     Country.find(country_id).name
   end
 
+  def country_name= (name)
+    self.country_id = Country.find_by_name(name).id
+    puts "***** SET COUNTRY ID TO #{self.country_id}"
+  end
+
   # AFTER saving the member, we just need to be sure that the family record
   #   points to this member if the member is marked as head of family.
   #   (All members without a family are marked as head-of-family in before_save, above.)

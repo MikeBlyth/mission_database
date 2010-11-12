@@ -1,4 +1,4 @@
-class AutocompleteSearchesController < ApplicationController
+class CountriesAutocompleteController < ApplicationController
 
   def index
     @countries = Country.where("name LIKE ?", "#{params[:term]}%").select("id, name")
