@@ -1,4 +1,4 @@
-﻿# Creating an Autocompleting Association Input in Rails3 + ActiveScaffold + JQuery
+﻿# Creating an Autocompleting Association Input in Rails3 + ActiveScaffold + JQuery UI
 
 The Rails/ActiveScaffold project I’m working on has models for Member and Country. Each member belongs to a country—i.e. has a nationality. This is all done in the usual way using a key country_id in the member model to refer to the country:
 
@@ -73,11 +73,11 @@ The details are actually simpler than the explanation! Start with these models:
 
 ### Step 3: Create a lookup function to be called by JQuery.
 
-_In app/controllers/countries\_autocomplete\_controller.rb_
+_In app/controllers/autocomplete\_controller.rb_
 
-    class CountriesAutocompleteController < ApplicationController
+    class AutocompleteController < ApplicationController
     
-      def index
+      def country
         @countries = Country.where("name LIKE ?", "#{params[:term]}%").select("id, name")
         @json_resp = []
         @countries.each do |c|
@@ -93,6 +93,30 @@ _In app/controllers/countries\_autocomplete\_controller.rb_
 
 I would have preferred to put this into the existing CountriesController, but for some reason when I did that the response was very slow (2+ seconds). In any case, it's important to get the routing right. I used 
    
-      match 'countries_autocomplete/index'
+      match 'autocomplete/:action'
 
 ### Step 4. Set up JQuery
+
+We need to add JQuery and JQuery UI to our project if they're not already present. Add to your default template (or elsewhere as long as it will be available)
+
+	<%= stylesheet_link_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/ui-lightness/jquery-ui.css' %>
+  	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js' %>
+  	<%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.js' %>
+  
+If you prefer, you can load the files to your own Rails `public/stylesheets` and  `public/javascript` folders and link to them there. 
+
+_Finally,_ add this short script to `public/javascripts/application.js`:
+	
+    $(function() {
+      $( ".country_name-input" ).live("click", function(){
+        $(this).autocomplete({
+          source: "autocomplete/country.js"
+          });
+      });
+    });
+
+`country_name-input` (be careful of the underscore and hyphen) is the class of the input. You could use an ID or other means of specifying it depending on what ActiveScaffold or other framework is generating.
+
+The `.live("click"` piece is used to attach the JQuery UI `autocomplete` widget to `country_name-input` as soon as the input is clicked. We do this because, in ActiveScaffold or other Ajax-based views, the input may not exist in the DOM when the page loads, so some other event must be used to attach it. The demo and documentation for JQuery UI autocomplete are at <http://jqueryui.com/demos/autocomplete/>.
+
+Everything is in place and should work now, once you put a few countries into the countries table.
