@@ -20,30 +20,7 @@
   
   <%= csrf_meta_tag %>
   
-  <script>
-  $(function() {
-    var availableTags = [
-    'Korea',
-    'New Zealand',
-    'UK',
-    'USA',
-    'Singapore'
-    ];
-
-    $( "h5" ).live("click", function(){
-      $("h5").addClass("test");
-      alert("JQuery UI addClass on h5 ok!");
-    });
-
-    $( ".country_name-input" ).live("click", function(){
-      $(this).autocomplete({
-        source: "autocomplete_searches/index.js"
-        });
-    });
-      
-  });
-  </script>
-
+ 
 </head>
 <body>
  <div id='top'>

@@ -1,6 +1,7 @@
 SIM::Application.routes.draw do
 
   match 'countries_autocomplete/index'
+  match 'autocomplete/country'
   match 'autocomplete_searches/index'
   match 'reports/:action(.:format)' => 'reports#:action'
   

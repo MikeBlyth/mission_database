@@ -46,12 +46,14 @@ class Member < ActiveRecord::Base
   end    
 
   def country_name
-    Country.find(country_id).name
+puts "Country_id = #{country_id}"
+    Country.find(country_id).name if country_id
   end
 
   def country_name= (name)
-    self.country_id = Country.find_by_name(name).id
-    puts "***** SET COUNTRY ID TO #{self.country_id}"
+    country = Country.find_by_name(name)
+    self.country_id = country.id if country
+    puts "***** SET COUNTRY ID FOR #{name} TO #{self.country_id}"
   end
 
   # AFTER saving the member, we just need to be sure that the family record
