@@ -4,7 +4,8 @@ SIM::Application.routes.draw do
   match 'autocomplete/country'
   match 'autocomplete_searches/index'
   match 'reports/:action(.:format)' => 'reports#:action'
-  
+  match 'members/set_full_names'
+   
 # match 'reports/bloodtypes' => 'reports#bloodtypes'
 #match 'reports/birthdays' => 'reports#birthdays'
 #match 'reports/birthday_calendar' => 'reports#birthday_calendar'

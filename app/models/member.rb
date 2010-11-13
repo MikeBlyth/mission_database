@@ -11,8 +11,9 @@ class Member < ActiveRecord::Base
   belongs_to :location
   belongs_to :employment_status
   belongs_to :status
-  validates_presence_of :last_name, :first_name
+  validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :spouse_id, :allow_blank=>true
+  validates_uniqueness_of :name
 
   before_save :link_member_and_family
   after_save  :update_family_record_if_family_head
@@ -96,6 +97,12 @@ puts "Country_id = #{country_id}"
     "#{last_name_first}"
   end
 
+  # Indexed_name is the full name stored in the table. It is formed automatically on record
+  # creation, re-formed if blank on updates. It must be unique. Stored in :name field of members table 
+  def indexed_name
+    last_name_first(:initial=>true, :paren_short => true)
+  end
+  
   def full_name
     s = self.first_name
     s = s + ' ' + self.middle_name unless self.middle_name.blank?
@@ -120,9 +127,11 @@ puts "Country_id = #{country_id}"
   # Full name with last name first: Johnson, Alan Mark
   # Options
   # * :short => _boolean_ default false; use the short form of first name (e.g. "Al")
+  # * :paren_short => boolean default false; append short name, if any, in "( )" 
   # * :initial => _boolean_ default false; use the initial instead of whole _middle_ name
   # * :middle => _boolean_ default true; include the middle name (or initial)
   def last_name_first(options={})
+    options[:short] = false if options[:paren_short] # paren_short overrides the short option
     if options[:short] && !short_name.blank?   # use the short form of first name if it's defined
       first = short_name
     else
@@ -132,6 +141,9 @@ puts "Country_id = #{country_id}"
       middle = middle_name[0] << '.'
     else
       middle = middle_name || ''
+    end
+    if (options[:paren_short]) && !short_name.blank? 
+      first = first + " (#{short_name})"
     end
     s = last_name + ', ' + first + ' ' + middle unless options[:middle] == false
     return s    

@@ -43,6 +43,15 @@ helper :countries
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
+  
+  def set_full_names
+    Member.find(:all).each do |m| 
+      if m.name.blank?
+        m.update_attributes(:name => m.indexed_name)
+      end
+    end
+    redirect_to(:action => :index)
+  end
 
 =begin
  # Form may return the country name or id, so may need to convert to ID before validating

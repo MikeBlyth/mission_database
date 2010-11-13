@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101108210404) do
+ActiveRecord::Schema.define(:version => 20101113211604) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -152,6 +152,11 @@ ActiveRecord::Schema.define(:version => 20101108210404) do
 
   add_index "home_address", ["SIM ID"], :name => "AddressMdNUMBER"
 
+  create_table "jqueries", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "locations", :force => true do |t|
     t.string   "description"
     t.integer  "city_id"
@@ -188,10 +193,13 @@ ActiveRecord::Schema.define(:version => 20101108210404) do
     t.integer  "location_id"
     t.integer  "employment_status_id"
     t.boolean  "family_head"
+    t.string   "name"
   end
 
   add_index "members", ["bloodtype_id"], :name => "fk_bloodtypes"
   add_index "members", ["country_id"], :name => "fk_countries"
+  add_index "members", ["family_id"], :name => "index_members_on_family_id"
+  add_index "members", ["name"], :name => "index_members_on_name", :unique => true
 
   create_table "members_travels", :id => false, :force => true do |t|
     t.integer  "member_id"
