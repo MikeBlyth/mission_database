@@ -3,13 +3,14 @@ helper :countries
 
   active_scaffold :member do |config|
     config.label = "Members"
-    list.columns = [:last_name, :first_name, :middle_name, :short_name, :sex,
+    list.columns = [:name, 
           :birth_date, :spouse, :country_name, :status, :contacts, :travels, :terms]
     list.columns.exclude :travel,
                           :bloodtype, :allergies, :medical_facts, :medications
     list.sorting = {:last_name => 'ASC'}
     show.columns = create.columns = update.columns = 
-        [:last_name, :first_name, :middle_name, :short_name, :sex,
+        [ :name, 
+          :last_name, :first_name, :middle_name, :short_name, :sex,
           :birth_date,  :spouse, :country_name,
           :date_active, :status, :family, :family_head,
           :ministry, :ministry_comment, 
@@ -17,6 +18,7 @@ helper :countries
           :contacts, :terms, :travels,
           :bloodtype, :allergies, :medications
           ]
+    show.columns.exclude :last_name, :first_name, :middle_name, :short_name
     config.columns[:country].actions_for_association_links = []
     config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]

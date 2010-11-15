@@ -7,5 +7,9 @@
           source: "autocomplete/country.js"
           });
       });
-    });
+    $('a.allow_edit').live('click', function() {
+      $(this).prev().removeAttr("disabled")
+      .focus()
+      });
+  });
 
