@@ -16,8 +16,25 @@
     $('.name-input').live('click', function(){
       $(this).val('name clicked')
     });
-    $('.first_name-input').live('click', function(){
+    $('.first_name-input').live('keyup', function(){
       var as_form = $(this).closest("form");
+      $('.name-input',as_form).val(make_name(as_form));
+    });
+    $('.last_name-input').live('keyup', function(){
+      var as_form = $(this).closest("form");
+      $('.name-input',as_form).val(make_name(as_form));
+    });
+    $('.middle_name-input').live('keyup', function(){
+      var as_form = $(this).closest("form");
+      $('.name-input',as_form).val(make_name(as_form));
+    });
+    $('.short_name-input').live('keyup', function(){
+      var as_form = $(this).closest("form");
+      $('.name-input',as_form).val(make_name(as_form));
+    });
+    
+//
+    function make_name(as_form) {
       var last_name = $('.last_name-input',as_form).val()
       var first_name = $('.first_name-input',as_form).val()
       var initial = $('.middle_name-input',as_form).val()[0] + '.'
@@ -26,7 +43,12 @@
       if (short_name) { 
         name += ' (' + short_name + ')'
       }
-      $('.name-input',as_form).val(name);
-    });
+      return name      
+    } 
+//test
+$('#actest').keyup(function() {
+  alert('Handler for .keyup() called.');
+});
+    
   });
 
