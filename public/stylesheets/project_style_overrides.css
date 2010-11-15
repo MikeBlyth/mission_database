@@ -14,14 +14,14 @@ div.states-view {
 
 .active-scaffold input.text-input, .active-scaffold select {
   font-size: 1em;
-  font-family: "Times New Roman"; }
+  font-family: "Verdana"; }
 
-.longitude-input, .latitude-input, .code-input, .sex-input,
+.longitude-input, .latitude-input, .code-input,
 .total_passengers-input, .baggage-input {
   width: 50px; }
 
 .state-input, .date-input, .birth_date-input, .date_active-input,
-.start_date-input, .end_date-input, .est_start_date-input,
+.start_date-input, .end_date-input, .est_start_date-input, .sex-input,
 .est_end_date-input, .return_date-input, .confirmed-input {
   width: 100px; }
 

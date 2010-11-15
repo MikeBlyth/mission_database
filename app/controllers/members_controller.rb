@@ -29,6 +29,9 @@ helper :countries
     config.columns[:family].form_ui = :select 
  #   config.columns[:family_id].form_ui = :select 
     config.columns[:education].form_ui = :select 
+    config.columns[:sex].options[:options] = [['Female', 'F'], ['Male',
+'M']]
+    config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
     config.columns[:status].form_ui = :select 
     config.columns[:employment_status].form_ui = :select 

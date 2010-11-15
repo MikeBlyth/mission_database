@@ -18,7 +18,9 @@
     });
     $('.first_name-input').live('keyup', function(){
       var as_form = $(this).closest("form");
+//      $('.name-input',as_form).removeAttr('disabled');
       $('.name-input',as_form).val(make_name(as_form));
+//      $('.name-input',as_form).attr('disabled', 'disabled');
     });
     $('.last_name-input').live('keyup', function(){
       var as_form = $(this).closest("form");
@@ -32,7 +34,10 @@
       var as_form = $(this).closest("form");
       $('.name-input',as_form).val(make_name(as_form));
     });
-    
+    $('input.submit').live('click', function(){
+      var as_form = $(this).closest("form");
+      $('.name-input',as_form).removeAttr("disabled");
+    });
 //
     function make_name(as_form) {
       var last_name = $('.last_name-input',as_form).val()
