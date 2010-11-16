@@ -9,7 +9,7 @@ helper :countries
                           :bloodtype, :allergies, :medical_facts, :medications
     list.sorting = {:last_name => 'ASC'}
     show.columns = create.columns = update.columns = 
-        [ :name, 
+        [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,
           :birth_date,  :spouse, :country_name,
           :date_active, :status, :family, :family_head,
@@ -18,7 +18,7 @@ helper :countries
           :contacts, :terms, :travels,
           :bloodtype, :allergies, :medications
           ]
-    show.columns.exclude :last_name, :first_name, :middle_name, :short_name
+    show.columns.exclude :last_name, :first_name, :middle_name, :short_name, :name_override
     config.columns[:country].actions_for_association_links = []
     config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]
