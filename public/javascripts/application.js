@@ -102,7 +102,10 @@
       }
     } 
   });
-
+// ************************ GET ID OF MEMBER BEING UPDATED *************
+  function get_update_id(as_form) { 
+    return as_form.attr('id').match(/update-(\d+)-/)[1]
+    };
 // ************************ FAMILY LOOKUP ******************************
 // *********************************************************************
 $(function() {
@@ -121,16 +124,14 @@ $(function() {
   var select_control = $(this)
   var last_name = $('input.last_name-input',as_form).val()
   var sex = $('select.sex-input option:selected',as_form)
-  var str = ""
-//  sex.each(function () {
-//                str += $(this).text() + " ";
-//              });
-//  alert ('For = ' + sex.text()[0])
-  $.getJSON("members/spouse_select.js", {name: last_name, sex: sex.text()[0]}, 
+  var my_id = get_update_id(as_form)
+  $.getJSON("members/spouse_select.js", 
+            {name: last_name, 
+             sex: sex.text()[0],
+             id: my_id}, 
     function(data){
-//      alert("Data Loaded: " + data[0].name + "(" + data[0].id+ ")");
-// ** need to do something to check whether data is returned before we 
-// **   destroy the existing option list
+    // !!** need to do something to check whether data is returned before we 
+    // !!**   destroy the existing option list
       select_control.empty()
       $.each(data, function(index,member){
         select_control.append("<option value='" + member.id + 

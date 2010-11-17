@@ -59,7 +59,6 @@ helper :countries
   end
  
   def spouse_select
-    @json_resp = []
     if params[:id] # Do we know the exact person we're dealing with?
       my_id = params[:id]
       me = Member.find(my_id) if my_id
@@ -69,10 +68,14 @@ helper :countries
       # then make up a temporary, incomplete "shadow" member to use for finding spouses
       me = Member.new(:last_name=>my_last_name, :sex=>my_sex)
     end
-    me.possible_spouses.each do |c|
-      @json_resp << {:name=>c.name, :id=>c.id}
+    @json_resp = []  # start with an empty response set
+    my_possible_spouses = me.possible_spouses
+    if my_possible_spouses  # i.e. if there are any possibilities
+      my_possible_spouses.each do |c|
+        @json_resp << {:name=>c.name, :id=>c.id}
+      end
     end
-    @json_resp << {:name => '--Other--' , :id => 0}
+    @json_resp << {:name => '--Other--' , :id => ''}
 
     respond_to do |format|
       format.js { render :json => @json_resp }

@@ -66,6 +66,19 @@ class Member < ActiveRecord::Base
      self.family_id = family.id if family
    end
 
+   def male_female
+     return :female if self.sex.upcase == 'F'
+     return :male if self.sex.upcase == 'M'
+   end
+   
+   def male?
+     return self.male_female == :male
+   end
+     
+   def female?
+     return self.male_female == :female
+   end
+     
    def spouse_name
      self.spouse.name
    end
@@ -90,11 +103,22 @@ class Member < ActiveRecord::Base
   # automatically ...
   # If we do it w/o any error checking, must be sure user can only assign a valid member as a spouse
   # (What if someone else deletes the spouse --- don't ever delete anyone :-)
-    if !spouse_id.nil?
+    if !spouse_id.nil? && spouse.spouse_id != self.id
       begin
-        if spouse.spouse_id != self.id
-          spouse.update_attributes(:spouse_id => self.id, :family_id => self.family_id)
-        end 
+        spouse.spouse_id = self.id  # my spouse is married to me
+        if self.male?
+          husband = self
+          wife = spouse
+        else
+          wife = self
+          husband = spouse
+        end
+        wife.family_id = husband.family_id
+        wife.family_head = false
+        husband.family_head = true
+
+        spouse.save!
+        self.save!
         rescue 
      #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
   logger.error "***Unable to find or update spouse (record id #{spouse_id})"
@@ -182,11 +206,19 @@ class Member < ActiveRecord::Base
   # box.
   def possible_spouses
     return [] if self.last_name.blank? || self.sex.blank?
+puts "Possible Spouses called for member #{self.last_name}, #{self.spouse_id}"
     my_sex = self.sex.downcase
     spouse_sex = my_sex == 'm' ? 'f' : 'm'
     age_18_date = Date.today - 18.years
     my_last_name = self.last_name
-    Member.where("last_name = ?", my_last_name).where("birth_date <= ?", age_18_date).where("sex = ?", spouse_sex)
+    possibilities = Member.where(:last_name => my_last_name, 
+                  :sex => spouse_sex).
+                  where("birth_date <= ?", age_18_date)
+    # delete from possibilities everyone
+    # who is married to someone else.
+    # (even works if our own id is still nil, undefined)
+    possibilities.delete_if {|x| x.spouse_id && x.spouse_id != self.id}
+    return possibilities 
   end
   
   def active

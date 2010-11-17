@@ -15,7 +15,8 @@ module MembersHelper
 puts "**********RECORD #{record}"
 puts "**********PARAMS #{params}"
     collection_select('record','spouse', record.possible_spouses, :id, :to_label, 
-      { :prompt=> '--select--' }, :class=>'spouse-input')
+      { :prompt=> '--select--' }, :class=>'spouse-input', 
+      :id=>"record_spouse_#{record.id}")
   end
 
   def name_form_column(record,params)

@@ -23,7 +23,7 @@ class AutocompleteController < ApplicationController
 
   # AUTOCOMPLETE LOOKUP FOR FAMILY
     def family
-    @families = Member.where("name LIKE ?", "#{params[:term]}%").select("id, name").where("family_head")
+    @families = Member.where("name LIKE ? and family_head = true", "#{params[:term]}%").select("id, name")
     @json_resp = []
     @families.each do |c|
       @json_resp << c.name
