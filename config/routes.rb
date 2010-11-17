@@ -2,9 +2,12 @@ SIM::Application.routes.draw do
 
   match 'countries_autocomplete/index'
   match 'autocomplete/country'
+  match 'autocomplete/family'
+  match 'autocomplete/spouse'
   match 'autocomplete_searches/index'
   match 'reports/:action(.:format)' => 'reports#:action'
   match 'members/set_full_names'
+  match 'members/spouse_select'
    
 # match 'reports/bloodtypes' => 'reports#bloodtypes'
 #match 'reports/birthdays' => 'reports#birthdays'

@@ -1,0 +1,1757 @@
+<html>​​​​​<head>
+
+
+  <title>SIM</title>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+  <link href="/stylesheets/active_scaffold_overrides.css?1289736065" media="screen" rel="stylesheet" type="text/css">
+<link href="/stylesheets/jquery-ui.css?1289265778" media="screen" rel="stylesheet" type="text/css">
+<link href="/stylesheets/project_style_overrides.css?1289850482" media="screen" rel="stylesheet" type="text/css">
+<link href="/stylesheets/scaffold.css?1286459827" media="screen" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/jquery-ui.css?1289265778" media="screen" rel="stylesheet" type="text/css">
+  <script src="/javascripts/jquery.js?1289595011" type="text/javascript"></script>
+  <script src="/javascripts/rails_jquery.js?1289595012" type="text/javascript"></script>
+  <script src="/javascripts/jquery-ui.js?1289595011" type="text/javascript"></script>
+  <script src="/javascripts/jquery-ui-timepicker-addon.js?1289595011" type="text/javascript"></script>
+  <script src="/javascripts/application.js?1289942146" type="text/javascript"></script>
+  <script src="/javascripts/active_scaffold/default/active_scaffold.js?1289947344" type="text/javascript"></script>
+<script src="/javascripts/active_scaffold/default/date_picker_bridge.js?1289983316" type="text/javascript"></script>
+<script src="/javascripts/active_scaffold/default/jquery.editinplace.js?1289947344" type="text/javascript"></script>
+<link href="/stylesheets/active_scaffold/default/stylesheet.css?1289947344" media="screen" rel="stylesheet" type="text/css">
+<!--[if IE]><link href="/stylesheets/active_scaffold/default/stylesheet-ie.css?1289947344" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+
+  <link href="/stylesheets/project_style_overrides.css?1289850482" media="screen" rel="stylesheet" type="text/css">
+  
+  <meta name="csrf-param" content="authenticity_token">
+<meta name="csrf-token" content="kWWRrCNmgvXkifFytNWAYKWStWcDld3uwZ8HOEaKtrY=">
+  
+ 
+</head><body>
+ <div id="top">
+    <div id="menu">
+      <div id="links">
+      <input id="actest">
+        <p>Main Admin Menu</p>
+        <ul class="links">
+          <li>
+                <a href="/reports/bloodtypes.pdf">Report</a>
+          </li>
+          <li>
+            <a href="/bloodtypes">Bloodtypes</a>
+          </li>
+          <li>
+            <a href="/cities">Cities</a>
+          </li>
+          <li>
+            <a href="/contacts">Contacts</a>
+          </li>
+          <li>
+            <a href="/contact_types">Contact types</a>
+          </li>
+          <li>
+            <a href="/countries">Countries</a>
+          </li>
+          <li>
+            <a href="/educations">Education codes</a>
+          </li>
+          <li>
+            <a href="/employment_statuses">Employment status codes</a>
+          </li>
+          <li>
+            <a href="/locations">Locations</a>
+          </li>
+          <li>
+            <a href="/members">Members</a>
+          </li>
+          <li>
+            <a href="/ministries">Ministry codes</a>
+          </li>
+          <li>
+            <a href="/states">States</a>
+          </li>
+          <li>
+            <a href="/statuses">Status codes</a>
+          </li>
+           <li>
+            <a href="/travels">Travel</a>
+          </li>
+           <li>Set member filter
+             <ul>
+              <li>
+                <a href="/admin/set_member_filter?filter=active">Active only</a>
+              </li>
+              <li>
+                <a href="/admin/set_member_filter?filter=on_field">On field only</a>
+              </li>
+              <li>
+                <a href="/admin/set_member_filter?filter=home_assignment">Home assignment</a>
+              </li>
+              <li>
+                <a href="/admin/set_member_filter?filter=ha_or_leave">HA or leave</a>
+              </li>
+              <li>
+                <a href="/admin/set_member_filter?filter=pipeline">Pipeline</a>
+              </li>
+              <li>
+                <a href="/admin/set_member_filter?filter=other">Other</a>
+              </li>
+              <li>
+                <a href="/admin/set_member_filter?filter=all">Clear filter</a>
+              </li>
+            </ul>
+       </li></ul>
+        <div class="clear"> </div>
+      </div>
+    </div>
+    <div id="content"><div id="main"><div id="as_members-active-scaffold" class="active-scaffold active-scaffold-as_members members-view default-theme">
+  <div class="active-scaffold-header">
+      <div class="actions">
+      <a href="/members/new" class="new as_action" data-position="top" data-remote="true" id="as_members-new--link">Create New</a>      <a href="/members/show_search" class="show_search as_action" data-position="top" data-remote="true" id="as_members-show_search--link">Search</a>    <img alt="loading indicator" class="loading-indicator" id="as_members-table--loading-indicator" src="/images/active_scaffold/default/indicator.gif?1289947344" style="visibility: hidden;">
+  </div>
+<h2>Members</h2>
+
+  </div>
+  <table cellpadding="0" cellspacing="0">
+    <tbody class="before-header" id="as_members-search-container">
+      <tr><td></td></tr>
+    </tbody>
+  </table>
+  <div id="as_members-content">
+    <table cellpadding="0" cellspacing="0">
+  <thead>
+    <tr>
+        <th class="name-column_heading " id="as_members-name-column" title=""><a href="/members?page=1&amp;sort=name&amp;sort_direction=ASC" class="as_sort" data-method="get" data-page-history="as_members" data-remote="true" id="as_members-search-form">Name</a></th>
+  <th class="birth_date-column_heading " id="as_members-birth_date-column" title=""><a href="/members?page=1&amp;sort=birth_date&amp;sort_direction=ASC" class="as_sort" data-method="get" data-page-history="as_members" data-remote="true" id="as_members-search-form">Birth date</a></th>
+  <th class="spouse-column_heading " id="as_members-spouse-column" title=""><a href="/members?page=1&amp;sort=spouse&amp;sort_direction=ASC" class="as_sort" data-method="get" data-page-history="as_members" data-remote="true" id="as_members-search-form">Spouse</a></th>
+  <th class="country_name-column_heading " id="as_members-country_name-column" title=""><p>Country name</p></th>
+  <th class="status-column_heading " data-ie_cancel_text="Cancel" data-ie_loading_text="Loading…" data-ie_mode="clone" data-ie_save_text="Update" data-ie_saving_text="Saving…" data-ie_url="/members/__id__/update_column?column=status" id="as_members-status-column" title=""><a href="/members?page=1&amp;sort=status&amp;sort_direction=ASC" class="as_sort" data-method="get" data-page-history="as_members" data-remote="true" id="as_members-search-form">Status</a><div class="as_inplace_pattern" style="display: none;"><select class="status-input" id="record_status_" name="record[status]"><option value="">- select -</option>
+<option value="7">Adult MK</option>
+<option value="1">Alumni</option>
+<option value="13">Alumni MK</option>
+<option value="8">Alumni-Retired</option>
+<option value="4">College</option>
+<option value="5">Home assignment</option>
+<option value="10">Not specified</option>
+<option value="2">On field w parents</option>
+<option value="6">On leave</option>
+<option value="3">On the field</option>
+<option value="12">Pipeline</option>
+<option value="11">With the Lord!</option></select></div></th>
+  <th class="contacts-column_heading " id="as_members-contacts-column" title=""><a href="/members?page=1&amp;sort=contacts&amp;sort_direction=ASC" class="as_sort" data-method="get" data-page-history="as_members" data-remote="true" id="as_members-search-form">Contacts</a></th>
+  <th class="travels-column_heading " id="as_members-travels-column" title=""><a href="/members?page=1&amp;sort=travels&amp;sort_direction=ASC" class="as_sort" data-method="get" data-page-history="as_members" data-remote="true" id="as_members-search-form">Travels</a></th>
+  <th class="terms-column_heading " id="as_members-terms-column" title=""><a href="/members?page=1&amp;sort=terms&amp;sort_direction=ASC" class="as_sort" data-method="get" data-page-history="as_members" data-remote="true" id="as_members-search-form">Terms</a></th>
+<th class="actions">
+</th>
+
+    </tr>
+  </thead>
+  <tbody class="messages">
+  <tr class="record even-record">
+    <td colspan="8" class="messages-container">
+      <p class="error-message message server-error" style="display: none;">
+        Request Failed (code 500, Internal Error)
+        <a href="#" onclick="ActiveScaffold.hide(this.parentNode); return false;" title="Close">Close</a>
+      </p>
+      <div id="as_members-messages">
+        
+      </div>
+      <p class="filtered-message" style="display: none;">
+        (Filtered)
+      </p>
+      <p id="as_members-empty-message" class="empty-message" style="display: none;">
+        No Entries
+      </p>
+    </td>
+      <td class="actions"></td>
+
+  </tr>
+</tbody>    
+
+
+
+  <tbody class="records" id="as_members-tbody">
+      
+<tr style="display: none;" class="record " id="as_members-list-1-row" data-refresh="/members/1/row?_method=get">
+  
+  <td class="name-column ">
+    ActiveMember, John J. (Johnson)
+  </td>
+
+  <td class="birth_date-column ">
+    1953-03-16
+  </td>
+
+  <td class="spouse-column ">
+    <a href="/members/2?parent_model=member&amp;association=spouse&amp;assoc_id=1&amp;eid=members_1_spouse&amp;adapter=_list_inline_adapter" class="show as_action spouse" data-position="after" data-remote="true" id="as_members-show-spouse-2-link">Anna</a>
+  </td>
+
+  <td class="country_name-column ">
+    Argentina
+  </td>
+
+  <td class="status-column ">
+    <span class="in_place_editor_field" data-ie_id="1" id="as_members-update_column-1-status-cell" title="Click to edit">On the field</span>
+  </td>
+
+  <td class="contacts-column ">
+    <a href="/contacts?parent_model=member&amp;association=contacts&amp;assoc_id=1&amp;eid=members_1_contacts&amp;adapter=_list_inline_adapter" class="index as_action" data-position="after" data-remote="true" id="as_members-index-contacts-1-link">on field</a>
+  </td>
+
+  <td class="travels-column ">
+    <a href="/travels?parent_model=member&amp;association=travels&amp;assoc_id=1&amp;eid=members_1_travels&amp;adapter=_list_inline_adapter" class="index as_action" data-position="after" data-remote="true" id="as_members-index-travels-1-link">2010-09-01 BA 85</a>
+  </td>
+
+  <td class="terms-column ">
+    <a href="/terms?parent_model=member&amp;association=terms&amp;assoc_id=1&amp;eid=members_1_terms&amp;adapter=_list_inline_adapter" class="index as_action" data-position="after" data-remote="true" id="as_members-index-terms-1-link">2009-01-01</a>
+  </td>
+
+  <td class="actions"><table cellpadding="0" cellspacing="0">
+  <tbody><tr>
+    <td class="indicator-container">
+      <img alt="loading indicator" class="loading-indicator" id="as_members-record-1-loading-indicator" src="/images/active_scaffold/default/indicator.gif?1289947344" style="visibility: hidden;">
+    </td>
+      <td>
+      <a href="/members?parent_model=member&amp;named_scope=family&amp;assoc_id=1&amp;eid=members_1_family&amp;adapter=_list_inline_adapter" class="index as_action" data-position="after" data-remote="true" id="as_members-index--link">Family</a>
+      </td>
+      <td>
+      <a href="/members/1/edit?adapter=_list_inline_adapter" class="edit as_action disabled" data-position="replace" data-remote="true" id="as_members-edit-1-link">Edit</a>
+      </td>
+      <td>
+      <a data-method="delete" href="/members/1" class="delete as_action" data-confirm="Are you sure you want to delete ActiveMember, John J?" data-remote="true" id="as_members-delete-1-link">Delete</a>
+      </td>
+      <td>
+      <a href="/members/1?adapter=_list_inline_adapter" class="show as_action" data-position="replace" data-remote="true" id="as_members-show-1-link">Show</a>
+      </td>
+  </tr>
+</tbody></table>
+</td>
+
+
+  
+</tr><tr class="inline-adapter as_adapter" id="as_members-nested-1-row">
+  <td style="" colspan="99" class="inline-adapter-cell">
+    <div class="edit-view members-view view">
+      <a href="" class="inline-adapter-close as_cancel" data-refresh="false" data-remote="true" title="Close">Close</a>      <div class="active-scaffold">
+  <div class="update-view members-view view">
+    <form accept-charset="UTF-8" action="/members/1" class="as_form update" data-loading="true" data-remote="true" id="as_members-update-1-form" method="post"><div style="margin: 0pt; padding: 0pt; display: inline;"><input name="utf8" value="✓" type="hidden"><input name="_method" value="put" type="hidden"><input name="authenticity_token" value="kWWRrCNmgvXkifFytNWAYKWStWcDld3uwZ8HOEaKtrY=" type="hidden"></div>
+  <h4>Update ActiveMember, John J</h4>
+
+  <div id="as_members-update-1-messages" class="messages-container">
+    
+  </div>
+
+  <ol class="form">
+  <li class="form-element required ">
+    <dl>
+  <dt>
+    <label for="record_name_1">Name</label>
+  </dt>
+  <dd>
+    <input class="name-input text-input" disabled="disabled" id="record_name_1" name="record[name]" size="35" value="ActiveMember, John J. (Johnson)" type="text">
+<a href="#" id="allow_edit_record_name_1" class="allow_edit">Click to allow editing</a>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_name_override_1">Name override</label>
+  </dt>
+  <dd>
+    <input name="record[name_override]" value="0" type="hidden"><input class="name_override-input" id="record_name_override_1" name="record[name_override]" value="1" type="checkbox">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element required ">
+    <dl>
+  <dt>
+    <label for="record_last_name_1">Last name</label>
+  </dt>
+  <dd>
+    <input class="last_name-input text-input" data-autocomplete="off" id="record_last_name_1" maxlength="255" name="record[last_name]" size="30" value="ActiveMember" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element required ">
+    <dl>
+  <dt>
+    <label for="record_first_name_1">First name</label>
+  </dt>
+  <dd>
+    <input class="first_name-input text-input" data-autocomplete="off" id="record_first_name_1" maxlength="255" name="record[first_name]" size="30" value="John" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_middle_name_1">Middle name</label>
+  </dt>
+  <dd>
+    <input class="middle_name-input text-input" data-autocomplete="off" id="record_middle_name_1" maxlength="255" name="record[middle_name]" size="30" value="J" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_short_name_1">Short name</label>
+  </dt>
+  <dd>
+    <input class="short_name-input text-input" data-autocomplete="off" id="record_short_name_1" maxlength="255" name="record[short_name]" size="30" value="Johnson" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_sex_1">Sex</label>
+  </dt>
+  <dd>
+    <select class="sex-input" id="record_sex_1" name="record[sex]"><option value="F">Female</option>
+<option value="M" selected="selected">Male</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_birth_date_1">Birth date</label>
+  </dt>
+  <dd>
+    <input class="birth_date-input text-input date_picker" data-autocomplete="off" id="record_birth_date_1" name="record[birth_date]" size="30" value="1953-03-16" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_spouse_name_1">Spouse name</label>
+  </dt>
+  <dd>
+    <input class="spouse_name-input text-input" data-autocomplete="off" id="record_spouse_name_1" name="record[spouse_name]" size="30" value="ActiveMember, Anna A. (Annabel)" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_country_name_1">Country name</label>
+  </dt>
+  <dd>
+    <input class="country_name-input text-input" data-autocomplete="off" id="record_country_name_1" name="record[country_name]" size="30" value="Argentina" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_date_active_1">Date active</label>
+  </dt>
+  <dd>
+    <input class="date_active-input text-input date_picker" data-autocomplete="off" id="record_date_active_1" name="record[date_active]" size="30" value="2000-01-01" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_status_1">Status</label>
+  </dt>
+  <dd>
+    <select class="status-input" id="record_status_1" name="record[status]"><option value="">- select -</option>
+<option value="7">Adult MK</option>
+<option value="1">Alumni</option>
+<option value="13">Alumni MK</option>
+<option value="8">Alumni-Retired</option>
+<option value="4">College</option>
+<option value="5">Home assignment</option>
+<option value="10">Not specified</option>
+<option value="2">On field w parents</option>
+<option value="6">On leave</option>
+<option value="3" selected="selected">On the field</option>
+<option value="12">Pipeline</option>
+<option value="11">With the Lord!</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_family_name_1">Family name</label>
+  </dt>
+  <dd>
+    <input class="family_name-input text-input" data-autocomplete="off" id="record_family_name_1" name="record[family_name]" size="30" value="ActiveMember, John J. (Johnson)" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_family_head_1">Family head</label>
+  </dt>
+  <dd>
+    <input name="record[family_head]" value="0" type="hidden"><input checked="checked" class="family_head-input" id="record_family_head_1" name="record[family_head]" value="1" type="checkbox">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_ministry_1">Ministry</label>
+  </dt>
+  <dd>
+    <select class="ministry-input" id="record_ministry_1" name="record[ministry]"><option value="">- select -</option>
+<option value="52">Accompanying spouse</option>
+<option value="38" selected="selected">Administrator</option>
+<option value="32">Allied Health Professionals</option>
+<option value="2">BSF Teaching Leader</option>
+<option value="33">Biomedical Eng.</option>
+<option value="8">Children's Ministry</option>
+<option value="12">City Ministries</option>
+<option value="11">Community Worker</option>
+<option value="30">Dentist</option>
+<option value="3">Discipleship</option>
+<option value="5">Discipleship (Pastoral Training)</option>
+<option value="23">ENT</option>
+<option value="1">Evangelism Personnel</option>
+<option value="17">Family Practice/GP</option>
+<option value="39">Financial Manager</option>
+<option value="31">Health educator</option>
+<option value="45">Hostel parent</option>
+<option value="50">Housewife/home schooling</option>
+<option value="18">Internal Medicine</option>
+<option value="19">Internal Medicine/Pediatrics</option>
+<option value="56">MK</option>
+<option value="49">MK Youth Pastor</option>
+<option value="44">Manager (Oasis)</option>
+<option value="34">Medical elective</option>
+<option value="35">Medical elective--Resident</option>
+<option value="36">Medical unspecified</option>
+<option value="43">Missionary child care</option>
+<option value="37">Missionary services</option>
+<option value="64">Navigators</option>
+<option value="28">Nurse educator</option>
+<option value="27">Nurse midwife</option>
+<option value="29">Nurse specialist</option>
+<option value="24">Ob/Gyn</option>
+<option value="25">Ob/Gyn (VVF)</option>
+<option value="26">Ophthalmologist</option>
+<option value="22">Orthopedic surgeon</option>
+<option value="20">Pediatrician</option>
+<option value="15">Physician</option>
+<option value="16">Psychiatrist</option>
+<option value="14">Rural Development Worker</option>
+<option value="53">Rural Minstry</option>
+<option value="54">STA</option>
+<option value="47">School teacher</option>
+<option value="40">Service Manager</option>
+<option value="9">Sports Ministry</option>
+<option value="42">Staff Development</option>
+<option value="46">Student teacher</option>
+<option value="21">Surgeon</option>
+<option value="48">Teacher/Chaplain</option>
+<option value="51">Technical</option>
+<option value="6">Theological  Educator</option>
+<option value="7">Theological ServicesTranslator</option>
+<option value="41">Travel services</option>
+<option value="66">Unspecified</option>
+<option value="13">Urban youth ministry</option>
+<option value="55">Visitor</option>
+<option value="10">Youth camp ministry</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_ministry_comment_1">Ministry comment</label>
+  </dt>
+  <dd>
+    <input class="ministry_comment-input text-input" data-autocomplete="off" id="record_ministry_comment_1" maxlength="255" name="record[ministry_comment]" size="30" value="Personnel Director" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_location_1">Location</label>
+  </dt>
+  <dd>
+    <select class="location-input" id="record_location_1" name="record[location]"><option value="">- select -</option>
+<option value="5">Aba Bible College, Abia State</option>
+<option value="10">Abuja</option>
+<option value="15">Adunu/ECWA/EMS</option>
+<option value="31">Apollo Crescent</option>
+<option value="23">BUTH (Evangel) Hospital</option>
+<option value="11">Baptist Guest House Abuja</option>
+<option value="19">Billiri -- ECWA Theol College</option>
+<option value="26">Challenge Compound</option>
+<option value="33">Danish Lutheran Compound</option>
+<option value="6">Egbe Hospital</option>
+<option value="1">Enugu</option>
+<option value="25">Gidan Bege</option>
+<option value="12">Gure</option>
+<option value="34">Hillcrest School</option>
+<option value="7">Igbaja Seminary</option>
+<option value="8">Ilorin</option>
+<option value="37">JETS</option>
+<option value="22">Jos</option>
+<option value="35">Jos CRC Mountain View</option>
+<option value="39">Jos City Ministries</option>
+<option value="28" selected="selected">Jos ECWA/SIM Headquarters</option>
+<option value="36">Jos ELM House</option>
+<option value="29">Jos Oasis Campound</option>
+<option value="27">Jos Pharmacy Compound</option>
+<option value="13">Kagoro</option>
+<option value="14">Kagoro -- Seminary</option>
+<option value="9">Kaiama</option>
+<option value="20">Kano</option>
+<option value="40">Miango</option>
+<option value="43">Miango Dental Clinic</option>
+<option value="42">Miango Kent Academy</option>
+<option value="41">Miango MRH</option>
+<option value="17">Minna</option>
+<option value="30">Niger Creek Compound</option>
+<option value="18">Ningi</option>
+<option value="16">Samaru/ECWA Widows Sch</option>
+<option value="24">Spring of Life</option>
+<option value="21">Tofa/ECWA Bible Train. Sch.</option>
+<option value="38">Word of  Life</option>
+<option value="32">Woyke House</option>
+<option value="45">test</option>
+<option value="46">test2</option>
+<option value="47">test3</option>
+<option value="48">unspecified</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_education_1">Education</label>
+  </dt>
+  <dd>
+    <select class="education-input" id="record_education_1" name="record[education]"><option value="">- select -</option>
+<option value="22">2 yr Bible college</option>
+<option value="21">2 yr college</option>
+<option value="23">2 yr nursing degree</option>
+<option value="24" selected="selected">4 yr college</option>
+<option value="20">Certificate course</option>
+<option value="26">Doctoral level</option>
+<option value="17">High school grad</option>
+<option value="25">Masters level</option>
+<option value="19">Some Bible college</option>
+<option value="18">Some college</option>
+<option value="16">Some school</option>
+<option value="29">unspecified</option>
+<option value="28">xts</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_qualifications_1">Qualifications</label>
+  </dt>
+  <dd>
+    <input class="qualifications-input text-input" data-autocomplete="off" id="record_qualifications_1" maxlength="255" name="record[qualifications]" size="30" value="BA Business" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="sub-form vertical-sub-form " id="as_members-1-contacts-subform">
+    <h5>Contacts (<a class="visibility-toggle" href="#">Show</a>)</h5>
+<div id="as_members-1-contacts-subform-div" style="display: none;">
+<div id="as_members-1-contacts-subform-list">
+  <div class="association-record-errors" id="as_members-contact-1-0-messages">
+    
+  </div>
+  <ol id="association-record_id_1_contacts_863" class="association-record  ">
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_address_1_contacts_863">Address</label>
+  </dt>
+  <dd>
+    <input class="address-input text-input" data-autocomplete="off" id="record_address_1_contacts_863" maxlength="255" name="record[contacts][863][address]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_blog_1_contacts_863">Blog</label>
+  </dt>
+  <dd>
+    <input class="blog-input text-input" data-autocomplete="off" id="record_blog_1_contacts_863" maxlength="100" name="record[contacts][863][blog]" size="30" value="Active blog address" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_contact_name_1_contacts_863">Contact name</label>
+  </dt>
+  <dd>
+    <input class="contact_name-input text-input" data-autocomplete="off" id="record_contact_name_1_contacts_863" maxlength="255" name="record[contacts][863][contact_name]" size="30" value="Active contact name" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_email_1_1_contacts_863">Email 1</label>
+  </dt>
+  <dd>
+    <input class="email_1-input text-input" data-autocomplete="off" id="record_email_1_1_contacts_863" maxlength="40" name="record[contacts][863][email_1]" size="30" value="Active_email@com.com" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_email_2_1_contacts_863">Email 2</label>
+  </dt>
+  <dd>
+    <input class="email_2-input text-input" data-autocomplete="off" id="record_email_2_1_contacts_863" maxlength="40" name="record[contacts][863][email_2]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_email_public_1_contacts_863">Email public</label>
+  </dt>
+  <dd>
+    <input name="record[contacts][863][email_public]" value="0" type="hidden"><input class="email_public-input" id="record_email_public_1_contacts_863" name="record[contacts][863][email_public]" value="1" type="checkbox">
+      <span class="description">Tick box if email is considered public</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_facebook_1_contacts_863">Facebook</label>
+  </dt>
+  <dd>
+    <input class="facebook-input text-input" data-autocomplete="off" id="record_facebook_1_contacts_863" maxlength="60" name="record[contacts][863][facebook]" size="30" value="Active facebook" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_other_website_1_contacts_863">Other website</label>
+  </dt>
+  <dd>
+    <input class="other_website-input text-input" data-autocomplete="off" id="record_other_website_1_contacts_863" maxlength="100" name="record[contacts][863][other_website]" size="30" value="Active other site" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_phone_1_1_contacts_863">Phone 1</label>
+  </dt>
+  <dd>
+    <input class="phone_1-input text-input" data-autocomplete="off" id="record_phone_1_1_contacts_863" maxlength="15" name="record[contacts][863][phone_1]" size="30" value="315-222-2041" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_phone_2_1_contacts_863">Phone 2</label>
+  </dt>
+  <dd>
+    <input class="phone_2-input text-input" data-autocomplete="off" id="record_phone_2_1_contacts_863" maxlength="15" name="record[contacts][863][phone_2]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_phone_public_1_contacts_863">Phone public</label>
+  </dt>
+  <dd>
+    <input name="record[contacts][863][phone_public]" value="0" type="hidden"><input class="phone_public-input" id="record_phone_public_1_contacts_863" name="record[contacts][863][phone_public]" value="1" type="checkbox">
+      <span class="description">Tick box if phone is considered public</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_photos_1_contacts_863">Photos</label>
+  </dt>
+  <dd>
+    <input class="photos-input text-input" data-autocomplete="off" id="record_photos_1_contacts_863" maxlength="50" name="record[contacts][863][photos]" size="30" value="flickr.com/active" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_skype_1_contacts_863">Skype</label>
+  </dt>
+  <dd>
+    <input class="skype-input text-input" data-autocomplete="off" id="record_skype_1_contacts_863" maxlength="20" name="record[contacts][863][skype]" size="30" value="ActiveSkype" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_skype_public_1_contacts_863">Skype public</label>
+  </dt>
+  <dd>
+    <input name="record[contacts][863][skype_public]" value="0" type="hidden"><input class="skype_public-input" id="record_skype_public_1_contacts_863" name="record[contacts][863][skype_public]" value="1" type="checkbox">
+      <span class="description">Tick box if Skype name is considered public</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_contact_type_1_contacts_863">Contact type</label>
+  </dt>
+  <dd>
+    <select class="contact_type-input" id="record_contact_type_1_contacts_863" name="record[contacts][863][contact_type]"><option value="">- select -</option>
+<option value="3">friend</option>
+<option value="7">home country</option>
+<option value="1" selected="selected">on field</option>
+<option value="6">other</option>
+<option value="2">parent</option>
+<option value="4">sibling</option>
+<option value="5">spouse</option>
+<option value="9">unspecified</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="actions">
+      <a href="#" class="destroy" id="record_id_1_contacts_863-destroy" onclick='ActiveScaffold.remove("association-record_id_1_contacts_863"); return false;' style="">Remove</a>
+      
+      <input name="record[contacts][863][id]" id="record_id_1_contacts_863" value="863" type="hidden">
+  </li>
+</ol>
+
+  <div class="association-record-errors" id="as_members-contact-1-1-messages">
+    
+  </div>
+  <ol id="association-record_id_1_contacts_1289983618617" class="association-record association-record-new locked">
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_address_1_contacts_1289983618617">Address</label>
+  </dt>
+  <dd>
+    <input class="address-input text-input" data-autocomplete="off" id="record_address_1_contacts_1289983618617" maxlength="255" name="record[contacts][1289983618617][address]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_blog_1_contacts_1289983618617">Blog</label>
+  </dt>
+  <dd>
+    <input class="blog-input text-input" data-autocomplete="off" id="record_blog_1_contacts_1289983618617" maxlength="100" name="record[contacts][1289983618617][blog]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_contact_name_1_contacts_1289983618617">Contact name</label>
+  </dt>
+  <dd>
+    <input class="contact_name-input text-input" data-autocomplete="off" id="record_contact_name_1_contacts_1289983618617" maxlength="255" name="record[contacts][1289983618617][contact_name]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_email_1_1_contacts_1289983618617">Email 1</label>
+  </dt>
+  <dd>
+    <input class="email_1-input text-input" data-autocomplete="off" id="record_email_1_1_contacts_1289983618617" maxlength="40" name="record[contacts][1289983618617][email_1]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_email_2_1_contacts_1289983618617">Email 2</label>
+  </dt>
+  <dd>
+    <input class="email_2-input text-input" data-autocomplete="off" id="record_email_2_1_contacts_1289983618617" maxlength="40" name="record[contacts][1289983618617][email_2]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_email_public_1_contacts_1289983618617">Email public</label>
+  </dt>
+  <dd>
+    <input name="record[contacts][1289983618617][email_public]" value="0" type="hidden"><input class="email_public-input" id="record_email_public_1_contacts_1289983618617" name="record[contacts][1289983618617][email_public]" value="1" type="checkbox">
+      <span class="description">Tick box if email is considered public</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_facebook_1_contacts_1289983618617">Facebook</label>
+  </dt>
+  <dd>
+    <input class="facebook-input text-input" data-autocomplete="off" id="record_facebook_1_contacts_1289983618617" maxlength="60" name="record[contacts][1289983618617][facebook]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_other_website_1_contacts_1289983618617">Other website</label>
+  </dt>
+  <dd>
+    <input class="other_website-input text-input" data-autocomplete="off" id="record_other_website_1_contacts_1289983618617" maxlength="100" name="record[contacts][1289983618617][other_website]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_phone_1_1_contacts_1289983618617">Phone 1</label>
+  </dt>
+  <dd>
+    <input class="phone_1-input text-input" data-autocomplete="off" id="record_phone_1_1_contacts_1289983618617" maxlength="15" name="record[contacts][1289983618617][phone_1]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_phone_2_1_contacts_1289983618617">Phone 2</label>
+  </dt>
+  <dd>
+    <input class="phone_2-input text-input" data-autocomplete="off" id="record_phone_2_1_contacts_1289983618617" maxlength="15" name="record[contacts][1289983618617][phone_2]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_phone_public_1_contacts_1289983618617">Phone public</label>
+  </dt>
+  <dd>
+    <input name="record[contacts][1289983618617][phone_public]" value="0" type="hidden"><input class="phone_public-input" id="record_phone_public_1_contacts_1289983618617" name="record[contacts][1289983618617][phone_public]" value="1" type="checkbox">
+      <span class="description">Tick box if phone is considered public</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_photos_1_contacts_1289983618617">Photos</label>
+  </dt>
+  <dd>
+    <input class="photos-input text-input" data-autocomplete="off" id="record_photos_1_contacts_1289983618617" maxlength="50" name="record[contacts][1289983618617][photos]" size="30" value="" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_skype_1_contacts_1289983618617">Skype</label>
+  </dt>
+  <dd>
+    <input class="skype-input text-input" data-autocomplete="off" id="record_skype_1_contacts_1289983618617" maxlength="20" name="record[contacts][1289983618617][skype]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_skype_public_1_contacts_1289983618617">Skype public</label>
+  </dt>
+  <dd>
+    <input name="record[contacts][1289983618617][skype_public]" value="0" type="hidden"><input class="skype_public-input" id="record_skype_public_1_contacts_1289983618617" name="record[contacts][1289983618617][skype_public]" value="1" type="checkbox">
+      <span class="description">Tick box if Skype name is considered public</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_contact_type_1_contacts_1289983618617">Contact type</label>
+  </dt>
+  <dd>
+    <select class="contact_type-input" id="record_contact_type_1_contacts_1289983618617" name="record[contacts][1289983618617][contact_type]"><option value="">- select -</option>
+<option value="3">friend</option>
+<option value="7">home country</option>
+<option value="1">on field</option>
+<option value="6">other</option>
+<option value="2">parent</option>
+<option value="4">sibling</option>
+<option value="5">spouse</option>
+<option value="9">unspecified</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="actions">
+      <a href="#" class="destroy" id="record_id_1_contacts_1289983618617-destroy" onclick='ActiveScaffold.remove("association-record_id_1_contacts_1289983618617"); return false;' style="display: none;">Remove</a>
+      
+  </li>
+</ol>
+
+</div>
+<div class="footer-wrapper">
+  <div class="footer">
+    <input data-remote="true" href="/members/edit_associated?id=1&amp;association=contacts" id="as_members-1-contacts-subform-create-another" style="" value="Create Another Contact" type="button">
+    
+
+    
+
+  </div>
+</div>
+
+</div>
+  </li>
+  <li class="sub-form horizontal-sub-form " id="as_members-1-terms-subform">
+    <h5>Terms (<a class="visibility-toggle" href="#">Show</a>)</h5>
+<div id="as_members-1-terms-subform-div" style="display: none;">
+<table cellpadding="0" cellspacing="0">
+  <thead>
+  <tr>
+      <th><label>Start date</label></th>
+      <th><label>End date</label></th>
+      <th><label>Ministry</label></th>
+      <th><label>Location</label></th>
+      <th><label>Status</label></th>
+      <th><label>Est start date</label></th>
+      <th><label>Est end date</label></th>
+  </tr>
+</thead>
+
+
+  <tbody id="as_members-1-terms-subform-list">
+    <tr class="association-record-errors">
+      <td style="" colspan="8" id="as_members-term-1-0-messages">
+        
+      </td>
+    </tr>
+    <tr id="association-record_id_1_terms_1" class="association-record  ">
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_start_date_1_terms_1">Start date</label>
+  </dt>
+  <dd>
+    <input class="start_date-input text-input date_picker" data-autocomplete="off" id="record_start_date_1_terms_1" name="record[terms][1][start_date]" size="30" value="2009-01-01" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_end_date_1_terms_1">End date</label>
+  </dt>
+  <dd>
+    <input class="end_date-input text-input date_picker" data-autocomplete="off" id="record_end_date_1_terms_1" name="record[terms][1][end_date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_ministry_1_terms_1">Ministry</label>
+  </dt>
+  <dd>
+    <select class="ministry-input" id="record_ministry_1_terms_1" name="record[terms][1][ministry]"><option value="">- select -</option>
+<option value="52">Accompanying spouse</option>
+<option value="38">Administrator</option>
+<option value="32">Allied Health Professionals</option>
+<option value="2">BSF Teaching Leader</option>
+<option value="33">Biomedical Eng.</option>
+<option value="8">Children's Ministry</option>
+<option value="12">City Ministries</option>
+<option value="11">Community Worker</option>
+<option value="30">Dentist</option>
+<option value="3">Discipleship</option>
+<option value="5">Discipleship (Pastoral Training)</option>
+<option value="23">ENT</option>
+<option value="1">Evangelism Personnel</option>
+<option value="17">Family Practice/GP</option>
+<option value="39">Financial Manager</option>
+<option value="31">Health educator</option>
+<option value="45">Hostel parent</option>
+<option value="50">Housewife/home schooling</option>
+<option value="18">Internal Medicine</option>
+<option value="19">Internal Medicine/Pediatrics</option>
+<option value="56">MK</option>
+<option value="49">MK Youth Pastor</option>
+<option value="44">Manager (Oasis)</option>
+<option value="34">Medical elective</option>
+<option value="35">Medical elective--Resident</option>
+<option value="36">Medical unspecified</option>
+<option value="43">Missionary child care</option>
+<option value="37">Missionary services</option>
+<option value="64">Navigators</option>
+<option value="28">Nurse educator</option>
+<option value="27">Nurse midwife</option>
+<option value="29">Nurse specialist</option>
+<option value="24">Ob/Gyn</option>
+<option value="25">Ob/Gyn (VVF)</option>
+<option value="26">Ophthalmologist</option>
+<option value="22">Orthopedic surgeon</option>
+<option value="20">Pediatrician</option>
+<option value="15">Physician</option>
+<option value="16">Psychiatrist</option>
+<option value="14">Rural Development Worker</option>
+<option value="53">Rural Minstry</option>
+<option value="54">STA</option>
+<option value="47">School teacher</option>
+<option value="40">Service Manager</option>
+<option value="9">Sports Ministry</option>
+<option value="42">Staff Development</option>
+<option value="46">Student teacher</option>
+<option value="21">Surgeon</option>
+<option value="48">Teacher/Chaplain</option>
+<option value="51">Technical</option>
+<option value="6">Theological  Educator</option>
+<option value="7">Theological ServicesTranslator</option>
+<option value="41">Travel services</option>
+<option value="66">Unspecified</option>
+<option value="13">Urban youth ministry</option>
+<option value="55">Visitor</option>
+<option value="10">Youth camp ministry</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_location_1_terms_1">Location</label>
+  </dt>
+  <dd>
+    <select class="location-input" id="record_location_1_terms_1" name="record[terms][1][location]"><option value="">- select -</option>
+<option value="5">Aba Bible College, Abia State</option>
+<option value="10">Abuja</option>
+<option value="15">Adunu/ECWA/EMS</option>
+<option value="31">Apollo Crescent</option>
+<option value="23">BUTH (Evangel) Hospital</option>
+<option value="11">Baptist Guest House Abuja</option>
+<option value="19">Billiri -- ECWA Theol College</option>
+<option value="26">Challenge Compound</option>
+<option value="33">Danish Lutheran Compound</option>
+<option value="6">Egbe Hospital</option>
+<option value="1">Enugu</option>
+<option value="25">Gidan Bege</option>
+<option value="12">Gure</option>
+<option value="34">Hillcrest School</option>
+<option value="7">Igbaja Seminary</option>
+<option value="8">Ilorin</option>
+<option value="37">JETS</option>
+<option value="22">Jos</option>
+<option value="35">Jos CRC Mountain View</option>
+<option value="39">Jos City Ministries</option>
+<option value="28">Jos ECWA/SIM Headquarters</option>
+<option value="36">Jos ELM House</option>
+<option value="29">Jos Oasis Campound</option>
+<option value="27">Jos Pharmacy Compound</option>
+<option value="13">Kagoro</option>
+<option value="14">Kagoro -- Seminary</option>
+<option value="9">Kaiama</option>
+<option value="20">Kano</option>
+<option value="40">Miango</option>
+<option value="43">Miango Dental Clinic</option>
+<option value="42">Miango Kent Academy</option>
+<option value="41">Miango MRH</option>
+<option value="17">Minna</option>
+<option value="30">Niger Creek Compound</option>
+<option value="18">Ningi</option>
+<option value="16">Samaru/ECWA Widows Sch</option>
+<option value="24">Spring of Life</option>
+<option value="21">Tofa/ECWA Bible Train. Sch.</option>
+<option value="38">Word of  Life</option>
+<option value="32">Woyke House</option>
+<option value="45">test</option>
+<option value="46">test2</option>
+<option value="47">test3</option>
+<option value="48">unspecified</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_status_1_terms_1">Status</label>
+  </dt>
+  <dd>
+    <select class="status-input" id="record_status_1_terms_1" name="record[terms][1][status]"><option value="">- select -</option>
+<option value="7">Adult MK</option>
+<option value="1">Alumni</option>
+<option value="13">Alumni MK</option>
+<option value="8">Alumni-Retired</option>
+<option value="4">College</option>
+<option value="5">Home assignment</option>
+<option value="10">Not specified</option>
+<option value="2">On field w parents</option>
+<option value="6">On leave</option>
+<option value="3">On the field</option>
+<option value="12">Pipeline</option>
+<option value="11">With the Lord!</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_est_start_date_1_terms_1">Est start date</label>
+  </dt>
+  <dd>
+    <input class="est_start_date-input text-input date_picker" data-autocomplete="off" id="record_est_start_date_1_terms_1" name="record[terms][1][est_start_date]" size="30" value="2009-01-14" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_est_end_date_1_terms_1">Est end date</label>
+  </dt>
+  <dd>
+    <input class="est_end_date-input text-input date_picker" data-autocomplete="off" id="record_est_end_date_1_terms_1" name="record[terms][1][est_end_date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="" class="actions">
+      <a href="#" class="destroy" id="record_id_1_terms_1-destroy" onclick='ActiveScaffold.remove("association-record_id_1_terms_1"); return false;' style="">Remove</a>
+      
+      <input name="record[terms][1][id]" id="record_id_1_terms_1" value="1" type="hidden">
+  </td>
+</tr>
+
+    <tr class="association-record-errors">
+      <td style="" colspan="8" id="as_members-term-1-1-messages">
+        
+      </td>
+    </tr>
+    <tr id="association-record_id_1_terms_1289983619776" class="association-record association-record-new locked">
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_start_date_1_terms_1289983619776">Start date</label>
+  </dt>
+  <dd>
+    <input class="start_date-input text-input date_picker" data-autocomplete="off" id="record_start_date_1_terms_1289983619776" name="record[terms][1289983619776][start_date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_end_date_1_terms_1289983619776">End date</label>
+  </dt>
+  <dd>
+    <input class="end_date-input text-input date_picker" data-autocomplete="off" id="record_end_date_1_terms_1289983619776" name="record[terms][1289983619776][end_date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_ministry_1_terms_1289983619776">Ministry</label>
+  </dt>
+  <dd>
+    <select class="ministry-input" id="record_ministry_1_terms_1289983619776" name="record[terms][1289983619776][ministry]"><option value="">- select -</option>
+<option value="52">Accompanying spouse</option>
+<option value="38">Administrator</option>
+<option value="32">Allied Health Professionals</option>
+<option value="2">BSF Teaching Leader</option>
+<option value="33">Biomedical Eng.</option>
+<option value="8">Children's Ministry</option>
+<option value="12">City Ministries</option>
+<option value="11">Community Worker</option>
+<option value="30">Dentist</option>
+<option value="3">Discipleship</option>
+<option value="5">Discipleship (Pastoral Training)</option>
+<option value="23">ENT</option>
+<option value="1">Evangelism Personnel</option>
+<option value="17">Family Practice/GP</option>
+<option value="39">Financial Manager</option>
+<option value="31">Health educator</option>
+<option value="45">Hostel parent</option>
+<option value="50">Housewife/home schooling</option>
+<option value="18">Internal Medicine</option>
+<option value="19">Internal Medicine/Pediatrics</option>
+<option value="56">MK</option>
+<option value="49">MK Youth Pastor</option>
+<option value="44">Manager (Oasis)</option>
+<option value="34">Medical elective</option>
+<option value="35">Medical elective--Resident</option>
+<option value="36">Medical unspecified</option>
+<option value="43">Missionary child care</option>
+<option value="37">Missionary services</option>
+<option value="64">Navigators</option>
+<option value="28">Nurse educator</option>
+<option value="27">Nurse midwife</option>
+<option value="29">Nurse specialist</option>
+<option value="24">Ob/Gyn</option>
+<option value="25">Ob/Gyn (VVF)</option>
+<option value="26">Ophthalmologist</option>
+<option value="22">Orthopedic surgeon</option>
+<option value="20">Pediatrician</option>
+<option value="15">Physician</option>
+<option value="16">Psychiatrist</option>
+<option value="14">Rural Development Worker</option>
+<option value="53">Rural Minstry</option>
+<option value="54">STA</option>
+<option value="47">School teacher</option>
+<option value="40">Service Manager</option>
+<option value="9">Sports Ministry</option>
+<option value="42">Staff Development</option>
+<option value="46">Student teacher</option>
+<option value="21">Surgeon</option>
+<option value="48">Teacher/Chaplain</option>
+<option value="51">Technical</option>
+<option value="6">Theological  Educator</option>
+<option value="7">Theological ServicesTranslator</option>
+<option value="41">Travel services</option>
+<option value="66">Unspecified</option>
+<option value="13">Urban youth ministry</option>
+<option value="55">Visitor</option>
+<option value="10">Youth camp ministry</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_location_1_terms_1289983619776">Location</label>
+  </dt>
+  <dd>
+    <select class="location-input" id="record_location_1_terms_1289983619776" name="record[terms][1289983619776][location]"><option value="">- select -</option>
+<option value="5">Aba Bible College, Abia State</option>
+<option value="10">Abuja</option>
+<option value="15">Adunu/ECWA/EMS</option>
+<option value="31">Apollo Crescent</option>
+<option value="23">BUTH (Evangel) Hospital</option>
+<option value="11">Baptist Guest House Abuja</option>
+<option value="19">Billiri -- ECWA Theol College</option>
+<option value="26">Challenge Compound</option>
+<option value="33">Danish Lutheran Compound</option>
+<option value="6">Egbe Hospital</option>
+<option value="1">Enugu</option>
+<option value="25">Gidan Bege</option>
+<option value="12">Gure</option>
+<option value="34">Hillcrest School</option>
+<option value="7">Igbaja Seminary</option>
+<option value="8">Ilorin</option>
+<option value="37">JETS</option>
+<option value="22">Jos</option>
+<option value="35">Jos CRC Mountain View</option>
+<option value="39">Jos City Ministries</option>
+<option value="28">Jos ECWA/SIM Headquarters</option>
+<option value="36">Jos ELM House</option>
+<option value="29">Jos Oasis Campound</option>
+<option value="27">Jos Pharmacy Compound</option>
+<option value="13">Kagoro</option>
+<option value="14">Kagoro -- Seminary</option>
+<option value="9">Kaiama</option>
+<option value="20">Kano</option>
+<option value="40">Miango</option>
+<option value="43">Miango Dental Clinic</option>
+<option value="42">Miango Kent Academy</option>
+<option value="41">Miango MRH</option>
+<option value="17">Minna</option>
+<option value="30">Niger Creek Compound</option>
+<option value="18">Ningi</option>
+<option value="16">Samaru/ECWA Widows Sch</option>
+<option value="24">Spring of Life</option>
+<option value="21">Tofa/ECWA Bible Train. Sch.</option>
+<option value="38">Word of  Life</option>
+<option value="32">Woyke House</option>
+<option value="45">test</option>
+<option value="46">test2</option>
+<option value="47">test3</option>
+<option value="48">unspecified</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_status_1_terms_1289983619776">Status</label>
+  </dt>
+  <dd>
+    <select class="status-input" id="record_status_1_terms_1289983619776" name="record[terms][1289983619776][status]"><option value="">- select -</option>
+<option value="7">Adult MK</option>
+<option value="1">Alumni</option>
+<option value="13">Alumni MK</option>
+<option value="8">Alumni-Retired</option>
+<option value="4">College</option>
+<option value="5">Home assignment</option>
+<option value="10">Not specified</option>
+<option value="2">On field w parents</option>
+<option value="6">On leave</option>
+<option value="3">On the field</option>
+<option value="12">Pipeline</option>
+<option value="11">With the Lord!</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_est_start_date_1_terms_1289983619776">Est start date</label>
+  </dt>
+  <dd>
+    <input class="est_start_date-input text-input date_picker" data-autocomplete="off" id="record_est_start_date_1_terms_1289983619776" name="record[terms][1289983619776][est_start_date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="">
+      <dl>
+  <dt>
+    <label for="record_est_end_date_1_terms_1289983619776">Est end date</label>
+  </dt>
+  <dd>
+    <input class="est_end_date-input text-input date_picker" data-autocomplete="off" id="record_est_end_date_1_terms_1289983619776" name="record[terms][1289983619776][est_end_date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </td>
+  <td style="" class="actions">
+      <a href="#" class="destroy" id="record_id_1_terms_1289983619776-destroy" onclick='ActiveScaffold.remove("association-record_id_1_terms_1289983619776"); return false;' style="display: none;">Remove</a>
+      
+  </td>
+</tr>
+
+  </tbody>
+</table>
+<div class="footer-wrapper">
+  <div class="footer">
+    <input data-remote="true" href="/members/edit_associated?id=1&amp;association=terms" id="as_members-1-terms-subform-create-another" style="" value="Create Another Term" type="button">
+    
+
+    
+
+  </div>
+</div>
+
+</div>
+  </li>
+  <li class="sub-form vertical-sub-form " id="as_members-1-travels-subform">
+    <h5>Travels (<a class="visibility-toggle" href="#">Show</a>)</h5>
+<div id="as_members-1-travels-subform-div" style="display: none;">
+<div id="as_members-1-travels-subform-list">
+  <div class="association-record-errors" id="as_members-travel-1-0-messages">
+    
+  </div>
+  <ol id="association-record_id_1_travels_1" class="association-record  ">
+  <li class="form-element required ">
+      <dl>
+  <dt>
+    <label for="record_date_1_travels_1">Date</label>
+  </dt>
+  <dd>
+    <input class="date-input text-input date_picker" data-autocomplete="off" id="record_date_1_travels_1" name="record[travels][1][date]" size="30" value="2010-09-01" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_origin_1_travels_1">Origin</label>
+  </dt>
+  <dd>
+    <input class="origin-input text-input" data-autocomplete="off" id="record_origin_1_travels_1" maxlength="255" name="record[travels][1][origin]" size="30" value="Abuja" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_destination_1_travels_1">Destination</label>
+  </dt>
+  <dd>
+    <input class="destination-input text-input" data-autocomplete="off" id="record_destination_1_travels_1" maxlength="255" name="record[travels][1][destination]" size="30" value="London" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_flight_1_travels_1">Flight</label>
+  </dt>
+  <dd>
+    <input class="flight-input text-input" data-autocomplete="off" id="record_flight_1_travels_1" maxlength="255" name="record[travels][1][flight]" size="30" value="BA 85" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_guesthouse_1_travels_1">Guesthouse</label>
+  </dt>
+  <dd>
+    <input class="guesthouse-input text-input" data-autocomplete="off" id="record_guesthouse_1_travels_1" maxlength="255" name="record[travels][1][guesthouse]" size="30" value="Baptist" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_return_date_1_travels_1">Return date</label>
+  </dt>
+  <dd>
+    <input class="return_date-input text-input date_picker" data-autocomplete="off" id="record_return_date_1_travels_1" name="record[travels][1][return_date]" size="30" value="2010-09-15" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_with_spouse_1_travels_1">With spouse</label>
+  </dt>
+  <dd>
+    <input name="record[travels][1][with_spouse]" value="0" type="hidden"><input checked="checked" class="with_spouse-input" id="record_with_spouse_1_travels_1" name="record[travels][1][with_spouse]" value="1" type="checkbox">
+      <span class="description">Traveling with spouse?</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_with_children_1_travels_1">With children</label>
+  </dt>
+  <dd>
+    <input name="record[travels][1][with_children]" value="0" type="hidden"><input checked="checked" class="with_children-input" id="record_with_children_1_travels_1" name="record[travels][1][with_children]" value="1" type="checkbox">
+      <span class="description">Traveling with children?</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_other_travelers_1_travels_1">Other travelers</label>
+  </dt>
+  <dd>
+    <input class="other_travelers-input text-input" data-autocomplete="off" id="record_other_travelers_1_travels_1" maxlength="255" name="record[travels][1][other_travelers]" size="30" value="Brother Active" type="text">
+      <span class="description">Names of other travelers (optional)</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_baggage_1_travels_1">Baggage</label>
+  </dt>
+  <dd>
+    <input class="baggage-input text-input" data-autocomplete="off" format="i18n_number" id="record_baggage_1_travels_1" name="record[travels][1][baggage]" size="30" value="6" type="text">
+      <span class="description">Number of pieces of baggage</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_total_passengers_1_travels_1">Total passengers</label>
+  </dt>
+  <dd>
+    <input class="total_passengers-input text-input" data-autocomplete="off" format="i18n_number" id="record_total_passengers_1_travels_1" name="record[travels][1][total_passengers]" size="30" value="5" type="text">
+      <span class="description">Total number of passengers beyond first</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_confirmed_1_travels_1">Confirmed</label>
+  </dt>
+  <dd>
+    <input class="confirmed-input text-input date_picker" data-autocomplete="off" id="record_confirmed_1_travels_1" name="record[travels][1][confirmed]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="actions">
+      <a href="#" class="destroy" id="record_id_1_travels_1-destroy" onclick='ActiveScaffold.remove("association-record_id_1_travels_1"); return false;' style="">Remove</a>
+      
+      <input name="record[travels][1][id]" id="record_id_1_travels_1" value="1" type="hidden">
+  </li>
+</ol>
+
+  <div class="association-record-errors" id="as_members-travel-1-1-messages">
+    
+  </div>
+  <ol id="association-record_id_1_travels_1289983620706" class="association-record association-record-new locked">
+  <li class="form-element required ">
+      <dl>
+  <dt>
+    <label for="record_date_1_travels_1289983620706">Date</label>
+  </dt>
+  <dd>
+    <input class="date-input text-input date_picker" data-autocomplete="off" id="record_date_1_travels_1289983620706" name="record[travels][1289983620706][date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_origin_1_travels_1289983620706">Origin</label>
+  </dt>
+  <dd>
+    <input class="origin-input text-input" data-autocomplete="off" id="record_origin_1_travels_1289983620706" maxlength="255" name="record[travels][1289983620706][origin]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_destination_1_travels_1289983620706">Destination</label>
+  </dt>
+  <dd>
+    <input class="destination-input text-input" data-autocomplete="off" id="record_destination_1_travels_1289983620706" maxlength="255" name="record[travels][1289983620706][destination]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_flight_1_travels_1289983620706">Flight</label>
+  </dt>
+  <dd>
+    <input class="flight-input text-input" data-autocomplete="off" id="record_flight_1_travels_1289983620706" maxlength="255" name="record[travels][1289983620706][flight]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_guesthouse_1_travels_1289983620706">Guesthouse</label>
+  </dt>
+  <dd>
+    <input class="guesthouse-input text-input" data-autocomplete="off" id="record_guesthouse_1_travels_1289983620706" maxlength="255" name="record[travels][1289983620706][guesthouse]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_return_date_1_travels_1289983620706">Return date</label>
+  </dt>
+  <dd>
+    <input class="return_date-input text-input date_picker" data-autocomplete="off" id="record_return_date_1_travels_1289983620706" name="record[travels][1289983620706][return_date]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_with_spouse_1_travels_1289983620706">With spouse</label>
+  </dt>
+  <dd>
+    <input name="record[travels][1289983620706][with_spouse]" value="0" type="hidden"><input class="with_spouse-input" id="record_with_spouse_1_travels_1289983620706" name="record[travels][1289983620706][with_spouse]" value="1" type="checkbox">
+      <span class="description">Traveling with spouse?</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_with_children_1_travels_1289983620706">With children</label>
+  </dt>
+  <dd>
+    <input name="record[travels][1289983620706][with_children]" value="0" type="hidden"><input class="with_children-input" id="record_with_children_1_travels_1289983620706" name="record[travels][1289983620706][with_children]" value="1" type="checkbox">
+      <span class="description">Traveling with children?</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_other_travelers_1_travels_1289983620706">Other travelers</label>
+  </dt>
+  <dd>
+    <input class="other_travelers-input text-input" data-autocomplete="off" id="record_other_travelers_1_travels_1289983620706" maxlength="255" name="record[travels][1289983620706][other_travelers]" size="30" type="text">
+      <span class="description">Names of other travelers (optional)</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_baggage_1_travels_1289983620706">Baggage</label>
+  </dt>
+  <dd>
+    <input class="baggage-input text-input" data-autocomplete="off" format="i18n_number" id="record_baggage_1_travels_1289983620706" name="record[travels][1289983620706][baggage]" size="30" value="" type="text">
+      <span class="description">Number of pieces of baggage</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_total_passengers_1_travels_1289983620706">Total passengers</label>
+  </dt>
+  <dd>
+    <input class="total_passengers-input text-input" data-autocomplete="off" format="i18n_number" id="record_total_passengers_1_travels_1289983620706" name="record[travels][1289983620706][total_passengers]" size="30" value="" type="text">
+      <span class="description">Total number of passengers beyond first</span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+      <dl>
+  <dt>
+    <label for="record_confirmed_1_travels_1289983620706">Confirmed</label>
+  </dt>
+  <dd>
+    <input class="confirmed-input text-input date_picker" data-autocomplete="off" id="record_confirmed_1_travels_1289983620706" name="record[travels][1289983620706][confirmed]" size="30" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="actions">
+      <a href="#" class="destroy" id="record_id_1_travels_1289983620706-destroy" onclick='ActiveScaffold.remove("association-record_id_1_travels_1289983620706"); return false;' style="display: none;">Remove</a>
+      
+  </li>
+</ol>
+
+</div>
+<div class="footer-wrapper">
+  <div class="footer">
+    <input data-remote="true" href="/members/edit_associated?id=1&amp;association=travels" id="as_members-1-travels-subform-create-another" style="" value="Create Another Travel" type="button">
+    
+
+    
+
+  </div>
+</div>
+
+</div>
+  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_bloodtype_1">Bloodtype</label>
+  </dt>
+  <dd>
+    <select class="bloodtype-input" id="record_bloodtype_1" name="record[bloodtype]"><option value="">- select -</option>
+<option value="15"></option>
+<option value="3">A</option>
+<option value="1">A neg</option>
+<option value="2" selected="selected">A+</option>
+<option value="12">AB</option>
+<option value="14">AB neg</option>
+<option value="13">AB+</option>
+<option value="6">B</option>
+<option value="4">B neg</option>
+<option value="5">B+</option>
+<option value="9">O</option>
+<option value="7">O neg</option>
+<option value="8">O+</option>
+<option value="19">X</option>
+<option value="18">Z</option>
+<option value="10">something +</option>
+<option value="11">something neg</option></select>
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_allergies_1">Allergies</label>
+  </dt>
+  <dd>
+    <input class="allergies-input text-input" data-autocomplete="off" id="record_allergies_1" maxlength="255" name="record[allergies]" size="30" value="no allergies" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+  <li class="form-element  ">
+    <dl>
+  <dt>
+    <label for="record_medications_1">Medications</label>
+  </dt>
+  <dd>
+    <input class="medications-input text-input" data-autocomplete="off" id="record_medications_1" maxlength="255" name="record[medications]" size="30" value="mefloquine" type="text">
+      <span class="description"></span>
+  </dd>
+</dl>  </li>
+</ol>
+
+
+  <p class="form-footer">
+    <input class="submit" name="commit" value="Update" type="submit">
+    <a href="/members" class="as_cancel" data-refresh="false" data-remote="true">Cancel</a>
+    <img alt="loading indicator" class="loading-indicator" id="as_members-update-1-loading-indicator" src="/images/active_scaffold/default/indicator.gif?1289947344" style="visibility: hidden;">
+  </p>
+
+</form>
+
+
+  </div>
+</div>
+    </div>
+  </td>
+</tr>
+
+
+
+<tr class="record even-record" id="as_members-list-2-row" data-refresh="/members/2/row?_method=get">
+  
+  <td class="name-column ">
+    ActiveMember, Anna A. (Annabel)
+  </td>
+
+  <td class="birth_date-column ">
+    1955-05-01
+  </td>
+
+  <td class="spouse-column ">
+    <a href="/members/1?parent_model=member&amp;association=spouse&amp;assoc_id=2&amp;eid=members_2_spouse" class="show as_action spouse" data-position="after" data-remote="true" id="as_members-show-spouse-1-link">John</a>
+  </td>
+
+  <td class="country_name-column ">
+    Belgium
+  </td>
+
+  <td class="status-column ">
+    <span class="in_place_editor_field" data-ie_id="2" id="as_members-update_column-2-status-cell" title="Click to edit">On the field</span>
+  </td>
+
+  <td class="contacts-column ">
+    <a href="/contacts?parent_model=member&amp;association=contacts&amp;assoc_id=2&amp;eid=members_2_contacts" class="index as_action" data-position="after" data-remote="true" id="as_members-index-contacts-2-link">parent, parent</a>
+  </td>
+
+  <td class="travels-column ">
+    <a href="/travels?parent_model=member&amp;association=travels&amp;assoc_id=2&amp;eid=members_2_travels" class="index as_action" data-position="after" data-remote="true" id="as_members-index-travels-2-link">1999-05-12 KLM 99</a>
+  </td>
+
+  <td class="terms-column ">
+    <a href="/terms?parent_model=member&amp;association=terms&amp;assoc_id=2&amp;eid=members_2_terms" class="index as_action" data-position="after" data-remote="true" id="as_members-index-terms-2-link">2009-01-01</a>
+  </td>
+
+  <td class="actions"><table cellpadding="0" cellspacing="0">
+  <tbody><tr>
+    <td class="indicator-container">
+      <img alt="loading indicator" class="loading-indicator" id="as_members-record-2-loading-indicator" src="/images/active_scaffold/default/indicator.gif?1289947344" style="visibility: hidden;">
+    </td>
+      <td>
+      <a href="/members?parent_model=member&amp;named_scope=family&amp;assoc_id=2&amp;eid=members_2_family" class="index as_action" data-position="after" data-remote="true" id="as_members-index--link">Family</a>
+      </td>
+      <td>
+      <a href="/members/2/edit" class="edit as_action" data-position="replace" data-remote="true" id="as_members-edit-2-link">Edit</a>
+      </td>
+      <td>
+      <a href="/members/2/delete" class="delete as_action" data-confirm="Are you sure you want to delete ActiveMember, Anna A?" data-remote="true" id="as_members-delete-2-link">Delete</a>
+      </td>
+      <td>
+      <a href="/members/2" class="show as_action" data-position="replace" data-remote="true" id="as_members-show-2-link">Show</a>
+      </td>
+  </tr>
+</tbody></table>
+</td>
+
+
+  
+</tr>
+
+  </tbody>
+</table>
+<div class="active-scaffold-footer">
+  <div class="active-scaffold-found"><span class="active-scaffold-records">2</span> Found</div>
+  <div class="active-scaffold-pagination">
+    
+  </div>
+  <br clear="both">
+</div>
+
+
+  </div>
+</div>
+</div></div>
+  </div>
+</body>​​​​​</html>

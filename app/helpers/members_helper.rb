@@ -11,6 +11,13 @@ module MembersHelper
     end  
   end
 
+  def spouse_form_column(record,params)
+puts "**********RECORD #{record}"
+puts "**********PARAMS #{params}"
+    collection_select('record','spouse', record.possible_spouses, :id, :to_label, 
+      { :prompt=> '--select--' }, :class=>'spouse-input')
+  end
+
   def name_form_column(record,params)
     text_input=text_field_tag 'record[name]', record.name, :id=>params[:id], :class=> "name-input text-input",
       :disabled=>'disabled', :size=>35

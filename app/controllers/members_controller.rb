@@ -12,7 +12,7 @@ helper :countries
         [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,
           :birth_date,  :spouse, :country_name,
-          :date_active, :status, :family, :family_head,
+          :date_active, :status, :family_name, :family_head,
           :ministry, :ministry_comment, 
           :location, :education, :qualifications,
           :contacts, :terms, :travels,
@@ -56,6 +56,27 @@ helper :countries
       end
     end
     redirect_to(:action => :index)
+  end
+ 
+  def spouse_select
+    @json_resp = []
+    if params[:id] # Do we know the exact person we're dealing with?
+      my_id = params[:id]
+      me = Member.find(my_id) if my_id
+    else  # if we don't know the id, we need at least the last name and sex
+      my_last_name = params[:name]
+      my_sex = params[:sex]
+      # then make up a temporary, incomplete "shadow" member to use for finding spouses
+      me = Member.new(:last_name=>my_last_name, :sex=>my_sex)
+    end
+    me.possible_spouses.each do |c|
+      @json_resp << {:name=>c.name, :id=>c.id}
+    end
+    @json_resp << {:name => '--Other--' , :id => 0}
+
+    respond_to do |format|
+      format.js { render :json => @json_resp }
+    end
   end
 
 =begin

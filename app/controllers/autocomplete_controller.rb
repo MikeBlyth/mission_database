@@ -1,5 +1,7 @@
 class AutocompleteController < ApplicationController
 
+
+  # AUTOCOMPLETE LOOKUP FOR COUNTRY
   def country
     @countries = Country.where("name LIKE ?", "#{params[:term]}%").select("id, name")
     @json_resp = []
@@ -14,11 +16,42 @@ class AutocompleteController < ApplicationController
     end
 
     respond_to do |format|
-#      format.html
       format.js { render :json => @json_resp }
-#      format.xml { render :xml => @countries }
     end
 
   end
+
+  # AUTOCOMPLETE LOOKUP FOR FAMILY
+    def family
+    @families = Member.where("name LIKE ?", "#{params[:term]}%").select("id, name").where("family_head")
+    @json_resp = []
+    @families.each do |c|
+      @json_resp << c.name
+    end
+
+    respond_to do |format|
+      format.js { render :json => @json_resp }
+    end
+  end
+
+  # AUTOCOMPLETE LOOKUP FOR SPOUSE
+  def spouse
+    member = Member.find(params[:member])
+    if member.sex.downcase == 'f'
+      target_sex = 'm'
+    else
+      target_sex = 'f'
+    end
+    @possible = Member.where("last_name = ?", member.last_name).where("sex = ?", target_sex).select("id, name")
+    @json_resp = []
+    @possible.each do |c|
+      @json_resp << c.name
+    end
+    @json_resp << '--Other--'
+    respond_to do |format|
+      format.js { render :json => @json_resp }
+    end
+  end
+
 
 end

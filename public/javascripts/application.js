@@ -103,3 +103,40 @@
     } 
   });
 
+// ************************ FAMILY LOOKUP ******************************
+// *********************************************************************
+$(function() {
+  $( "input.family_name-input" ).live("click", function(){
+    $(this).autocomplete({
+      source: "autocomplete/family.js"
+      });
+  });
+});
+
+// ************************ SPOUSE LOOKUP ******************************
+// *********************************************************************
+$(function() {
+  $("select.spouse-input" ).live("click", function(){
+  var as_form = $(this).closest("form")
+  var select_control = $(this)
+  var last_name = $('input.last_name-input',as_form).val()
+  var sex = $('select.sex-input option:selected',as_form)
+  var str = ""
+//  sex.each(function () {
+//                str += $(this).text() + " ";
+//              });
+//  alert ('For = ' + sex.text()[0])
+  $.getJSON("members/spouse_select.js", {name: last_name, sex: sex.text()[0]}, 
+    function(data){
+//      alert("Data Loaded: " + data[0].name + "(" + data[0].id+ ")");
+// ** need to do something to check whether data is returned before we 
+// **   destroy the existing option list
+      select_control.empty()
+      $.each(data, function(index,member){
+        select_control.append("<option value='" + member.id + 
+        "'>" + member.name + "</option>")
+      }) 
+    });
+  });
+});
+

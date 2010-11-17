@@ -16,6 +16,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.0)
+    RedCloth (4.2.3)
     abstract (1.0.0)
     actionmailer (3.0.0)
       actionpack (= 3.0.0)
@@ -119,6 +120,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  RedCloth
   calendar_date_select!
   cucumber-rails (>= 0.3.2)
   haml

@@ -47,15 +47,33 @@ class Member < ActiveRecord::Base
   end    
 
   def country_name
-puts "Country_id = #{country_id}"
     Country.find(country_id).name if country_id
   end
 
   def country_name= (name)
     country = Country.find_by_name(name)
     self.country_id = country.id if country
-    puts "***** SET COUNTRY ID FOR #{name} TO #{self.country_id}"
   end
+
+   def family_name
+     if !family_id.nil?
+       Family.find(family_id).head.name
+     end  
+   end
+
+   def family_name= (name)
+     family = Member.find_by_name(name)
+     self.family_id = family.id if family
+   end
+
+   def spouse_name
+     self.spouse.name
+   end
+
+   def spouse_name= (name)
+     myspouse = Member.find_by_name(name)
+     self.spouse_id = myspouse.id if myspouse
+   end
 
   # AFTER saving the member, we just need to be sure that the family record
   #   points to this member if the member is marked as head of family.
@@ -149,14 +167,28 @@ puts "Country_id = #{country_id}"
     return s    
   end
   
-  def spouse_name
-    if self.spouse.nil?
-      return ''
-    else
-      return Member.find(self.spouse).firstname
-    end
+  # def spouse_name
+  #   if self.spouse.nil?
+  #     return ''
+  #   else
+  #     return Member.find(self.spouse).firstname
+  #   end
+  # end
+  # 
+  
+  # Possible Spouses: Return from members table a list of all the
+  # ones that could be spouses of this one: e.g. same last name,
+  # opposite sex, age over 18, whatever. This is for the selection
+  # box.
+  def possible_spouses
+    return [] if self.last_name.blank? || self.sex.blank?
+    my_sex = self.sex.downcase
+    spouse_sex = my_sex == 'm' ? 'f' : 'm'
+    age_18_date = Date.today - 18.years
+    my_last_name = self.last_name
+    Member.where("last_name = ?", my_last_name).where("birth_date <= ?", age_18_date).where("sex = ?", spouse_sex)
   end
-
+  
   def active
     return Status.find(self.status_id).active == true 
   end

@@ -15,6 +15,7 @@ gem 'prawn', ">=0.10.0", :git => "git://github.com/sandal/prawn"
 #gem 'prawn', :git => "git://github.com/sandal/prawn" #, :submodules => true
 gem 'haml' 
 gem 'jrails'
+gem 'RedCloth'
 gem 'rails3-jquery-autocomplete'
 group :development, :test do
   gem "rspec-rails", ">= 2.0.0"
