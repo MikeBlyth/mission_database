@@ -104,7 +104,8 @@
   });
 // ************************ GET ID OF MEMBER BEING UPDATED *************
   function get_update_id(as_form) { 
-    return as_form.attr('id').match(/update-(\d+)-/)[1]
+    part_match = as_form.attr('id').match(/update-(\d+)-/)
+    return part_match == null ? 'new' : part_match[1]
     };
 // ************************ FAMILY LOOKUP ******************************
 // *********************************************************************

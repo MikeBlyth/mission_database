@@ -59,9 +59,9 @@ helper :countries
   end
  
   def spouse_select
-    if params[:id] # Do we know the exact person we're dealing with?
+    if params[:id] && params[:id] != 'new' # Do we know the exact person we're dealing with?
       my_id = params[:id]
-      me = Member.find(my_id) if my_id
+      me = Member.find(my_id)
     else  # if we don't know the id, we need at least the last name and sex
       my_last_name = params[:name]
       my_sex = params[:sex]
