@@ -39,7 +39,16 @@
     });
 //
 // Build full name from components whenever a key is pressed in a name input box
-    $('.last_name-input', '.middle_name-input', '.first_name-input', '.short_name-input').live('keyup', function(){
+    $('.last_name-input').live('keyup', function(){
+      make_name($(this).closest("form"));
+    });
+    $('.first_name-input').live('keyup', function(){
+      make_name($(this).closest("form"));
+    });
+    $('.middle_name-input').live('keyup', function(){
+      make_name($(this).closest("form"));
+    });
+    $('.short_name-input').live('keyup', function(){
       make_name($(this).closest("form"));
     });
     $('.last_name-input').live('click', function(){
@@ -120,9 +129,18 @@ $(function() {
 // ************************ SPOUSE LOOKUP ******************************
 // *********************************************************************
 $(function() {
-  $("select.spouse-input" ).live("click", function(){
-  var as_form = $(this).closest("form")
-  var select_control = $(this)
+  $( "input.last_name-input" ).live("change", function() {
+    set_spouse_choices($(this).closest("form"))
+    });
+  });
+$(function() {
+  $( "select.sex-input" ).live("change", function() {
+    set_spouse_choices($(this).closest("form"))
+    });
+  });
+
+function set_spouse_choices(as_form) {
+  var select_control = $('select.spouse-input',as_form)
   var last_name = $('input.last_name-input',as_form).val()
   var sex = $('select.sex-input option:selected',as_form)
   var my_id = get_update_id(as_form)
@@ -133,12 +151,12 @@ $(function() {
     function(data){
     // !!** need to do something to check whether data is returned before we 
     // !!**   destroy the existing option list
-      select_control.empty()
+//      select_control.empty()
+      $("option.spouse-input:not(:selected)").remove()
       $.each(data, function(index,member){
         select_control.append("<option value='" + member.id + 
         "'>" + member.name + "</option>")
       }) 
     });
-  });
-});
+  };
 

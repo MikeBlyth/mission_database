@@ -59,13 +59,21 @@ helper :countries
   end
  
   def spouse_select
+    my_last_name = params[:name]
+    my_sex = params[:sex]
+    # For existing members, retrieve the existing database record and 
+    #   TEMPORARILY change the last_name and sex to conform
+    #   with the request. This change is not saved!
     if params[:id] && params[:id] != 'new' # Do we know the exact person we're dealing with?
       my_id = params[:id]
       me = Member.find(my_id)
-    else  # if we don't know the id, we need at least the last name and sex
-      my_last_name = params[:name]
-      my_sex = params[:sex]
-      # then make up a temporary, incomplete "shadow" member to use for finding spouses
+      me.last_name = my_last_name
+      me.sex = my_sex
+    # For new members (no ID yet, still being created)
+    #   make up a temporary, incomplete "shadow" member to use for finding spouses;
+    #   we don't know the id, but we need at least the last name and sex
+    else  
+      # then 
       me = Member.new(:last_name=>my_last_name, :sex=>my_sex)
     end
     @json_resp = []  # start with an empty response set
@@ -75,8 +83,8 @@ helper :countries
         @json_resp << {:name=>c.name, :id=>c.id}
       end
     end
-    @json_resp << {:name => '--Other--' , :id => ''}
-
+    @json_resp << {:name => '--Other--' , :id => ''} <<
+                  {:name => '--None---' , :id => ''} 
     respond_to do |format|
       format.js { render :json => @json_resp }
     end

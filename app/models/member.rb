@@ -129,11 +129,25 @@ class Member < ActiveRecord::Base
   def check_if_family_head
     if family_head
       errors[base] << "Can't delete head of family"
-      return false
+  # ! uncomment this next line to prevent unwanted delete
+  # ! leaving it commented while doing a lot of deletes for testing
+ #     return false
     else
       true  
     end
   end
+
+# EXAMPLES OF NAME FORMS 
+# to_label:         Blyth, Michael
+# indexed_name:     Blyth, Michael J. (Mike)
+# full_name:        Michael John Blyth
+# full_name_short:  Mike Blyth
+# full_name_with_short: Michael John Blyth (Mike)
+# last_name_first:  Blyth, Michael John    (default)
+#  :initial=>true   Blyth, Michael J.
+#  :short=>true     Blyth, Mike J.
+#  :short_paren=>true Blyth, Michael John (Mike)
+#  :middle=>false   Blyth, Michael  
 
   def to_label
     "#{last_name_first}"
@@ -218,6 +232,8 @@ puts "Possible Spouses called for member #{self.last_name}, #{self.spouse_id}"
     # who is married to someone else.
     # (even works if our own id is still nil, undefined)
     possibilities.delete_if {|x| x.spouse_id && x.spouse_id != self.id}
+    dummy_no_spouse = Member.new(:id=>'', :first_name=>'---', :last_name=>'---')
+    possibilities << dummy_no_spouse
     return possibilities 
   end
   

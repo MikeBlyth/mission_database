@@ -14,9 +14,28 @@ module MembersHelper
   def spouse_form_column(record,params)
 puts "**********RECORD #{record}"
 puts "**********PARAMS #{params}"
-    collection_select('record','spouse', record.possible_spouses, :id, :to_label, 
+    result = collection_select('record','spouse', record.possible_spouses, :id, :to_label, 
       { :prompt=> '--select--' }, :class=>'spouse-input', 
       :id=>"record_spouse_#{record.id}")
+# ! This logic should go in controller, but we need to find ActiveScaffold callback
+# !   in order to place it there.
+    if record.spouse_id && record.spouse.spouse_id != record.id
+      my_name = record.full_name_short
+      spouse_name = record.spouse.full_name_short
+      spouse_first_name = record.spouse.first_name
+      result << raw("<p class='alert'>Mismatched spouses: #{my_name}" +
+                    " shows #{spouse_name} as spouse but #{spouse_first_name} " +
+                    " shows ")
+      if record.spouse.spouse_id.nil?
+        result << raw("no spouse.") 
+      else
+        result << raw("#{record.spouse.spouse.full_name_short} as spouse.")
+      end  
+      result << raw("</p><p class='alert'>If you save this record still showing a spouse, " +
+            "<em>that</em> person's record will be updated automatically to show #{record.first_name} as " +
+            "<em>his</em> or <em>her</em> spouse.</p>")
+    end
+    return result
   end
 
   def name_form_column(record,params)
