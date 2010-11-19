@@ -18,13 +18,6 @@ SIM::Application.routes.draw do
 
   resources :jqueries do as_routes end
 
-# for jquery_ui autocomplete test
-get "welcome/show"
-get "welcome/autocomplete_brand_name"
-get "welcome/autocomplete_country_name"
-
-# ------
-
 
 #=begin
 #  devise_for :users
@@ -43,7 +36,7 @@ get "welcome/autocomplete_country_name"
   resources :states do as_routes end
   resources :statuses do as_routes end
   resources :teams do as_routes end
-  resources :terms do as_routes end
+  resources :field_terms do as_routes end
   resources :travels do as_routes end
 
   get "members/index"

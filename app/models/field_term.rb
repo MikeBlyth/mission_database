@@ -1,4 +1,4 @@
-class Term < ActiveRecord::Base
+class FieldTerm < ActiveRecord::Base
   belongs_to :member
   belongs_to :location
   belongs_to :status

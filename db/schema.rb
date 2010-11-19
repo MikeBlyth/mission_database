@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101116142709) do
+ActiveRecord::Schema.define(:version => 20101119112227) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -126,6 +126,19 @@ ActiveRecord::Schema.define(:version => 20101116142709) do
     t.integer  "head_id"
     t.integer  "status_id"
     t.integer  "location_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "field_terms", :force => true do |t|
+    t.integer  "member_id"
+    t.integer  "status_id"
+    t.integer  "location_id"
+    t.integer  "ministry_id"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.date     "est_start_date"
+    t.date     "est_end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -301,19 +314,6 @@ ActiveRecord::Schema.define(:version => 20101116142709) do
 
   add_index "statuses", ["code"], :name => "index_status_codes_on_code", :unique => true
   add_index "statuses", ["description"], :name => "index_status_codes_on_description", :unique => true
-
-  create_table "terms", :force => true do |t|
-    t.integer  "member_id"
-    t.integer  "status_id"
-    t.integer  "location_id"
-    t.integer  "ministry_id"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.date     "est_start_date"
-    t.date     "est_end_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "travels", :force => true do |t|
     t.date     "date"

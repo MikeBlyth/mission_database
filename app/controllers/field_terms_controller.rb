@@ -1,5 +1,5 @@
-class TermsController < ApplicationController
-  active_scaffold :term do |config|
+class FieldTermsController < ApplicationController
+  active_scaffold :field_term do |config|
    config.columns = [:start_date, :end_date, :ministry, :location, :status,
         :est_start_date, :est_end_date]
  #  config.subform.layout = :vertical

@@ -1,4 +1,3 @@
-require 'prawn_extend'
 require 'reports_helper'
 
 class TableTest < Prawn::Document

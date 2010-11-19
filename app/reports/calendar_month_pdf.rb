@@ -1,4 +1,3 @@
-require 'prawn_extend'
 require 'reports_helper'
 
 # Prawn document to generate PDF calendar for a given month

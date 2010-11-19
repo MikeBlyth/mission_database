@@ -6,19 +6,20 @@ gem 'rails', '3.0.0'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql'
-#gem 'devise', '1.1.2'
+# gem 'devise', '1.1.2'
 #gem 'paperclip', :git => "git://github.com/thoughtbot/paperclip.git"
 #gem 'pdf-inspector', :git => "git://github.com/sandal/pdf-inspector.git"
 #gem 'ttfunk', :git => "git://github.com/sandal/ttfunk.git"
-gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
+# gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 gem 'prawn', ">=0.10.0", :git => "git://github.com/sandal/prawn"
 #gem 'prawn', :git => "git://github.com/sandal/prawn" #, :submodules => true
 gem 'haml' 
 gem 'jrails'
-gem 'RedCloth'
-gem 'rails3-jquery-autocomplete'
+# gem 'RedCloth'
+# gem 'rails3-jquery-autocomplete'
 group :development, :test do
   gem "rspec-rails", ">= 2.0.0"
+  gem "win32console"
   gem "cucumber-rails", ">= 0.3.2"
  gem "webrat", ">= 0.7.2"
 end

@@ -4,7 +4,7 @@ helper :countries
   active_scaffold :member do |config|
     config.label = "Members"
     list.columns = [:name, 
-          :birth_date, :spouse, :country_name, :status, :contacts, :travels, :terms]
+          :birth_date, :spouse, :country_name, :status, :contacts, :travels, :field_terms]
     list.columns.exclude :travel,
                           :bloodtype, :allergies, :medical_facts, :medications
     list.sorting = {:last_name => 'ASC'}
@@ -15,7 +15,7 @@ helper :countries
           :date_active, :status, :family_name, :family_head,
           :ministry, :ministry_comment, 
           :location, :education, :qualifications,
-          :contacts, :terms, :travels,
+          :contacts, :field_terms, :travels,
           :bloodtype, :allergies, :medications
           ]
     show.columns.exclude :last_name, :first_name, :middle_name, :short_name, :name_override
@@ -37,7 +37,7 @@ helper :countries
     config.columns[:employment_status].form_ui = :select 
     config.columns[:location].form_ui = :select 
     config.columns[:status].inplace_edit = true
-    config.columns[:terms].collapsed = true
+    config.columns[:field_terms].collapsed = true
     config.columns[:travels].collapsed = true
     config.columns[:contacts].collapsed = true
   #  config.columns[:family].actions_for_association_links = []

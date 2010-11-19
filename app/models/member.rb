@@ -1,7 +1,7 @@
 class Member < ActiveRecord::Base
   has_many :contacts, :dependent => :destroy 
   has_many :travels, :dependent => :destroy 
-  has_many :terms,  :dependent => :destroy 
+  has_many :field_terms,  :dependent => :destroy 
   belongs_to :spouse, :class_name => "Member", :foreign_key => "spouse_id"
   belongs_to :family
   belongs_to :country

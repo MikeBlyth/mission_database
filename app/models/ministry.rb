@@ -1,7 +1,7 @@
 class Ministry < ActiveRecord::Base
 include ModelHelper
   has_many :members
-  has_many :terms
+  has_many :field_terms
   validates_uniqueness_of :code, :description
   validates_presence_of :code, :description
 
