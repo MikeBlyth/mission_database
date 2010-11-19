@@ -14,28 +14,39 @@ module MembersHelper
   def spouse_form_column(record,params)
 puts "**********RECORD #{record}"
 puts "**********PARAMS #{params}"
-    result = collection_select('record','spouse', record.possible_spouses, :id, :to_label, 
-      { :prompt=> '--select--' }, :class=>'spouse-input', 
-      :id=>"record_spouse_#{record.id}")
-# ! This logic should go in controller, but we need to find ActiveScaffold callback
-# !   in order to place it there.
+    # Generate the select input ourselves
+    result = "<select id='record_spouse' name='record[spouse]' class='spouse-input'>" + 
+             "<option class='spouse-input' value=''>--None--</option>"
+    record.possible_spouses.each do |p|
+      if record.spouse_id == p.id
+puts "****** #{p.to_label} selected because id=#{p.id} and record.spouse_id = #{record.spouse_id}"
+        selected = "selected='selected'"
+      else
+        selected = ''
+      end
+      result << "<option class='spouse-input' value='#{p.id}' #{selected}>#{p.to_label}</option>"
+puts "********#{result}"
+    end
+    result << "<option class='spouse-input' value=''>--Other--</option></select>"
+    # Mismatched spouses?
+    # ! This logic should go in controller, but we need to find ActiveScaffold callback
+    # !   in order to place it there.
     if record.spouse_id && record.spouse.spouse_id != record.id
       my_name = record.full_name_short
       spouse_name = record.spouse.full_name_short
       spouse_first_name = record.spouse.first_name
-      result << raw("<p class='alert'>Mismatched spouses: #{my_name}" +
-                    " shows #{spouse_name} as spouse but #{spouse_first_name} " +
-                    " shows ")
+      result << "<p class='alert'>Mismatched spouses: #{my_name}" +
+                    " shows #{spouse_name} as spouse but #{spouse_first_name} shows " 
       if record.spouse.spouse_id.nil?
-        result << raw("no spouse.") 
+        result << "no spouse." 
       else
-        result << raw("#{record.spouse.spouse.full_name_short} as spouse.")
+        result << "#{record.spouse.spouse.full_name_short} as spouse."
       end  
-      result << raw("</p><p class='alert'>If you save this record still showing a spouse, " +
+      result << "</p><p class='alert'>If you save this record still showing a spouse, " +
             "<em>that</em> person's record will be updated automatically to show #{record.first_name} as " +
-            "<em>his</em> or <em>her</em> spouse.</p>")
+            "<em>his</em> or <em>her</em> spouse.</p>"
     end
-    return result
+    return raw(result)
   end
 
   def name_form_column(record,params)

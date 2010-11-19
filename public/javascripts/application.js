@@ -144,6 +144,7 @@ function set_spouse_choices(as_form) {
   var last_name = $('input.last_name-input',as_form).val()
   var sex = $('select.sex-input option:selected',as_form)
   var my_id = get_update_id(as_form)
+  var my_selected = $("option.spouse-input:selected").text()
   $.getJSON("members/spouse_select.js", 
             {name: last_name, 
              sex: sex.text()[0],
@@ -154,8 +155,10 @@ function set_spouse_choices(as_form) {
 //      select_control.empty()
       $("option.spouse-input:not(:selected)").remove()
       $.each(data, function(index,member){
-        select_control.append("<option value='" + member.id + 
-        "'>" + member.name + "</option>")
+        if (my_selected != member.name) {
+          select_control.append("<option class='spouse-input' value='" + member.id + 
+          "'>" + member.name + "</option>")
+        }
       }) 
     });
   };

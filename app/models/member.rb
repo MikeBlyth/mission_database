@@ -19,6 +19,7 @@ class Member < ActiveRecord::Base
   after_save  :update_family_record_if_family_head
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
+  before_destroy :check_if_spouse
   
   SECONDS_PER_YEAR = 3600*24*365.25
   SECONDS_PER_DAY = 3600*24
@@ -129,6 +130,7 @@ class Member < ActiveRecord::Base
   def check_if_family_head
     if family_head
       errors[base] << "Can't delete head of family"
+puts "******** Can't delete head of family.*******"
   # ! uncomment this next line to prevent unwanted delete
   # ! leaving it commented while doing a lot of deletes for testing
  #     return false
@@ -136,7 +138,19 @@ class Member < ActiveRecord::Base
       true  
     end
   end
-
+  
+  def check_if_spouse
+    # if there IS a valid spouse, remove the spouse's link to this member
+    orphan_spouse = Member.find_by_spouse_id(self.id)
+    if orphan_spouse
+puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
+      errors[base] << "Can't delete while still spouse of #{orphan_spouse.to_label}"
+      return false
+    else
+      return true
+    end  
+  end
+  
 # EXAMPLES OF NAME FORMS 
 # to_label:         Blyth, Michael
 # indexed_name:     Blyth, Michael J. (Mike)
@@ -150,7 +164,7 @@ class Member < ActiveRecord::Base
 #  :middle=>false   Blyth, Michael  
 
   def to_label
-    "#{last_name_first}"
+    last_name_first
   end
 
   # Indexed_name is the full name stored in the table. It is formed automatically on record
@@ -227,13 +241,12 @@ puts "Possible Spouses called for member #{self.last_name}, #{self.spouse_id}"
     my_last_name = self.last_name
     possibilities = Member.where(:last_name => my_last_name, 
                   :sex => spouse_sex).
-                  where("birth_date <= ?", age_18_date)
+                  where("birth_date <= ?", age_18_date).order("name")
     # delete from possibilities everyone
     # who is married to someone else.
     # (even works if our own id is still nil, undefined)
     possibilities.delete_if {|x| x.spouse_id && x.spouse_id != self.id}
-    dummy_no_spouse = Member.new(:id=>'', :first_name=>'---', :last_name=>'---')
-    possibilities << dummy_no_spouse
+puts "Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
     return possibilities 
   end
   

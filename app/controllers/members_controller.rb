@@ -11,7 +11,7 @@ helper :countries
     show.columns = create.columns = update.columns = 
         [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,
-          :birth_date,  :spouse, :country_name,
+          :birth_date, :spouse, :country_name,
           :date_active, :status, :family_name, :family_head,
           :ministry, :ministry_comment, 
           :location, :education, :qualifications,
@@ -25,7 +25,7 @@ helper :countries
 #    config.delete.link = false
  #   config.columns[:country].form_ui = :select 
     config.columns[:bloodtype].form_ui = :select 
-    config.columns[:spouse].form_ui = :select 
+  #  config.columns[:spouse].form_ui = :select 
     config.columns[:family].form_ui = :select 
  #   config.columns[:family_id].form_ui = :select 
     config.columns[:education].form_ui = :select 
@@ -84,7 +84,8 @@ helper :countries
       end
     end
     @json_resp << {:name => '--Other--' , :id => ''} <<
-                  {:name => '--None---' , :id => ''} 
+                  {:name => '--None--' , :id => ''} 
+puts "@json_resp = #{@json_resp}"
     respond_to do |format|
       format.js { render :json => @json_resp }
     end
