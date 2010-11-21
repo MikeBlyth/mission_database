@@ -6,7 +6,7 @@
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 development:
-  adapter: mysql
+  adapter: mysql2
   encoding: utf8
   reconnect: false
   database: SIM_development
@@ -19,10 +19,10 @@ development:
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test: &test
-  adapter: mysql
+  adapter: sqlite3
   encoding: utf8
   reconnect: false
-  database: SIM_test
+  database: db/SIM_test
   pool: 5
   username: personnel
   password: byprayer

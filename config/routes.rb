@@ -9,17 +9,17 @@ SIM::Application.routes.draw do
   match 'members/set_full_names'
   match 'members/spouse_select'
    
-# match 'reports/bloodtypes' => 'reports#bloodtypes'
-#match 'reports/birthdays' => 'reports#birthdays'
-#match 'reports/birthday_calendar' => 'reports#birthday_calendar'
-#match 'reports/tabletest' => 'reports#tabletest'
-#match 'reports/multi_col_test' => 'reports#multi_col_test'
+ match 'reports/bloodtypes' => 'reports#bloodtypes'
+match 'reports/birthdays' => 'reports#birthdays'
+match 'reports/birthday_calendar' => 'reports#birthday_calendar'
+match 'reports/tabletest' => 'reports#tabletest'
+match 'reports/multi_col_test' => 'reports#multi_col_test'
 
 
   resources :jqueries do as_routes end
 
 
-#=begin
+
 #  devise_for :users
   resources :bloodtypes do as_routes end
   resources :cities do as_routes end
@@ -40,7 +40,7 @@ SIM::Application.routes.draw do
   resources :travels do as_routes end
 
   get "members/index"
-#=end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
