@@ -129,11 +129,12 @@ class Member < ActiveRecord::Base
 
   def check_if_family_head
     if family_head
-      errors[base] << "Can't delete head of family"
 puts "******** Can't delete head of family.*******"
-  # ! uncomment this next line to prevent unwanted delete
-  # ! leaving it commented while doing a lot of deletes for testing
- #     return false
+      self.errors.add(:delete, "Can't delete head of family.")
+      # ! uncomment this next line to prevent unwanted delete
+      # ! leaving it commented while doing a lot of deletes for testing
+      raise ActiveRecord::RecordInvalid
+      return false
     else
       true  
     end
@@ -144,8 +145,8 @@ puts "******** Can't delete head of family.*******"
     orphan_spouse = Member.find_by_spouse_id(self.id)
     if orphan_spouse
 puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
-      errors[base] << "Can't delete while still spouse of #{orphan_spouse.to_label}"
-      return false
+      errors[:delete] << "can't delete while still spouse of #{orphan_spouse.to_label}"
+      raise ActiveRecord::RecordInvalid
     else
       return true
     end  

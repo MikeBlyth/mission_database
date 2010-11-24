@@ -91,6 +91,19 @@ puts "@json_resp = #{@json_resp}"
     end
   end
 
+    # Override the ActiveScaffold method so that we can pass errors in flash
+    def do_destroy
+      @record = find_if_allowed(params[:id], :delete)
+      begin
+        self.successful = @record.destroy
+      rescue
+        flash[:warning] = as_(:cant_destroy_record, :record => @record.to_label)
+        flash[:warning] << " because #{@record.errors[:delete]}"
+        self.successful = false
+      end
+    end
+
+
 =begin
  # Form may return the country name or id, so may need to convert to ID before validating
   def country_lookup
