@@ -213,10 +213,11 @@ puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
     else
       middle = middle_name || ''
     end
-    if (options[:paren_short]) && !short_name.blank? 
-      first = first + " (#{short_name})"
+    if (options[:paren_short]) && !short_name.blank? && short_name =! first
+      first = first + " x(#{short_name})"
     end
-    s = last_name + ', ' + first + ' ' + middle unless options[:middle] == false
+    s = last_name + ', ' + first 
+    s << (' ' + middle) unless options[:middle] == false || middle.empty?
     return s    
   end
   

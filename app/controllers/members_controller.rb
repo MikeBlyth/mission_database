@@ -51,9 +51,10 @@ helper :countries
   
   def set_full_names
     Member.find(:all).each do |m| 
-      if m.name.blank?
+      if m.name.blank? || (m.first_name == m.short_name)
         m.update_attributes(:name => m.indexed_name)
       end
+      m.name = m.name.strip if m.name[-1]= ' '
     end
     redirect_to(:action => :index)
   end
