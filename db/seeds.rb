@@ -107,6 +107,9 @@ x.save
 x = City.new(:name => 'Tofa', :state => 'Kano', :country => 'NG', :latitude => 12.0133, :longitude => 8.75)
 x.id = 25
 x.save
+x = City.new(:name => 'Karu', :state => 'Federal Capital Territory', :country => 'NG')
+x.id = 26
+x.save
 x = City.new(:name => 'Miango', :state => 'Plateau', :country => 'NG', :latitude => 9.853, :longitude => 8.696)
 x.id = 45
 x.save
@@ -1080,6 +1083,9 @@ x.id = 42
 x.save
 x = Location.new(:description => 'Miango Dental Clinic', :city_id => 45, :code => 60203)
 x.id = 43
+x.save
+x = Location.new(:description => 'Karu--Seminary', :city_id => 26, :code => 30101)
+x.id = 44
 x.save
 x = Location.new(:description => 'unspecified', :city_id => 0, :code => 0)
 x.id = 48

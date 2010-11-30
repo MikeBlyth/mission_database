@@ -5,6 +5,8 @@ gem 'rails', '3.0.0'
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
 
+#gem 'faster_require'
+
 gem 'mysql'
 #gem 'mysql2'
 # gem 'devise', '1.1.2'

@@ -16,7 +16,7 @@ SIM::Application.routes.draw do
 #match 'reports/multi_col_test' => 'reports#multi_col_test'
 
 
-  resources :jqueries do as_routes end
+#  resources :jqueries do as_routes end
 
 
 #=begin
