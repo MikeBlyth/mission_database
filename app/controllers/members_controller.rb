@@ -11,8 +11,10 @@ helper :countries
     show.columns = create.columns = update.columns = 
         [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,
-          :birth_date, :spouse, :country_name,
-          :date_active, :status, :family_name, :family_head,
+          :birth_date, :spouse, 
+          :family_name, :family_head,
+          :country_name,
+          :date_active, :status, :employment_status,
           :ministry, :ministry_comment, 
           :location, :education, :qualifications,
           :contacts, :field_terms, :travels,
@@ -23,14 +25,10 @@ helper :countries
     config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]
 #    config.delete.link = false
- #   config.columns[:country].form_ui = :select 
     config.columns[:bloodtype].form_ui = :select 
-  #  config.columns[:spouse].form_ui = :select 
     config.columns[:family].form_ui = :select 
- #   config.columns[:family_id].form_ui = :select 
     config.columns[:education].form_ui = :select 
-    config.columns[:sex].options[:options] = [['Female', 'F'], ['Male',
-'M']]
+    config.columns[:sex].options[:options] = [['Female', 'F'], ['Male', 'M']]
     config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
     config.columns[:status].form_ui = :select 

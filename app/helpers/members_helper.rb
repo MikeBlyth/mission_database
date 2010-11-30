@@ -5,7 +5,7 @@ module MembersHelper
 #  end
   def spouse_column(record)
     if record.spouse
-      record.spouse.first_name
+      record.spouse.short_name || record.spouse.first_name
     else
       "-"
     end  

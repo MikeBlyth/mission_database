@@ -20,7 +20,7 @@ Feature: user adds member
     
     |last_name|first_name|middle_name|short_name|sex|name|
     |Cooper   |Donald    |John       |Jack      | M | Cooper, Donald J. (Jack)   | 
-    |Cooper   |Jordan    |Franklin   |          | M | Cooper, Jordan F.      )   | 
+    |Cooper   |Jordan    |Franklin   |          | M | Cooper, Jordan F.          | 
     |Cooper   |Samuel    |           |Samuel    | M | Cooper, Samuel             | 
     |Cooper   |K.        |Quilton    |Jack      | M | Cooper, K. Q. (Jack)       |
   

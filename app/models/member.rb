@@ -243,7 +243,7 @@ puts "Possible Spouses called for member #{self.last_name}, #{self.spouse_id}"
     my_last_name = self.last_name
     possibilities = Member.where(:last_name => my_last_name, 
                   :sex => spouse_sex).
-                  where("birth_date <= ?", age_18_date).order("name")
+                  where("birth_date <= ? OR birth_date IS NULL", age_18_date).order("name")
     # delete from possibilities everyone
     # who is married to someone else.
     # (even works if our own id is still nil, undefined)
