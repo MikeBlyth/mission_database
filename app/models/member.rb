@@ -129,11 +129,12 @@ class Member < ActiveRecord::Base
 
   def check_if_family_head
     if family_head
-      errors[base] << "Can't delete head of family"
 puts "******** Can't delete head of family.*******"
-  # ! uncomment this next line to prevent unwanted delete
-  # ! leaving it commented while doing a lot of deletes for testing
- #     return false
+      self.errors.add(:delete, "Can't delete head of family.")
+      # ! uncomment this next line to prevent unwanted delete
+      # ! leaving it commented while doing a lot of deletes for testing
+      raise ActiveRecord::RecordInvalid
+      return false
     else
       true  
     end
@@ -144,8 +145,8 @@ puts "******** Can't delete head of family.*******"
     orphan_spouse = Member.find_by_spouse_id(self.id)
     if orphan_spouse
 puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
-      errors[base] << "Can't delete while still spouse of #{orphan_spouse.to_label}"
-      return false
+      errors[:delete] << "can't delete while still spouse of #{orphan_spouse.to_label}"
+      raise ActiveRecord::RecordInvalid
     else
       return true
     end  
@@ -212,10 +213,11 @@ puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
     else
       middle = middle_name || ''
     end
-    if (options[:paren_short]) && !short_name.blank? 
-      first = first + " (#{short_name})"
+    if (options[:paren_short]) && !short_name.blank? && short_name =! first
+      first = first + " x(#{short_name})"
     end
-    s = last_name + ', ' + first + ' ' + middle unless options[:middle] == false
+    s = last_name + ', ' + first 
+    s << (' ' + middle) unless options[:middle] == false || middle.empty?
     return s    
   end
   
@@ -241,7 +243,7 @@ puts "Possible Spouses called for member #{self.last_name}, #{self.spouse_id}"
     my_last_name = self.last_name
     possibilities = Member.where(:last_name => my_last_name, 
                   :sex => spouse_sex).
-                  where("birth_date <= ?", age_18_date).order("name")
+                  where("birth_date <= ? OR birth_date IS NULL", age_18_date).order("name")
     # delete from possibilities everyone
     # who is married to someone else.
     # (even works if our own id is still nil, undefined)

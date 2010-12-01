@@ -3,7 +3,9 @@ source 'http://rubygems.org'
 gem 'rails', '>= 3.0.0'
 
 # Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
+#gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+#gem 'faster_require'
 
 gem 'mysql2'
 # gem 'devise', '1.1.2'
@@ -19,7 +21,6 @@ gem 'jrails'
 # gem 'rails3-jquery-autocomplete'
 group :development, :test do
   gem "rspec-rails", ">= 2.0.0"
-#  gem "win32console"
   gem "cucumber-rails", ">= 0.3.2"
  gem "webrat", ">= 0.7.2"
 end

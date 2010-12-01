@@ -132,17 +132,18 @@ ActiveRecord::Schema.define(:version => 20101119112227) do
   add_index "locations", ["description"], :name => "index_locations_on_description", :unique => true
 
   create_table "members", :force => true do |t|
-    t.string   "last_name"
-    t.string   "short_name"
-    t.string   "sex"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "last_name",           :null => false
+    t.string   "first_name",           :null => false
     t.string   "middle_name"
+    t.string   "name",           :null => false
+    t.string   "short_name"
+    t.boolean  "name_override"
+    t.string   "sex"
+    t.boolean  "family_head"
     t.integer  "family_id"
-    t.date     "birth_date"
     t.integer  "spouse_id"
+    t.date     "birth_date"
     t.integer  "country_id"
-    t.string   "first_name"
     t.integer  "bloodtype_id"
     t.string   "allergies"
     t.string   "medical_facts"
@@ -155,16 +156,14 @@ ActiveRecord::Schema.define(:version => 20101119112227) do
     t.integer  "education_id"
     t.integer  "location_id"
     t.integer  "employment_status_id"
-    t.boolean  "family_head"
-    t.string   "name"
-    t.boolean  "name_override"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "members", ["bloodtype_id"], :name => "fk_bloodtypes"
   add_index "members", ["country_id"], :name => "fk_countries"
   add_index "members", ["family_id"], :name => "index_members_on_family_id"
   add_index "members", ["name"], :name => "index_members_on_name", :unique => true
-
   create_table "ministries", :force => true do |t|
     t.string   "description"
     t.integer  "code"

@@ -11,8 +11,10 @@ helper :countries
     show.columns = create.columns = update.columns = 
         [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,
-          :birth_date, :spouse, :country_name,
-          :date_active, :status, :family_name, :family_head,
+          :birth_date, :spouse, 
+          :family_name, :family_head,
+          :country_name,
+          :date_active, :status, :employment_status,
           :ministry, :ministry_comment, 
           :location, :education, :qualifications,
           :contacts, :field_terms, :travels,
@@ -23,14 +25,10 @@ helper :countries
     config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]
 #    config.delete.link = false
- #   config.columns[:country].form_ui = :select 
     config.columns[:bloodtype].form_ui = :select 
-  #  config.columns[:spouse].form_ui = :select 
     config.columns[:family].form_ui = :select 
- #   config.columns[:family_id].form_ui = :select 
     config.columns[:education].form_ui = :select 
-    config.columns[:sex].options[:options] = [['Female', 'F'], ['Male',
-'M']]
+    config.columns[:sex].options[:options] = [['Female', 'F'], ['Male', 'M']]
     config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
     config.columns[:status].form_ui = :select 
@@ -51,9 +49,10 @@ helper :countries
   
   def set_full_names
     Member.find(:all).each do |m| 
-      if m.name.blank?
+      if m.name.blank? || (m.first_name == m.short_name)
         m.update_attributes(:name => m.indexed_name)
       end
+      m.name = m.name.strip if m.name[-1]= ' '
     end
     redirect_to(:action => :index)
   end
@@ -90,6 +89,19 @@ puts "@json_resp = #{@json_resp}"
       format.js { render :json => @json_resp }
     end
   end
+
+    # Override the ActiveScaffold method so that we can pass errors in flash
+    def do_destroy
+      @record = find_if_allowed(params[:id], :delete)
+      begin
+        self.successful = @record.destroy
+      rescue
+        flash[:warning] = as_(:cant_destroy_record, :record => @record.to_label)
+        flash[:warning] << " because #{@record.errors[:delete]}"
+        self.successful = false
+      end
+    end
+
 
 =begin
  # Form may return the country name or id, so may need to convert to ID before validating
