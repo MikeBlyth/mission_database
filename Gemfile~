@@ -22,9 +22,8 @@ gem 'jrails'
 group :development, :test do
   gem "rspec-rails", ">= 2.2.0"
   gem "cucumber-rails", ">= 0.3.2"
-  gem "webrat", ">= 0.7.2"
-  gem "launchy"
-# gem "selenium-client", ">= 1.2.18"
+ gem "webrat", ">= 0.7.2"
+ gem "selenium-client", ">= 1.2.18"
 end
 # gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"
 # Use unicorn as the web server

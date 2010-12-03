@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<div class='active-scaffold'>
+<%= raw "<div class='show-view family-view view' id='show_family_#{@record.id}'>" %>
+<h4><%= @record.full_name %>'s Family</h4>
+<p>Click on a name to edit that person's information!</p>
+
+<div id='family_members' style='margin-left: 10px'>
+<%  @record.members.each do  |m| %>
+  <p>       <%= link_to 'Edit', edit_member_path(m) %> <%= m.to_label + " (#{m.sex})" %>  </p>
+<% end %>
+</div>
+
+<ul>
+<% if @record.head.spouse_id.blank? %>
+<li><%= link_to 'Add spouse', {:controller => "members", :action=> "new", :spouse=>@record.head_id} %></li>
+<% end %>
+<li><%= link_to 'Add child', {:controller => "members", :action=> "new", :parent=>@record.head_id} %></li>
+</ul>
+
+<%= link_to 'Close', families_path, {:class=> 'as_cancel close'} %>
+</p>
+</div>
+</div>
+
+

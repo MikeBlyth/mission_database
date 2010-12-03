@@ -12,8 +12,4 @@ class Family < ActiveRecord::Base
     "*#{head.last_name_first}"
   end
 
-  def full_name
-    head.full_name
-  end
-
 end

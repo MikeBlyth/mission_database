@@ -236,19 +236,20 @@ puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
   # box.
   def possible_spouses
     return [] if self.last_name.blank? || self.sex.blank?
-puts "Possible Spouses called for member #{self.last_name}, #{self.spouse_id}"
-    my_sex = self.sex.downcase
-    spouse_sex = my_sex == 'm' ? 'f' : 'm'
+    my_sex = self.sex.upcase
+    spouse_sex = my_sex == 'M' ? 'F' : 'M'
+#puts "**** Possible Spouses called for member #{self.last_name}, #{self.spouse_id}, #{spouse_sex}"
     age_18_date = Date.today - 18.years
     my_last_name = self.last_name
     possibilities = Member.where(:last_name => my_last_name, 
                   :sex => spouse_sex).
-                  where("birth_date <= ? OR birth_date IS NULL", age_18_date).order("name")
+    #              where("birth_date <= ? OR birth_date IS NULL", age_18_date).
+                  order("name")
     # delete from possibilities everyone
     # who is married to someone else.
     # (even works if our own id is still nil, undefined)
     possibilities.delete_if {|x| x.spouse_id && x.spouse_id != self.id}
-puts "Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
+# puts "***** Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
     return possibilities 
   end
   

@@ -4,6 +4,15 @@ module ApplicationHelper
       s = self.code.to_s + ' ' + self.description
       return s
     end
+
+    def opposite_sex(s)
+      return :male if s == :female
+      return :female if s == :male
+      return nil unless s.respond_to? :downcase
+      return 'F' if s.downcase[0] == 'm'
+      return 'M' if s.downcase[0] == 'f'
+    end	
+
 end
 
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on

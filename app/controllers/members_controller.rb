@@ -1,5 +1,6 @@
 class MembersController < ApplicationController
 helper :countries
+include ApplicationHelper
 
   active_scaffold :member do |config|
     config.label = "Members"
@@ -47,6 +48,30 @@ helper :countries
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
   
+  # Override the ActiveScaffold new method so we can initialize form for spouse and children
+  def do_new
+	super		# do whatever ActiveScaffold does to make a new member
+#    puts "************ #{params}"
+  	if params[:spouse] 
+      @spouse = Member.find(params[:spouse])
+#	puts "********* @spouse = #{@spouse.to_label}"
+    	@record.last_name = @spouse.last_name
+      @record.spouse_id = @spouse.id
+      @record.sex = opposite_sex(@spouse.sex)
+      @record.family_id = @spouse.family_id
+      @record.status_id = @spouse.status_id
+      @record.employment_status_id = @spouse.employment_status_id
+    end
+  	if params[:parent] 
+      @parent = Member.find(params[:parent])
+# puts "********* @parent = #{@parent.to_label}"
+      @record.employment_status_id = EmploymentStatus.find_by_mk_default(true).id
+#  puts "***** Emp = #{@record.employment_status.description}"
+    	@record.last_name = @parent.last_name
+      @record.family_id = @parent.family_id
+    end
+	end
+
   def set_full_names
     Member.find(:all).each do |m| 
       if m.name.blank? || (m.first_name == m.short_name)

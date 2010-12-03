@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+@family = @record
+
+<h2><%= @family.full_name %></h2>
+
+<%  @family.members.each do  |m| %>
+ <li>
+   <%= link_to (m.to_label || "???"), member_path(m) %>
+ </li>
+<% end %>
+<li><%= link_to 'Add new member', new_member_path(:family_id=>@family) %></li>
+</ul>
+<%= link_to 'Edit', edit_family_path(@family) %> |
+<%= link_to 'Back', families_path %>
+</p>

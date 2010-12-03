@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101203100130) do
+ActiveRecord::Schema.define(:version => 20101119112227) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -22,6 +22,12 @@ ActiveRecord::Schema.define(:version => 20101203100130) do
   end
 
   add_index "bloodtypes", ["full"], :name => "index_bloodtypes_on_full", :unique => true
+
+  create_table "brands", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cities", :force => true do |t|
     t.string   "name"
@@ -67,6 +73,23 @@ ActiveRecord::Schema.define(:version => 20101203100130) do
   add_index "contacts", ["id"], :name => "ID", :unique => true
   add_index "contacts", ["member_id"], :name => "member_id"
 
+  create_table "contacts_sample", :force => true do |t|
+    t.integer  "member_id"
+    t.string   "email1"
+    t.string   "email2"
+    t.string   "phone1"
+    t.string   "phone2"
+    t.string   "blog"
+    t.string   "website"
+    t.string   "photosite"
+    t.string   "facebook"
+    t.string   "contact_name"
+    t.string   "address"
+    t.string   "contact_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "countries", :force => true do |t|
     t.string   "code"
     t.string   "name"
@@ -94,7 +117,6 @@ ActiveRecord::Schema.define(:version => 20101203100130) do
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "mk_default"
   end
 
   add_index "employment_statuses", ["code"], :name => "index_employment_status_codes_on_code", :unique => true
@@ -117,6 +139,33 @@ ActiveRecord::Schema.define(:version => 20101203100130) do
     t.date     "end_date"
     t.date     "est_start_date"
     t.date     "est_end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "home_address", :primary_key => "ID", :force => true do |t|
+    t.string "SIM ID",        :limit => 6
+    t.string "home_address"
+    t.string "field_address"
+    t.string "HLINE1",        :limit => 30
+    t.string "HLINE2",        :limit => 30
+    t.string "HCITY",         :limit => 22
+    t.string "HSTATE",        :limit => 3
+    t.string "SM",            :limit => 30
+    t.string "HPOST",         :limit => 10
+    t.string "HCTRY",         :limit => 3
+    t.string "CM",            :limit => 25
+    t.string "FLINE1",        :limit => 30
+    t.string "FCITY",         :limit => 22
+    t.string "FSTATE",        :limit => 3
+    t.string "FSM",           :limit => 30
+    t.string "FPOST",         :limit => 10
+    t.string "FCTRY",         :limit => 25
+  end
+
+  add_index "home_address", ["SIM ID"], :name => "AddressMdNUMBER"
+
+  create_table "jqueries", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -166,6 +215,13 @@ ActiveRecord::Schema.define(:version => 20101203100130) do
   add_index "members", ["family_id"], :name => "index_members_on_family_id"
   add_index "members", ["name"], :name => "index_members_on_name", :unique => true
 
+  create_table "members_travels", :id => false, :force => true do |t|
+    t.integer  "member_id"
+    t.integer  "travel_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ministries", :force => true do |t|
     t.string   "description"
     t.integer  "code"
@@ -175,6 +231,68 @@ ActiveRecord::Schema.define(:version => 20101203100130) do
 
   add_index "ministries", ["code"], :name => "index_ministry_codes_on_code", :unique => true
   add_index "ministries", ["description"], :name => "index_ministry_codes_on_description", :unique => true
+
+  create_table "names_basic", :primary_key => "Key", :force => true do |t|
+    t.string  "Family ID",        :limit => 50
+    t.integer "family_id"
+    t.string  "Last Name",        :limit => 20
+    t.string  "First Name",       :limit => 20
+    t.string  "Casual Name",      :limit => 50
+    t.string  "SEX",              :limit => 1
+    t.integer "Nationality_id"
+    t.string  "Nationality Code", :limit => 3
+    t.string  "Ministry",         :limit => 50
+  end
+
+  add_index "names_basic", ["Family ID"], :name => "Family ID"
+  add_index "names_basic", ["Key"], :name => "Key_or_ID", :unique => true
+
+  create_table "personnel", :primary_key => "Key", :force => true do |t|
+    t.string  "StatusCode",             :limit => 1
+    t.integer "MinistryCode",           :limit => 2
+    t.integer "ministry_id"
+    t.string  "MinistryComment",        :limit => 100
+    t.integer "education_id"
+    t.integer "EducationCode",          :limit => 2
+    t.string  "QUALIFICAT",             :limit => 40
+    t.integer "location_id"
+    t.integer "LocationCode"
+    t.date    "BIRTHDAY"
+    t.string  "BLOODTYPE",              :limit => 3
+    t.integer "bloodtype_id"
+    t.integer "miss_status_id"
+    t.string  "Missionary Status Code", :limit => 3
+    t.date    "DATEACTIVE"
+    t.float   "TERMLEN"
+    t.date    "NEXT"
+    t.date    "Departure Date"
+    t.date    "DATEARRIVE"
+    t.date    "DATEEMPLOY"
+    t.date    "MODIFIED"
+    t.string  "Term Status",            :limit => 50
+    t.integer "ONLEAVE",                :limit => 1
+    t.integer "statuscode_i"
+  end
+
+  create_table "personnel_details", :force => true do |t|
+    t.integer  "status_code_id"
+    t.string   "ministry_comment"
+    t.string   "qualifications"
+    t.date     "date_active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "ministry_id"
+    t.integer  "education_id"
+    t.integer  "location_id"
+    t.integer  "employment_status_id"
+  end
+
+  create_table "position_codes", :force => true do |t|
+    t.string   "description"
+    t.string   "code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "states", :force => true do |t|
     t.string   "name"

@@ -11,13 +11,16 @@ Feature: user adds member
   * Correctly cross-referencing spouses with each other and
     with children.
   
+  @wip
   Scenario Outline: create simplest member
     Given that the create member form is open
     When I enter "<last_name>" , "<first_name>", "<middle_name>", "<short_name>, and "<sex>"
     And I press the Create button
     Then the new member should be in the list
     And the name should be "<name>"
-    
+   
+  @wip
+  Scenarios: Put some description here, add more scenarios
     |last_name|first_name|middle_name|short_name|sex|name|
     |Cooper   |Donald    |John       |Jack      | M | Cooper, Donald J. (Jack)   | 
     |Cooper   |Jordan    |Franklin   |          | M | Cooper, Jordan F.          | 

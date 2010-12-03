@@ -944,7 +944,7 @@ x.save
 x = EmploymentStatus.new(:description => 'Career - Field Staff', :code => 'CAR')
 x.id = 5
 x.save
-x = EmploymentStatus.new(:description => 'MK dependent', :code => 'MKD')
+x = EmploymentStatus.new(:description => 'MK dependent', :code => 'MKD', :mk_default => true)
 x.id = 6
 x.save
 x = EmploymentStatus.new(:description => 'ST-Affiliate', :code => 'STF')
