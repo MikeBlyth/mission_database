@@ -1,29 +1,20 @@
-Feature: user adds member
+Feature: Member generates unique "indexed" name
 
-  Personnel administrators need to add members over time.
-  Adding them can be at different levels of completeness,
-  from simple name and other essentials (birthdate?) all the
-  way to entering every possible piece of data. Logic and
-  error checking should include
-  * A unique way to identify members; no duplicates.
-  * Common-sense validation of dates
-  * Checking for inconsistent attributes (e.g. a baby working)
-  * Correctly cross-referencing spouses with each other and
-    with children.
   
-  @wip
-  Scenario Outline: create simplest member
-    Given that the create member form is open
-    When I enter "<last_name>" , "<first_name>", "<middle_name>", "<short_name>, and "<sex>"
-    And I press the Create button
-    Then the new member should be in the list
-    And the name should be "<name>"
+  Scenario Outline: Generate indexed name 
+    When I enter names "<last_name>" , "<first_name>", "<middle_name>", and "<short_name>"
+    Then the new indexed name should be "<name>"
    
-  @wip
   Scenarios: Put some description here, add more scenarios
-    |last_name|first_name|middle_name|short_name|sex|name|
-    |Cooper   |Donald    |John       |Jack      | M | Cooper, Donald J. (Jack)   | 
-    |Cooper   |Jordan    |Franklin   |          | M | Cooper, Jordan F.          | 
-    |Cooper   |Samuel    |           |Samuel    | M | Cooper, Samuel             | 
-    |Cooper   |K.        |Quilton    |Jack      | M | Cooper, K. Q. (Jack)       |
-  
+    |last_name|first_name|middle_name|short_name|name|
+    |Cooper   |Donald    |John       |Jack      | Cooper, Donald J.   | 
+    |Cooper   |Jordan    |Franklin   |          | Cooper, Jordan F.          | 
+    |Cooper   |Samuel    |           |Samuel    | Cooper, Samuel             | 
+    |Cooper   |K.        |Quilton    |Jack      | Cooper, K. Q.       |
+
+  Scenario: Model should reject duplicate name
+    Given an existing member with a name "Baggins, Frodo"
+    When I make a new member with name "Baggins, Frodo"
+    Then the record will not be valid
+    And it will show a duplication error
+      

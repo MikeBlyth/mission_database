@@ -12,9 +12,27 @@ Feature: add family members
     Given a family view
     When I ask to create a spouse
     Then I receive a valid form for a spouse
-    
+
   Scenario: Get a form for editing a child
     Given a family view
     When I ask to create a child
     Then I receive a valid form for a child
+
+  Scenario Outline: New members should be linked to families
+    Given a single family record existing with ID=100
+    When I add a member ID=101 with "<family_id>" and "<head>"
+    Then the member's family_id will be "<new_fam_id>"
+    And the "<new_fam_id>" family record will exist
+    
+  Scenarios: no pre-existing family record
+    | family_id |  head  |  new_fam_id |
+   |           |  false |   101       |
+    |           |  true  |   101       |
+    | 101       |  false |   101       |
+    | 101       |  true  |   101       |
+      
+  Scenarios: family record does exist for the new member
+    | family_id |  head  |  new_fam_id |
+    | 100       |  false |   100       |
+    | 100       |  true  |   101  |
     

@@ -1,4 +1,5 @@
   def construct_member(params={})
+#puts "****+++ Starting construct member, Member.count = #{Member.count}, params=#{params}"
     m = Member.new({:last_name=> 'Testing', 
         :first_name => "Test_#{rand.to_s[2..5]}",
         :family_id => 1,
@@ -7,8 +8,10 @@
           :birth_date => '1970-01-01',
           }.merge(params)) 
     m.id = params[:id]
-    m.name = "#{m.last_name}, #{m.first_name}"
-    m.save
+#    name = "#{m.last_name}, #{m.first_name}" if name.empty?
+    m.save!
+    @member_save_errors = m.errors
+#puts "****++++ new member constructed: #{m}"  
     m
   end
     
@@ -70,12 +73,13 @@ end
 
 
 When /^I ask to create a spouse$/ do
-  visit family_path(@head.family_id)
-  click_link "Add spouse" 
+#puts "****+++#{new_member_path(:id=>@head.id, :spouse=>'spouse')}"
+#puts "****+++ spouse_id = #{@head.id}, #{@head}"
+  visit new_member_path(:id=>@head.id, :spouse=>'spouse')
 end
 
 Then /^I receive a valid form for a spouse$/ do
-  field_named("record[spouse]").value.should == "1"
+  field_named("record[spouse]").value.to_i.should == @head.id
   field_labeled("Last name").value.should == @head.last_name
   field_labeled("Family name").value.should contain @head.last_name
   response.should contain(@status.description)
@@ -84,8 +88,7 @@ Then /^I receive a valid form for a spouse$/ do
 end
 
 When /^I ask to create a child$/ do
-  visit family_path(@head.family_id)
-  click_link "Add child" 
+  visit new_member_path(:id=>@head.id, :child=>'child')
 end
 
 Then /^I receive a valid form for a child$/ do
@@ -117,5 +120,50 @@ Then /^I see the "([^"]*)"$/ do |arg1|
   else  
     response.should_not contain '--nil--'
   end
+end
+
+When /^I enter names "([^"]*)" , "([^"]*)", "([^"]*)", and "([^"]*)"$/ do |last_name, first_name, middle_name, short_name|
+  @member = Member.new(:last_name=> last_name, :first_name => first_name, :middle_name => middle_name, :short_name => short_name)
+end
+
+Then /^the new indexed name should be "([^"]*)"$/ do |name|
+  @member.indexed_name.should == name
+end
+
+######## LINKING MEMBERS & FAMILIES ##########
+
+Given /^a single family record existing with ID=100$/ do
+    @member = construct_member(:id => 100, :family_id => 100, :family_head => true)
+end
+
+When /^I add a member ID=101 with "([^"]*)" and "([^"]*)"$/ do |id, family_head|
+  @families = Family.count
+  @member = construct_member(:id => 101, :family_id => id, :family_head => family_head)
+end
+
+Then /^the member's family_id will be "([^"]*)"$/ do | new_family_id |
+  
+  @member.family_id.should == new_family_id.to_i
+end
+
+Then /^the "([^"]*)" family record will exist$/ do |arg1|
+  f = Family.find(@member.family_id)
+  f.should_not be nil
+end
+
+Given /^an existing member with a name "([^"]*)"$/ do |name|
+  @member = construct_member(:name => name)
+end
+
+When /^I make a new member with name "([^"]*)"$/ do |name|
+  @member = Member.new(:name => name, :first_name => 'A', :last_name => 'A')
+end
+
+Then /^the record will not be valid$/ do
+  @member.should_not be_valid
+end
+
+Then /^it will show a duplication error$/ do
+  @member.errors.should contain("already been taken")
 end
 

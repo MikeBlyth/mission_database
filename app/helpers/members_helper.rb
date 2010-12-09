@@ -23,9 +23,9 @@ module MembersHelper
         selected = ''
       end
       result << "<option class='spouse-input' value='#{p.id}' #{selected}>#{p.to_label}</option>"
-#puts "********#{result}"
     end
     result << "<option class='spouse-input' value=''>--Other--</option></select>"
+#puts "********#{result}"
     # Mismatched spouses?
     # ! This logic should go in controller, but we need to find ActiveScaffold callback
     # !   in order to place it there.

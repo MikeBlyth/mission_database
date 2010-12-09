@@ -3,9 +3,15 @@ helper :countries
 include ApplicationHelper
 
   active_scaffold :member do |config|
+
+#config.action_links.add "new", :label => 'Add Spouse', :parameters=>{:spouse=>'spouse'},
+#    :type => :collection
+
+
+
     config.label = "Members"
     list.columns = [:name, 
-          :birth_date, :spouse, :country_name, :status, :contacts, :travels, :field_terms]
+          :birth_date, :spouse, :family, :country_name, :status, :contacts, :travels, :field_terms]
     list.columns.exclude :travel,
                           :bloodtype, :allergies, :medical_facts, :medications
     list.sorting = {:last_name => 'ASC'}
@@ -39,36 +45,56 @@ include ApplicationHelper
     config.columns[:field_terms].collapsed = true
     config.columns[:travels].collapsed = true
     config.columns[:contacts].collapsed = true
-  #  config.columns[:family].actions_for_association_links = []
-    config.nested.add_scoped_link(:family) 
+    config.columns[:family].actions_for_association_links = [:list]
+
+    
+#    config.columns[:family].link = :show
+#    config.nested.add_link("Family", [:family])  # This doesn't seem to work; should add a "Family" link in actions
+ #   config.nested.add_scoped_link(:family) 
  
    config.actions.exclude :search
    config.actions.add :field_search
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
+
+# TODO REMOVE OR DISABLE WHEN FINISHED DEBUGGING
+############## ONLY FOR TROUBLESHOOTING! ************************
+  def do_show
+    super
+    if @record.family.nil?
+      begin
+          f = Family.new(:head => @record)
+          f.id = @record.family_id
+          f.save
+      rescue
+         puts "****** ERROR  #{$!}"
+      end
+    end
+  end    
+
   
   # Override the ActiveScaffold new method so we can initialize form for spouse and children
   def do_new
 	super		# do whatever ActiveScaffold does to make a new member
-#    puts "************ #{params}"
-  	if params[:spouse] 
-      @spouse = Member.find(params[:spouse])
-#	puts "********* @spouse = #{@spouse.to_label}"
-    	@record.last_name = @spouse.last_name
-      @record.spouse_id = @spouse.id
-      @record.sex = opposite_sex(@spouse.sex)
-      @record.family_id = @spouse.family_id
-      @record.status_id = @spouse.status_id
-      @record.employment_status_id = @spouse.employment_status_id
+  	if params[:spouse] || params[:child]
+        family = Family.find(params[:id])
+        head = family.head    # e.g. /members/new?eid=members_6_family&id=1&spouse=spouse      
+  	end
+#      @spouse = Member.find(params[:spouse])  # use if url is like /members/new?spouse=15
+    if params[:spouse]
+    	@record.last_name = head.last_name
+      @record.spouse_id = head.id
+      @record.sex = opposite_sex(head.sex)
+      @record.family_id = head.family_id
+      @record.status_id = head.status_id
+      @record.employment_status_id = head.employment_status_id
+#debugger      
     end
-  	if params[:parent] 
-      @parent = Member.find(params[:parent])
-# puts "********* @parent = #{@parent.to_label}"
+  	if params[:child] 
       @record.employment_status_id = EmploymentStatus.find_by_mk_default(true).id
-#  puts "***** Emp = #{@record.employment_status.description}"
-    	@record.last_name = @parent.last_name
-      @record.family_id = @parent.family_id
+    	@record.last_name = head.last_name
+      @record.family_id = head.family_id
     end
 	end
 
@@ -127,30 +153,6 @@ puts "@json_resp = #{@json_resp}"
       end
     end
 
-
-=begin
- # Form may return the country name or id, so may need to convert to ID before validating
-  def country_lookup
- #   country = params[:record][:country]
- #   unless (country.to_i > 0)or country.blank? 
- #     params[:record][:country] = Country.find_by_name(country).id
- #   end
-    country_id = Country.find_by_name(params[:record][:country_name]).id
-    params[:record][:country] = country_id
-
-    params[:record].delete(:country_name)
-  end
-
-  def update
-    country_lookup
-    super
-  end
-
-  def create
-    country_lookup
-    super
-  end
-=end
 
 # criteria based on the filter set in application_controller. 
 # it would better to somehow have these defined other than hard-coding the numbers, if the 

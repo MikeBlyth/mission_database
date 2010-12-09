@@ -24,7 +24,9 @@ group :development, :test do
   gem "cucumber-rails", ">= 0.3.2"
   gem "webrat", ">= 0.7.2"
   gem "launchy"
-# gem "selenium-client", ">= 1.2.18"
+ gem "selenium-client", ">= 1.2.18"
+ gem "database_cleaner", ">= 0.5.2"
+
 end
 # gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"
 # Use unicorn as the web server
@@ -34,7 +36,7 @@ end
 # gem 'capistrano'
 
 # To use debugger
-# gem 'ruby-debug'
+gem 'ruby-debug19'
 
 # Bundle the extra gems:
 # gem 'bj'

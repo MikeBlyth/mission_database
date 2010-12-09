@@ -7,9 +7,7 @@
 
 <div id='family_members' style='margin-left: 10px'>
 <%  @record.members.each do  |m| %>
-  <p>       <%= link_to 'Edit', edit_member_path(m), {:remote=>"true", 
-      :position=>"after", 
-      :class=>"edit as_action"} %> <%= m.to_label + " (#{m.sex})" %>  </p>
+  <p>       <%= link_to 'Edit', edit_member_path(m) %> <%= m.to_label + " (#{m.sex})" %>  </p>
 <% end %>
 </div>
 
