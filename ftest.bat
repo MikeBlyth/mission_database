@@ -1,1 +1,0 @@
-ruby -Itest test/functional/%1s_controller_test.rb

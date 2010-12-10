@@ -4,7 +4,6 @@ class Member < ActiveRecord::Base
   has_many :field_terms,  :dependent => :destroy 
   belongs_to :spouse, :class_name => "Member", :foreign_key => "spouse_id"
   belongs_to :family
-#  has_one    :family 
   belongs_to :country
   belongs_to :bloodtype 
   belongs_to :education
@@ -19,7 +18,6 @@ class Member < ActiveRecord::Base
   before_validation :set_indexed_name_if_empty
   before_save :set_family_head_if_no_family
   after_create :link_member_and_family
-#  after_save  :update_family_record_if_family_head
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
@@ -30,6 +28,9 @@ class Member < ActiveRecord::Base
   SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
 
   #== Relate the Family to the newly-created or updated member
+  # Includes
+  # * set_family_head_if_no_family  -- before_save
+  # * link_member_and_family        -- after_create
   # This is a bit tricky because member and family are related in two ways.
   # * A member BELONGS to a family through family_id (everyone belongs to a family)
   # * A family BELONGS to a member through :head_id  (a family belongs to the head of the family)
@@ -40,20 +41,9 @@ class Member < ActiveRecord::Base
   #    - save the new family record with a DUMMY head_id since we don't know the member's id yet
   #    - relate the member to the new family through self.family_id = my_own_family.id
   #    - make the member head of his/her own family
-=begin
-  def link_member_and_family
-#  puts "******** #{name}, family id = #{family_id}, family_name = #{family.to_label if family}"
-    if family_id.nil? ||  family.nil?
-      my_own_family = Family.create(:status_id => self.status_id, :location_id => self.location_id)
-        # note that until the member record is saved and update_family_record_if_family_head is called,
-        # this family will not point to anyone as the head.
-      self.family_id = my_own_family.id
-      self.family_head = true
-    end
-  end    
-=end
 
-  # if I don't already belong to a valid family, then I must be head of my own family
+  # If I am head of family, then family_id is my own id
+  # If I don't already belong to a valid family, then I must be head of my own family
   #   -- in a new record, we can't yet set family_id because it does not yet have an id
   #   -- in an existing record with no family_id, set the family_id to self
   # This is on "before save" callback so executes before any create or update of a member
@@ -64,16 +54,6 @@ class Member < ActiveRecord::Base
       self.family_id = self.id                #    ... will be valid id if existing, else nil
     end
   end
-  
-  def family_id
-#  puts "******family_head=#{attributes['family_id']}, family_id=#{attributes['family_id']}, id=#{self.id}, family_id=#{attributes['family_id']}"
-    if family_head || (attributes['family_id'] == 0)
-      return self.id
-    else
-# debugger
-      return self.attributes['family_id']
-    end  
-  end    
   
   # I am new record and I don't already belong to a family? Then make one for me!
   # This is on 'after_create' callback, so executes only for new records
@@ -86,23 +66,12 @@ class Member < ActiveRecord::Base
     end
   end
   
+  # Before validation, create the name column if it is empty
   def set_indexed_name_if_empty
     if self.name.blank?
       self.name = indexed_name
     end
   end    
-  
-  
-
-  # AFTER saving the member, we just need to be sure that the family record
-  #   points to this member if the member is marked as head of family.
-  #   (All members without a family are marked as head-of-family in before_save, above.)
-  def update_family_record_if_family_head
-    if family_head && family.head != self.id
- #     self.family.update_attributes(:head_id => self.id)
-    end
- #     f = self.family
-  end
   
   def country_name
     Country.find(country_id).name if country_id

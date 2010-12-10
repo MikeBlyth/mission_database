@@ -1,1 +1,0 @@
-ruby -Itest test/unit/%1_test.rb
