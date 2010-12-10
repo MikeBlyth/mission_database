@@ -18,7 +18,7 @@ class Member < ActiveRecord::Base
 
   before_validation :set_indexed_name_if_empty
   before_save :set_family_head_if_no_family
-  after_save :link_member_and_family
+  after_create :link_member_and_family
 #  after_save  :update_family_record_if_family_head
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
@@ -54,12 +54,14 @@ class Member < ActiveRecord::Base
 =end
 
   # if I don't already belong to a valid family, then I must be head of my own family
-  #   (we can't yet set family_id because if this record is new, it does not yet have an id)
+  #   -- in a new record, we can't yet set family_id because it does not yet have an id
+  #   -- in an existing record with no family_id, set the family_id to self
+  # This is on "before save" callback so executes before any create or update of a member
   def set_family_head_if_no_family
-    self.family_id = self.id if family_head 
-    if self.family_id.nil? ||  family.nil?
-      self.family_head = true
-      self.family_id = 0
+    self.family_id = self.id if family_head   # family <== nil if new, self if existing 
+    if self.family_id.nil? ||  family.nil?    # If no valid family is set
+      self.family_head = true                 #    Make self the head of family
+      self.family_id = self.id                #    ... will be valid id if existing, else nil
     end
   end
   
@@ -73,13 +75,14 @@ class Member < ActiveRecord::Base
     end  
   end    
   
+  # I am new record and I don't already belong to a family? Then make one for me!
+  # This is on 'after_create' callback, so executes only for new records
   def link_member_and_family
-    # I don't already belong to a family? Then make one for me!
     if family_id.nil? ||  family.nil?
       my_own_family = Family.new(:head_id => self.id, :status_id => self.status_id, :location_id => self.location_id)
       my_own_family.id = self.id
-      my_own_family.save
-      self.family_id = my_own_family.id
+      my_own_family.save!
+      self.update_attributes(:family_id => self.id)
     end
   end
   
