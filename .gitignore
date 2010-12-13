@@ -1,7 +1,9 @@
 .bundle
 db/*.sqlite3
+db/SIM_test
+db/SIM_development
 log/*.log
-tmp/**/*
+tmp/
 vendor/
 webrat.log
 

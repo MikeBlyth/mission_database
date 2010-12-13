@@ -3,19 +3,15 @@ require 'spec_helper'
 
 describe Member do
   before(:each) do
-    @status = Factory.create(:status)
     @family = Factory.create(:family)
     @member = new_member    # This is in addition to the family_head, which is *saved* on creation of a family
                             #   This second family member @member is *not* saved yet
   end    
 
   def new_member
-    @family.members.new(:middle_name => 'Middle', :first_name => "Sally", :name=>"Last, Sally")
-  end
+    @family.members.new(:last_name => "Last", :middle_name => 'Middle', :first_name => "Sally", :name=>"Last, Sally")
 
-  def puts_member(m, tag='member')
-    puts "****+++ #{tag}: #{m.to_s}, id=#{m.id}, status_id=#{m.status_id}, family_id=#{m.family_id}"
-  end  
+  end
 
   it "is valid with valid attributes" do
     @member.should be_valid
@@ -46,11 +42,6 @@ describe Member do
     @member.should_not be_valid
   end
 
-  it "is invalid without a matching family" do
-    @member.family_id = 999
-    @member.should_not be_valid
-  end
-
   it "cannot be deleted if it is the family head" do
     head = @family.head
     Member.should have(1).record
@@ -68,25 +59,12 @@ describe Member do
     Member.should have(1).record
   end
 
-
   it "is invalid if full name already exists in database" do
-    @member.name  = @family.head.name
-#puts_member(@member, "$")
-    @member.should_not be_valid
+    v = new_member
+    v.name = @family.head.name
+    v.should_not be_valid
   end
 
-  it "copies inherited fields from family when new" do
-    @member.last_name.should == @family.last_name
-    @member.status_id.should == @family.status_id
-    @member.location_id.should == @family.location_id
-    
-  end
-  
-  it "does not copy inherited fields from family when NOT new" do
-    @member.last_name = "something else"
-    @member.save!
-    retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
-    retrieved.last_name.should_not == @family.last_name
-  end
+
 end
 

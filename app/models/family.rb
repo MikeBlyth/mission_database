@@ -3,17 +3,34 @@ class Family < ActiveRecord::Base
   has_many :members
   belongs_to :status
   belongs_to :location
+  validates_presence_of :last_name, :first_name, :name
+  validates_uniqueness_of :name, :sim_id, :allow_blank=>true
 
+  after_create :create_family_head_member
+  before_destroy :check_for_existing_members
   def to_label
-    if head.nil?
-      logger.error "Family with missing head: ID=#{id}, head=#{head_id}"
-      return "DB error missing head ID=#{id}, head=#{head_id}"
-    end
-    "*#{head.last_name_first}"
+    "* #{name}"
   end
 
+  def to_s
+    to_label
+  end
+  
   def full_name
-    head.full_name
+    name
+  end
+
+  # Creating a new family ==> Need to create the member record for head
+  def create_family_head_member
+#puts "****** new family #{self.attributes}"
+    head = Member.create!(:name=>name, :last_name=>last_name, :first_name=>first_name,
+            :status=>status, :location=>location, :family =>self, :family_head=>true)
+    self.update_attributes(:head => head)
+#puts "****** head: #{head.errors}"
+  end
+  
+  def check_for_existing_members
+    return self.members.count == 0
   end
 
 end

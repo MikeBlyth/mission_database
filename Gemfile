@@ -24,10 +24,15 @@ group :development, :test do
   gem "cucumber-rails", ">= 0.3.2"
   gem "webrat", ">= 0.7.2"
   gem "launchy"
- gem "selenium-client", ">= 1.2.18"
- gem "database_cleaner", ">= 0.5.2"
-
+  gem "factory_girl", "2.0.0.beta1"
+  gem "factory_girl_rails", "1.1.beta1"
+  gem "selenium-client", ">= 1.2.18"
+  gem "database_cleaner", ">= 0.5.2"
 end
+
+group :test do
+end
+
 # gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"
 # Use unicorn as the web server
 # gem 'unicorn'

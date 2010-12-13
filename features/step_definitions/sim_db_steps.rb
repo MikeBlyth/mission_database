@@ -1,74 +1,85 @@
+  def construct_family
+#puts "\n****+++ Constructing a family "
+    @family = Family.create!(:last_name=>'Robertson', :first_name=>'Alan', 
+      :middle_name=>'K.', :name=>'Robertson, Alan', :status_id=>1, :location_id=>1,
+      :sim_id => '99'
+      )
+    @head = @family.head
+  end
+
   def construct_member(params={})
 #puts "****+++ Starting construct member, Member.count = #{Member.count}, params=#{params}"
-    m = Member.new({:last_name=> 'Testing', 
+    m = @family.members.new( { 
         :first_name => "Test_#{rand.to_s[2..5]}",
-        :family_id => 1,
         :family_head => false,
-          :sex => 'M', 
-          :birth_date => '1970-01-01',
-          }.merge(params)) 
-    m.id = params[:id]
+        :sex => 'M', 
+        :birth_date => '1970-01-01',
+        }.merge(params) ) 
+    m.id = params[:id]   # allow override -- not sure this is needed still
 #    name = "#{m.last_name}, #{m.first_name}" if name.empty?
     m.save!
     @member_save_errors = m.errors
-#puts "****++++ new member constructed: #{m}"  
+#puts "****++++ new member constructed: #{m} (Errors: #{m.errors})"  
     m
   end
     
-  def create_family_head(params={})
-    head = construct_member({:first_name => "John", :family_head=>true}.merge(params))
-    head
-  end
-  
+ 
   def create_spouse(params={})
-    spouse = construct_member(:first_name=>"Sally", :sex=>"F", :spouse_id => @head.id)
-  end  
+    @spouse_name = params[:first_name] || "Sally"
+    @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
+  end
 
-  def create_children(n=1, params)
-    children = []
-    1.upto(n) do |x|
-      children << construct_member({:first_name => "Child_#{x}"}.merge(params))
+  def create_children(names=['Child'],params={})
+    @children = []
+    names.each do |name|
+#puts "****+++ Constructing child #{name} #{@family.last_name}"
+      @children << construct_member({:first_name => name}.merge(params))
     end  
   end  
 
-  # TODO: Replace with some kind of fixture
+  # TODO: Replace with some kind of fixture?
   def set_up_statuses
     @status = Status.create(:code => 100, :description => "TestStatus")
   end
   
+  # TODO: Replace with some kind of fixture?
   def set_up_employment_statuses
     @employment_status = EmploymentStatus.create(:code=>200, :description => "EmploymentStatus")
     EmploymentStatus.create(:code=>300, :description => "MK dependent", :mk_default => true)
   end
 
-Given /^a family view$/ do
+Given /^a one-person family$/ do
   # This stuff should probably be changed to a fixture somehow
-  @head = create_family_head({:status_id => 1, :employment_status_id => 1})
   set_up_statuses
   set_up_employment_statuses
+  construct_family
 end
 
 Given /^a family without a spouse$/ do
-  @head = create_family_head({:status_id => 1, :employment_status_id => 1})
-  @spouse = nil
+  set_up_statuses
+  set_up_employment_statuses
+  construct_family
 end
 
 Given /^a family with a spouse$/ do
-  @head = create_family_head({:status_id => 1, :employment_status_id => 1})
-  @spouse = create_spouse
+  construct_family
+  create_spouse
 end
 
 Given /^a family with a "([^"]*)" and "([^"]*)" and "([^"]*)"$/ do |spouse, child_1, child_2|
-  @head = create_family_head({:status_id => 1, :employment_status_id => 1})
+  construct_family
   if spouse != '--nil--'
-    @spouse = create_spouse(:first_name => spouse)
+    create_spouse({:first_name => spouse})
   end
   if child_1 != '--nil--'
-    @child_1 = create_children(:first_name => child_1)
+    @child_1 = create_children([child_1])
   end
   if child_2 != '--nil--'
-    @child_1 = create_children(:first_name => child_2)
+    @child_1 = create_children([child_2])
   end
+#puts "****+++ Family constructed "
+#@family.members.each {|m| puts "****+++ Member #{m.name}" }
+
 end
 
 
@@ -98,12 +109,19 @@ Then /^I receive a valid form for a child$/ do
   response.should contain("MK")
 end
 
-When /^I view the family$/ do
-  visit family_path(@head.family_id)
+When /^I view the list of families$/ do
+  visit families_path
 end
 
 Then /^I see a link to add a spouse$/ do
   response.should contain "Add spouse"
+end
+
+Then /^the family includes the head and spouse$/ do
+  couple = @family.members
+  couple.should have(2).records
+  couple[0].name.should == @head.name
+  couple[1].name.should == @spouse.name
 end
 
 Then /^I do not see a link to add a spouse$/ do
@@ -114,9 +132,9 @@ Then /^I see the head of family$/ do
   response.should contain @head.to_label
 end
 
-Then /^I see the "([^"]*)"$/ do |arg1|
-  if arg1 == '---nil--'
-    response.should contain arg1 
+Then /^I see the "([^"]*)"$/ do |thing_to_see|
+  if thing_to_see != '--nil--'
+    response.should contain thing_to_see
   else  
     response.should_not contain '--nil--'
   end
@@ -166,4 +184,5 @@ end
 Then /^it will show a duplication error$/ do
   @member.errors.should contain("already been taken")
 end
+
 

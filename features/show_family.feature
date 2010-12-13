@@ -1,20 +1,15 @@
-Feature: family members view
+Feature: family list view
 
-  This simple view shows family members
+  This simple view shows families and all their members
 
-  Scenario: View shows link to add spouse
-    Given a family without a spouse
-    When I view the family
-    Then I see a link to add a spouse   
-    
-  Scenario: View shows link to add spouse
+
+  Scenario: Create family
     Given a family with a spouse
-    When I view the family
-    Then I do not see a link to add a spouse   
-    
+    Then the family includes the head and spouse
+
   Scenario Outline: View shows head, spouse and children
     Given a family with a "<spouse>" and "<first_child>" and "<second_child>"
-    When I view the family
+    When I view the list of families
     Then I see the head of family
     And I see the "<spouse>"
     And I see the "<first_child>"

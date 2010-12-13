@@ -11,13 +11,15 @@ class Member < ActiveRecord::Base
   belongs_to :location
   belongs_to :employment_status
   belongs_to :status
-  validates_presence_of :last_name, :first_name, :name
+  validates_presence_of :last_name, :first_name, :name, :family_id
   validates_uniqueness_of :spouse_id, :allow_blank=>true
+  validate :family_record_exists
   validates_uniqueness_of :name, :id
 
+  after_initialize :inherit_from_family
   before_validation :set_indexed_name_if_empty
-  before_save :set_family_head_if_no_family
-  after_create :link_member_and_family
+  #before_save :set_family_head_if_no_family
+  #after_create :link_member_and_family
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
@@ -26,7 +28,7 @@ class Member < ActiveRecord::Base
   SECONDS_PER_DAY = 3600*24
   SECONDS_PER_WEEK = SECONDS_PER_DAY * 7
   SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
-
+=begin
   #== Relate the Family to the newly-created or updated member
   # Includes
   # * set_family_head_if_no_family  -- before_save
@@ -65,7 +67,26 @@ class Member < ActiveRecord::Base
       self.update_attributes(:family_id => self.id)
     end
   end
+=end
   
+  # Copy last name & other family-level attributes to new member as defaults
+  def inherit_from_family
+    return unless new_record? &&             # Inheritance only applies to new, unsaved records
+                  family_id && Family.find_by_id(family_id) # must belong to existing family
+    self.last_name ||= self.family.last_name
+    self.status_id = self.family.status_id
+    self.location_id = self.family.location_id
+  end
+
+  # Valid record must be linked to an existing family
+  def family_record_exists
+    # It should be enough to say ... unless family, but that does not seem to catch
+    #   newly-created records with an invalid ID. If we say ...Family.find(family_id),
+    #   it fails when id = nil, so we resort to Family.find_by_id(family_id)
+    errors.add(:family, "must belong to an existing family") unless 
+        family_id && Family.find_by_id(family_id)
+  end
+
   # Before validation, create the name column if it is empty
   def set_indexed_name_if_empty
     if self.name.blank?
@@ -146,11 +167,11 @@ class Member < ActiveRecord::Base
 
   def check_if_family_head
     if family_head
-puts "******** Can't delete head of family.*******"
+#puts "******** Can't delete head of family.*******"
       self.errors.add(:delete, "Can't delete head of family.")
       # ! uncomment this next line to prevent unwanted delete
       # ! leaving it commented while doing a lot of deletes for testing
-      raise ActiveRecord::RecordInvalid
+  #    raise ActiveRecord::RecordInvalid
       return false
     else
       true  

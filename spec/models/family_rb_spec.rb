@@ -1,0 +1,88 @@
+require 'spec_helper'
+
+describe Family do
+  before(:each) do
+    @family= Factory.build(:family)
+  end    
+
+  it "is valid with valid attributes" do
+    @family.should be_valid
+  end
+
+  it "is not valid without a first name" do
+    @family.first_name = ''
+    @family.should_not be_valid
+  end
+  it "is not valid without a last name" do
+    @family.last_name = ''
+    @family.should_not be_valid
+  end
+  it "is not valid without a full name" do
+    @family.name = ''
+    @family.should_not be_valid   # because set_indexed_name_if_empty is called before validation
+  end
+
+#  it "is valid when creating its own 'name' (full name)" do
+#    @family.name = @family.indexed_name
+#    @family.should be_valid
+#  end
+
+  it "is valid if name is unique" do
+    @family.save # save the already-created family
+    new_f = Factory.build(:family)
+    new_f.name = "dummy name"
+    new_f.should be_valid
+  end
+
+  def should_reject_duplicate(dup_column, unique_columns)
+    @family.send(dup_column.to_s + "=", "9999")
+    @family.save   # prime the situation by saving one member
+    @family = Factory.build(:family)    # get another w same params (unless @family was changed before being called)
+    unique_columns.each {|col| @family.send(col.to_s+"=", "7070") } # these fields are now unique
+    @family.send(dup_column.to_s + "=", "9999")  # this field is a duplicate
+    @family.valid?
+    @family.errors[dup_column].should == ["has already been taken"] 
+  end
+
+  it "is invalid if name already exists in database" do
+    should_reject_duplicate(:name, [:sim_id])
+  end
+
+  it "is invalid if SIM ID already exists in database" do
+    should_reject_duplicate(:sim_id, [:name])
+  end
+
+  it "creates a corresponding family head in the members table" do
+    @family.save!    # has to be saved in order to create the member
+    @head = Member.last
+    @head.family_head.should be true
+    @head.family_id.should == @family.id
+    @head.name.should == @family.name
+    @head.status.should == @family.status
+  end
+  
+  it "links through 'family_head' to the family head in the members table" do
+    @family.save!
+    @head = Member.last
+    @family.head_id.should == @head.id
+  end
+  
+  it "can be deleted when it contains no members" do
+    @family.save!    # automatically saves first member (family head) also
+    Family.count.should == 1        
+    head = @family.head
+    head.family_head = false
+    head.destroy
+    @family.destroy
+    Family.count.should == 0        
+  end
+
+  it "cannot be deleted while it contains members" do
+    @family.save!
+    Family.count.should == 1
+    @family.destroy
+    Family.count.should == 1
+  end
+
+end
+

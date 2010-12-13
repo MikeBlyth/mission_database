@@ -4,17 +4,12 @@ include ApplicationHelper
 
   active_scaffold :member do |config|
 
-#config.action_links.add "new", :label => 'Add Spouse', :parameters=>{:spouse=>'spouse'},
-#    :type => :collection
-
-
-
     config.label = "Members"
     list.columns = [:name, 
           :birth_date, :spouse, :family, :country_name, :status, :contacts, :travels, :field_terms]
     list.columns.exclude :travel,
                           :bloodtype, :allergies, :medical_facts, :medications
-    list.sorting = {:last_name => 'ASC'}
+    list.sorting = {:name => 'ASC'}
     show.columns = create.columns = update.columns = 
         [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,
@@ -27,7 +22,9 @@ include ApplicationHelper
           :contacts, :field_terms, :travels,
           :bloodtype, :allergies, :medications
           ]
-    show.columns.exclude :last_name, :first_name, :middle_name, :short_name, :name_override
+    show.columns.exclude    :last_name, :first_name, :middle_name, :short_name, :name_override
+    update.columns.exclude :family_name
+    create.columns.exclude :family_name
     config.columns[:country].actions_for_association_links = []
     config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]
@@ -77,11 +74,14 @@ include ApplicationHelper
   # Override the ActiveScaffold new method so we can initialize form for spouse and children
   def do_new
 	super		# do whatever ActiveScaffold does to make a new member
+  # find the family id from parameter like "families_1001_members"
+  family_ = params[:eid].split('_')[1]
+  
+=begin
   	if params[:spouse] || params[:child]
         family = Family.find(params[:id])
         head = family.head    # e.g. /members/new?eid=members_6_family&id=1&spouse=spouse      
   	end
-#      @spouse = Member.find(params[:spouse])  # use if url is like /members/new?spouse=15
     if params[:spouse]
     	@record.last_name = head.last_name
       @record.spouse_id = head.id
@@ -89,13 +89,13 @@ include ApplicationHelper
       @record.family_id = head.family_id
       @record.status_id = head.status_id
       @record.employment_status_id = head.employment_status_id
-#debugger      
     end
   	if params[:child] 
       @record.employment_status_id = EmploymentStatus.find_by_mk_default(true).id
     	@record.last_name = head.last_name
       @record.family_id = head.family_id
     end
+=end
 	end
 
   def set_full_names
@@ -172,7 +172,8 @@ puts "@json_resp = #{@json_resp}"
     when session[:filter] == 'other'
       ['members.status_id NOT IN (?)', ['2','3','5','6','12']]
     else
-      ['true']
+ #     ['?', true]
+      ['members.id > 0']  # no filter; use this if can't get "true" to work
     end
 
     selector
