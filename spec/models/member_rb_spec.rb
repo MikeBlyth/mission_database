@@ -5,14 +5,15 @@ describe Member do
   before(:each) do
     @status = Factory.create(:status)
     @family = Factory.create(:family)
-    @member = new_member    # This is in addition to the family_head, which is *saved* on creation of a family
+    @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
                             #   This second family member @member is *not* saved yet
   end    
 
-  def new_member
-    @family.members.new(:middle_name => 'Middle', :first_name => "Sally", :name=>"Last, Sally")
+  def new_family_member
+    Factory.build(:member, :family=>@family)
   end
 
+  ## FOR DEBUGGING ONLY
   def puts_member(m, tag='member')
     puts "****+++ #{tag}: #{m.to_s}, id=#{m.id}, status_id=#{m.status_id}, family_id=#{m.family_id}"
   end  
@@ -52,26 +53,22 @@ describe Member do
   end
 
   it "cannot be deleted if it is the family head" do
-    head = @family.head
     Member.should have(1).record
-    destroyed = head.destroy
-    destroyed.should == false
-    head.errors[:delete].should include "Can't delete head of family."
+    @family.head.destroy
+    @family.head.errors[:delete].should include "Can't delete head of family."
     Member.should have(1).record
   end
 
   it "can be deleted if it is not the family head" do
-    @member.family_head = false   # Make explicit what is default anyway
-    @member.save
-    Member.should have(2).records
-    @member.destroy
     Member.should have(1).record
+    @family.head.family_head = false  # i.e., remove family_head property from record marked as head
+    @family.head.destroy
+    Member.should have(0).records
   end
 
 
   it "is invalid if full name already exists in database" do
     @member.name  = @family.head.name
-#puts_member(@member, "$")
     @member.should_not be_valid
   end
 

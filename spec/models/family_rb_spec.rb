@@ -22,11 +22,6 @@ describe Family do
     @family.should_not be_valid   # because set_indexed_name_if_empty is called before validation
   end
 
-#  it "is valid when creating its own 'name' (full name)" do
-#    @family.name = @family.indexed_name
-#    @family.should be_valid
-#  end
-
   it "is valid if name is unique" do
     @family.save # save the already-created family
     new_f = Factory.build(:family)
@@ -54,25 +49,19 @@ describe Family do
 
   it "creates a corresponding family head in the members table" do
     @family.save!    # has to be saved in order to create the member
-    @head = Member.last
+    @head = @family.head
     @head.family_head.should be true
     @head.family_id.should == @family.id
     @head.name.should == @family.name
     @head.status.should == @family.status
   end
   
-  it "links through 'family_head' to the family head in the members table" do
-    @family.save!
-    @head = Member.last
-    @family.head_id.should == @head.id
-  end
-  
   it "can be deleted when it contains no members" do
     @family.save!    # automatically saves first member (family head) also
     Family.count.should == 1        
     head = @family.head
-    head.family_head = false
-    head.destroy
+    head.family_head = false  # because we can't destroy it if it is the family head
+    head.destroy              # remove the only member of this family
     @family.destroy
     Family.count.should == 0        
   end

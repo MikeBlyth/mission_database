@@ -28,54 +28,14 @@ class Member < ActiveRecord::Base
   SECONDS_PER_DAY = 3600*24
   SECONDS_PER_WEEK = SECONDS_PER_DAY * 7
   SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
-=begin
-  #== Relate the Family to the newly-created or updated member
-  # Includes
-  # * set_family_head_if_no_family  -- before_save
-  # * link_member_and_family        -- after_create
-  # This is a bit tricky because member and family are related in two ways.
-  # * A member BELONGS to a family through family_id (everyone belongs to a family)
-  # * A family BELONGS to a member through :head_id  (a family belongs to the head of the family)
-  # When creating a new member, the user should be able to assign him/her to an existing family.
-  # If that is not done, then the new member should constitute his own family 
-  # So the logic of what we're doing in before_ and after_save is:
-  # 1) If the member does not have an existing one
-  #    - save the new family record with a DUMMY head_id since we don't know the member's id yet
-  #    - relate the member to the new family through self.family_id = my_own_family.id
-  #    - make the member head of his/her own family
-
-  # If I am head of family, then family_id is my own id
-  # If I don't already belong to a valid family, then I must be head of my own family
-  #   -- in a new record, we can't yet set family_id because it does not yet have an id
-  #   -- in an existing record with no family_id, set the family_id to self
-  # This is on "before save" callback so executes before any create or update of a member
-  def set_family_head_if_no_family
-    self.family_id = self.id if family_head   # family <== nil if new, self if existing 
-    if self.family_id.nil? ||  family.nil?    # If no valid family is set
-      self.family_head = true                 #    Make self the head of family
-      self.family_id = self.id                #    ... will be valid id if existing, else nil
-    end
-  end
-  
-  # I am new record and I don't already belong to a family? Then make one for me!
-  # This is on 'after_create' callback, so executes only for new records
-  def link_member_and_family
-    if family_id.nil? ||  family.nil?
-      my_own_family = Family.new(:head_id => self.id, :status_id => self.status_id, :location_id => self.location_id)
-      my_own_family.id = self.id
-      my_own_family.save!
-      self.update_attributes(:family_id => self.id)
-    end
-  end
-=end
-  
+ 
   # Copy last name & other family-level attributes to new member as defaults
   def inherit_from_family
     return unless new_record? &&             # Inheritance only applies to new, unsaved records
                   family_id && Family.find_by_id(family_id) # must belong to existing family
     self.last_name ||= self.family.last_name
-    self.status_id = self.family.status_id
-    self.location_id = self.family.location_id
+    self.status_id ||= self.family.status_id
+    self.location_id ||= self.family.location_id
   end
 
   # Valid record must be linked to an existing family
