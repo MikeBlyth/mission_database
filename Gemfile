@@ -31,6 +31,10 @@ group :development, :test do
 end
 
 group :test do
+  gem "spork"	
+  gem "autotest"
+  gem "redgreen"
+  gem "test-unit", "1.2.3"
 end
 
 # gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"
