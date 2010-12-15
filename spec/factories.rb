@@ -8,7 +8,7 @@ require 'factory_girl_rails'
 
 FactoryGirl.define do
   factory :family do
-    sequence(:last_name) {|n| "LastName_#{n}" }
+    sequence(:last_name) {|n| "LastNameA_#{n}" }
     first_name "King"  
     middle_name "MiddleName"  
     short_name "Shorty"
@@ -21,9 +21,8 @@ FactoryGirl.define do
   #  association :family
     family @family
     sequence(:first_name) {|n| "Person_#{n}" }
-    family_head false
+    sex 'F'
     after_build { |user| user.inherit_from_family}
-    
   end
 
   factory :status do 

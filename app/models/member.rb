@@ -29,6 +29,10 @@ class Member < ActiveRecord::Base
   SECONDS_PER_WEEK = SECONDS_PER_DAY * 7
   SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
  
+  def family_head
+    return family.head_id == self.id
+  end 
+
   # Copy last name & other family-level attributes to new member as defaults
   def inherit_from_family
     return unless new_record? &&             # Inheritance only applies to new, unsaved records
@@ -113,8 +117,9 @@ class Member < ActiveRecord::Base
           husband = spouse
         end
         wife.family_id = husband.family_id
-        wife.family_head = false
-        husband.family_head = true
+# TODO May need to do something in Family object to fix
+#        wife.family_head = false
+#        husband.family_head = true
 
         spouse.save!
         self.save!

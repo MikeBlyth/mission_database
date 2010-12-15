@@ -59,9 +59,9 @@ describe Family do
   it "can be deleted when it contains no members" do
     @family.save!    # automatically saves first member (family head) also
     Family.count.should == 1        
-    head = @family.head
-    head.family_head = false  # because we can't destroy it if it is the family head
-    head.destroy              # remove the only member of this family
+    fam_member = @family.head # save it so we can destroy it :-)
+    @family.head = nil        # because we can't destroy head if it is the family head
+    fam_member.destroy    
     @family.destroy
     Family.count.should == 0        
   end

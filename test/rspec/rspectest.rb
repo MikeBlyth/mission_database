@@ -36,7 +36,7 @@ end ########
 
 describe "Member" do
   it "should make a new family for itself when saved without a family" do
-    m = Member.new(:last_name=>"Bee", :first_name=>"O", :country_id=>4, :family_id=>nil, :family_head=>false)
+    m = Member.new(:last_name=>"Bee", :first_name=>"O", :country_id=>4, :family_id=>nil)
 p m.class
     m.save
     f = m.family

@@ -11,7 +11,6 @@
 #puts "****+++ Starting construct member, Member.count = #{Member.count}, params=#{params}"
     m = @family.members.new( { 
         :first_name => "Test_#{rand.to_s[2..5]}",
-        :family_head => false,
         :sex => 'M', 
         :birth_date => '1970-01-01',
         }.merge(params) ) 
@@ -150,14 +149,15 @@ end
 
 ######## LINKING MEMBERS & FAMILIES ##########
 
-Given /^a single family record existing with ID=100$/ do
-    @member = construct_member(:id => 100, :family_id => 100, :family_head => true)
-end
+# Are these still needed?
+#Given /^a single family record existing with ID=100$/ do
+#    @member = construct_member(:id => 100, :family_id => 100, :family_head => true)
+#end
 
-When /^I add a member ID=101 with "([^"]*)" and "([^"]*)"$/ do |id, family_head|
-  @families = Family.count
-  @member = construct_member(:id => 101, :family_id => id, :family_head => family_head)
-end
+#When /^I add a member ID=101 with "([^"]*)" and "([^"]*)"$/ do |id, family_head|
+#  @families = Family.count
+#  @member = construct_member(:id => 101, :family_id => id, :family_head => family_head)
+#end
 
 Then /^the member's family_id will be "([^"]*)"$/ do | new_family_id |
   

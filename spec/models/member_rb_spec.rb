@@ -58,14 +58,13 @@ describe Member do
     @family.head.errors[:delete].should include "Can't delete head of family."
     Member.should have(1).record
   end
-
+ 
   it "can be deleted if it is not the family head" do
+    @member.save    # member is not the head
+    Member.should have(2).records
+    @member.destroy
     Member.should have(1).record
-    @family.head.family_head = false  # i.e., remove family_head property from record marked as head
-    @family.head.destroy
-    Member.should have(0).records
   end
-
 
   it "is invalid if full name already exists in database" do
     @member.name  = @family.head.name
@@ -85,5 +84,6 @@ describe Member do
     retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
     retrieved.last_name.should_not == @family.last_name
   end
+  
 end
 
