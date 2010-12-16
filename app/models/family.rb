@@ -22,7 +22,7 @@ class Family < ActiveRecord::Base
 
   # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
-#puts "****** new family #{self.attributes}"
+ # debugger
     head = Member.create!(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :status=>status, :location=>location, :family =>self)
     self.update_attributes(:head => head)  # Record newly-created member as the head of family

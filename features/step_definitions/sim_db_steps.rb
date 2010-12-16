@@ -1,28 +1,14 @@
+  require 'add_details'
+  
   def construct_family
-#puts "\n****+++ Constructing a family "
-    @family = Family.create!(:last_name=>'Robertson', :first_name=>'Alan', 
-      :middle_name=>'K.', :name=>'Robertson, Alan', :status_id=>1, :location_id=>1,
-      :sim_id => '99'
-      )
+    @family = Factory.create(:family)
     @head = @family.head
   end
 
   def construct_member(params={})
-#puts "****+++ Starting construct member, Member.count = #{Member.count}, params=#{params}"
-    m = @family.members.new( { 
-        :first_name => "Test_#{rand.to_s[2..5]}",
-        :sex => 'M', 
-        :birth_date => '1970-01-01',
-        }.merge(params) ) 
-    m.id = params[:id]   # allow override -- not sure this is needed still
-#    name = "#{m.last_name}, #{m.first_name}" if name.empty?
-    m.save!
-    @member_save_errors = m.errors
-#puts "****++++ new member constructed: #{m} (Errors: #{m.errors})"  
-    m
+    m = Factory.create(:member, {:family=>@family}.merge(params))
   end
-    
- 
+  
   def create_spouse(params={})
     @spouse_name = params[:first_name] || "Sally"
     @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
@@ -36,12 +22,10 @@
     end  
   end  
 
-  # TODO: Replace with some kind of fixture?
   def set_up_statuses
-    @status = Status.create(:code => 100, :description => "TestStatus")
+    @status = Factory.create(:status)
   end
   
-  # TODO: Replace with some kind of fixture?
   def set_up_employment_statuses
     @employment_status = EmploymentStatus.create(:code=>200, :description => "EmploymentStatus")
     EmploymentStatus.create(:code=>300, :description => "MK dependent", :mk_default => true)
@@ -62,7 +46,9 @@ end
 
 Given /^a family with a spouse$/ do
   construct_family
+  @head.update_attributes(:sex=>'M')
   create_spouse
+  @spouse.update_attributes(:sex=>'F')
 end
 
 Given /^a family with a "([^"]*)" and "([^"]*)" and "([^"]*)"$/ do |spouse, child_1, child_2|
@@ -111,6 +97,29 @@ end
 When /^I view the list of families$/ do
   visit families_path
 end
+
+When /^I edit the family head$/ do
+  @head.add_details   # give @head the various attributes we're going to check on the form
+  @country = Factory.create(:country)
+  @education = Factory.create(:education)
+  @employment_status = Factory.create(:employment_status)
+  @ministry = Factory.create(:ministry)
+  visit edit_member_path @head
+end  
+
+Then /^I should see the editing form for the family head$/ do
+  response.should contain "Update #{@head.to_label}"
+  field_labeled("Last name").value.should == @head.last_name
+  field_labeled("First name").value.should == @head.first_name
+  field_labeled("Sex").value.should == @head.sex
+  field_named("record[spouse]").value.should == @spouse.id.to_s
+  response.should contain @spouse.first_name
+  field_labeled("Country").value.should == @country.name
+  field_labeled("education").value.should == @head.education_id.to_s
+  field_labeled("employment status").value.should == @head.employment_status_id.to_s
+  field_labeled("ministry").value.should == @head.ministry_id.to_s
+  
+end  
 
 Then /^I see a link to add a spouse$/ do
   response.should contain "Add spouse"

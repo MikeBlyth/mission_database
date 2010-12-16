@@ -14,7 +14,7 @@ include ApplicationHelper
         [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,
           :birth_date, :spouse, 
-          :family_name, :family_head,
+          :family_name,
           :country_name,
           :date_active, :status, :employment_status,
           :ministry, :ministry_comment, 
@@ -69,35 +69,7 @@ include ApplicationHelper
       end
     end
   end    
-
   
-  # Override the ActiveScaffold new method so we can initialize form for spouse and children
-  def do_new
-	super		# do whatever ActiveScaffold does to make a new member
-  # find the family id from parameter like "families_1001_members"
-  family_ = params[:eid].split('_')[1]
-  
-=begin
-  	if params[:spouse] || params[:child]
-        family = Family.find(params[:id])
-        head = family.head    # e.g. /members/new?eid=members_6_family&id=1&spouse=spouse      
-  	end
-    if params[:spouse]
-    	@record.last_name = head.last_name
-      @record.spouse_id = head.id
-      @record.sex = opposite_sex(head.sex)
-      @record.family_id = head.family_id
-      @record.status_id = head.status_id
-      @record.employment_status_id = head.employment_status_id
-    end
-  	if params[:child] 
-      @record.employment_status_id = EmploymentStatus.find_by_mk_default(true).id
-    	@record.last_name = head.last_name
-      @record.family_id = head.family_id
-    end
-=end
-	end
-
   def set_full_names
     Member.find(:all).each do |m| 
       if m.name.blank? || (m.first_name == m.short_name)
