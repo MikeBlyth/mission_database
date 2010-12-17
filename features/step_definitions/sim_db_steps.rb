@@ -1,4 +1,4 @@
-  require 'add_details'
+  require 'sim_test_helper'
   
   def construct_family
     @family = Factory.create(:family)
@@ -100,10 +100,7 @@ end
 
 When /^I edit the family head$/ do
   @head.add_details   # give @head the various attributes we're going to check on the form
-  @country = Factory.create(:country)
-  @education = Factory.create(:education)
-  @employment_status = Factory.create(:employment_status)
-  @ministry = Factory.create(:ministry)
+  seed_tables
   visit edit_member_path @head
 end  
 
@@ -192,6 +189,22 @@ end
 
 Then /^it will show a duplication error$/ do
   @member.errors.should contain("already been taken")
+end
+
+Given /^that detail tables \(like Countries\) exist$/ do
+  seed_tables
+end
+
+When /^I select "([^"]*)"$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see a valid form for a new family$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see a valid form for updating a family$/ do
+  pending # express the regexp above with the code you wish you had
 end
 
 

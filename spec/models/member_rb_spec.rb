@@ -1,6 +1,3 @@
-require 'spec_helper'
-
-
 describe Member do
   before(:each) do
     @status = Factory.create(:status)

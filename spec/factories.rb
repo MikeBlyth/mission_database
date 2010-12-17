@@ -62,12 +62,37 @@ FactoryGirl.define do
     code 1
     description 'Educated!'
   end
+
+  factory :state do
+    id 1
+    name 'Plateau'
+  end
+  
+  factory :city do   
+    id 1
+    name 'Jos'
+    country 'ng'
+    state 'Plateau'
+  end
+  
+  factory :location do
+    id 1
+    code 1
+    description 'JETS'
+    city_id 1
+  end
   
   factory :ministry do
     id 1
     code 1
     description 'Evangelism'
   end
+
+  factory :bloodtype do
+    id 1
+    full 'AB+'
+  end
+  
   
 end
 
