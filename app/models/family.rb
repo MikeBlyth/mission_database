@@ -24,6 +24,7 @@ class Family < ActiveRecord::Base
   def create_family_head_member
  # debugger
     head = Member.create!(:name=>name, :last_name=>last_name, :first_name=>first_name,
+            :middle_name => middle_name,
             :status=>status, :location=>location, :family =>self)
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
 #puts "****** head: #{head.errors}"

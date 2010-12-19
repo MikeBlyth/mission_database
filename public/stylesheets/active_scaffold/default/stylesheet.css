@@ -108,7 +108,6 @@ float: right;
 .active-scaffold-header div.actions div.action_group li span {
 float: none;
 margin: 0 2px;
-padding: 2px;
 }
 
 .active-scaffold-header div.actions .action_group ul {
@@ -186,7 +185,7 @@ background-color: #555;
 
 .active-scaffold th a, .active-scaffold th a:visited {
 color: #fff;
-padding: 2px 15px 2px 5px;
+padding: 2px 2px 2px 5px;
 }
 
 .active-scaffold th p {
@@ -203,6 +202,10 @@ color: #ff8;
 background-color: #333;
 }
 
+.active-scaffold th.sorted a {
+padding-right: 18px;
+}
+
 .active-scaffold th.asc a,
 .active-scaffold th.asc a:hover {
 background: #333 url(../../../images/active_scaffold/default/arrow_up.gif) right 50% no-repeat;
@@ -216,6 +219,10 @@ background: #333 url(../../../images/active_scaffold/default/arrow_down.gif) rig
 .active-scaffold th.loading a,
 .active-scaffold th.loading a:hover {
 background: #333 url(../../../images/active_scaffold/default/indicator-small.gif) right 50% no-repeat;
+}
+
+.active-scaffold th .mark_heading {
+margin-left: 5px;
 }
 
 /* Table :: Record Rows
@@ -345,8 +352,9 @@ display: none;
 }
 
 .active-scaffold .actions .action_group:hover ul,
-.active-scaffold .actions .action_group ul li:hover ul {
-display:block;
+.active-scaffold .actions .action_group ul li:hover > ul,
+.active-scaffold .actions .action_group ul ul li:hover ul {
+display: block;
 }
 
 

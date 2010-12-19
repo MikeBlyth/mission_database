@@ -5,7 +5,7 @@ class FamiliesController < ApplicationController
 #    :type => :member
 #config.action_links.add "new", :label => 'Add Child', :controller=> :members, :parameters=>{:child=>'child'},
 #    :type => :member
-    config.columns = [:name, :first_name, :last_name, :sim_id, :members, :location, :status]
+    config.columns = [:name, :first_name, :last_name, :middle_name, :sim_id, :members, :location, :status]
     update.columns.exclude :members 
     create.columns.exclude :members
     config.columns[:status].clear_link  # Do not include link to family head in the list view

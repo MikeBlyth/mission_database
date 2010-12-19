@@ -216,7 +216,7 @@ Given /^a form filled in for a new family$/ do
   seed_tables
   @family = Factory.build(:family)   # Not yet saved to database
   f=@family
-puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
+puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}, f.head_id=#{f.head_id}"
   visit new_family_path
   fill_in("Last name", :with=> @family.last_name)
   fill_in("record[name]", :with=> @family.name)
@@ -228,14 +228,16 @@ end
 Then /^the database should contain the new family$/ do
   Family.count.should == 1
   f = Family.first
+  @head_id = f.head_id
 puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
   f = Family.find_by_sim_id(@family.sim_id)
   f.should_not be nil
 end
 
 Then /^I should see a form for editing the family head$/ do
-save_and_open_page( ) 
-  response.should contain Regexp.new("Update .*#{@family.last_name}")
-  response.should contain "Country name"
+
+  response.should contain "You are being redirected"
+  href = "http://example.org/members/#{@head_id}/edit"
+  response.should have_selector('a', :href=>href)
 end
 
