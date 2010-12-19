@@ -153,18 +153,6 @@ Then /^the new indexed name should be "([^"]*)"$/ do |name|
   @member.indexed_name.should == name
 end
 
-######## LINKING MEMBERS & FAMILIES ##########
-
-# Are these still needed?
-#Given /^a single family record existing with ID=100$/ do
-#    @member = construct_member(:id => 100, :family_id => 100, :family_head => true)
-#end
-
-#When /^I add a member ID=101 with "([^"]*)" and "([^"]*)"$/ do |id, family_head|
-#  @families = Family.count
-#  @member = construct_member(:id => 101, :family_id => id, :family_head => family_head)
-#end
-
 Then /^the member's family_id will be "([^"]*)"$/ do | new_family_id |
   
   @member.family_id.should == new_family_id.to_i
@@ -195,16 +183,59 @@ Given /^that detail tables \(like Countries\) exist$/ do
   seed_tables
 end
 
-When /^I select "([^"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+When /^I select "new family"$/ do 
+  visit new_family_path
+end
+
+When /^I select "update family"$/ do
+Factory.create(:status)
+  visit edit_family_path @family
 end
 
 Then /^I should see a valid form for a new family$/ do
-  pending # express the regexp above with the code you wish you had
+  response.should contain "Create Family"
+  response.should contain "Create Family"
+  field_labeled("Last name").value.blank?.should be true
+  field_labeled("First name").value.blank?.should be true
+  field_labeled("SIM").value.blank?.should be true
+  field_labeled("Status").value.blank?.should be true
+  field_labeled("Location").value.blank?.should be true
 end
 
 Then /^I should see a valid form for updating a family$/ do
-  pending # express the regexp above with the code you wish you had
+puts "@family.status_id=#{@family.status_id}, status=#{@family.status}"
+  response.should contain Regexp.new("Update .*#{@family.last_name}")
+  field_labeled("Last name").value.should == @family.last_name
+  field_labeled("First name").value.should == @family.first_name
+  field_labeled("SIM").value.should == @family.sim_id.to_s
+  field_labeled("Status").value.should == @family.status_id.to_s
+  field_labeled("Location").value.should == @family.location_id.to_s
 end
 
+Given /^a form filled in for a new family$/ do
+  seed_tables
+  @family = Factory.build(:family)   # Not yet saved to database
+  f=@family
+puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
+  visit new_family_path
+  fill_in("Last name", :with=> @family.last_name)
+  fill_in("record[name]", :with=> @family.name)
+  fill_in("First name", :with=> @family.first_name)
+  fill_in("SIM", :with=> @family.sim_id)
+
+end
+
+Then /^the database should contain the new family$/ do
+  Family.count.should == 1
+  f = Family.first
+puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
+  f = Family.find_by_sim_id(@family.sim_id)
+  f.should_not be nil
+end
+
+Then /^I should see a form for editing the family head$/ do
+save_and_open_page( ) 
+  response.should contain Regexp.new("Update .*#{@family.last_name}")
+  response.should contain "Country name"
+end
 

@@ -5,7 +5,7 @@ class FamiliesController < ApplicationController
 #    :type => :member
 #config.action_links.add "new", :label => 'Add Child', :controller=> :members, :parameters=>{:child=>'child'},
 #    :type => :member
-    config.columns = [:name, :sim_id, :members, :location, :status]
+    config.columns = [:name, :first_name, :last_name, :sim_id, :members, :location, :status]
     update.columns.exclude :members 
     create.columns.exclude :members
     config.columns[:status].clear_link  # Do not include link to family head in the list view
@@ -15,6 +15,11 @@ class FamiliesController < ApplicationController
     config.columns[:members].associated_limit = nil    # show all members, no limit to how many
     config.columns[:location].form_ui = :select 
     config.columns[:status].form_ui = :select
+    config.columns[:name].description = "This is the name by which the family will be known"
+    config.columns[:first_name].description = "of individual or head of family"
+  
+    config.columns[:sim_id].label = "SIM ID Number"
+    config.create.link.page = true 
 
   end
   
@@ -39,6 +44,16 @@ class FamiliesController < ApplicationController
 
     selector
   end  
-  
+
+  def create_respond_to_html 
+   redirect_to edit_member_path @record.head
+puts "  redirect_to #{edit_member_path @record.head}"
+  end  
+
+  def create_respond_to_js
+   redirect_to edit_member_path @record.head
+puts "  redirect_to #{edit_member_path @record.head}"
+  end  
+
 end
 

@@ -12,6 +12,7 @@ FactoryGirl.define do
     first_name "King"  
     middle_name "MiddleName"  
     short_name "Shorty"
+    sequence(:sim_id) {|n|  500 + n }
     status_id 1
     location_id 1
     name {"#{last_name}, #{first_name}"}
