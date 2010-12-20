@@ -119,6 +119,7 @@ x.save
 x = City.new(:name => 'unspecified', :state => '', :country => '??')
 x.id = 47
 x.save
+unspecified_city_id = x.id   # We save this to use in the unspecified location record (see below)
 
 
 ContactType.delete_all
@@ -1087,7 +1088,11 @@ x.save
 x = Location.new(:description => 'Karu--Seminary', :city_id => 26, :code => 30101)
 x.id = 44
 x.save
-x = Location.new(:description => 'unspecified', :city_id => 0, :code => 0)
+# -- Note that the next line requires "unspecified_city_id" which is defined above in the
+# section seeding the cities. It could also be generated independently here, as
+#     unspecified_city_id = City.find_by_description('unspecified').id
+# but the cities still have to be seeded first.
+x = Location.new(:description => 'unspecified', :city_id => unspecified_city_id, :code => 0)
 x.id = 48
 x.save
 

@@ -1,5 +1,6 @@
 class MembersController < ApplicationController
 helper :countries
+helper :name_column
 include ApplicationHelper
 
   active_scaffold :member do |config|

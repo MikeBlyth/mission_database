@@ -2,7 +2,7 @@
 
 <div class='active-scaffold'>
 <%= raw "<div class='show-view family-view view' id='show_family_#{@record.id}'>" %>
-<h4><%= @record.full_name %>'s Family</h4>
+<h4> <%= "Family of #{@record.casual_name} (#{@record.name})" %></h4>
 <p>Click on a name to edit that person's information!</p>
 
 <div id='family_members' style='margin-left: 10px'>

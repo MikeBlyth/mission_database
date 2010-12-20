@@ -1,13 +1,17 @@
 class FamiliesController < ApplicationController
+helper :name_column
+
   active_scaffold :family do |config|
      list.sorting = {:name => 'ASC'}
 #config.action_links.add "new", :label => 'Spouse', :controller=> :members, :parameters=>{:spouse=>'spouse', },
 #    :type => :member
 #config.action_links.add "new", :label => 'Add Child', :controller=> :members, :parameters=>{:child=>'child'},
 #    :type => :member
-    config.columns = [:name, :first_name, :last_name, :middle_name, :sim_id, :members, :location, :status]
+    config.columns = [:name, :name_override, :first_name, :last_name, :middle_name, :sim_id, :members, :location, :status]
     update.columns.exclude :members 
+    update.columns.exclude :members, :first_name, :last_name, :middle_name 
     create.columns.exclude :members
+    list.columns.exclude  :name_override
     config.columns[:status].clear_link  # Do not include link to family head in the list view
     config.columns[:location].clear_link  # Do not include link to family head in the list view
 #    config.update.link = false  # Do not include a link to "Edit" on each line
@@ -44,6 +48,14 @@ class FamiliesController < ApplicationController
 
     selector
   end  
+
+  def do_new
+    super
+    @unspecified_location = Location.find_by_code(0)
+    @unspecified_status = Status.find_by_code(0)
+    @record.location = @unspecified_location
+    @record.status = @unspecified_status
+  end
 
   def create_respond_to_html 
    redirect_to edit_member_path @record.head

@@ -20,6 +20,10 @@ class Family < ActiveRecord::Base
     name
   end
 
+  def casual_name
+    head.full_name_short
+  end
+
   # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
  # debugger

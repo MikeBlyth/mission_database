@@ -1,0 +1,53 @@
+%h3 Create a New Individual or Family
+
+= form_for :record, :url => { :action => "create" } do |form| 
+  %h4 Information for the individual or <em>head</em> of family
+  %p
+    = form.label :name
+    = form.text_field :name
+  %p
+    = form.label :name_override
+    = form.check_box :name_override
+    %a.allow_edit{:href=>'#', :id=> "allow_edit_#{params[:id]}"} Click to allow editing
+  %p 
+    = form.label :last_name
+    = form.text_field :last_name
+
+  %p 
+    = form.label :first_name
+    = form.text_field :first_name
+
+  %p 
+    = form.label :middle_name
+    = form.text_field :middle_name
+
+  %p 
+    = form.label :short_name
+    = form.text_field :short_name
+
+  %h4 Information for individual or <em>entire family</em>
+  %p
+    = form.label :sim_id, 'SIM ID'
+    = form.text_field :sim_id
+  %p
+    = form.label :status_id, "Status"
+    = collection_select(:record, :status_id, Status.all, :id, :description)    
+  %p
+    = form.label :location_id, "Location"
+    - @location_options = options_from_collection_for_select(Location.all, :id, :description)
+    = form.select(:location_id, @location_options)    
+
+  .actions
+    = form.submit "Create"
+
+/ 
+  This will go in the corresponding EDIT form
+  #family_members{:style=>'margin-left: 10px'}
+
+    - @record.members.each do  |m|
+      %p= link_to 'Edit', edit_member_path(m), {:remote=>"true", :position=>"after", :class=>"edit as_action"}  
+      %span= m.to_label + " (#{m.sex})"
+
+
+
+

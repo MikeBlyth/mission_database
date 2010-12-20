@@ -193,20 +193,24 @@ Factory.create(:status)
 end
 
 Then /^I should see a valid form for a new family$/ do
-  response.should contain "Create Family"
-  response.should contain "Create Family"
-  field_labeled("Last name").value.blank?.should be true
+save_and_open_page( )
+  response.should contain "Create a New Individual or Family"
+  field_named("record[last_name]").value.blank?.should be true
   field_labeled("First name").value.blank?.should be true
   field_labeled("SIM").value.blank?.should be true
-  field_labeled("Status").value.blank?.should be true
-  field_labeled("Location").value.blank?.should be true
+puts "Status_id=#{field_with_id("record_status_id").value}"
+  field_with_id("record_status_id").value.blank?.should be true
+puts "Location_id=#{field_with_id("record_location_id").value}"
+  field_with_id("record_location_id").value.blank?.should be true
 end
 
 Then /^I should see a valid form for updating a family$/ do
+# save_and_open_page( )
 puts "@family.status_id=#{@family.status_id}, status=#{@family.status}"
   response.should contain Regexp.new("Update .*#{@family.last_name}")
-  field_labeled("Last name").value.should == @family.last_name
-  field_labeled("First name").value.should == @family.first_name
+  field_labeled("Name").value.should == @family.name
+#  field_labeled("Last name").value.should == @family.last_name
+#  field_labeled("First name").value.should == @family.first_name
   field_labeled("SIM").value.should == @family.sim_id.to_s
   field_labeled("Status").value.should == @family.status_id.to_s
   field_labeled("Location").value.should == @family.location_id.to_s
@@ -240,4 +244,15 @@ Then /^I should see a form for editing the family head$/ do
   href = "http://example.org/members/#{@head_id}/edit"
   response.should have_selector('a', :href=>href)
 end
+
+Then /^I should see a customized form for a new family$/ do
+  response.should contain "Create a New Individual or Family"
+  response.should contain "Click to allow editing"
+  response.should have_selector "input", :id=> 'record_name' 
+#  field_labeled("First name").value.should == @family.first_name
+#  field_labeled("SIM").value.should == @family.sim_id.to_s
+#  field_labeled("Status").value.should == @family.status_id.to_s
+#  field_labeled("Location").value.should == @family.location_id.to_s
+end
+
 
