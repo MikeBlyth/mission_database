@@ -188,20 +188,8 @@ When /^I select "new family"$/ do
 end
 
 When /^I select "update family"$/ do
-Factory.create(:status)
-  visit edit_family_path @family
-end
 
-Then /^I should see a valid form for a new family$/ do
-save_and_open_page( )
-  response.should contain "Create a New Individual or Family"
-  field_named("record[last_name]").value.blank?.should be true
-  field_labeled("First name").value.blank?.should be true
-  field_labeled("SIM").value.blank?.should be true
-puts "Status_id=#{field_with_id("record_status_id").value}"
-  field_with_id("record_status_id").value.blank?.should be true
-puts "Location_id=#{field_with_id("record_location_id").value}"
-  field_with_id("record_location_id").value.blank?.should be true
+  visit edit_family_path @family
 end
 
 Then /^I should see a valid form for updating a family$/ do
@@ -243,6 +231,20 @@ Then /^I should see a form for editing the family head$/ do
   response.should contain "You are being redirected"
   href = "http://example.org/members/#{@head_id}/edit"
   response.should have_selector('a', :href=>href)
+end
+
+Then /^I should see a valid form for a new family$/ do
+save_and_open_page( )
+  response.should contain "Create a New Individual or Family"
+  field_named("record[last_name]").value.blank?.should be true
+  field_labeled("First name").value.blank?.should be true
+  field_labeled("SIM").value.blank?.should be true
+  x = field_with_id("record_status").element
+  puts x
+puts "Status_id=#{field_with_id("record_status").element}; value=#{field_with_id("record_status").value}"
+  field_with_id("record_status").element.search(".//option[@selected = 'selected']").inner_html.should =~ /on field/i
+puts "Location_id=#{field_with_id("record_location_id").value}"
+  field_with_id("record_location").value.should == "-1"
 end
 
 Then /^I should see a customized form for a new family$/ do

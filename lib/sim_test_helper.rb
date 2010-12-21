@@ -19,9 +19,20 @@ end
 #Module SIM_Test_Helper
   
   def seed_tables
+    Factory.create(:country_unspecified)
+    Factory.create(:status_unspecified)
+    Factory.create(:state_unspecified)
+    Factory.create(:city_unspecified)
+    Factory.create(:location_unspecified)
+    Factory.create(:education_unspecified)
+    Factory.create(:employment_status_unspecified)
+    Factory.create(:ministry_unspecified)
+    Factory.create(:bloodtype_unspecified)
     @country = Factory.create(:country)
+    @status = Factory.create(:status)
     @state = Factory.create(:state)
     @city = Factory.create(:city)
+  puts "City=#{@city.id}, #{@city.name}"
     @location = Factory.create(:location)
     @education = Factory.create(:education)
     @employment_status = Factory.create(:employment_status)

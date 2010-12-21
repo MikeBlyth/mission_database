@@ -37,9 +37,10 @@ class Member < ActiveRecord::Base
   def inherit_from_family
     return unless new_record? &&             # Inheritance only applies to new, unsaved records
                   family_id && Family.find_by_id(family_id) # must belong to existing family
-    self.last_name ||= self.family.last_name
-    self.status_id ||= self.family.status_id
-    self.location_id ||= self.family.location_id
+    self.last_name = family.last_name
+    self.status_id = family.status_id
+    self.location_id = family.location_id
+#puts "**** Inherited from family; status_id = #{self.status_id}"
   end
 
   # Valid record must be linked to an existing family

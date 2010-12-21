@@ -5,6 +5,13 @@ describe Family do
     @family= Factory.build(:family)
   end    
 
+  it "has the right 'unspecified' defaults when created" do
+    m = Family.new
+    m.status_id.should == -1
+    m.location_id.should == -1
+    m.sim_id.should == nil
+  end    
+
   it "is valid with valid attributes" do
     @family.should be_valid
   end
@@ -13,6 +20,7 @@ describe Family do
     @family.first_name = ''
     @family.should_not be_valid
   end
+
   it "is not valid without a last name" do
     @family.last_name = ''
     @family.should_not be_valid

@@ -2,6 +2,7 @@
 
 = form_for :record, :url => { :action => "create" } do |form| 
   %h4 Information for the individual or <em>head</em> of family
+  = debug @record
   %p
     = form.label :name
     = form.text_field :name
@@ -30,12 +31,11 @@
     = form.label :sim_id, 'SIM ID'
     = form.text_field :sim_id
   %p
-    = form.label :status_id, "Status"
-    = collection_select(:record, :status_id, Status.all, :id, :description)    
+    = form.label :status, "Status"
+    = form.collection_select(:status, Status.all, :id, :description)    
   %p
-    = form.label :location_id, "Location"
-    - @location_options = options_from_collection_for_select(Location.all, :id, :description)
-    = form.select(:location_id, @location_options)    
+    = form.label :location, "Location"
+    = form.collection_select(:location, Location.find(:all, :order=>'description'), :id, :description)    
 
   .actions
     = form.submit "Create"

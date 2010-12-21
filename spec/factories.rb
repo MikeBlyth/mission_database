@@ -13,8 +13,6 @@ FactoryGirl.define do
     middle_name "MiddleName"  
     short_name "Shorty"
     sequence(:sim_id) {|n|  500 + n }
-    status_id 1
-    location_id 1
     name {"#{last_name}, #{first_name}"}
   end
 
@@ -42,7 +40,13 @@ FactoryGirl.define do
   factory :status do 
     id 1
     code 1
-    description "Description 1"
+    description "On field"
+  end
+
+  factory :status_unspecified, :parent => :status do 
+    id -1
+    code 0
+    description "Unspecified"
   end
 
   factory :country do
@@ -52,10 +56,23 @@ FactoryGirl.define do
     nationality 'Afghan'
   end
   
+  factory :country_unspecified, :parent => :country do
+    id -1
+    code '??'
+    name 'Unspecified'
+    nationality 'Unspecified'
+  end
+  
   factory :employment_status do
     id 1
     code 1
     description 'Career'
+  end
+  
+  factory :employment_status_unspecified, :parent => :employment_status do
+    id -1
+    code 0
+    description "Unspecified"
   end
   
   factory :education do
@@ -64,9 +81,20 @@ FactoryGirl.define do
     description 'Educated!'
   end
 
+  factory :education_unspecified, :parent => :education do
+    id -1
+    code 0
+    description "Unspecified"
+  end
+
   factory :state do
     id 1
     name 'Plateau'
+  end
+  
+  factory :state_unspecified, :parent => :state do
+    id -1
+    name 'Unspecified'
   end
   
   factory :city do   
@@ -74,6 +102,13 @@ FactoryGirl.define do
     name 'Jos'
     country 'ng'
     state 'Plateau'
+  end
+
+  factory :city_unspecified, :parent => :city do   
+    id -1
+    name 'Unspecified'
+    country '??'
+    state ''
   end
   
   factory :location do
@@ -83,10 +118,23 @@ FactoryGirl.define do
     city_id 1
   end
   
+  factory :location_unspecified, :parent => :location do
+    id -1
+    code 0
+    description 'Unspecified'
+    city_id -1
+  end
+  
   factory :ministry do
     id 1
     code 1
     description 'Evangelism'
+  end
+
+  factory :ministry_unspecified, :parent => :ministry do
+    id -1
+    code 0
+    description 'Unspecified'
   end
 
   factory :bloodtype do
@@ -94,7 +142,12 @@ FactoryGirl.define do
     full 'AB+'
   end
   
+  factory :bloodtype_unspecified, :parent => :bloodtype do
+    id -1
+    full 'Unspecified'
+  end
   
+ 
 end
 
 
