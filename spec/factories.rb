@@ -5,6 +5,11 @@ require 'factory_girl_rails'
 #def clean
 # DatabaseCleaner.clean
 #end
+#  FactoryGirl.sequence :loc do |n|
+#    n
+#  end
+
+
 
 FactoryGirl.define do
   factory :family do
@@ -112,9 +117,9 @@ FactoryGirl.define do
   end
   
   factory :location do
-    id 1
-    code 1
-    description 'JETS'
+    sequence(:id) {|n| n}
+    sequence(:code) {|n| 20+n}
+    description 'JETS' 
     city_id 1
   end
   
