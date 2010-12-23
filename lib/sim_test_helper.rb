@@ -39,5 +39,15 @@ end
     @ministry = Factory.create(:ministry)
     @bloodtype = Factory.create(:bloodtype)
   end
+
+# see https://github.com/shyouhei/ruby/blob/trunk/ext/syck/lib/syck.rb#L436
+    def y( object, *objects )
+        objects.unshift object
+        puts( if objects.length == 1
+                  YAML.dump( *objects )
+              else
+                  YAML.dump_stream( *objects )
+              end )
+    end
   
 #end
