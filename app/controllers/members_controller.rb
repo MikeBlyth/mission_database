@@ -49,7 +49,7 @@ include ApplicationHelper
 #    config.columns[:family].link = :show
 #    config.nested.add_link("Family", [:family])  # This doesn't seem to work; should add a "Family" link in actions
  #   config.nested.add_scoped_link(:family) 
-   config.actions.exclude :create
+#   config.actions.exclude :create
    config.actions.exclude :search
    config.actions.add :field_search
    config.field_search.human_conditions = true

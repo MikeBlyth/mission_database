@@ -1,7 +1,8 @@
 SIM::Application.routes.draw do
 
   match 'countries_autocomplete/index'
-  match 'autocomplete/country'
+  match '*a/autocomplete/country' => 'autocomplete#country'
+  match 'autocomplete/country' 
   match 'autocomplete/family'
   match 'autocomplete/spouse'
   match 'autocomplete_searches/index'

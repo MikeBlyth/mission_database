@@ -242,8 +242,9 @@ save_and_open_page( )
   x = field_with_id("record_status").element
   puts x
 puts "Status_id=#{field_with_id("record_status").element}; value=#{field_with_id("record_status").value}"
-  field_with_id("record_status").element.search(".//option[@selected = 'selected']").inner_html.should =~ /on field/i
-puts "Location_id=#{field_with_id("record_location_id").value}"
+puts field_with_id("record_status").element.search(".//option[@selected = 'selected']")
+  field_with_id("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
+puts "Location_id=#{field_with_id("record_location").value}"
   field_with_id("record_location").value.should == "-1"
 end
 

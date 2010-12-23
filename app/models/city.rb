@@ -6,11 +6,17 @@ class City < ActiveRecord::Base
   validates_numericality_of :longitude, :allow_nil => true;
   validates_numericality_of :latitude, :allow_nil => true;
   # note we can't simply check for uniqueness of name since there can be cities w same name
+
+  def locations_sorted
+    locations.sort_by {|x| x.description}
+  end
   
 protected
+
   def nigeria
   #  return false
     c = self.country.to_s.downcase
     return (c == 'nigeria') || (c == 'ng')
   end
+
 end

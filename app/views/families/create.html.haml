@@ -32,10 +32,13 @@
     = form.text_field :sim_id
   %p
     = form.label :status, "Status"
-    = form.collection_select(:status, Status.all, :id, :description)    
+    - status_choices =   options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
+    = debug status_choices
+    = "**@record[:status_id]=#{@record[:status_id]}"
+    = form.select(:status, status_choices)    
   %p
     = form.label :location, "Location"
-    = form.collection_select(:location, Location.find(:all, :order=>'description'), :id, :description)    
+    = form.select(:location, location_selection_list(@record[:location_id]))    
 
   .actions
     = form.submit "Create"

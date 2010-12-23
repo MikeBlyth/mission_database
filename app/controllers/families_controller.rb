@@ -54,9 +54,9 @@ helper :name_column
 #    @unspecified_location = Location.find_by_description('Unspecified')
 # TODO Need to standardize -- status should not have one-character codes; unspecified should be 0
  #   @unspecified_status = Status.find_by_description('Unspecified')
-    @locations = Location.select("code, city_id, description").order("code")
-    @record.location_id = 1
-    @record.status = Status.find(-1)
+#    @locations = Location.select("code, city_id, description").order("code")
+#    @record.location_id = -1
+#    @record.status = Status.find(-1)
   end
 
   def create_respond_to_html 

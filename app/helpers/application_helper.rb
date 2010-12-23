@@ -14,7 +14,9 @@ module ApplicationHelper
     end	
 
 end
-
+include ActionView::Helpers::FormOptionsHelper
+# TODO: May be best to replace this with the Rails method that does the same thing.
+# http://api.rubyonrails.org/classes/ActionView/Helpers/FormOptionsHelper.html#method-i-option_groups_from_collection_for_select
 def options_for_select_with_grouping(option_list, grouping_column, selected, value_column=:id, label_column=:description)
   options = []
   groups = option_list.group_by{|opt| opt[grouping_column]}.sort_by { |k,v| k}
@@ -35,12 +37,13 @@ def options_for_select_with_grouping(option_list, grouping_column, selected, val
 end
 
 def location_selection_list (selected=-1)
+cities = City.where(1).order('name')
+return option_groups_from_collection_for_select(cities, :locations_sorted, :name, :id, :description, selected)
   selections =  Location.select("id, city_id, description")
   hashed_locations = []
   selections.each do | selection |
     hashed_locations << {:id => selection.id, :city=>selection.city.name, :description => selection.description}
   end
-puts hashed_locations
   options_for_select_with_grouping(hashed_locations, :city, selected)
   
 end
