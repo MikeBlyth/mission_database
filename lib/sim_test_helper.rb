@@ -1,6 +1,7 @@
 require Rails.root.join('spec/factories')
 require 'member'
 
+# Why can't this go in the module?
 class Member
   def add_details
     self.update_attributes(:middle_name => 'Midname',
@@ -16,8 +17,10 @@ class Member
   end
 end
 
+
 module SimTestHelper
-  
+
+ 
   def seed_tables
     Factory.create(:country_unspecified)
     Factory.create(:status_unspecified)

@@ -1,4 +1,5 @@
   require 'sim_test_helper'
+  include SimTestHelper
   
   def construct_family
     @family = Factory.create(:family)
@@ -194,7 +195,7 @@ end
 
 Then /^I should see a valid form for updating a family$/ do
 # save_and_open_page( )
-puts "@family.status_id=#{@family.status_id}, status=#{@family.status}"
+#puts "@family.status_id=#{@family.status_id}, status=#{@family.status}"
   response.should contain Regexp.new("Update .*#{@family.last_name}")
   field_labeled("Name").value.should == @family.name
 #  field_labeled("Last name").value.should == @family.last_name
@@ -207,8 +208,6 @@ end
 Given /^a form filled in for a new family$/ do
   seed_tables
   @family = Factory.build(:family)   # Not yet saved to database
-  f=@family
-puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}, f.head_id=#{f.head_id}"
   visit new_family_path
   fill_in("Last name", :with=> @family.last_name)
   fill_in("record[name]", :with=> @family.name)
@@ -221,7 +220,7 @@ Then /^the database should contain the new family$/ do
   Family.count.should == 1
   f = Family.first
   @head_id = f.head_id
-puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
+#puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
   f = Family.find_by_sim_id(@family.sim_id)
   f.should_not be nil
 end

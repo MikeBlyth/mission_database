@@ -61,12 +61,10 @@ helper :name_column
 
   def create_respond_to_html 
    redirect_to edit_member_path @record.head
-puts "  redirect_to #{edit_member_path @record.head}"
   end  
 
   def create_respond_to_js
    redirect_to edit_member_path @record.head
-puts "  redirect_to #{edit_member_path @record.head}"
   end  
 
 end
