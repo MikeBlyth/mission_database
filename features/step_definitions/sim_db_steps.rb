@@ -234,17 +234,12 @@ Then /^I should see a form for editing the family head$/ do
 end
 
 Then /^I should see a valid form for a new family$/ do
-save_and_open_page( )
+#save_and_open_page( )
   response.should contain "Create a New Individual or Family"
   field_named("record[last_name]").value.blank?.should be true
   field_labeled("First name").value.blank?.should be true
   field_labeled("SIM").value.blank?.should be true
-  x = field_with_id("record_status").element
-  puts x
-puts "Status_id=#{field_with_id("record_status").element}; value=#{field_with_id("record_status").value}"
-puts field_with_id("record_status").element.search(".//option[@selected = 'selected']")
   field_with_id("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
-puts "Location_id=#{field_with_id("record_location").value}"
   field_with_id("record_location").value.should == "-1"
 end
 

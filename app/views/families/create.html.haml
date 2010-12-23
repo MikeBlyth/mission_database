@@ -2,7 +2,6 @@
 
 = form_for :record, :url => { :action => "create" } do |form| 
   %h4 Information for the individual or <em>head</em> of family
-  = debug @record
   %p
     = form.label :name
     = form.text_field :name
@@ -33,12 +32,10 @@
   %p
     = form.label :status, "Status"
     - status_choices =   options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
-    = debug status_choices
-    = "**@record[:status_id]=#{@record[:status_id]}"
     = form.select(:status, status_choices)    
   %p
     = form.label :location, "Location"
-    = form.select(:location, location_selection_list(@record[:location_id]))    
+    = form.select(:location, location_choices(@record[:location_id]))    
 
   .actions
     = form.submit "Create"

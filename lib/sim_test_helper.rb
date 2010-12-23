@@ -16,7 +16,7 @@ class Member
   end
 end
 
-#Module SIM_Test_Helper
+module SimTestHelper
   
   def seed_tables
     Factory.create(:country_unspecified)
@@ -32,12 +32,43 @@ end
     @status = Factory.create(:status)
     @state = Factory.create(:state)
     @city = Factory.create(:city)
-  puts "City=#{@city.id}, #{@city.name}"
     @location = Factory.create(:location)
     @education = Factory.create(:education)
     @employment_status = Factory.create(:employment_status)
     @ministry = Factory.create(:ministry)
     @bloodtype = Factory.create(:bloodtype)
+  end
+
+# This is just a convenient way of defining a few locations to be created 
+  def locations_hash
+   [ 
+                  {:city=>'Jos', :city_id => 2, :description=>'Evangel', :id=>1},
+                  {:city=>'Jos', :city_id => 2, :description=>'JETS', :id=>3},
+                  {:city=>'Jos', :city_id => 2, :description=>'ECWA', :id=>2},
+                  {:city=>'Miango', :city_id => 4, :description=>'MRH', :id=>4},
+                  {:city=>'Miango', :city_id => 2, :description=>'KA', :id=>5},
+                  {:city=>'Miango', :city_id => 2, :description=>'Miango Dental Clinic', :id=>6},
+                  {:city=>'Kano', :city_id => 3, :description=>'Tofa Bible School', :id=>7},
+                  {:city=>'Kano', :city_id => 3, :description=>'Kano Eye Hospital', :id=>8},
+                  {:city=>'Abuja', :city_id => 5, :description=>'Abuja Guest House', :id=>9}
+    ]
+  end
+  
+  def setup_cities
+    Factory.create(:city, :name => 'Jos', :id=>2)
+    Factory.create(:city, :name => 'Kano', :id=>3)
+    Factory.create(:city, :name => 'Miango', :id=>4)
+    Factory.create(:city, :name => 'Abuja', :id=>5)
+    Factory.create(:city_unspecified)
+  end
+
+  def setup_locations
+    locations_hash.each do |location| 
+      Factory.create(:location, :id=>location[:id], :city_id=>location[:city_id],
+              :description=>location[:description])
+    end
+    Factory.create(:location_unspecified)
+    @locations = Location.all
   end
 
 # see https://github.com/shyouhei/ruby/blob/trunk/ext/syck/lib/syck.rb#L436
@@ -50,4 +81,4 @@ end
               end )
     end
   
-#end
+end
