@@ -1,0 +1,37 @@
+%h3 Edit Family <em> #{@record.to_label} </em>
+
+= form_for @record, :as=> :record, :url => { :action => "update" } do |form| 
+  %h4 Information for individual or <em>entire family</em>
+  %p
+    = form.label :name, 'Name to identify family'
+    %a.allow_edit{:href=>'#', :id=> "allow_edit_#{params[:id]}"} Click to allow editing
+    %br
+    = form.text_field :name
+    = form.label :name_override
+    = form.check_box :name_override
+  %p
+
+  %p
+    = form.label :sim_id, 'SIM ID'
+    = form.text_field :sim_id, :class => 'sim_id-input'
+    = form.label :status, "Status"
+    - status_choices =   options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
+    = form.select(:status, status_choices)    
+    = form.label :location, "Location"
+    = form.select(:location, location_choices(@record[:location_id]))    
+  <hr>
+ 
+  This will go in the corresponding EDIT form
+  #family_members{:style=>'margin-left: 10px'}
+
+    - @record.members.each do  |m|
+      %p
+        = link_to 'Edit', edit_member_path(m), {:remote=>"true", :position=>"after", :class=>"edit as_action"}  
+        %span= m.to_label + " (#{m.sex})"
+
+  .actions
+    = form.submit "Update"
+
+
+
+

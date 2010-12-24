@@ -2,38 +2,42 @@
 
 = form_for :record, :url => { :action => "create" } do |form| 
   %h4 Information for the individual or <em>head</em> of family
-  %p
-    = form.label :name
-    = form.text_field :name
-  %p
-    = form.label :name_override
-    = form.check_box :name_override
-    %a.allow_edit{:href=>'#', :id=> "allow_edit_#{params[:id]}"} Click to allow editing
   %p 
-    = form.label :last_name
-    = form.text_field :last_name
-
-  %p 
-    = form.label :first_name
-    = form.text_field :first_name
-
-  %p 
-    = form.label :middle_name
-    = form.text_field :middle_name
-
-  %p 
-    = form.label :short_name
-    = form.text_field :short_name
-
+    %table
+      %tr
+        %td
+          = form.label :last_name
+          %br
+          = form.text_field :last_name, :class=> "last_name-input"
+        %td
+          = form.label :first_name
+          %br
+          = form.text_field :first_name, :class=> "first_name-input"
+        %td
+          = form.label :middle_name
+          %br
+          = form.text_field :middle_name, :class=> "middle_name-input"
+        %td
+          = form.label :short_name
+          %br
+          = form.text_field :short_name, :class=> "short_name-input"
+  %hr
   %h4 Information for individual or <em>entire family</em>
   %p
-    = form.label :sim_id, 'SIM ID'
-    = form.text_field :sim_id
+    = form.label :name, 'Name to identify family'
+    %a.allow_edit{:href=>'#', :id=> "allow_edit_#{params[:id]}"} Click to allow editing
+    %br
+    = form.text_field :name
+    = form.label :name_override
+    = form.check_box :name_override
   %p
+
+  %p
+    = form.label :sim_id, 'SIM ID'
+    = form.text_field :sim_id, :class => 'sim_id-input'
     = form.label :status, "Status"
     - status_choices =   options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
     = form.select(:status, status_choices)    
-  %p
     = form.label :location, "Location"
     = form.select(:location, location_choices(@record[:location_id]))    
 
@@ -41,7 +45,7 @@
     = form.submit "Create"
 
 / 
-  This will go in the corresponding EDIT form
+  %h4 Family Members
   #family_members{:style=>'margin-left: 10px'}
 
     - @record.members.each do  |m|

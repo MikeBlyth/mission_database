@@ -196,8 +196,8 @@ end
 Then /^I should see a valid form for updating a family$/ do
 # save_and_open_page( )
 #puts "@family.status_id=#{@family.status_id}, status=#{@family.status}"
-  response.should contain Regexp.new("Update .*#{@family.last_name}")
-  field_labeled("Name").value.should == @family.name
+  response.should contain Regexp.new("(Update|Edit|) .*#{@family.last_name}")
+  field_named("record[name]").value.should == @family.name
 #  field_labeled("Last name").value.should == @family.last_name
 #  field_labeled("First name").value.should == @family.first_name
   field_labeled("SIM").value.should == @family.sim_id.to_s
