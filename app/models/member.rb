@@ -33,6 +33,14 @@ class Member < ActiveRecord::Base
     return family.head_id == self.id
   end 
 
+  def xx(v=5)
+    self.update_attributes(:status_id=>v)
+    puts "Status_id = #{status_id}"
+    save
+    puts "Status_id after save = #{status_id}"
+    Member.find(self.id)
+  end
+
   # Copy last name & other family-level attributes to new member as defaults
   def inherit_from_family
     return unless new_record? &&             # Inheritance only applies to new, unsaved records
@@ -40,7 +48,7 @@ class Member < ActiveRecord::Base
     self.last_name = family.last_name
     self.status_id = family.status_id
     self.location_id = family.location_id
-#puts "**** Inherited from family; status_id = #{self.status_id}"
+puts "**** Inherited from family; status_id = #{self.status_id}"
   end
 
   # Valid record must be linked to an existing family

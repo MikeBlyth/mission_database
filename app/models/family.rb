@@ -13,6 +13,12 @@ class Family < ActiveRecord::Base
     "* #{name}"
   end
 
+  def kill_me
+    self.update_attributes(:head_id => nil)
+    self.members.each {|m| m.destroy}
+    self.destroy
+  end
+
   def to_s
     to_label
   end

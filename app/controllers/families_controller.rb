@@ -27,6 +27,12 @@ helper :name_column
 
   end
   
+  def add_family_member
+    record = Member.new(:last_name=>'NewMember', :first_name=>'Guess')
+    params[:record] = {:last_name=>'NewMember', :first_name=>'Guess'}
+    redirect_to new_member_path
+  end
+  
   def conditions_for_collection
     selector = case
     when session[:filter] == 'active'

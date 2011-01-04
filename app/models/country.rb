@@ -7,7 +7,7 @@ class Country < ActiveRecord::Base
     "#{name}"
   end
 
-  def self.find(id)
+  def self.find(id, options={})
     x = super id
     x.nationality = x.nationality.force_encoding("UTF-8")
     x

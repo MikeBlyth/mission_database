@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'email_validator'
+require 'sim_test_helper'
 #require 'email_veracity'
 
 class ActiveSupport::TestCase

@@ -16,19 +16,17 @@ div.states-view {
   font-size: 1em;
   font-family: "Verdana"; }
 
-.longitude-input, .latitude-input, .code-input, .sim_id-input,
+.longitude-input, .latitude-input, .code-input,
 .total_passengers-input, .baggage-input {
   width: 50px; }
 
-.first_name-input, .middle_name-input, .short_name-input {
-  width: 80px;}
-
-.last_name-input, .state-input, .date-input, .birth_date-input, .date_active-input,
+.state-input, .date-input, .birth_date-input, .date_active-input,
 .start_date-input, .end_date-input, .est_start_date-input, .sex-input,
 .est_end_date-input, .return_date-input, .confirmed-input {
   width: 100px; }
 
-.origin-input, .destination-input, .flight-input,
+.first_name-input, .last_name-input, .middle_name-input,
+.short_name-input, .origin-input, .destination-input, .flight-input,
 .guesthouse-input {
   width: 150px; }
 
@@ -72,6 +70,15 @@ h2 {
   border: 1px solid rgba(255, 0, 0, 0.45);
   z-index: 9;
   background: rgba(200, 255, 250, 0.8); }
+
+.family_info p {
+  padding-top: 0.3em; }
+
+.family_members, .add_family_members {
+  margin-top: 1em; }
+  .family_members a, .family_members p, .add_family_members a, .add_family_members p {
+    margin-left: 1em;
+    margin-top: 0.3em; }
 
 .test {
   color: red;

@@ -34,14 +34,10 @@
 
 Given /^a one-person family$/ do
   # This stuff should probably be changed to a fixture somehow
-  set_up_statuses
-  set_up_employment_statuses
   construct_family
 end
 
 Given /^a family without a spouse$/ do
-  set_up_statuses
-  set_up_employment_statuses
   construct_family
 end
 
@@ -76,12 +72,12 @@ When /^I ask to create a spouse$/ do
 end
 
 Then /^I receive a valid form for a spouse$/ do
-  field_named("record[spouse]").value.to_i.should == @head.id
-  field_labeled("Last name").value.should == @head.last_name
-  field_labeled("Family name").value.should contain @head.last_name
-  response.should contain(@status.description)
-  response.should contain(@employment_status.description)
-  field_labeled("Sex").value.should contain('F')
+  find_field("record[spouse]").value.to_i.should == @head.id
+  find_field("Last name").value.should == @head.last_name
+  find_field("Family name").value.should have_content @head.last_name
+  page.should have_content(@status.description)
+  page.should have_content(@employment_status.description)
+  find_field("Sex").value.should have_content('F')
 end
 
 When /^I ask to create a child$/ do
@@ -89,10 +85,10 @@ When /^I ask to create a child$/ do
 end
 
 Then /^I receive a valid form for a child$/ do
-  field_named("record[spouse]").value.should == ""
-  field_labeled("Last name").value.should == @head.last_name
-  field_labeled("Family name").value.should contain @head.last_name
-  response.should contain("MK")
+  find_field("record[spouse]").value.should == ""
+  find_field("Last name").value.should == @head.last_name
+  find_field("Family name").value.should have_content @head.last_name
+  page.should have_content("MK")
 end
 
 When /^I view the list of families$/ do
@@ -106,21 +102,20 @@ When /^I edit the family head$/ do
 end  
 
 Then /^I should see the editing form for the family head$/ do
-  response.should contain "Update #{@head.to_label}"
-  field_labeled("Last name").value.should == @head.last_name
-  field_labeled("First name").value.should == @head.first_name
-  field_labeled("Sex").value.should == @head.sex
-  field_named("record[spouse]").value.should == @spouse.id.to_s
-  response.should contain @spouse.first_name
-  field_labeled("Country").value.should == @country.name
-  field_labeled("education").value.should == @head.education_id.to_s
-  field_labeled("employment status").value.should == @head.employment_status_id.to_s
-  field_labeled("ministry").value.should == @head.ministry_id.to_s
+  page.should have_content "Update #{@head.to_label}"
+  find_field("Last name").value.should == @head.last_name
+  find_field("First name").value.should == @head.first_name
+  find_field("Sex").value.should == @head.sex
+  find_field("record[spouse]").value.should == @spouse.id.to_s
+  page.should have_content @spouse.first_name
+  find_field("Country").value.should == @country.name
+  find_field("Employment status").value.should == @head.employment_status_id.to_s
+  find_field("Ministry").value.should == @head.ministry_id.to_s
   
 end  
 
 Then /^I see a link to add a spouse$/ do
-  response.should contain "Add spouse"
+  page.should have_content "Add spouse"
 end
 
 Then /^the family includes the head and spouse$/ do
@@ -131,18 +126,18 @@ Then /^the family includes the head and spouse$/ do
 end
 
 Then /^I do not see a link to add a spouse$/ do
-  response.should_not contain "Add spouse"
+  page.should_not have_content "Add spouse"
 end
 
 Then /^I see the head of family$/ do
-  response.should contain @head.to_label
+  page.should have_content @head.to_label
 end
 
 Then /^I see the "([^"]*)"$/ do |thing_to_see|
   if thing_to_see != '--nil--'
-    response.should contain thing_to_see
+    page.should have_content thing_to_see
   else  
-    response.should_not contain '--nil--'
+    page.should_not have_content '--nil--'
   end
 end
 
@@ -177,7 +172,7 @@ Then /^the record will not be valid$/ do
 end
 
 Then /^it will show a duplication error$/ do
-  @member.errors.should contain("already been taken")
+  @member.errors.should have_content("already been taken")
 end
 
 Given /^that detail tables \(like Countries\) exist$/ do
@@ -196,13 +191,13 @@ end
 Then /^I should see a valid form for updating a family$/ do
 # save_and_open_page( )
 #puts "@family.status_id=#{@family.status_id}, status=#{@family.status}"
-  response.should contain Regexp.new("(Update|Edit|) .*#{@family.last_name}")
-  field_named("record[name]").value.should == @family.name
-#  field_labeled("Last name").value.should == @family.last_name
-#  field_labeled("First name").value.should == @family.first_name
-  field_labeled("SIM").value.should == @family.sim_id.to_s
-  field_labeled("Status").value.should == @family.status_id.to_s
-  field_labeled("Location").value.should == @family.location_id.to_s
+##  page.should have_content Regexp.new("(Update|Edit|) .*#{@family.last_name}")
+  find_field("record[name]").value.should == @family.name
+#  find_field("Last name").value.should == @family.last_name
+#  find_field("First name").value.should == @family.first_name
+  find_field("SIM").value.should == @family.sim_id.to_s
+  find_field("Status").value.should == @family.status_id.to_s
+  find_field("Location").value.should == @family.location_id.to_s
 end
 
 Given /^a form filled in for a new family$/ do
@@ -226,30 +221,71 @@ Then /^the database should contain the new family$/ do
 end
 
 Then /^I should see a form for editing the family head$/ do
-
-  response.should contain "You are being redirected"
+#save_and_open_page( )
   href = "http://example.org/members/#{@head_id}/edit"
-  response.should have_selector('a', :href=>href)
+  page.should have_selector('a', :href=>href)
+  find_field("First name").value.should == @family.first_name
 end
 
 Then /^I should see a valid form for a new family$/ do
 #save_and_open_page( )
-  response.should contain "Create a New Individual or Family"
-  field_named("record[last_name]").value.blank?.should be true
-  field_labeled("First name").value.blank?.should be true
-  field_labeled("SIM").value.blank?.should be true
-  field_with_id("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
-  field_with_id("record_location").value.should == "-1"
+  page.should have_content "Create a New Individual or Family"
+  find_field("record[last_name]").value.blank?.should be true
+  find_field("First name").value.blank?.should be true
+  find_field("SIM").value.blank?.should be true
+#  find_field("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
+  find_field("record_status").value.should == "-1"
+  find_field("record_location").value.should == "-1"
+  page.should have_content "Create a New Individual or Family"
+  page.should have_content "Click to allow editing"
+  page.should have_selector "input", :id=> 'record_name' 
 end
 
 Then /^I should see a customized form for a new family$/ do
-  response.should contain "Create a New Individual or Family"
-  response.should contain "Click to allow editing"
-  response.should have_selector "input", :id=> 'record_name' 
-#  field_labeled("First name").value.should == @family.first_name
-#  field_labeled("SIM").value.should == @family.sim_id.to_s
-#  field_labeled("Status").value.should == @family.status_id.to_s
-#  field_labeled("Location").value.should == @family.location_id.to_s
+#  find_field("First name").value.should == @family.first_name
+#  find_field("SIM").value.should == @family.sim_id.to_s
+#  find_field("Status").value.should == @family.status_id.to_s
+#  find_field("Location").value.should == @family.location_id.to_s
+end
+
+Then /^I should see a button for adding a spouse$/ do
+  page.should have_link "Add spouse"
+end
+
+Then /^I should see a button for adding a child$/ do
+  page.should have_link "Add child" 
+end
+
+Given /^that I am updating a family$/ do
+  seed_tables
+  construct_family
+  @head.add_details
+  @head.status_id.should == 1
+  visit edit_family_path :id=>@family.id
+end
+
+When /^I click on "([^"]*)"$/ do |button_to_click|
+ save_and_open_page( )
+  click_link_or_button button_to_click
+end
+
+Then /^I should see a form titled "([^"]*)"$/ do |title|
+  page.should have_content title
+#  x=find(:xpath, '//form').innerhtml
+#  puts "find result=#{x}"
+ save_and_open_page( )
+end
+
+Then /^the form should be pre\-set to add a spouse$/ do
+  find_field("Last name").value.should == @family.last_name
+  find_field("First name").value.blank?.should be true
+  find_field("Sex").value.should == ApplicationHelper::opposite_sex(@head.sex)
+#  find_field("Spouse").value.should == @head.name
+  find_field("record[spouse]").value.should == @head.id.to_s
+  find_field("Country name").value.should == @head.country.name
+#  find_field("Date active").value.should == @head.date_active
+  find_field("Status").value.to_s.should == @head.status_id.to_s
+  find_field("Location").value.to_s.should == @head.location_id.to_s
 end
 
 

@@ -9,6 +9,8 @@ SIM::Application.routes.draw do
   match 'reports/:action(.:format)' => 'reports#:action'
   match 'members/set_full_names'
   match 'members/spouse_select'
+
+  match 'families/:id/add_family_member' => 'families#add_family_member', :as => :add_family_member
    
  match 'reports/bloodtypes' => 'reports#bloodtypes'
 match 'reports/birthdays' => 'reports#birthdays'

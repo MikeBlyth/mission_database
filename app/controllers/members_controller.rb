@@ -56,6 +56,34 @@ include ApplicationHelper
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
 
+  def do_new
+    super
+    pp "\n***** New Family ******\n"
+    pp params
+    if params[:family]
+      family = Family.find_by_id(params[:family])
+      head = family.head
+      if params[:type] == 'spouse'
+        @record = Member.new( :family => family,
+                              :last_name=> family.last_name, 
+                              :sex => opposite_sex(head.sex),
+                              :spouse => head,
+                              :country_id => head.country_id,
+                              :status => head.status,
+                              :date_active => head.date_active,
+                              :employment_status => head.employment_status,
+                              :location => head.location )
+        @headline = "Add Spouse for #{head.full_name}"
+      end  
+    end
+  end
+
+  def add_spouse
+    @record = Member.new(:last_name=>'New Spouse')
+    @title = 'Adding a spouse'
+    do_new
+  end
+
 # TODO REMOVE OR DISABLE WHEN FINISHED DEBUGGING
 ############## ONLY FOR TROUBLESHOOTING! ************************
   def do_show
