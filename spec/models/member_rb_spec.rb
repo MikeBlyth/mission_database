@@ -1,7 +1,8 @@
 describe Member do
   before(:each) do
     @status = Factory.create(:status)
-    @family = Factory.create(:family)
+#    Factory.create(:status_unspecified)
+    @family = Factory.create(:family, :status=> @status)
     @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
                             #   This second family member @member is *not* saved yet
   end    
@@ -80,6 +81,10 @@ describe Member do
   end
 
   it "copies inherited fields from family when new" do
+    Factory.create(:city)
+    @location = Factory.create(:location)
+    @family = Factory.create(:family, :status=>@status, :location=>@location)
+    @member = new_family_member
     @member.last_name.should == @family.last_name
     @member.status_id.should == @family.status_id
     @member.location_id.should == @family.location_id

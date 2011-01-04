@@ -2,7 +2,7 @@
   include SimTestHelper
   
   def construct_family
-    @family = Factory.create(:family)
+    @family = Factory.create(:family, :status=>Status.last, :location=>Location.last)
     @head = @family.head
   end
 
@@ -260,12 +260,13 @@ Given /^that I am updating a family$/ do
   seed_tables
   construct_family
   @head.add_details
-  @head.status_id.should == 1
+  @head.status_id.should == Status.last.id
+  @head.location_id.should == Location.last.id
   visit edit_family_path :id=>@family.id
 end
 
 When /^I click on "([^"]*)"$/ do |button_to_click|
- save_and_open_page( )
+# save_and_open_page( )
   click_link_or_button button_to_click
 end
 
@@ -273,14 +274,13 @@ Then /^I should see a form titled "([^"]*)"$/ do |title|
   page.should have_content title
 #  x=find(:xpath, '//form').innerhtml
 #  puts "find result=#{x}"
- save_and_open_page( )
+# save_and_open_page( )
 end
 
 Then /^the form should be pre\-set to add a spouse$/ do
   find_field("Last name").value.should == @family.last_name
   find_field("First name").value.blank?.should be true
   find_field("Sex").value.should == ApplicationHelper::opposite_sex(@head.sex)
-#  find_field("Spouse").value.should == @head.name
   find_field("record[spouse]").value.should == @head.id.to_s
   find_field("Country name").value.should == @head.country.name
 #  find_field("Date active").value.should == @head.date_active
@@ -288,4 +288,14 @@ Then /^the form should be pre\-set to add a spouse$/ do
   find_field("Location").value.to_s.should == @head.location_id.to_s
 end
 
+Then /^the form should be pre\-set to add a child$/ do
+  find_field("Last name").value.should == @family.last_name
+  find_field("First name").value.blank?.should be true
+#  find_field("Sex").value.should == ApplicationHelper::opposite_sex(@head.sex)
+  find_field("record[spouse]").value.should == ''
+  find_field("Country name").value.should == @head.country.name
+#  find_field("Date active").value.should == @head.date_active
+  find_field("Status").value.to_s.should == @head.status_id.to_s
+  find_field("Location").value.to_s.should == @head.location_id.to_s
+end
 

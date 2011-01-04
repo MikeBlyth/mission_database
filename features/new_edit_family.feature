@@ -18,7 +18,7 @@ Feature: Forms for creating and updating families
     When I press "Create"
     Then the database should contain the new family
     And I should see a form for editing the family head
-    
+   
   Scenario: I should see links to add spouse and kids from family edit form
     Given that detail tables (like Countries) exist
     And a one-person family
@@ -27,9 +27,15 @@ Feature: Forms for creating and updating families
     And I should see a button for adding a spouse
     And I should see a button for adding a child
 
-  @wip
+
   Scenario: I should be able to add spouse from family edit form
     Given that I am updating a family
     When I click on "Add spouse"
     Then I should see a form titled "Add Spouse for"
     And the form should be pre-set to add a spouse
+
+  Scenario: I should be able to add child from family edit form
+    Given that I am updating a family
+    When I click on "Add child"
+    Then I should see a form titled "Add Child for"
+    And the form should be pre-set to add a child

@@ -58,8 +58,6 @@ include ApplicationHelper
 
   def do_new
     super
-    pp "\n***** New Family ******\n"
-    pp params
     if params[:family]
       family = Family.find_by_id(params[:family])
       head = family.head
@@ -74,14 +72,17 @@ include ApplicationHelper
                               :employment_status => head.employment_status,
                               :location => head.location )
         @headline = "Add Spouse for #{head.full_name}"
+      elsif params[:type] == 'child'
+        @record = Member.new( :family => family,
+                              :last_name=> family.last_name, 
+                              :country_id => head.country_id,
+                              :status => head.status,
+                              :date_active => head.date_active,
+                              :location => head.location )
+        @headline = "Add Child for #{head.full_name}"
       end  
-    end
-  end
 
-  def add_spouse
-    @record = Member.new(:last_name=>'New Spouse')
-    @title = 'Adding a spouse'
-    do_new
+    end
   end
 
 # TODO REMOVE OR DISABLE WHEN FINISHED DEBUGGING
