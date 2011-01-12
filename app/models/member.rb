@@ -33,6 +33,10 @@ class Member < ActiveRecord::Base
     return family.head_id == self.id
   end 
 
+  def is_single?
+    return spouse.nil?
+  end
+  
   def xx(v=5)
     self.update_attributes(:status_id=>v)
     puts "Status_id = #{status_id}"

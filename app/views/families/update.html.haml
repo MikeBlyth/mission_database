@@ -30,8 +30,9 @@
         %span= m.to_label + " (#{m.sex})"
   .add_family_members
     %p 
-      = link_to 'Add spouse', new_member_path(:type=>'spouse', :family => @record.id)
       = link_to 'Add child', new_member_path(:type=>'child', :family => @record)
+      - if @record.head.is_single?
+        = link_to 'Add spouse', new_member_path(:type=>'spouse', :family => @record.id)
 
 
 

@@ -27,7 +27,12 @@ Feature: Forms for creating and updating families
     And I should see a button for adding a spouse
     And I should see a button for adding a child
 
-
+  Scenario: I should not see a link to add a spouse when a spouse already exists
+    Given that detail tables (like Countries) exist
+    And a family with a "Wife" and "Big Kid" and "Baby"
+    When I select "update family"
+    Then I should not see a button for adding a spouse
+    
   Scenario: I should be able to add spouse from family edit form
     Given that I am updating a family
     When I click on "Add spouse"

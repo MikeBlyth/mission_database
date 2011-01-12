@@ -43,9 +43,9 @@ FactoryGirl.define do
   end
   
   factory :status do 
-    id 1
-    code 1
-    description "On field"
+    sequence(:id) {|n| n}
+    sequence(:code) {|n| 100+n}
+    sequence(:description) {|n|  "On field_#{n}" }
   end
 
   factory :status_unspecified, :parent => :status do 

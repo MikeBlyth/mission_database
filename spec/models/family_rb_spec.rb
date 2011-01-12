@@ -56,12 +56,16 @@ describe Family do
   end
 
   it "creates a corresponding family head in the members table" do
+    city=Factory.create(:city)
+    @family.location = Factory.create(:location)
+    @family.status = Factory.create(:status)
     @family.save!    # has to be saved in order to create the member
-    @head = @family.head
-    @head.family_head.should be true
-    @head.family_id.should == @family.id
-    @head.name.should == @family.name
-    @head.status.should == @family.status
+    head = @family.head
+    head.family_head.should be true
+    head.family.should == @family
+    head.name.should == @family.name
+    head.status.should == @family.status
+    head.location.should == @family.location
   end
   
   it "can be deleted when it contains no members" do

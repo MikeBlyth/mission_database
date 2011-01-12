@@ -2,7 +2,7 @@
   include SimTestHelper
   
   def construct_family
-    @family = Factory.create(:family, :status=>Status.last, :location=>Location.last)
+    @family = Factory.create(:family, :status=>@status, :location=>@location)
     @head = @family.head
   end
 
@@ -33,7 +33,6 @@
   end
 
 Given /^a one-person family$/ do
-  # This stuff should probably be changed to a fixture somehow
   construct_family
 end
 
@@ -45,7 +44,6 @@ Given /^a family with a spouse$/ do
   construct_family
   @head.update_attributes(:sex=>'M')
   create_spouse
-  @spouse.update_attributes(:sex=>'F')
 end
 
 Given /^a family with a "([^"]*)" and "([^"]*)" and "([^"]*)"$/ do |spouse, child_1, child_2|
@@ -61,7 +59,6 @@ Given /^a family with a "([^"]*)" and "([^"]*)" and "([^"]*)"$/ do |spouse, chil
   end
 #puts "****+++ Family constructed "
 #@family.members.each {|m| puts "****+++ Member #{m.name}" }
-
 end
 
 
@@ -250,6 +247,10 @@ end
 
 Then /^I should see a button for adding a spouse$/ do
   page.should have_link "Add spouse"
+end
+
+Then /^I should not see a button for adding a spouse$/ do
+  page.should_not have_link "Add spouse"
 end
 
 Then /^I should see a button for adding a child$/ do

@@ -86,17 +86,41 @@ describe Member do
     @family = Factory.create(:family, :status=>@status, :location=>@location)
     @member = new_family_member
     @member.last_name.should == @family.last_name
-    @member.status_id.should == @family.status_id
-    @member.location_id.should == @family.location_id
+    @member.status.should == @family.status
+    @member.location.should == @family.location
     
   end
   
   it "does not copy inherited fields from family when NOT new" do
-    @member.last_name = "something else"
-    @member.save!
+    new_last_name = "something else"
+    new_status = Factory.create(:status)
+    city=Factory.create(:city)
+    new_location = Factory.create(:location)
+    @member.update_attributes(:status=>new_status, :location=>new_location, :last_name=>new_last_name)
     retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
-    retrieved.last_name.should_not == @family.last_name
+    retrieved.last_name.should == new_last_name
+    retrieved.status.should == new_status
+    retrieved.location.should == new_location
+  end
+
+  it "can marry single person of opposite sex" do
+    family2 = Factory.create(:family, :status=> @status)
+    head2 = family2.head
+    head2.update_attributes(:sex=>opposite_sex(@head.sex))
+    @head.spouse = head2
+    @
+  end
+    
+  it "cannot marry married person" do
+  end
+    
+  it "cannot marry single person of same sex" do
   end
   
+  it "cannot marry underage person" do
+  end
+  
+  
+    
 end
 
