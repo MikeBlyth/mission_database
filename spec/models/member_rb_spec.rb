@@ -1,8 +1,11 @@
+include ApplicationHelper
+
 describe Member do
   before(:each) do
     @status = Factory.create(:status)
 #    Factory.create(:status_unspecified)
     @family = Factory.create(:family, :status=> @status)
+    @head = @family.head
     @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
                             #   This second family member @member is *not* saved yet
   end    
@@ -106,18 +109,21 @@ describe Member do
   it "can marry single person of opposite sex" do
     family2 = Factory.create(:family, :status=> @status)
     head2 = family2.head
-    head2.update_attributes(:sex=>opposite_sex(@head.sex))
+    head2.update_attributes(:sex=>ApplicationHelper::opposite_sex(@head.sex))
     @head.spouse = head2
-    @
+    pending 
   end
     
   it "cannot marry married person" do
+    pending
   end
     
   it "cannot marry single person of same sex" do
+    pending
   end
   
   it "cannot marry underage person" do
+    pending
   end
   
   
