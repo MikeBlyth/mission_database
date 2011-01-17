@@ -8,7 +8,7 @@ gem 'rails', '>= 3.0.0'
 #gem 'faster_require'
 
 gem 'mysql2'
-# gem 'devise', '1.1.2'
+gem 'devise' #, '1.1.2'
 #gem 'paperclip', :git => "git://github.com/thoughtbot/paperclip.git"
 #gem 'pdf-inspector', :git => "git://github.com/sandal/pdf-inspector.git"
 #gem 'ttfunk', :git => "git://github.com/sandal/ttfunk.git"
