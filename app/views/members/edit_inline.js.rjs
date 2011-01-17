@@ -1,0 +1,1 @@
+page.replace_html('target', '***** This is what we say ***')

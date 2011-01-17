@@ -1,0 +1,7 @@
+<% form_action ||= :create %>
+<%= render :partial => "base_form", :locals => {:xhr => xhr ||= nil,
+                                                :form_action => form_action,
+                                                :method => method ||= :post,
+                                                :cancel_link => cancel_link ||= true,
+                                                :headline =>  @headline ||= "Create new individual" } %>
+
