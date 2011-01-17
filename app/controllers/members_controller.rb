@@ -56,6 +56,13 @@ include ApplicationHelper
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
 
+  def edit_inline
+    respond_to do |format|
+      puts "**** Edit INline"
+      format.js
+    end
+  end
+  
   def do_new
     super
     if params[:family]
@@ -143,17 +150,17 @@ puts "@json_resp = #{@json_resp}"
     end
   end
 
-    # Override the ActiveScaffold method so that we can pass errors in flash
-    def do_destroy
-      @record = find_if_allowed(params[:id], :delete)
-      begin
-        self.successful = @record.destroy
-      rescue
-        flash[:warning] = as_(:cant_destroy_record, :record => @record.to_label)
-        flash[:warning] << " because #{@record.errors[:delete]}"
-        self.successful = false
-      end
+  # Override the ActiveScaffold method so that we can pass errors in flash
+  def do_destroy
+    @record = find_if_allowed(params[:id], :delete)
+    begin
+      self.successful = @record.destroy
+    rescue
+      flash[:warning] = as_(:cant_destroy_record, :record => @record.to_label)
+      flash[:warning] << " because #{@record.errors[:delete]}"
+      self.successful = false
     end
+  end
 
 
 # criteria based on the filter set in application_controller. 

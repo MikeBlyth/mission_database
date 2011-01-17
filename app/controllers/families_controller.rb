@@ -32,7 +32,10 @@ helper :name_column
     params[:record] = {:last_name=>'NewMember', :first_name=>'Guess'}
     redirect_to new_member_path
   end
-  
+
+  def edit_inline
+    
+  end  
   def conditions_for_collection
     selector = case
     when session[:filter] == 'active'
