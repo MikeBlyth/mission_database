@@ -2,7 +2,7 @@
 <%# coding: utf-8 %>
 <html>
 <head>
-  <title>SIM</title>
+  <title><%= @title ||= 'SIM' %></title>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <%= stylesheet_link_tag :all %>
   <%# javascript_include_tag :defaults %>
@@ -81,6 +81,9 @@
           </li>
            <li>
             <%= link_to 'Travel', travels_path %>
+          </li>
+           <li>
+            <%= link_to 'Signup', signup_path %>
           </li>
            <li>Set member filter
              <ul>

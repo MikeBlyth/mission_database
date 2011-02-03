@@ -2,6 +2,8 @@ SIM::Application.routes.draw do
 
   get "users/new"
 
+  match '/signup',  :to => 'users#new'
+
 #  devise_for :users
 
   match 'countries_autocomplete/index'
