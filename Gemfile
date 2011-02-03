@@ -22,7 +22,7 @@ gem 'jrails'
 group :development, :test do
   gem "rspec-rails", ">= 2.2.0"
   gem "cucumber-rails", ">= 0.3.2"
-#  gem "webrat", ">= 0.7.2"
+  gem "webrat", ">= 0.7.2"
   gem "capybara"
   gem "launchy"
   gem "factory_girl", "2.0.0.beta1"

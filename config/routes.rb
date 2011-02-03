@@ -1,5 +1,7 @@
 SIM::Application.routes.draw do
 
+  get "users/new"
+
 #  devise_for :users
 
   match 'countries_autocomplete/index'
