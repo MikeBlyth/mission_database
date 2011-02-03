@@ -1,5 +1,7 @@
 SIM::Application.routes.draw do
 
+#  devise_for :users
+
   match 'countries_autocomplete/index'
   match '*a/autocomplete/country' => 'autocomplete#country'
   match 'autocomplete/country' 
@@ -36,10 +38,8 @@ match 'reports/multi_col_test' => 'reports#multi_col_test'
   resources :locations do as_routes end
   resources :members do as_routes end
   resources :ministries do as_routes end
-  resources :players do as_routes end
   resources :states do as_routes end
   resources :statuses do as_routes end
-  resources :teams do as_routes end
   resources :field_terms do as_routes end
   resources :travels do as_routes end
 
