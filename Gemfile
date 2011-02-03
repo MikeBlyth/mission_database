@@ -27,6 +27,8 @@ group :development, :test do
   gem "launchy"
   gem "factory_girl", "2.0.0.beta1"
   gem "factory_girl_rails", "1.1.beta1"
+  # To use debugger
+  gem 'ruby-debug19'
   gem "selenium-client", ">= 1.2.18"
   gem "database_cleaner", ">= 0.5.2"
 end
@@ -45,8 +47,6 @@ end
 # Deploy with Capistrano
 # gem 'capistrano'
 
-# To use debugger
-gem 'ruby-debug19'
 
 # Bundle the extra gems:
 # gem 'bj'
