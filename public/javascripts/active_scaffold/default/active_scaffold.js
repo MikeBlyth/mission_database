@@ -32,10 +32,9 @@ $(document).ready(function() {
       if (action_link.is_disabled()) {
         return false;
       } else {
-        // hack: rails jquery defaults to dataType script
-        // but activescaffold is returning html content
-        // which chrome does nt like
-        if (action_link.position) event.data_type = 'dummy';
+        // hack: jquery requires if you request for javascript that javascript
+        // is coming back, however rails has a different mantra
+        if (action_link.position) event.data_type = 'rails';
         if (action_link.loading_indicator) action_link.loading_indicator.css('visibility','visible');
         action_link.disable();
       }
@@ -162,7 +161,14 @@ $(document).ready(function() {
       }
       
       if (csrf_param) options['params'] = csrf_param.attr('content') + '=' + csrf_token.attr('content');
-            
+
+      if (span.closest('div.active-scaffold').attr('data-eid')) {
+        if (options['params'].length > 0) {
+          options['params'] += ";";
+        }
+        options['params'] += ("eid=" + span.closest('div.active-scaffold').attr('data-eid'));
+      }
+
       if (mode === 'clone') {
         options.clone_id_suffix = record_id;
         options.clone_selector = '#' + column_heading.attr('id') + ' .as_inplace_pattern';
@@ -515,9 +521,9 @@ var ActiveScaffold = {
     $(form_element + ":first *:input[type!=hidden]:first").focus();
   },
     
-  create_record_row: function(tbody, html, options) {
-    if (typeof(tbody) == 'string') tbody = '#' + tbody;
-    tbody = $(tbody);
+  create_record_row: function(active_scaffold_id, html, options) {
+    if (typeof(active_scaffold_id) == 'string') active_scaffold_id = '#' + active_scaffold_id;
+    tbody = $(active_scaffold_id).find('tbody.records');
     
     if (options.insert_at == 'top') {
       tbody.prepend(html);
@@ -626,6 +632,7 @@ var ActiveScaffold = {
     toggler.children('a').click(function() {
       toggable.toggle(); 
       $(this).html((toggable.is(':hidden')) ? options.show_label : options.hide_label);
+      return false;
     });
   },
   
@@ -637,8 +644,9 @@ var ActiveScaffold = {
         element.append(content);
       }
     } else {
-      if (current = $('#' + element.attr('id') + ' tr.association-record')[0]) {
-        this.replace(current, content);
+      var current = $('#' + element.attr('id') + ' tr.association-record')
+      if (current[0]) {
+        this.replace(current[0], content);
       } else {
         element.prepend(content);
       }
@@ -820,6 +828,10 @@ ActiveScaffold.ActionLink.Abstract = Class.extend({
 
   scaffold_id: function() {
     return '#' + this.tag.closest('div.active-scaffold').attr('id');
+  },
+
+  scaffold: function() {
+    return this.tag.closest('div.active-scaffold');
   },
   
   update_flash_messages: function(messages) {
