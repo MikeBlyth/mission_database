@@ -151,7 +151,13 @@ FactoryGirl.define do
     id -1
     full 'Unspecified'
   end
-  
+
+  factory :user do 
+    name                  "Foo Bar"
+    email                 "foo.bar@example.com"
+    password              "foobar"
+    password_confirmation "foobar"
+  end  
  
 end
 
