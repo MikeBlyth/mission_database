@@ -1,3 +1,18 @@
+# == Schema Information
+# Schema version: 20101221093216
+#
+# Table name: cities
+#
+#  id         :integer(4)      not null, primary key
+#  name       :string(255)
+#  state      :string(255)
+#  country    :string(255)     default("NG"), not null
+#  created_at :datetime
+#  updated_at :datetime
+#  latitude   :float
+#  longitude  :float
+#
+
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:

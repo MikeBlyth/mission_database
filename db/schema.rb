@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101221093216) do
+ActiveRecord::Schema.define(:version => 20110205113852) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -221,5 +221,15 @@ ActiveRecord::Schema.define(:version => 20101221093216) do
     t.boolean  "with_spouse"
     t.boolean  "with_children"
   end
+
+  create_table "users", :force => true do |t|
+    t.string   "name"
+    t.string   "email"
+    t.string   "password"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "users", ["name"], :name => "index_users_on_name", :unique => true
 
 end

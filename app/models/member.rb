@@ -1,3 +1,36 @@
+# == Schema Information
+# Schema version: 20101221093216
+#
+# Table name: members
+#
+#  id                   :integer(4)      not null, primary key
+#  last_name            :string(255)
+#  short_name           :string(255)
+#  sex                  :string(255)
+#  created_at           :datetime
+#  updated_at           :datetime
+#  middle_name          :string(255)
+#  family_id            :integer(4)
+#  birth_date           :date
+#  spouse_id            :integer(4)
+#  country_id           :integer(4)      default(-1)
+#  first_name           :string(255)
+#  bloodtype_id         :integer(4)      default(-1)
+#  allergies            :string(255)
+#  medical_facts        :string(255)
+#  medications          :string(255)
+#  status_id            :integer(4)      default(-1)
+#  ministry_comment     :string(255)
+#  qualifications       :string(255)
+#  date_active          :date
+#  ministry_id          :integer(4)      default(-1)
+#  education_id         :integer(4)      default(-1)
+#  location_id          :integer(4)      default(-1)
+#  employment_status_id :integer(4)      default(-1)
+#  name                 :string(255)
+#  name_override        :boolean(1)
+#
+
 class Member < ActiveRecord::Base
   has_many :contacts, :dependent => :destroy 
   has_many :travels, :dependent => :destroy 

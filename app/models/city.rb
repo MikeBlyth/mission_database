@@ -1,3 +1,18 @@
+# == Schema Information
+# Schema version: 20101221093216
+#
+# Table name: cities
+#
+#  id         :integer(4)      not null, primary key
+#  name       :string(255)
+#  state      :string(255)
+#  country    :string(255)     default("NG"), not null
+#  created_at :datetime
+#  updated_at :datetime
+#  latitude   :float
+#  longitude  :float
+#
+
 class City < ActiveRecord::Base
   has_many :locations
  # belongs_to :states

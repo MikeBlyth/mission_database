@@ -128,6 +128,7 @@
       </div>
     </div>
     <div id="content"><div id="main"><%= yield %></div></div>
+    <div id='debug'>  <%= debug(params) if Rails.env.development? %> </div>
   </div>
 </body>
 </html>

@@ -1,7 +1,5 @@
 SIM::Application.routes.draw do
 
-  get "users/new"
-
   match '/signup',  :to => 'users#new'
 
 #  devise_for :users
@@ -46,6 +44,7 @@ match 'reports/multi_col_test' => 'reports#multi_col_test'
   resources :statuses do as_routes end
   resources :field_terms do as_routes end
   resources :travels do as_routes end
+  resources :users
 
   get "members/index"
 
