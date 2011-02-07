@@ -24,10 +24,14 @@
  
 </head>
 <body>
- <div id='top'>
-   <% flash.each do |key, value| %>
-     <div class="flash <%= key %>"><%= value %></div>
-   <% end %> 
+  <div id='top'>
+    <% if flash.any? %>
+      <div id='notice'>
+        <% flash.each do |key, value| %>
+          <div class="flash <%= key %>"><%= value %></div>
+        <% end %> 
+      </div>
+    <% end %>
     <div id='menu'>
       <div id='links'>
       <input id='actest'>
@@ -124,8 +128,10 @@
         <div class="clear"> </div>
       </div>
     </div>
-    <div id="content"><div id="main"><%= yield %></div></div>
-    <div id='debug'>  <%= debug(params) if Rails.env.development? %> </div>
+    <div id="content">
+      <div id="main"><%= yield %></div>
+      <div id='debug'>  <%= debug(params) if Rails.env.development? %> </div>
+    </div>
   </div>
 </body>
 </html>
