@@ -21,6 +21,10 @@ gem "active_scaffold_vho"
 
 # gem 'RedCloth'
 # gem 'rails3-jquery-autocomplete'
+
+# Bundle gems for the local environment. Make sure to
+# put test-only gems in this group so their generators
+# and rake tasks are available in development mode:
 group :development, :test do
   gem 'annotate-models' #, '1.0.4'
   gem "rspec-rails", ">= 2.2.0"
@@ -57,9 +61,4 @@ end
 gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
 
-# Bundle gems for the local environment. Make sure to
-# put test-only gems in this group so their generators
-# and rake tasks are available in development mode:
-# group :development, :test do
-#   gem 'webrat'
-# end
+
