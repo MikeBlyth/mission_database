@@ -15,7 +15,6 @@
   <%= javascript_include_tag 'jquery-ui.js' %>
   <%= javascript_include_tag 'jquery-ui-timepicker-addon.js' %>
   <%= javascript_include_tag 'application.js' %>
- <%#= javascript_include_tag 'autocomplete-rails.js' %>
   <%= active_scaffold_includes %>
   <%= stylesheet_link_tag 'project_style_overrides.css' %>
   
@@ -25,13 +24,6 @@
 </head>
 <body>
   <div id='top'>
-    <% if flash.any? %>
-      <div id='notice'>
-        <% flash.each do |key, value| %>
-          <div class="flash <%= key %>"><%= value %></div>
-        <% end %> 
-      </div>
-    <% end %>
     <div id='menu'>
       <div id='links'>
       <input id='actest'>
@@ -129,6 +121,15 @@
       </div>
     </div>
     <div id="content">
+      <% flash[:info] = "Flash greetings!" %>
+      <% if flash.any?  %>
+        <div id='notice'>
+          <p>This is a paragraph within flash box</p>
+          <% flash.each do |key, value| %>
+            <div class="flash <%= key %>"><%= value %></div>
+          <% end %> 
+        </div>
+      <% end %>
       <div id="main"><%= yield %></div>
       <div id='debug'>  <%= debug(params) if Rails.env.development? %> </div>
     </div>
