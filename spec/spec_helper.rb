@@ -43,6 +43,11 @@ Spork.prefork do
     
   end
 
+  # Define a helper to directly sign in a test user
+  def test_sign_in(user)
+    controller.sign_in(user)
+  end
+
 end
 
 Spork.each_run do

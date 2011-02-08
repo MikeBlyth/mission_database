@@ -63,11 +63,13 @@ h2 {
   color: red; }
 
 #notice {
-  padding: 0 0.5em 0.5em 0.5em;
+  padding: 0.5em;
   margin: 10px;
   border: 1px solid #44ee44;
   background: #116644;
-  color: #eeeeee; }
+  color: #eeeeee;
+  font-style: bold;
+  font-size: 1.5em; }
 
 .family_info p {
   padding-top: 0.3em; }
