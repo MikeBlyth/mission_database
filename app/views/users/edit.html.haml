@@ -1,4 +1,4 @@
-%h1 New User
+%h1 Edit User #{@user.name}
 = form_for(@user) do |f| 
   = render 'shared/error_messages', :object => f.object
   .field
@@ -18,5 +18,5 @@
     %br
     = f.password_field :password_confirmation 
   .actions
-    = f.submit "Sign up"
+    = f.submit "Update"
 

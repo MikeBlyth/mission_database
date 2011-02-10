@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+def set_password(user, password, confirmation=nil)
+  user.password = password
+  user.password_confirmation = confirmation || password
+  user
+end  
+
 describe User do
 
   before(:each) do
@@ -30,7 +36,9 @@ describe User do
   it "should reject duplicate user names (case insensitive)" do
     User.create!(@attr)
     # make a user with the same name (but upper case), and a different email
-    user_with_duplicate_name = User.new(:name => @attr[:name].upcase, :email => "new_email@new.com")
+    user_with_duplicate_name = User.new(@attr)
+    user_with_duplicate_name.name.upcase!
+    user_with_duplicate_name.email = "new_email@new.com"
     user_with_duplicate_name.should_not be_valid
   end
   it "should accept valid email addresses" do
@@ -53,30 +61,59 @@ describe User do
   describe "password validations" do
 
     before(:each) do
-      @user = User.create!(@attr)
+      @user = User.new(@attr)   # NOT create -- don't want to save to database
     end
 
     it "should require a password" do
-      User.new(@attr.merge(:password => "", :password_confirmation => "")).
-        should_not be_valid
+      set_password(@user, "").should_not be_valid
+#      User.new(@attr.merge(:password => "", :password_confirmation => "")).should_not be_valid
     end
 
+    it "should be valid with matching password and confirmation" do
+      @user.should be_valid
+#     User.new(@attr).should be_valid
+    end
+    
     it "should require a matching password confirmation" do
-      User.new(@attr.merge(:password_confirmation => "invalid")).
-        should_not be_valid
+      set_password(@user, @user.password, "bogusword").should_not be_valid
+    end
+
+    it "should be invalid with blank password_confirmation" do
+      set_password(@user, @user.password, "").should_not be_valid
     end
 
     it "should reject short passwords" do
       short = "a" * 5
-      hash = @attr.merge(:password => short, :password_confirmation => short)
-      User.new(hash).should_not be_valid
+      set_password(@user, short).should_not be_valid
     end
 
     it "should reject long passwords" do
       long = "a" * 41
-      hash = @attr.merge(:password => long, :password_confirmation => long)
-      User.new(hash).should_not be_valid
+      set_password(@user, long).should_not be_valid
     end
+
+    it "should reject passwords containing the user name (case insensitive)" do
+      set_password(@user, "ABC"+@user.name.upcase).should_not be_valid
+    end
+    
+    it "should reject passwords containing the user email (case insensitive)" do
+      set_password(@user, @user.email.upcase).should_not be_valid
+      set_password(@user, @user.email.upcase[1..6]).should_not be_valid
+      
+    end
+
+    it "should reject passwords containing repeated characters" do
+      set_password(@user, 'bcdfaaaa').should_not be_valid
+    end
+
+  end # describe "password validations" do
+
+  describe "password encryption" do
+
+    before(:each) do
+      @user = User.create!(@attr)
+    end
+
     it "should have an encrypted password attribute" do
       @user.should respond_to(:encrypted_password)
     end

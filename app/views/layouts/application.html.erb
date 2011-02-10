@@ -32,6 +32,7 @@
         <ul class="links">
           <% if signed_in? %>
             <li><%= link_to "Sign out", signout_path, :method => :delete %></li>
+            <li><%= link_to "User Settings", edit_user_path(current_user) %></li>
             <li>
                   <%= link_to 'Report', 
                    :controller=>'reports', :action=>'bloodtypes', :format=>'pdf'%>
