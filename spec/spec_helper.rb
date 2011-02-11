@@ -48,6 +48,9 @@ Spork.prefork do
     controller.sign_in(user)
   end
 
+  def test_sign_out
+    controller.sign_out
+  end
 end
 
 Spork.each_run do
