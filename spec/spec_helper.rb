@@ -51,6 +51,44 @@ Spork.prefork do
   def test_sign_out
     controller.sign_out
   end
+
+  # This code will be run each time you run your specs.
+  def deny_access
+    describe "authentication of edit/update pages" do
+
+      # TODO This could be refactored using lambda?
+      describe "for non-signed-in users" do
+        # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by
+        # signing out before this group of tests.
+        before(:each) do
+          test_sign_out
+        end
+
+        it "should deny access to 'edit'" do
+          get :edit, :id => @user
+          response.should redirect_to(signin_path)
+        end
+
+        it "should deny access to 'update'" do
+          put :update, :id => @user, :user => {}
+          response.should redirect_to(signin_path)
+        end
+
+        it "should deny access to 'show'" do
+          get :show, :id => @user
+          response.should redirect_to(signin_path)
+        end
+
+        it "should deny access to 'destroy'" do
+          put :destroy, :id => @user
+          response.should redirect_to(signin_path)
+        end
+
+
+      end
+
+    end  # "authentication of edit/update pages"
+  end # deny access  
 end
 
 Spork.each_run do
