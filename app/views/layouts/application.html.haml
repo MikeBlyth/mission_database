@@ -1,0 +1,35 @@
+!!! html
+!!!
+%html
+  %head
+    %title= @title ||= 'SIM' 
+    %meta{ 'http-equiv' => "content-type", 'content'=> "text/html;charset=UTF-8"}
+    = stylesheet_link_tag :all 
+    -# javascript_include_tag :defaults 
+    -# stylesheet_link_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/themes/ui-lightness/jquery-ui.css' 
+    = stylesheet_link_tag 'jquery-ui.css' 
+    -#= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js' 
+    = javascript_include_tag 'jquery.js' 
+    = javascript_include_tag 'rails_jquery.js' 
+    -#= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.4/jquery-ui.js' 
+    = javascript_include_tag 'jquery-ui.js' 
+    = javascript_include_tag 'jquery-ui-timepicker-addon.js' 
+    = javascript_include_tag 'application.js' 
+    = active_scaffold_includes 
+    = stylesheet_link_tag 'project_style_overrides.css' 
+    
+    = csrf_meta_tag 
+
+%body
+  #top
+    #menu
+      = render 'shared/side_menu' 
+    #content
+      - if flash.any?  
+        #notice
+          - flash.each do |key, value| 
+            %div{:class=>"flash #{key}" }= value
+      #main= yield 
+      #debug 
+        = debug(params) if Rails.env.development? || Rails.env.test?  
+

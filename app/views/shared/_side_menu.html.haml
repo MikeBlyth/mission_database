@@ -1,0 +1,37 @@
+#links
+  %p Main Admin Menu
+  %p= signed_in? ? "Signed in" : "Not signed in" 
+  %ul.links
+    - if signed_in? 
+      %li= link_to "Sign out", signout_path, :method => :delete       
+      %li= link_to "User Settings", edit_user_path(current_user)       
+      %li= link_to 'Report', :controller=>'reports', :action=>'bloodtypes', :format=>'pdf'      
+      %li= link_to 'Bloodtypes', bloodtypes_path 
+      %li= link_to 'Cities', cities_path 
+      %li= link_to 'Contacts', contacts_path 
+      %li= link_to 'Contact types', contact_types_path 
+      %li= link_to 'Countries', countries_path 
+      %li= link_to 'Education codes', educations_path 
+      %li= link_to 'Employment status codes', employment_statuses_path 
+      %li= link_to 'Families', families_path 
+      %li= link_to 'Locations', locations_path 
+      %li= link_to 'Members', members_path 
+      %li= link_to 'Ministry codes', ministries_path 
+      %li= link_to 'States', states_path 
+      %li= link_to 'Status codes', statuses_path 
+      %li= link_to 'Travel', travels_path 
+      %li= link_to 'Signup', signup_path 
+      %li 
+        Set member filter
+        %ul
+          %li= link_to 'Active only', :controller=>'application', :action=>'set_member_filter', :filter => :active 
+          %li= link_to 'On field only', :controller=>'application', :action=>'set_member_filter', :filter => :on_field 
+          %li= link_to 'Home assignment',  :controller=>'application', :action=>'set_member_filter', :filter => :home_assignment 
+          %li= link_to 'HA or leave',  :controller=>'application', :action=>'set_member_filter', :filter => :ha_or_leave 
+          %li= link_to 'Pipeline',  :controller=>'application', :action=>'set_member_filter', :filter => :pipeline 
+          %li= link_to 'Other',  :controller=>'application', :action=>'set_member_filter', :filter => :other 
+          %li= link_to 'Clear filter',  :controller=>'application', :action=>'set_member_filter', :filter => :all 
+    - else 
+      %li= link_to "Sign in", signin_path
+  .clear
+
