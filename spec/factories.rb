@@ -133,6 +133,13 @@ FactoryGirl.define do
     end_date '31 Dec 2010'  
   end
 
+  factory :field_term_future, :parent => :field_term do
+    start_date ''
+    end_date ''
+    est_start_date '1 May 2011'
+    est_end_date '30 Jan 2013'  
+  end
+
   factory :location do
     sequence(:id) {|n| n}
     sequence(:code) {|n| 20+n}
@@ -157,6 +164,40 @@ FactoryGirl.define do
     id 999999
     code 0
     description 'Unspecified'
+  end
+
+  factory :travel do
+    member_id 1
+    date '1 May 2011'
+    return_date '15 Oct 2011'
+    flight 'LH 999'
+    purpose 'Home assignment'
+    origin 'Abuja'
+    destination 'Charlotte'
+    guesthouse 'Baptist'
+    baggage '2'
+    total_passengers '1'
+    other_travelers ''
+    confirmed '14 Mar 2011'
+    with_spouse false
+    with_children false
+  end
+
+  factory :travel_to_field, :parent => :travel do
+    member_id 1
+    date '30 Oct 2011'
+    return_date ''
+    flight 'BA 888'
+    purpose ''
+    origin 'London'
+    destination 'Abuja'
+    guesthouse 'Baptist'
+    baggage '3'
+    total_passengers '1'
+    other_travelers ''
+    confirmed '14 Mar 2011'
+    with_spouse false
+    with_children false
   end
 
   factory :bloodtype do
