@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(:version => 20110205141145) do
 
   create_table "families", :force => true do |t|
     t.integer  "head_id"
-    t.integer  "status_id",     :default => -1
-    t.integer  "location_id",   :default => -1
+    t.integer  "status_id",     :default => 999999
+    t.integer  "location_id",   :default => 999999
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "last_name"
@@ -117,9 +117,9 @@ ActiveRecord::Schema.define(:version => 20110205141145) do
 
   create_table "field_terms", :force => true do |t|
     t.integer  "member_id"
-    t.integer  "status_id",      :default => -1
-    t.integer  "location_id",    :default => -1
-    t.integer  "ministry_id",    :default => -1
+    t.integer  "status_id",      :default => 999999
+    t.integer  "location_id",    :default => 999999
+    t.integer  "ministry_id",    :default => 999999
     t.date     "start_date"
     t.date     "end_date"
     t.date     "est_start_date"
@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(:version => 20110205141145) do
 
   create_table "locations", :force => true do |t|
     t.string   "description"
-    t.integer  "city_id",     :default => -1
+    t.integer  "city_id",     :default => 999999
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "code"
@@ -149,20 +149,20 @@ ActiveRecord::Schema.define(:version => 20110205141145) do
     t.integer  "family_id"
     t.date     "birth_date"
     t.integer  "spouse_id"
-    t.integer  "country_id",           :default => -1
+    t.integer  "country_id",           :default => 999999
     t.string   "first_name"
-    t.integer  "bloodtype_id",         :default => -1
+    t.integer  "bloodtype_id",         :default => 999999
     t.string   "allergies"
     t.string   "medical_facts"
     t.string   "medications"
-    t.integer  "status_id",            :default => -1
+    t.integer  "status_id",            :default => 999999
     t.string   "ministry_comment"
     t.string   "qualifications"
     t.date     "date_active"
-    t.integer  "ministry_id",          :default => -1
-    t.integer  "education_id",         :default => -1
-    t.integer  "location_id",          :default => -1
-    t.integer  "employment_status_id", :default => -1
+    t.integer  "ministry_id",          :default => 999999
+    t.integer  "education_id",         :default => 999999
+    t.integer  "location_id",          :default => 999999
+    t.integer  "employment_status_id", :default => 999999
     t.string   "name"
     t.boolean  "name_override"
   end

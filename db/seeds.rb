@@ -6,8 +6,8 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 #
-# We use id = -1 for all "unspecified" values. For example, unknown or unspecified bloodtype is represented by
-# the bloodtype record with id = -1.
+# We use id = 999999 for all "unspecified" values. For example, unknown or unspecified bloodtype is represented by
+# the bloodtype record with id = 999999.
 #
 # coding: utf-8
 
@@ -55,7 +55,7 @@ x = Bloodtype.new(:abo => 'AB', :rh => 'neg', :comment => '', :full => 'AB neg')
 x.id = 14
 x.save
 x = Bloodtype.new(:abo => '', :rh => '', :comment => 'unknown', :full => '')
-x.id = -1
+x.id = 999999
 x.save
 
 City.delete_all
@@ -120,7 +120,7 @@ x = City.new(:name => 'Gyero', :state => 'Plateau', :country => 'NG', :latitude 
 x.id = 46
 x.save
 x = City.new(:name => 'unspecified', :state => '', :country => '??')
-x.id = -1
+x.id = 999999
 x.save
 unspecified_city_id = x.id   # We save this to use in the unspecified location record (see below)
 
@@ -148,7 +148,7 @@ x = ContactType.new(:code => 2, :description => 'home country')
 x.id = 7
 x.save
 x = ContactType.new(:code => 0, :description => 'unspecified')
-x.id = -1
+x.id = 999999
 x.save
 
 Country.delete_all
@@ -888,7 +888,7 @@ x = Country.new(:code => 'UKW', :name => 'Wales', :nationality => 'Welsh', :incl
 x.id = 258
 x.save
 x = Country.new(:code => '??', :name => 'Not known', :nationality => 'Not known', :include_in_selection => 1)
-x.id = -1
+x.id = 999999
 x.save
 
 Education.delete_all
@@ -929,7 +929,7 @@ x = Education.new(:description => 'xts', :code => 995)
 x.id = 28
 x.save
 x = Education.new(:description => 'unspecified', :code => 99)
-x.id = -1
+x.id = 999999
 x.save
 
 EmploymentStatus.delete_all
@@ -964,7 +964,7 @@ x = EmploymentStatus.new(:description => 'Visitor', :code => 'VIS')
 x.id = 10
 x.save
 x = EmploymentStatus.new(:description => 'unspecified', :code => '???')
-x.id = -1
+x.id = 999999
 x.save
 
 Location.delete_all
@@ -1096,7 +1096,7 @@ x.save
 #     unspecified_city_id = City.find_by_description('unspecified').id
 # but the cities still have to be seeded first.
 x = Location.new(:description => 'unspecified', :city_id => unspecified_city_id, :code => 0)
-x.id = -1
+x.id = 999999
 x.save
 
 Ministry.delete_all
@@ -1269,7 +1269,7 @@ x = Ministry.new(:description => 'Navigators', :code => 221)
 x.id = 64
 x.save
 x = Ministry.new(:description => 'Unspecified', :code => 9999)
-x.id = -1
+x.id = 999999
 x.save
 
 State.delete_all
@@ -1382,7 +1382,7 @@ x = State.new(:name => 'Abuja FCT')
 x.id = 36
 x.save
 x = State.new(:name => 'Unspecified')
-x.id = -1
+x.id = 999999
 x.save
 
 Status.delete_all
@@ -1420,5 +1420,8 @@ x = Status.new(:description => 'Alumni MK', :code => 'B', :active => 0, :on_fiel
 x.id = 13
 x.save
 x = Status.new(:description => 'Unspecified', :code => 'Z')
-x.id = -1
+x.id = 999999
 x.save
+
+User.delete_all
+User.create!(:name=>"Administrator", :password=>"ByPrayer", :password_confirmation=>"ByPrayer", :email=>"sample@example.com")

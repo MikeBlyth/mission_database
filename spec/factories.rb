@@ -49,7 +49,7 @@ FactoryGirl.define do
   end
 
   factory :status_unspecified, :parent => :status do 
-    id -1
+    id 999999
     code 0
     description "Unspecified"
   end
@@ -62,7 +62,7 @@ FactoryGirl.define do
   end
   
   factory :country_unspecified, :parent => :country do
-    id -1
+    id 999999
     code '??'
     name 'Unspecified'
     nationality 'Unspecified'
@@ -75,7 +75,7 @@ FactoryGirl.define do
   end
   
   factory :employment_status_unspecified, :parent => :employment_status do
-    id -1
+    id 999999
     code 0
     description "Unspecified"
   end
@@ -87,7 +87,7 @@ FactoryGirl.define do
   end
 
   factory :education_unspecified, :parent => :education do
-    id -1
+    id 999999
     code 0
     description "Unspecified"
   end
@@ -98,7 +98,7 @@ FactoryGirl.define do
   end
   
   factory :state_unspecified, :parent => :state do
-    id -1
+    id 999999
     name 'Unspecified'
   end
   
@@ -110,12 +110,29 @@ FactoryGirl.define do
   end
 
   factory :city_unspecified, :parent => :city do   
-    id -1
+    id 999999
     name 'Unspecified'
     country '??'
     state ''
   end
   
+  factory :contact do
+    member_id 1
+    contact_type_id 1 
+    email_1 'my_email@example.com'
+    phone_1 '0808-888-8888'
+    skype 'MySkypeName'
+  end
+
+  factory :field_term do
+    member_id 1
+    status_id 3
+    location_id 26
+    ministry_id 6
+    start_date '1 Jan 2008'
+    end_date '31 Dec 2010'  
+  end
+
   factory :location do
     sequence(:id) {|n| n}
     sequence(:code) {|n| 20+n}
@@ -124,10 +141,10 @@ FactoryGirl.define do
   end
   
   factory :location_unspecified, :parent => :location do
-    id -1
+    id 999999
     code 0
     description 'Unspecified'
-    city_id -1
+    city_id 999999
   end
   
   factory :ministry do
@@ -137,7 +154,7 @@ FactoryGirl.define do
   end
 
   factory :ministry_unspecified, :parent => :ministry do
-    id -1
+    id 999999
     code 0
     description 'Unspecified'
   end
@@ -148,7 +165,7 @@ FactoryGirl.define do
   end
   
   factory :bloodtype_unspecified, :parent => :bloodtype do
-    id -1
+    id 999999
     full 'Unspecified'
   end
 
