@@ -13,6 +13,11 @@ module SessionsHelper
     @current_user ||= user_from_remember_token
   end
 
+  # Is user (the parameter) the currently logged in user?
+  def current_user?(user)
+    user == current_user
+  end
+
   def signed_in?
     !current_user.nil?
   end
@@ -23,7 +28,6 @@ module SessionsHelper
   end
 
   def deny_access
-#puts "Denying access to page, redirecting to sign in path"
     redirect_to signin_path, :notice => "Please sign in to access this page."
   end
 
@@ -34,7 +38,6 @@ module SessionsHelper
     end
 
     def remember_token
-#puts "**** remember_token: cookie=#{cookies.signed[:remember_token]}"
       cookies.signed[:remember_token] || [nil, nil]
     end
 

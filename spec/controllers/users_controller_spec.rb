@@ -155,7 +155,35 @@ describe UsersController do
   end # describe "PUT 'update'" do
   
   # Check that access to controller is blocked when user is not logged in (use deny_access method defined in spec_helper)
-  deny_access
-  
+  # "authentication before controller access"
+  describe "authentication before controller access" do
+
+    describe "for non-signed-in users" do
+      before(:each) {test_sign_out}
+      deny_edit
+      deny_update
+      deny_show
+      deny_destroy
+    end
+
+    describe "for signed-in users" do
+
+      before(:each) do
+        wrong_user = Factory(:user, :name => "Different user")
+        test_sign_in(wrong_user)
+      end
+
+      # One (ordinary) user should not be able to edit another user's information
+      it "should require matching users for 'edit'" do
+        get :edit, :id => @user
+        response.should redirect_to(root_path)
+      end
+
+      it "should require matching users for 'update'" do
+        put :update, :id => @user, :user => {}
+        response.should redirect_to(root_path)
+      end
+    end # describe "for signed-in users" 
+  end # describe "authentication before controller access"
 
 end

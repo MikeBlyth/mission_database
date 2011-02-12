@@ -6,10 +6,6 @@ require 'spec_helper'
   end
 
 describe "LayoutLinks" do
-  it "should have a signup page at '/signup'" do
-    get '/signup'
-    response.should have_selector('title', :content => "Sign up")
-  end
 
   describe "when not signed in" do
     it "should have a signin link" do
@@ -34,6 +30,12 @@ describe "LayoutLinks" do
 # save_and_open_page( )
        page.should have_selector("a", :href => signout_path,
                                          :content => "Sign out")
+    end
+
+   it "should have a signup page at '/signup'" do
+      #    integration_test_sign_in
+      visit '/signup'
+      page.should have_selector('title', :content => "Sign up")
     end
 
   end

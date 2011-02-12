@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 
   before_filter :authenticate #, :only => [:edit, :update]
+  before_filter :correct_user #, :only => [:edit, :update]
 
   def show
     @title = 'User'
@@ -25,7 +26,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @user = User.find(params[:id])
+  #   @user = User.find(params[:id])  # User is already found by private (authentication) method correct_user, below
     @title = "Edit user"
   end
 
@@ -48,7 +49,15 @@ class UsersController < ApplicationController
 private
 
     def authenticate
+#puts "Controller #{self}.authenticate: signed_in? = #{signed_in?}"
       deny_access unless signed_in?
+    end
+
+    def correct_user
+      return unless params[:id]
+      @user = User.find(params[:id])
+#puts "Not correct user: current=#{current_user.id}, @user=#{@user.id}" unless current_user?(@user)
+      redirect_to(root_path) unless current_user?(@user)
     end
 
 end
