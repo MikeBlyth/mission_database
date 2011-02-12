@@ -214,16 +214,15 @@ $(document).ready(function() {
       var as_form = element.closest('form.as_form');
       $.ajax({
         url: element.attr('data-update_url'),
-        data: {value: element.val()},
+        data: {value: element.val(),
+               source_id: element.attr('id')},
         beforeSend: function(event) {
           element.nextAll('img.loading-indicator').css('visibility','visible');
-          $('input[type=submit]', as_form).attr('disabled', 'disabled');
-          $("input:enabled,select:enabled", as_form).attr('disabled', 'disabled');
+          ActiveScaffold.disable_form(as_form)
         },
         complete: function(event) {
           element.nextAll('img.loading-indicator').css('visibility','hidden');
-          $('input[type=submit]', as_form).attr('disabled', '');
-          $("input:disabled,select:disabled", as_form).attr('disabled', '');
+          ActiveScaffold.enable_form(as_form)
         },
         error: function (xhr, status, error) {
           var as_div = element.closest("div.active-scaffold");
@@ -504,7 +503,7 @@ var ActiveScaffold = {
     var loading_indicator = $('#' + as_form.attr('id').replace(/-form$/, '-loading-indicator'));
     if (loading_indicator) loading_indicator.css('visibility','visible');
     $('input[type=submit]', as_form).attr('disabled', 'disabled');
-    $("input:enabled,select:enabled", as_form).attr('disabled', 'disabled');
+    $("input:enabled,select:enabled,textarea:enabled", as_form).attr('disabled', 'disabled');
   },
   
   enable_form: function(as_form) {
@@ -513,7 +512,7 @@ var ActiveScaffold = {
     var loading_indicator = $('#' + as_form.attr('id').replace(/-form$/, '-loading-indicator'));
     if (loading_indicator) loading_indicator.css('visibility','hidden');
     $('input[type=submit]', as_form).attr('disabled', '');
-    $("input:disabled,select:disabled", as_form).attr('disabled', '');
+    $("input:disabled,select:disabled,textarea:disabled", as_form).attr('disabled', '');
   },  
   
   focus_first_element_of_form: function(form_element) {
@@ -560,6 +559,15 @@ var ActiveScaffold = {
     this.stripe(tbody);
     this.decrement_record_count(tbody.closest('div.active-scaffold'));
     this.reload_if_empty(tbody, page_reload_url);
+  },
+
+  delete_subform_record: function(record) {
+    if (typeof(record) == 'string') record = '#' + record;
+    var errors = $(record).prev();
+    if (errors.hasClass('association-record-errors')) {
+      this.replace_html(errors, '');
+    }
+    this.remove(record);
   },
 
   report_500_response: function(active_scaffold_id) {
@@ -653,13 +661,21 @@ var ActiveScaffold = {
     }
   },
   
-  render_form_field: function(element, content, options) {
-    if (typeof(element) == 'string') element = '#' + element;
-    var element = $(element);
-    if (options.is_subform == false) {
-      this.replace(element.closest('dl'), content);
-    } else {
-      this.replace_html(element, content);
+  render_form_field: function(source, content, options) {
+    if (typeof(source) == 'string') source = '#' + source;
+    var source = $(source);
+    var element = source.closest('.association-record');
+    if (element.length == 0) {
+      element = source.closest('ol.form');
+    }
+    element = element.find('.' + options.field_class);
+
+    if (element) {
+      if (options.is_subform == false) {
+        this.replace(element.closest('dl'), content);
+      } else {
+        this.replace_html(element, content);
+      }
     }
   },
   
