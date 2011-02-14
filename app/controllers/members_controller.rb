@@ -1,7 +1,9 @@
 class MembersController < ApplicationController
-helper :countries
-helper :name_column
-include ApplicationHelper
+  helper :countries
+  helper :name_column
+  include ApplicationHelper
+
+  before_filter :authenticate #, :only => [:edit, :update]
 
   active_scaffold :member do |config|
 
@@ -187,6 +189,20 @@ puts "@json_resp = #{@json_resp}"
 
     selector
   end  
+
+private
+
+    def authenticate
+#puts "Controller #{self}.authenticate: signed_in? = #{signed_in?}"
+      deny_access unless signed_in?
+    end
+
+    def correct_user
+      return unless params[:id]
+      @user = User.find(params[:id])
+#puts "Not correct user: current=#{current_user.id}, @user=#{@user.id}" unless current_user?(@user)
+      redirect_to(root_path) unless current_user?(@user)
+    end
   
 end
   

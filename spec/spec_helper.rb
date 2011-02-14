@@ -75,8 +75,6 @@ Spork.each_run do
   end
     
   def deny_edit
- #   test_sign_in @user
-#puts "******* CONTROLLER = #{controller}"
     it "should deny access to 'edit'" do
       get :edit, :id => @user
       response.should redirect_to(signin_path)
@@ -84,7 +82,6 @@ Spork.each_run do
   end      
 
   def deny_update
- #   test_sign_out
     it "should deny access to 'update'" do
       put :update, :id => @user, :user => {}
       response.should redirect_to(signin_path)
@@ -92,7 +89,6 @@ Spork.each_run do
   end      
 
   def deny_show
- #   test_sign_out
     it "should deny access to 'show'" do
       get :show, :id => @user
       response.should redirect_to(signin_path)
@@ -100,13 +96,11 @@ Spork.each_run do
   end      
 
   def deny_destroy
- #   test_sign_out
     it "should deny access to 'destroy'" do
       put :destroy, :id => @user
       response.should redirect_to(signin_path)
     end
   end      
-
 
 end
 
