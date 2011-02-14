@@ -7,8 +7,8 @@ describe Family do
 
   it "has the right 'unspecified' defaults when created" do
     m = Family.new
-    m.status_id.should == -1
-    m.location_id.should == -1
+    m.status_id.should == 999999
+    m.location_id.should == 999999
     m.sim_id.should == nil
   end    
 

@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110213084018
 #
 # Table name: locations
 #
 #  id          :integer(4)      not null, primary key
 #  description :string(255)
-#  city_id     :integer(4)      default(-1)
+#  city_id     :integer(4)      default(999999)
 #  created_at  :datetime
 #  updated_at  :datetime
 #  code        :integer(4)

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110213084018
 #
 # Table name: members
 #
@@ -13,20 +13,20 @@
 #  family_id            :integer(4)
 #  birth_date           :date
 #  spouse_id            :integer(4)
-#  country_id           :integer(4)      default(-1)
+#  country_id           :integer(4)      default(999999)
 #  first_name           :string(255)
-#  bloodtype_id         :integer(4)      default(-1)
+#  bloodtype_id         :integer(4)      default(999999)
 #  allergies            :string(255)
 #  medical_facts        :string(255)
 #  medications          :string(255)
-#  status_id            :integer(4)      default(-1)
+#  status_id            :integer(4)      default(999999)
 #  ministry_comment     :string(255)
 #  qualifications       :string(255)
 #  date_active          :date
-#  ministry_id          :integer(4)      default(-1)
-#  education_id         :integer(4)      default(-1)
-#  location_id          :integer(4)      default(-1)
-#  employment_status_id :integer(4)      default(-1)
+#  ministry_id          :integer(4)      default(999999)
+#  education_id         :integer(4)      default(999999)
+#  location_id          :integer(4)      default(999999)
+#  employment_status_id :integer(4)      default(999999)
 #  name                 :string(255)
 #  name_override        :boolean(1)
 #

@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110213084018
 #
 # Table name: families
 #
 #  id            :integer(4)      not null, primary key
 #  head_id       :integer(4)
-#  status_id     :integer(4)      default(-1)
-#  location_id   :integer(4)      default(-1)
+#  status_id     :integer(4)      default(999999)
+#  location_id   :integer(4)      default(999999)
 #  created_at    :datetime
 #  updated_at    :datetime
 #  last_name     :string(255)
@@ -58,7 +58,6 @@ class Family < ActiveRecord::Base
             :middle_name => middle_name,
             :status=>status, :location=>location, :family =>self)
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
-#puts "****** head: status=#{head.status_id}, location=#{head.location_id}"
   end
   
   def check_for_existing_members

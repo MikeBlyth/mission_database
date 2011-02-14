@@ -1,6 +1,6 @@
 class FieldTermsController < ApplicationController
   active_scaffold :field_term do |config|
-   config.columns = [:start_date, :end_date, :ministry, :location, :status,
+   config.columns = [:start_date, :end_date, :ministry, :location, :employment_status,
         :est_start_date, :est_end_date]
  #  config.subform.layout = :vertical
   end

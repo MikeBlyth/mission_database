@@ -100,18 +100,24 @@ class FamilySeed
         :ministry_id => '47')
     Factory.create(:field_term, :member_id => zinsser.head.id, 
         :start_date => '13 Nov 2007', :end_date => '1 Dec 2010',
+        :employment_status_id => '5',
         :ministry_id => '260')
     Factory.create(:field_term_future, :member_id => zinsser.head.id, 
         :est_start_date => '1 Nov 2011', :est_end_date => '14 Mar 2013',
+        :employment_status_id => '5',
         :ministry_id => '260')
     Factory.create(:field_term, :member_id => zinsser.head.spouse.id, 
         :start_date => '13 Nov 2007', :end_date => '1 Dec 2010',
+        :employment_status_id => '5',
         :ministry_id => '16')
     Factory.create(:field_term_future, :member_id => zinsser.head.spouse.id, 
         :est_start_date => '1 Nov 2011', :est_end_date => '14 Mar 2013',
+        :employment_status_id => '5',
         :ministry_id => '16')
     Factory.create(:field_term_future, :member_id => adler.head.id, 
-        :est_start_date => '1 May 2011', :est_end_date => '1 Jan 2013')
+        :est_start_date => '1 May 2011', :est_end_date => '1 Jan 2013',
+        :employment_status_id => '5',
+        )
 
 # CONTACTS
     Factory.create(:contact, :member_id => blackburn.head.id, :email_1=>'MrBlackburn@example.com')

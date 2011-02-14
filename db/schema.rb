@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110205141145) do
+ActiveRecord::Schema.define(:version => 20110213084018) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -117,15 +117,15 @@ ActiveRecord::Schema.define(:version => 20110205141145) do
 
   create_table "field_terms", :force => true do |t|
     t.integer  "member_id"
-    t.integer  "status_id",      :default => 999999
-    t.integer  "location_id",    :default => 999999
-    t.integer  "ministry_id",    :default => 999999
+    t.integer  "location_id",          :default => 999999
+    t.integer  "ministry_id",          :default => 999999
     t.date     "start_date"
     t.date     "end_date"
     t.date     "est_start_date"
     t.date     "est_end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "employment_status_id", :default => 999999
   end
 
   create_table "locations", :force => true do |t|

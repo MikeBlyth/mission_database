@@ -231,8 +231,8 @@ Then /^I should see a valid form for a new family$/ do
   find_field("First name").value.blank?.should be true
   find_field("SIM").value.blank?.should be true
 #  find_field("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
-  find_field("record_status").value.should == "-1"
-  find_field("record_location").value.should == "-1"
+  find_field("record_status").value.should == "999999"
+  find_field("record_location").value.should == "999999"
   page.should have_content "Create a New Individual or Family"
   page.should have_content "Click to allow editing"
   page.should have_selector "input", :id=> 'record_name' 
@@ -261,8 +261,8 @@ Given /^that I am updating a family$/ do
   seed_tables
   construct_family
   @head.add_details
-  @head.status_id.should == Status.last.id
-  @head.location_id.should == Location.last.id
+  @head.status_id.should == @status.id
+  @head.location_id.should == @location.id
   visit edit_family_path :id=>@family.id
 end
 

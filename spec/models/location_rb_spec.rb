@@ -12,7 +12,7 @@ include SimTestHelper
     # any changes to the test data will likely break the tests.
     choices = location_choices(2).gsub(/\n/, '')  # Rails procedure throws in random line-breaks; remove for testing
     choices.should =~ /^<optgroup label="Abuja"><option value="9">Abuja Guest House<\/option>/
-    choices.should =~ /<optgroup label="Unspecified"><option value="-1">Unspecified<\/option><\/optgroup>$/
+    choices.should =~ /<optgroup label="Unspecified"><option value="999999">Unspecified<\/option><\/optgroup>$/
     choices.should =~ /<optgroup label="Jos"><option value="2" selected="selected">ECWA<\/option><option value="1">Evangel<\/option>/
 
   end

@@ -66,6 +66,7 @@ helper :name_column
 #    @locations = Location.select("code, city_id, description").order("code")
 #    @record.location_id = -1
 #    @record.status = Status.find(-1)
+#    puts "**** New Family: #{@record.attributes}"
   end
 
   def create_respond_to_html 
