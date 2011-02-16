@@ -122,8 +122,8 @@ FactoryGirl.define do
   end
   
   factory :member do 
-  #  association :family
-    family @family
+    association :family
+    family_id @family_id
     sequence(:first_name) {|n| "Person_#{n}" }
     sex ['M','F'].shuffle[0]    # randomly pick M or F
     after_build { |user| user.inherit_from_family}
@@ -132,7 +132,7 @@ FactoryGirl.define do
   factory :member_with_details, :parent=> :member do
     middle_name 'Midname'
     short_name 'Shorty'
-    birthdate '1980-01-01'
+    birth_date '1980-01-01'
     country_id 1
     date_active '2005-01-01'
     employment_status_id 1

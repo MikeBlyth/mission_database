@@ -28,13 +28,16 @@ end
 module SimTestHelper
   include ApplicationHelper
 
-def test_init
-  require 'cleaner'
-  include SimTestHelper
-  SimTestHelper::seed_tables
-  @f = Factory.create(:family)
-  @h = @f.head
-end
+  def test_init
+ #   require 'cleaner'
+ #   include SimTestHelper
+    SimTestHelper::seed_tables
+    @f = Factory.create(:family)
+    @h = @f.head
+    @contact = Factory.create(:contact, :member => @h)
+    @travel = Factory.create(:travel, :member => @h)
+    @field_term = Factory.create(:field_term, :member => @h)
+  end
  
   def seed_tables
     Factory.create(:country_unspecified)
@@ -99,4 +102,4 @@ end
               end )
     end
   
-end
+end #Module
