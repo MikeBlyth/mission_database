@@ -37,7 +37,7 @@ def options_for_select_with_grouping(option_list, grouping_column, selected, val
 end
 
 def location_choices(selected=999999)
-cities = City.where(1).order('name')
+cities = City.where(true).order('name')
 return option_groups_from_collection_for_select(cities, :locations_sorted, :name, :id, :description, selected)
   selections =  Location.select("id, city_id, description")
   hashed_locations = []

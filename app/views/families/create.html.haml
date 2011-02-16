@@ -36,7 +36,7 @@
     = form.label :sim_id, 'SIM ID'
     = form.text_field :sim_id, :class => 'sim_id-input'
     = form.label :status, "Status"
-    - status_choices =   options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
+    - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
     = form.select(:status, status_choices)    
     = form.label :location, "Location"
     = form.select(:location, location_choices(@record[:location_id]))    
