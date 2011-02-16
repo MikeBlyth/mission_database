@@ -51,16 +51,14 @@ class Member < ActiveRecord::Base
 
   after_initialize :inherit_from_family
   before_validation :set_indexed_name_if_empty
-  #before_save :set_family_head_if_no_family
-  #after_create :link_member_and_family
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
   
-  SECONDS_PER_YEAR = 3600*24*365.25
-  SECONDS_PER_DAY = 3600*24
-  SECONDS_PER_WEEK = SECONDS_PER_DAY * 7
-  SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
+#  SECONDS_PER_YEAR = 3600*24*365.25
+#  SECONDS_PER_DAY = 3600*24
+#  SECONDS_PER_WEEK = SECONDS_PER_DAY * 7
+#  SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
  
   def family_head
     return family.head_id == self.id

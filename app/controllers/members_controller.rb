@@ -58,6 +58,21 @@ class MembersController < ApplicationController
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
   end
 
+
+#  def destroy
+#puts "**** Members_controller : destroy #{params}, Member.count=#{Member.count}"
+#    @member = Member.find(params[:id])
+#    @member.destroy
+#puts "**** Members_controller: destroyed, Member.count=#{Member.count}"
+
+#    respond_to do |format|
+#puts "**** Members_controller: redirecting"
+#      format.html { redirect_to(members_url) }
+#      format.xml  { head :ok }
+#    end
+#  end
+
+
   def edit_inline
     respond_to do |format|
       puts "**** Edit INline"

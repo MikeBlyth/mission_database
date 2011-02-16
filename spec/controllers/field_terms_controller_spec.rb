@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'sim_test_helper'
-require "webrat"
+#require "webrat"
 #include SimTestHelper
 
-Webrat.configure do |config|
-  config.mode = :rails
-end
+#Webrat.configure do |config|
+#  config.mode = :rails
+#end
 
 describe FieldTermsController do
   render_views
