@@ -3,10 +3,10 @@ module ReportsHelper
 
   def page_header(options={})
 font_families.update(
-   "Aller" => { :bold        => "c:/windows/fonts/Aller.ttf",
-                           :italic      => "c:/windows/fonts/Aller_It.ttf",
-                           :bold_italic => "c:/windows/fonts/Aller_BdIt.ttf",
-                           :normal      => "c:/windows/fonts/Aller_Rg.ttf" })
+   "Aller" => { :bold        => "public/fonts/Aller.ttf",
+                           :italic      => "public/fonts/Aller_It.ttf",
+                           :bold_italic => "public/fonts/Aller_BdIt.ttf",
+                           :normal      => "public/fonts/Aller_Rg.ttf" })
     # Main info repeated on every page (see below for page number)
     repeat :all do 
       header_top_margin = bounds.top
