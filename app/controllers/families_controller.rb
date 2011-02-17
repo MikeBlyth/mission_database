@@ -1,6 +1,8 @@
 class FamiliesController < ApplicationController
-helper :name_column
-
+  helper :name_column
+  before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
+  
   active_scaffold :family do |config|
      list.sorting = {:name => 'ASC'}
 #config.action_links.add "new", :label => 'Spouse', :controller=> :members, :parameters=>{:spouse=>'spouse', },

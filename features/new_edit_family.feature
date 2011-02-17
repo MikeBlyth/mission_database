@@ -11,6 +11,7 @@ Feature: Forms for creating and updating families
   Scenario: Getting an update family form with expected values
     Given that detail tables (like Countries) exist
     And a family with a "Wife" and "Big Kid" and "Baby"
+    And that I am signed in
     When I select "update family"
     Then I should see a valid form for updating a family
     

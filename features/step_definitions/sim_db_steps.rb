@@ -1,6 +1,5 @@
   require 'sim_test_helper'
   include SimTestHelper
-
     
   def construct_family
     @family = Factory.create(:family, :status=>@status, :location=>@location)
@@ -34,6 +33,7 @@
   end
 
 Given /^that I am signed in$/ do
+    return if cookies[:remember_token]
     user = Factory(:user)
     visit signin_path
     fill_in "Name",    :with => user.name

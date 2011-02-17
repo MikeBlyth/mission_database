@@ -9,6 +9,7 @@ Feature: family list view
 
   Scenario Outline: View shows head, spouse and children
     Given a family with a "<spouse>" and "<first_child>" and "<second_child>"
+    And that I am signed in
     When I view the list of families
     Then I see the head of family
     And I see the "<spouse>"

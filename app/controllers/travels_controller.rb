@@ -1,4 +1,7 @@
 class TravelsController < ApplicationController
+  before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
+  
   active_scaffold :travel do |config|
   #  config.columns[:member].actions_for_association_links = [:show]
    config.subform.layout = :vertical

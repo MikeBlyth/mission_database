@@ -1,5 +1,9 @@
 class CountriesController < ApplicationController
-helper :countries
+  helper :countries
+
+  before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
+  
   active_scaffold :country do |config|
     config.columns = [:name, :nationality, :code]
     config.show.link = false

@@ -1,5 +1,3 @@
-require 'authentication_helper'
-
 class CitiesController < ApplicationController
   
   before_filter :authenticate #, :only => [:edit, :update]

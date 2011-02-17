@@ -1,5 +1,7 @@
 class EducationsController < ApplicationController
-    config.label = "Cities"
+  before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
+  
   active_scaffold :education do |config|
     config.columns = [:code, :description]
     config.show.link = false

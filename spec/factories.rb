@@ -123,8 +123,9 @@ FactoryGirl.define do
   end
   
   factory :member do 
-    association :family
-    family_id @family_id
+#    association :family
+#    family_id @family_id
+    family { |a| a.association :family }
     sequence(:first_name) {|n| "Person_#{n}" }
     sex ['M','F'].shuffle[0]    # randomly pick M or F
     after_build { |user| user.inherit_from_family}
@@ -212,7 +213,7 @@ FactoryGirl.define do
   end
 
   factory :user do 
-    name                  "Foo Bar"
+    sequence(:name) {|n| "User_#{n}" }
     email                 "foo.bar@example.com"
     password              "foobar"
     password_confirmation "foobar"

@@ -1,4 +1,7 @@
 class StatusesController < ApplicationController
+  before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
+  
   active_scaffold :status do |config|
     config.columns = [:code, :description, :active, :on_field]
     config.show.link = false

@@ -1,4 +1,8 @@
 class BloodtypesController < ApplicationController
+
+  before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
+  
   active_scaffold :bloodtype do |config|
     # list.columns.exclude :abo, :rh, :members
     list.columns = [:full, :comment]
