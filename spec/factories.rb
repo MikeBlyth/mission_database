@@ -23,7 +23,6 @@ FactoryGirl.define do
   end
 
   factory :city do   
-#    id 1
     name 'Jos'
     country 'ng'
     state 'Plateau'
@@ -92,7 +91,8 @@ FactoryGirl.define do
   end
 
   factory :field_term do
-    member_id 1
+#    member_id 1
+    member { |a| a.association :member }
     employment_status_id 5
     location_id 26
     ministry_id 6
@@ -179,7 +179,7 @@ FactoryGirl.define do
   end
 
   factory :travel do
-    member_id 1
+    member { |a| a.association :member }
     date '1 May 2011'
     return_date '15 Oct 2011'
     flight 'LH 999'
@@ -196,7 +196,6 @@ FactoryGirl.define do
   end
 
   factory :travel_to_field, :parent => :travel do
-    member_id 1
     date '30 Oct 2011'
     return_date ''
     flight 'BA 888'

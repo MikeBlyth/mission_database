@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   validates :email, :presence => true,
                     :format   => { :with => email_regex }
 
-  # Automatically create the virtual attribute 'password_confirmation'.
+  # Automatically creates the virtual attribute 'password_confirmation'.
   validates :password, :presence     => true,
                       :confirmation => true,
                       :length       => { :within => 6..40 }

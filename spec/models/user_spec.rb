@@ -108,6 +108,7 @@ describe User do
 
   end # describe "password validations" do
 
+  # PASSWORD ENCRYPTION
   describe "password encryption" do
 
     before(:each) do
@@ -151,8 +152,28 @@ describe User do
         matching_user = User.authenticate(@attr[:name], @attr[:password])
         matching_user.should == @user
       end
+    end # "authenticate method"
+  end # PASSWORD ENCRYPTION
+
+  describe "admin attribute" do
+
+    before(:each) do
+      @user = User.create!(@attr)
     end
-  end
+
+    it "should respond to admin" do
+      @user.should respond_to(:admin)
+    end
+
+    it "should not be an admin by default" do
+      @user.should_not be_admin
+    end
+
+    it "should be convertible to an admin" do
+      @user.toggle!(:admin)
+      @user.should be_admin
+    end
+  end # "admin attribute" 
 
 end
 

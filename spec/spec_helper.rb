@@ -7,7 +7,7 @@ Spork.prefork do
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
   
-#  require File.dirname(__FILE__) + "/factories"  
+  require File.dirname(__FILE__) + "/factories"  
 
   # This file is copied to spec/ when you run 'rails generate rspec:install'
   ENV["RAILS_ENV"] ||= 'test'
@@ -67,8 +67,6 @@ Spork.each_run do
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by
         # signing out before this group of tests.
-
-  require File.dirname(__FILE__) + "/factories"  
 
   def deny_all
     deny_edit

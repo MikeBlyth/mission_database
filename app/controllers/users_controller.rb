@@ -1,7 +1,15 @@
 class UsersController < ApplicationController
 
-  before_filter :authenticate #, :only => [:edit, :update]
-  before_filter :correct_user #, :only => [:edit, :update]
+  before_filter :authenticate 
+  before_filter :correct_user 
+  before_filter :administrator, :only => [:destroy]
+  def index
+    @users = User.all
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @cities }
+    end
+  end
 
   def show
     @title = 'User'
@@ -43,21 +51,31 @@ class UsersController < ApplicationController
 
   # TODO
   def destroy
-    # PENDING
+    User.find(params[:id]).destroy
+    flash[:success] = "User destroyed."
+    redirect_to users_path
   end
   
 private
 
     def authenticate
 #puts "Controller #{self}.authenticate: signed_in? = #{signed_in?}"
+#puts signed_in? ? "Signed in" : "***** Denying access" 
       deny_access unless signed_in?
     end
 
+    def administrator
+      unless current_user.admin?
+        flash[:error] = "Only administrators can do that"
+        redirect_to(root_path) 
+      end  
+    end  
+
+    # Check that the user is an administrator or operating on his own user record
     def correct_user
       return unless params[:id]
       @user = User.find(params[:id])
-#puts "Not correct user: current=#{current_user.id}, @user=#{@user.id}" unless current_user?(@user)
-      redirect_to(root_path) unless current_user?(@user)
+      redirect_to(root_path) unless current_user?(@user) || current_user.admin?
     end
 
 end

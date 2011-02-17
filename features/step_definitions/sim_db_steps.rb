@@ -227,7 +227,7 @@ Then /^the database should contain the new family$/ do
 end
 
 Then /^I should see a form for editing the family head$/ do
-save_and_open_page( )
+#save_and_open_page( )
   href = "http://example.org/members/#{@head_id}/edit"
   page.should have_selector('a', :href=>href)
   find_field("First name").value.should == @family.first_name

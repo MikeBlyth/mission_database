@@ -1424,4 +1424,7 @@ x.id = 999999
 x.save
 
 User.delete_all
-User.create!(:name=>"Administrator", :password=>"ByPrayer", :password_confirmation=>"ByPrayer", :email=>"sample@example.com")
+admin = User.create!(:name=>"Administrator", :password=>"ByPrayer", :password_confirmation=>"ByPrayer", 
+            :email=>"sample@example.com")
+admin.toggle!(:admin)            
+            
