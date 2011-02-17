@@ -1,6 +1,9 @@
+require 'authentication_helper'
+
 class ContactsController < ApplicationController
 
   before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
 
   active_scaffold :contact do |config|
     list.columns = [:member, :contact_type, :contact_name, :address, :phone_1, :email_1]
@@ -19,18 +22,6 @@ class ContactsController < ApplicationController
    config.subform.layout = :vertical
  #    list.sorting = {:member.last_name => 'ASC'}
   end
-
-private
-
-    def authenticate
-      deny_access unless signed_in?
-    end
-
-    def correct_user
-      return unless params[:id]
-      @user = User.find(params[:id])
-      redirect_to(root_path) unless current_user?(@user)
-    end
 
 end 
 

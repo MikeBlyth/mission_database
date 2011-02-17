@@ -23,7 +23,7 @@ FactoryGirl.define do
   end
 
   factory :city do   
-    id 1
+#    id 1
     name 'Jos'
     country 'ng'
     state 'Plateau'
@@ -37,7 +37,7 @@ FactoryGirl.define do
   end
   
   factory :contact do
-    member_id 1
+    member { |a| a.association :member }
     contact_type_id 1 
     email_1 'my_email@example.com'
     phone_1 '0808-888-8888'
@@ -111,7 +111,8 @@ FactoryGirl.define do
     sequence(:id) {|n| n}
     sequence(:code) {|n| 20+n}
     description 'JETS' 
-    city_id 1
+    city { |a| a.association :city }
+#    city_id 1
   end
   
   factory :location_unspecified, :parent => :location do

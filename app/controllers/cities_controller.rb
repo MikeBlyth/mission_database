@@ -1,4 +1,10 @@
+require 'authentication_helper'
+
 class CitiesController < ApplicationController
+  
+  before_filter :authenticate #, :only => [:edit, :update]
+  include AuthenticationHelper
+  
   active_scaffold :city do |config|
     config.label = "Cities"
     config.columns = [:name, :state, :country, :latitude, :longitude]
@@ -9,7 +15,8 @@ class CitiesController < ApplicationController
     config.columns[:longitude].inplace_edit = :ajax
     config.subform.columns.exclude :latitude, :longitude
   end
-end 
+
+end
 =begin
   # GET /cities
   # GET /cities.xml

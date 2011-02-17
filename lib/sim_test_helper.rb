@@ -88,7 +88,7 @@ module SimTestHelper
       Factory.create(:location, :id=>location[:id], :city_id=>location[:city_id],
               :description=>location[:description])
     end
-    Factory.create(:location_unspecified)
+    Factory.create(:location_unspecified, :city_id => 999999)
     @locations = Location.all
   end
 
