@@ -4,6 +4,7 @@ Feature: edit member view
 
   Scenario: Getting an editing form with expected values
     Given a family with a spouse
+    And that I am signed in
     When I edit the family head
     Then I should see the editing form for the family head
 

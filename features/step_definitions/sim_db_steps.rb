@@ -1,6 +1,7 @@
   require 'sim_test_helper'
   include SimTestHelper
-  
+
+    
   def construct_family
     @family = Factory.create(:family, :status=>@status, :location=>@location)
     @head = @family.head
@@ -31,6 +32,14 @@
     @employment_status = EmploymentStatus.create(:code=>200, :description => "EmploymentStatus")
     EmploymentStatus.create(:code=>300, :description => "MK dependent", :mk_default => true)
   end
+
+Given /^that I am signed in$/ do
+    user = Factory(:user)
+    visit signin_path
+    fill_in "Name",    :with => user.name
+    fill_in "Password", :with => user.password
+    click_button "Sign in"
+end
 
 Given /^a one-person family$/ do
   construct_family
@@ -218,7 +227,7 @@ Then /^the database should contain the new family$/ do
 end
 
 Then /^I should see a form for editing the family head$/ do
-#save_and_open_page( )
+save_and_open_page( )
   href = "http://example.org/members/#{@head_id}/edit"
   page.should have_selector('a', :href=>href)
   find_field("First name").value.should == @family.first_name
