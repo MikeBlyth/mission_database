@@ -9,7 +9,7 @@ describe UsersController do
   render_views
   
   before(:each) do
-    @user = Factory(:user)
+    @user = Factory(:user, :admin => true)
     test_sign_in(@user)
   end
 
@@ -166,24 +166,45 @@ describe UsersController do
       deny_destroy
     end
 
-    describe "for signed-in users" do
+    describe "for signed-in, non-administrator users" do
 
       before(:each) do
-        wrong_user = Factory(:user, :name => "Different user")
+        wrong_user = Factory(:user, :name => "Different user", :admin => false)
         test_sign_in(wrong_user)
       end
 
       # One (ordinary) user should not be able to edit another user's information
-      it "should require matching users for 'edit'" do
+      it "should reject non-matching users for 'edit'" do
         get :edit, :id => @user
         response.should redirect_to(root_path)
       end
 
-      it "should require matching users for 'update'" do
+      it "should reject non-matching users for 'update'" do
         put :update, :id => @user, :user => {}
         response.should redirect_to(root_path)
       end
     end # describe "for signed-in users" 
+
+    # Administrator should be able to edit anyone's data
+    describe "for administrator users" do
+
+      before(:each) do
+        admin_user = Factory(:user, :name => "Different user", :admin => true)
+        test_sign_in(admin_user)
+      end
+
+      it "should accept admin users for 'edit'" do
+        get :edit, :id => @user
+        response.should have_selector("title", :content => "Edit user")
+      end
+
+      it "should accept admin users for 'update'" do
+        new_email = "new_email@example.com"
+        put :update, :id => @user, :user => @user.attributes.merge(:email => new_email)
+        @user.reload
+        @user.email.should == new_email
+      end
+    end # describe "for administrator users" 
   end # describe "authentication before controller access"
 
   describe "DELETE 'destroy'" do
