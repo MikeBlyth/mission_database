@@ -309,3 +309,20 @@ Then /^the form should be pre\-set to add a child$/ do
   find_field("Location").value.to_s.should == @head.location_id.to_s
 end
 
+Given /^I am viewing the family list$/ do
+  visit families_path
+end
+
+When /^I select the delete link$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see an error message$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^the family should still be present$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+

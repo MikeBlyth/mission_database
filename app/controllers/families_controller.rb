@@ -5,17 +5,13 @@ class FamiliesController < ApplicationController
   
   active_scaffold :family do |config|
      list.sorting = {:name => 'ASC'}
-#config.action_links.add "new", :label => 'Spouse', :controller=> :members, :parameters=>{:spouse=>'spouse', },
-#    :type => :member
-#config.action_links.add "new", :label => 'Add Child', :controller=> :members, :parameters=>{:child=>'child'},
-#    :type => :member
     config.columns = [:name, :name_override, :first_name, :last_name, :middle_name, :sim_id, :members, :location, :status]
     update.columns.exclude :members 
     update.columns.exclude :members, :first_name, :last_name, :middle_name 
     create.columns.exclude :members
-    list.columns.exclude  :name_override
-    config.columns[:status].clear_link  # Do not include link to family head in the list view
-    config.columns[:location].clear_link  # Do not include link to family head in the list view
+    list.columns.exclude  :name_override, :first_name, :last_name, :middle_name
+    config.columns[:status].inplace_edit = true
+    config.columns[:location].inplace_edit = true
 #    config.update.link = false  # Do not include a link to "Edit" on each line
 #    config.delete.link = false  # Do not include a link to "Delete" on each line
     config.columns[:members].associated_limit = nil    # show all members, no limit to how many
@@ -24,9 +20,9 @@ class FamiliesController < ApplicationController
     config.columns[:name].description = "This is the name by which the family will be known"
     config.columns[:first_name].description = "of individual or head of family"
   
-    config.columns[:sim_id].label = "SIM ID Number"
+    config.columns[:sim_id].label = "SIM ID"
     config.create.link.page = true 
-
+    config.delete.link.confirm = "\n"+"*" * 60 + "\nAre you sure you want to delete this family and all its members??!!\n" + "*" * 60
   end
   
   def add_family_member
@@ -59,17 +55,6 @@ class FamiliesController < ApplicationController
 
     selector
   end  
-
-  def do_new
-    super
-#    @unspecified_location = Location.find_by_description('Unspecified')
-# TODO Need to standardize -- status should not have one-character codes; unspecified should be 0
- #   @unspecified_status = Status.find_by_description('Unspecified')
-#    @locations = Location.select("code, city_id, description").order("code")
-#    @record.location_id = -1
-#    @record.status = Status.find(-1)
-#    puts "**** New Family: #{@record.attributes}"
-  end
 
   def create_respond_to_html 
    redirect_to edit_member_path @record.head

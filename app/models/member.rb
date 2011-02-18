@@ -61,7 +61,7 @@ class Member < ActiveRecord::Base
 #  SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
  
   def family_head
-    return family.head_id == self.id
+    return Family.find_by_id(family_id) && (family.head_id == self.id)
   end 
 
   def is_single?
@@ -176,11 +176,7 @@ class Member < ActiveRecord::Base
 
   def check_if_family_head
     if family_head
-#puts "******** Can't delete head of family.*******"
       self.errors.add(:delete, "Can't delete head of family.")
-      # ! uncomment this next line to prevent unwanted delete
-      # ! leaving it commented while doing a lot of deletes for testing
-  #    raise ActiveRecord::RecordInvalid
       return false
     else
       true  
@@ -191,9 +187,8 @@ class Member < ActiveRecord::Base
     # if there IS a valid spouse, remove the spouse's link to this member
     orphan_spouse = Member.find_by_spouse_id(self.id)
     if orphan_spouse
-puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
       errors[:delete] << "can't delete while still spouse of #{orphan_spouse.to_label}"
-      raise ActiveRecord::RecordInvalid
+ #     raise ActiveRecord::RecordInvalid
     else
       return true
     end  
@@ -324,22 +319,19 @@ puts "******Deleting would orphan spouse #{orphan_spouse.to_label}"
    # d, w, m, and y are day, week, month and year in seconds. Not efficient to calculate it each call, but 
    # helps make clear what we're doing, and we can't define constants in a function
   def time_human(t, expand=true)    # where t is time in seconds
- 
-  return nil if t.nil?
-     d = SECONDS_PER_DAY  
-     w = SECONDS_PER_WEEK
-     m = SECONDS_PER_MONTH
-     y = SECONDS_PER_YEAR
-     return "#{(t/d).floor} days" if t < m
-     return sprintf("%0.1f weeks", t/w) if t < (m * 2)
-  if t < (m * 24)
-    s = sprintf("%d months", t/m, t/y) 
-    s = sprintf("%d months (%0.1f years)", t/m, t/y) if expand
-    return s
+    return nil if t.nil?
+    d = SECONDS_PER_DAY  
+    w = SECONDS_PER_WEEK
+    m = SECONDS_PER_MONTH
+    y = SECONDS_PER_YEAR
+    return "#{(t/d).floor} days" if t < m
+    return sprintf("%0.1f weeks", t/w) if t < (m * 2)
+    if t < (m * 24)
+      s = sprintf("%d months", t/m, t/y) 
+      s = sprintf("%d months (%0.1f years)", t/m, t/y) if expand
+      return s
+    end
+    return sprintf("%1.1f years", t/y) if t < (y * 7)
+    return "#{(t/y).to_i} years"
   end
-    
-     return sprintf("%1.1f years", t/y) if t < (y * 7)
-     return "#{(t/y).to_i} years"
-   end
-
 end

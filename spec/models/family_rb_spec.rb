@@ -78,11 +78,15 @@ describe Family do
     Family.count.should == 0        
   end
 
-  it "cannot be deleted while it contains members" do
+  it "can be deleted while it contains members" do
     @family.save!
+    head = @family.head
     Family.count.should == 1
+    Member.count.should == 1
+    spouse = Factory(:member, :family=>@family, :spouse=> head)
     @family.destroy
-    Family.count.should == 1
+    Family.count.should == 0
+    Member.count.should == 0
   end
 
 end

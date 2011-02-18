@@ -20,15 +20,15 @@
 
 class Family < ActiveRecord::Base
   belongs_to :head, :class_name => "Member"
-  has_many :members
+  has_many :members, :dependent => :delete_all
+      # :delete_all is used so the members will be destroyed without any error checking
   belongs_to :status
   belongs_to :location
   validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
 
-
   after_create :create_family_head_member
-  before_destroy :check_for_existing_members
+
   def to_label
     "* #{name}"
   end
@@ -60,8 +60,4 @@ class Family < ActiveRecord::Base
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
   end
   
-  def check_for_existing_members
-    return self.members.count == 0
-  end
-
 end
