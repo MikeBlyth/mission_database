@@ -4,7 +4,7 @@ jQuery(function($){
     $.datepicker.setDefaults($.datepicker.regional['en']);
   }
   if (typeof($.timepicker) === 'object') {
-    $.timepicker.regional['en'] = {"ampm":false,"hourText":"Hour","minuteText":"Minute","secondText":"Seconds"};
+    $.timepicker.regional['en'] = {"ampm":false,"hourText":"Hour","minuteText":"Minute","secondText":"Seconds","dateFormat":"D, dd M yy ","timeFormat":"hh:mm:ss"};
     $.timepicker.setDefaults($.timepicker.regional['en']);
   }
 });
