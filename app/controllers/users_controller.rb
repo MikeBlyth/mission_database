@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_filter :authenticate 
   before_filter :correct_user, :only => [:edit, :update]
-  before_filter :administrator, :only => [:destroy]
+  before_filter :administrator, :only => [:new, :create, :destroy]
   def index
     @users = User.all
     respond_to do |format|

@@ -52,14 +52,13 @@ Spork.prefork do
     controller.sign_out
   end
 
-  def integration_test_sign_in
-      @user = Factory.create(:user)
+  def integration_test_sign_in(options={})
+      @user = Factory.create(:user, options)
       visit signin_path
       fill_in "Name",    :with => @user.name
       fill_in "Password", :with => @user.password
       click_button "Sign in"
   end
-
 
 end # Spork.prefork
 
