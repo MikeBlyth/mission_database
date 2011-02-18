@@ -13,6 +13,10 @@ module SessionsHelper
     @current_user ||= user_from_remember_token
   end
 
+  def current_user_admin?
+    current_user.admin?
+  end
+
   # Is user (the parameter) the currently logged in user?
   def current_user?(user)
     user == current_user

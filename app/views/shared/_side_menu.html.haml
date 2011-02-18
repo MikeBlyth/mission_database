@@ -1,13 +1,14 @@
 #links
-  %p Main Admin Menu
+  %p Main Menu
   %p= signed_in? ? "Signed in" : "Not signed in" 
-  %ul.links
-    - if signed_in? 
+  - if signed_in? 
+    %ul.links
       %li= link_to 'Families', families_path 
       %li= link_to 'Members', members_path 
       =# %li= link_to "User Settings", edit_user_path(current_user)       
       %li= link_to 'Travel', travels_path 
       %li= link_to 'Contacts', contacts_path 
+      %li= link_to 'Users',users_path
       =# %li= link_to 'Report', :controller=>'reports', :action=>'bloodtypes', :format=>'pdf'      
       %li (Birthday, bloodtype, calendar reports in progress)
       %li 
@@ -21,8 +22,9 @@
           %li= link_to 'Other',  :controller=>'application', :action=>'set_member_filter', :filter => :other 
           %li= link_to 'Clear filter',  :controller=>'application', :action=>'set_member_filter', :filter => :all 
       %li= link_to "Sign out", signout_path, :method => :delete       
-      %hr
-      %h5 For Admin Use
+    %hr
+    %ul.links
+      %h5 Option Tables
       %li= link_to 'Bloodtypes', bloodtypes_path 
       %li= link_to 'Cities', cities_path 
       %li= link_to 'Contact types', contact_types_path 
@@ -33,10 +35,13 @@
       %li= link_to 'Ministry codes', ministries_path 
       %li= link_to 'States', states_path 
       %li= link_to 'Status codes', statuses_path 
-      %li= link_to 'List users',users_path
-      %li= link_to 'Add User', new_user_path 
-    - else 
-      %li= link_to "Sign in", signin_path
+    - if current_user_admin?
+      %hr
+      %ul.links
+        %li= link_to 'Add User', new_user_path 
+  - else 
+    %p Please sign in 
+    = link_to "Sign in", signin_path
   .clear
   
 

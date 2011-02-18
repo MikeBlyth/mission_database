@@ -1,37 +1,55 @@
 require 'spec_helper'
-  require "webrat"
+require "webrat"
 
-  Webrat.configure do |config|
-    config.mode = :rails
-  end
+Webrat.configure do |config|
+  config.mode = :rails
+end
 
 describe "LayoutLinks" do
 
   describe "when not signed in" do
-    it "should have a signin link" do
+    it "should have a signin but no signout or content link" do
       visit root_path
-      page.should have_selector("a", :href => signin_path,
-                                         :content => "Sign in")
+      page.should have_link("Sign in")
+      page.should have_no_link("Sign out")
+      page.should have_no_link("Families")
     end
-  end
+  end # "when not signed in"
 
-  describe "when signed in" do
+  describe "when signed in as ordinary user" do
 
-    before(:each) do
-      @user = Factory.create(:user)
-      visit signin_path
-      fill_in "Name",    :with => @user.name
-      fill_in "Password", :with => @user.password
-      click_button "Sign in"
-    end
+    before(:each) {integration_test_sign_in(:admin=>false)}
 
-    it "should have a signout link" do
+    it "should have a signout and content link but no signin link" do
       visit root_path
-# save_and_open_page( )
-       page.should have_selector("a", :href => signout_path,
-                                         :content => "Sign out")
+      page.should have_link("Sign out")
+      page.should have_link("Families")
+      page.should have_no_link("Sign in")
     end
 
-  end
+    it "should not have a link to add users" do
+      visit root_path
+      page.should have_no_link("Add User")
+    end
+
+  end # "when signed in as ordinary user"
+
+  describe "when signed in as administrator" do
+
+    before(:each) {integration_test_sign_in(:admin=>true)}
+
+    it "should have a signout and content link but no signin link" do
+      visit root_path
+      page.should have_link("Sign out")
+      page.should have_link("Families")
+      page.should have_no_link("Sign in")
+    end
+
+    it "should have a link to add users" do
+      visit root_path
+      page.should have_link("Add User")
+    end
+
+  end # "when signed in as administrator"
 end
 

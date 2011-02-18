@@ -16,9 +16,10 @@
     = f.label :password_confirmation, "Confirmation"
     %br
     = f.password_field :password_confirmation 
-  .field
-    = f.label :admin, "Administrator"
-    %br
-    = f.check_box :admin 
+  - if current_user_admin?
+    .field
+      = f.label :admin, "Administrator"
+      %br
+      = f.check_box :admin 
   .actions
     = f.submit "Create"
