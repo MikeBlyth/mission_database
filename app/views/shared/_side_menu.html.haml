@@ -33,7 +33,8 @@
       %li= link_to 'Ministry codes', ministries_path 
       %li= link_to 'States', states_path 
       %li= link_to 'Status codes', statuses_path 
-      %li= link_to 'Signup', signup_path 
+      %li= link_to 'List users',users_path
+      %li= link_to 'Add User', new_user_path 
     - else 
       %li= link_to "Sign in", signin_path
   .clear

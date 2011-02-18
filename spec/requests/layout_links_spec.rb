@@ -32,12 +32,6 @@ describe "LayoutLinks" do
                                          :content => "Sign out")
     end
 
-   it "should have a signup page at '/signup'" do
-      #    integration_test_sign_in
-      visit '/signup'
-      page.should have_selector('title', :content => "Sign up")
-    end
-
   end
 end
 
