@@ -1,5 +1,7 @@
 %h1 Reports
 %p Choose a report from those listed below
 %ul
-  %li= link_to "Blood types", bloodtype_report_path, :defaults => { :format => 'pdf' }
-  
+  %li= link_to "Birthday list", "/reports/birthdays.pdf"
+  %li= link_to "Birthday calendar", "/reports/birthday_calendar.pdf"  
+  %li= link_to "Blood types", "/reports/bloodtypes.pdf"
+

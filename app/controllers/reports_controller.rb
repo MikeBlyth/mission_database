@@ -8,6 +8,9 @@ class ReportsController < ApplicationController
 
    # Blood Type Reports
    def bloodtypes
+#puts "**** Bloodtype report, params = #{params}"
+     params = {:format => 'pdf'}.merge(params || {}) 
+puts "**** Bloodtype report, params[:format] = #{params[:format]}"
      selected = Member.select("family_id, last_name, first_name, middle_name, bloodtype_id, status_id")
      selected = selected.delete_if{|x| !x.on_field || x.bloodtype_id.nil? }   # delete members not on the field
      output = BloodtypeReport.new.to_pdf(selected,"Includes only those currently on the field")
