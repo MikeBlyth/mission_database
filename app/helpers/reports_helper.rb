@@ -1,3 +1,5 @@
+require 'formatted_columns'
+
 module ReportsHelper
   # Page Header for use by Prawn
 

@@ -22,7 +22,7 @@ include ReportsHelper
     end
     page_header(:title=>'Birthdays', :left=>'SIM Nigeria Reports')
     move_down 8
-    formatted_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>2, 
+    flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>2, 
       :size=>12, :inline_format => true , :gutter=>15 
     # Now sort by birthdate (month and day only)
     # A bit awkward to sort since some dates are nil (unknown) and don't respond to date methods;
@@ -58,7 +58,7 @@ include ReportsHelper
     
     # Create the report of names by birth_date
     start_new_page
-    formatted_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
+    flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
       :size=>12, :inline_format => true , :gutter=>5 
     render
   end

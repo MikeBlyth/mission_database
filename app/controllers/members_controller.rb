@@ -53,11 +53,11 @@ class MembersController < ApplicationController
 #    config.columns[:family].link = :show
 #    config.nested.add_link("Family", [:family])  # This doesn't seem to work; should add a "Family" link in actions
  #   config.nested.add_scoped_link(:family) 
-#   config.actions.exclude :create
    config.actions.exclude :search
    config.actions.add :field_search
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
+   config.create.link.page = false 
   end
 
 
@@ -77,7 +77,7 @@ class MembersController < ApplicationController
 
   def edit_inline
     respond_to do |format|
-      puts "**** Edit INline"
+      puts "**** Edit Inline"
       format.js
     end
   end

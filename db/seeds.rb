@@ -54,7 +54,7 @@ x.save
 x = Bloodtype.new(:abo => 'AB', :rh => 'neg', :comment => '', :full => 'AB neg')
 x.id = 14
 x.save
-x = Bloodtype.new(:abo => '', :rh => '', :comment => 'unknown', :full => '')
+x = Bloodtype.new(:abo => '', :rh => '', :comment => 'unknown', :full => 'unknown')
 x.id = 999999
 x.save
 

@@ -16,7 +16,7 @@ include ReportsHelper
     end
     page_header(:title=>'Blood Types', :left=>'SIM Nigeria Reports')
     move_down 8
-    formatted_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
+    flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
       :size=>10,  :gutter=>5 , :inline_format => true
     # Now sort by bloodtype 
     selected.sort! {|x,y| (x.bloodtype.full+x.last_name_first) <=> (y.bloodtype.full+y.last_name_first)}
@@ -31,7 +31,7 @@ include ReportsHelper
     end
     # Create the report of names by bloodtype
     start_new_page
-    formatted_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
+    flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
       :size=>10, :inline_format => true , :gutter=>5 
     render
   end

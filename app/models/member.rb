@@ -55,11 +55,6 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
   
-#  SECONDS_PER_YEAR = 3600*24*365.25
-#  SECONDS_PER_DAY = 3600*24
-#  SECONDS_PER_WEEK = SECONDS_PER_DAY * 7
-#  SECONDS_PER_MONTH = SECONDS_PER_YEAR / 12
- 
   def family_head
     return Family.find_by_id(family_id) && (family.head_id == self.id)
   end 
