@@ -344,6 +344,10 @@ Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
 #  page.driver.instance_variable_set('@body', File.read(temp_txt.path))
   #The next line replaces the previous 4, though I don't know exactly how the last bit works!
   page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
+  # next is a hack for now, to allow '{next month}' to mean we need to see next month's name in the report.
+  if target_text == '{next month}'
+    target_text = Date::MONTHNAMES[Date::today().next_month.month]  # which is the name for the next month from now
+  end
   page.should have_content target_text
 end
 

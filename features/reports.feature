@@ -13,7 +13,7 @@ Feature: report generation
     Given that I am signed in
     And I click on "Reports"
     When I click on "Birthday calendar" 
-    Then I should get a "March" PDF report
+    Then I should get a "{next month}" PDF report
 
   Scenario: Generate bloodtype reports
     Given that I am signed in
