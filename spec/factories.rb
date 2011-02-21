@@ -51,7 +51,7 @@ FactoryGirl.define do
   end
   
   factory :country_unspecified, :parent => :country do
-    id 999999
+    id UNSPECIFIED
     code '??'
     name 'Unspecified'
     nationality 'Unspecified'

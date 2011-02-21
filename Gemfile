@@ -8,7 +8,7 @@ gem 'rails', '>= 3.0.0'
 #gem 'faster_require'
 
 gem 'mysql2'
-gem 'devise' #, '1.1.2'
+#gem 'devise' #, '1.1.2'
 #gem 'paperclip', :git => "git://github.com/thoughtbot/paperclip.git"
 #gem 'pdf-inspector', :git => "git://github.com/sandal/pdf-inspector.git"
 #gem 'ttfunk', :git => "git://github.com/sandal/ttfunk.git"
@@ -58,7 +58,7 @@ end
 # Bundle the extra gems:
 # gem 'bj'
 # gem 'nokogiri'
-gem 'sqlite3-ruby', :require => 'sqlite3'
+#gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
 
 

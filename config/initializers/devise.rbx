@@ -25,8 +25,8 @@ Devise.setup do |config|
   # Tell if authentication through request.params is enabled. True by default.
   # config.params_authenticatable = true
 
-  # Tell if authentication through HTTP Basic Auth is enabled. True by default.
-  # config.http_authenticatable = true
+  # Tell if authentication through HTTP Basic Auth is enabled. False by default.
+  # config.http_authenticatable = false
 
   # Set this to true to use Basic Auth for AJAX requests.  True by default.
   # config.http_authenticatable_on_xhr = true
@@ -46,7 +46,7 @@ Devise.setup do |config|
   config.encryptor = :bcrypt
 
   # Setup a pepper to generate the encrypted password.
-  config.pepper = "3b55c165a2c7bc86c306fbafa4bac6e23d3064fd0de17d8638165e6eacadf5e4943297d79b6ea7eb23433768423546d3bfe6941c7dd0537b41f8a0cf14d29588"
+  config.pepper = "1c8e20fddbcdb750fd5919051c1d05c096e39b2ed1a2a30bf5ab16efe50f25f20fea8d9f1de3edf0b91e5b0b7800e3f8044299ad45c8d340d915f8ef13832910"
 
   # ==> Configuration for :confirmable
   # The time you want to give your user to confirm his account. During this time
