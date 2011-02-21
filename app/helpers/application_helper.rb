@@ -1,5 +1,3 @@
-UNSPECIFIED = 999999
-
 module ApplicationHelper
 
     def code_with_description

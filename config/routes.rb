@@ -23,9 +23,9 @@ SIM::Application.routes.draw do
   match 'families/:id/add_family_member' => 'families#add_family_member', :as => :add_family_member
   match 'members/edit_inline/:id' => 'members#edit_inline', :as => :edit_inline
    
- match 'reports/bloodtypes' => 'reports#bloodtypes'
-match 'reports/birthdays' => 'reports#birthdays'
-match 'reports/birthday_calendar' => 'reports#birthday_calendar'
+ match 'reports/bloodtypes' => 'reports#bloodtypes', :as => 'bloodtype_report'
+match 'reports/birthdays' => 'reports#birthdays', :as => 'birthday_report'
+match 'reports/birthday_calendar' => 'reports#birthday_calendar', :as => 'birthday_calendar_report'
 match 'reports/tabletest' => 'reports#tabletest'
 match 'reports/multi_col_test' => 'reports#multi_col_test'
 

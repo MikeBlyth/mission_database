@@ -155,6 +155,7 @@ GEM
       ffi (~> 0.6.3)
       json_pure
       rubyzip
+    settingslogic (2.0.6)
     spork (0.8.4)
     term-ansicolor (1.0.5)
     test-unit (1.2.3)
@@ -195,6 +196,7 @@ DEPENDENCIES
   rspec-rails (>= 2.2.0)
   ruby-debug19
   selenium-client (>= 1.2.18)
+  settingslogic
   spork
   test-unit (= 1.2.3)
   webrat (>= 0.7.2)

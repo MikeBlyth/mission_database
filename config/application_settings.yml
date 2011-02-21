@@ -1,0 +1,21 @@
+# See https://github.com/binarylogic/settingslogic
+# Access like this
+# Can set like this if desired:
+#  Settings[:rows_per_screen_page] = 20
+defaults: &defaults
+  reports: 
+    page_size: 'A4'
+  screen:
+  rows_per_screen_page: 20
+
+development:
+  <<: *defaults
+  screen:
+    rows_per_screen_page: 40
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
+

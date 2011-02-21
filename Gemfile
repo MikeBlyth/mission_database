@@ -18,7 +18,7 @@ gem 'prawn', ">=0.10.0", :git => "git://github.com/sandal/prawn" , :submodules =
 gem 'haml' 
 gem 'jrails'
 gem "active_scaffold_vho"
-
+gem 'settingslogic'
 # gem 'RedCloth'
 # gem 'rails3-jquery-autocomplete'
 

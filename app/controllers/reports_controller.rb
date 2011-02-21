@@ -1,6 +1,11 @@
 # For generating different kinds of reports output to PDF
 # Perhaps should be refactored so that each report is inside its own main model's controller?
 class ReportsController < ApplicationController
+
+  def index
+  end
+
+
    # Blood Type Reports
    def bloodtypes
      selected = Member.select("family_id, last_name, first_name, middle_name, bloodtype_id, status_id")

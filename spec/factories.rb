@@ -1,5 +1,6 @@
 #require 'spec_helper'
 require 'factory_girl_rails'
+load 'config/initializers/constants.rb'
 
 #DatabaseCleaner.strategy = :truncation
 #def clean
