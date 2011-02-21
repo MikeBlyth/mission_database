@@ -332,7 +332,7 @@ end
 
 ###################### REPORTS #####################################
 
-Then /^I should get a "([^"]*)" PDF report$/ do |text|
+Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
 # Converts a PDF response to a text one, based on methods in 
 # http://upstre.am/blog/2009/02/testing-pdfs-with-cucumber-and-rails
   temp_pdf = Tempfile.new('pdf')
@@ -344,7 +344,7 @@ Then /^I should get a "([^"]*)" PDF report$/ do |text|
 #  page.driver.instance_variable_set('@body', File.read(temp_txt.path))
   #The next line replaces the previous 4, though I don't know exactly how the last bit works!
   page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
-  page.should have_content "Birthday"
+  page.should have_content target_text
 end
 
 

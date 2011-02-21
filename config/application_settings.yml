@@ -5,6 +5,8 @@
 defaults: &defaults
   reports: 
     page_size: 'A4'
+    birthday_calendar:
+      birthday_prefix: 'BD: '
   screen:
   rows_per_screen_page: 20
 

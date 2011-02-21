@@ -36,26 +36,43 @@ puts "**** Bloodtype report, params[:format] = #{params[:format]}"
       end
     end
   end
+
  
   def birthday_calendar
+    # Settings
+    page_size = params[:page_size] || Settings.reports.page_size
+    if params[:date].respond_to?(:month)
+      date = params[:date]
+    else
+      next_m = Date::today().next_month
+      date = Date.new(next_m.year, next_m.month, 1)
+    end
+    page_layout = params[:page_layout] || :landscape
+    box = params[:box] || true
+    prefix = Settings.reports.birthday_calendar.birthday_prefix # Something like "BD: " or icon of a cake, to precede each name
+
+    # Select the people born this month and to put on the calendar
     selected = Member.select("family_id, last_name, first_name, middle_name, birth_date, status_id")
-    calendar = CalendarMonthPdf.new(3,2010, :page_size=>"A4", :page_layout=>:landscape, :box=>true)
+    calendar = CalendarMonthPdf.new(:date=>date, :page_size=>page_size, :page_layout=>page_layout, :box=>box)
+
+    # Make a hash like { 1 => "BD: John Doe\nBD: Mary Smith", 8 => "BD: Adam Smith\n"}
     msg = {}
     selected.each do |m|
-      if m.birth_date && (m.birth_date.month == 3 )
-#puts "adding #{m.short_name} to day #{m.birth_date.day}"
+      if m.birth_date && (m.birth_date.month == 3 ) # Select people who were born in this month
         msg[m.birth_date.day] ||= ''
-        msg[m.birth_date.day] << "BD: " + m.full_name + "\n"
+        msg[m.birth_date.day] << prefix + m.full_name + "\n" 
       end
     end
-    msg.each do |day,names|  
+
+    # Actually print the strings
+    msg.each do |day,names|  # For each day with birthdays, print the names list. 
         calendar.in_day(day) do
           calendar.move_down 11
           calendar.text names, :align=> :left, :valign=>:top, :size=>8
         end
     end    
-    calendar.in_day(1) {calendar.text "1"}
-    calendar.in_day(20) {calendar.stroke_bounds}
+    # calendar.in_day(1) {calendar.text "1"} # Just an example of how to write text in the box
+    # calendar.in_day(20) {calendar.stroke_bounds} # Just an example of drawing a box inside the calendar date box
 
     respond_to do |format|
       format.pdf do

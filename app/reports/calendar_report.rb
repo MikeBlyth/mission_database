@@ -83,13 +83,13 @@ class CalendarReport < Prawn::Document
       stroke
     end  
 
-    def to_pdf(month, year, params={})
+    def to_pdf(params)
       # First, the calculations
       # Consider calendar as having 7 columns (0..6) and row_count rows (0..row_count)
       # First, find where the first of the month will go. Row 0, column first_dow
-      @month = month
-      @year = year
-      @first = Date.new(year,month,1)
+      @month = params[:date].month
+      @year = params[:date].year
+      @first = params[:date].day
       @last = @first.end_of_month
       @first_wday = @first.wday
       @last_wday = @last.wday

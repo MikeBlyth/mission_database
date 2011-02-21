@@ -16,16 +16,16 @@ include ReportsHelper
     # * :title_format => _hash_    (Prawn formatting parameters to be applied to title) 
     # * :day_number_format => _hash_  (formatting for day numbers) 
     # * :box => _boolean_  (draw box at page margins)
-    def initialize(month, year, params={})
+    def initialize(params={})
       # First, the calculations
       # Consider calendar as having 7 columns (0..6) and row_count rows (0..row_count)
       # First, find where the first of the month will go. Row 0, column first_dow
       params[:page_layout] ||= :landscape
       super(params)   # initialize Prawn::Document with page size, orientation, etc.
 
-      @month = month
-      @year = year
-      @first = Date.new(year,month,1)
+      @month = month = params[:date].month  # Can we get rid of the local values and just use the globals?
+      @year = year = params[:date].year
+      @first = params[:date]
       @last = @first.end_of_month
       @first_wday = @first.wday
       @last_wday = @last.wday
