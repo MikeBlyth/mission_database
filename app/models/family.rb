@@ -19,11 +19,14 @@
 #
 
 class Family < ActiveRecord::Base
+  include NameHelper
+  
   belongs_to :head, :class_name => "Member"
   has_many :members, :dependent => :delete_all
       # :delete_all is used so the members will be destroyed without any error checking
   belongs_to :status
   belongs_to :location
+  before_validation :set_indexed_name_if_empty
   validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
 
