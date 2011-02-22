@@ -2,7 +2,7 @@
 require './spec/factories'
  
 class FamilySeed
-
+include ApplicationHelper
 @@mens_names = %w(Patrick Malcolm Francis Sandy Jerome Neal Alex Eric Wesley Franklin Dwight Wayne Neal Tim Jerome Douglas Donald Paul Louis Harvey) +
   %w( William Frederick Jason Don Scott Pat Evan Calvin Eugene Luis Allan Kyle Calvin Gary Mike Leon Steve Curtis Brett Brandon Keith Ronnie Scott) +
   %w( Gene Geoffrey Shawn Vincent Kurt Danny Danny Marshall Jack Benjamin Clifford Martin Jimmy Vincent Sidney Jeff Raymond Roger Troy Neal Martin) +
@@ -54,9 +54,110 @@ class FamilySeed
   
 @@sexes = %w( M F )
   
+@@us_addresses = [ ["Juana C. Waldron","15251 Nordhoff St","North Hills, CA 91343-2249","(818) 892-7557"],
+  ["Marilyn T. Champagne","109 Shartom Dr","Augusta, GA 30907-4712","(706) 651-2147"],
+  ["Thomas C. Chacon","102 E Johnson St","Cary, NC 27513-4615","(919) 481-8577"],
+  ["Deena T. Robertson","1017 Murray Dr","Santa Maria, CA 93454-5512","(805) 922-7337"],
+  ["Sam L. Stafford","6320 Boca Del Mar Dr","Boca Raton, FL 33433-5735","(561) 368-2531"],
+  ["Yolanda G. Brown","3500 NW Boca Raton Blvd","Boca Raton, FL 33431-5851","(561) 368-5032"],
+  ["Ashley J. Hoskinson","4411 Gardendale St","San Antonio, TX 78240-1194","(210) 561-4840"],
+  ["Patrick L. Flanigan","2317 Dickens Ave","Charlotte, NC 28208-381","(704) 394-7568"],
+  ["Wallace G. Tabone","12226 SE 259th Pl","Kent, WA 98030-8653","(253) 639-4638"],
+  ["Henry C. Butler","9105 Tyler Ave","Jacksonville, FL 32208-2356","(904) 683-4717"],
+  ["Gladys M. Bishop","18214 Via Calma","Rowland Heights, CA 91748-3350","(626) 965-4074"],
+  ["Eric B. Sheley","1604 Sierra Woods Dr","Reston, VA 20194-5623","(703) 709-6887"],
+  ["Alvin M. Davila","999 E Valley Blvd","Alhambra, CA 91801-0900","(626) 576-4579"],
+  ["Patricia B. Mithani","535 Pierce St, Apt 1206","Albany, CA 94706-1053","(510) 558-4248"],
+  ["Kim M. Ebersole","7326 Oakland Ave","Minneapolis, MN 55423-3226","(612) 869-8109"],
+  ["Rosie B. Rineer","144 Leland Ave","San Francisco, CA 94134-2806","(415) 586-3038"],
+  ["Shirley K. Singletar","3777 S Gessner Rd","Houston, TX 77063-5212","(713) 278-3526"],
+  ["Lois N. Sanders","393 Cattail Rd","Livingston Manor, NY 12758-6745","(845) 439-7873"],
+  ["William G. Morrison","2216 Cropsey Ave","Brooklyn, NY 11214-5608","(718) 265-4740"],
+  ["William M. Eccles","10 N Main St","Lamar, CO 81052-2576","(719) 336-7588"],
+  ["Constance G. Martinez","44 NE Third St","Ontario, OR 97914-2521","(541) 881-5214"],
+  ["Patricia J. Mcdole","401 Ashbourne Ave","Lindenwold, NJ 08021-2620","(856) 566-8523"],
+  ["Rene J. Capriola","1129 N Memorial Dr","Racine, WI 53404-3043","(262) 456-4422"],
+  ["Larry A. Jenkins","524 E Linden Ave","Lindenwold, NJ 08021-1521","(856) 566-2783"],
+  ["Lora R. Irons","4626 N Harlem Ave","Harwood Heights, IL 60706-4714","(708) 867-3852"],
+  ["Lydia W. Purvis","5441 Western Ave, Ste 2","Boulder, CO 80301-2733","(303) 447-2372"],
+  ["James E. Matlock","1201 Boynton Dr","Chattanooga, TN 37402-2144","(423) 267-4172"],
+  ["Wendy T. Guerrero","4701 Randolph Rd, Ste 103","Rockville, MD 20852-2260","(301) 816-2733"],
+  ["Donald L. Causey","24000 Edgehill Dr","Beachwood, OH 44122-1228","(216) 381-4494"],
+  ["Timothy J. Mccabe","42473 Magellan Sq","Ashburn, VA 20148-5608","(703) 542-4731"],
+   ["Paul K. Schroeder","410 Gardenia Ln","Buffalo Grove, IL 60089-1661","(847) 541-7954"],
+  ["Harold L. Robinson","1511 E 86th St","Chicago, IL 60619-6518","(773) 684-4178"],
+  ["Patrick M. Fraley","28 Milford St","Medway, MA 02053-1631","(508) 533-4864"],
+  ["Linda E. Berthold","9402 Bentridge Ave","Potomac, MD 20854-2870","(301) 424-3748"],
+  ["Ryan M. Chastain","1018 Adams Ave, Apt 3C","Salisbury, MD 21804-6687","(410) 341-4264"],
+  ["Shirley A. Smith","1901 Kylemore Dr","Greensboro, NC 27406-6440","(336) 315-7986"],
+  ["Arlene J. Blake","201 Railroad Ave","East Rutherford, NJ 07073-1943","(201) 340-5848"],
+  ["Monica E. Cruz","3333 228th St SE","Bothell, WA 98021-8950","(425) 482-2245"],
+  ["Tammy D. Benavides","4510 W Capitol Dr","Milwaukee, WI 53216-1564","(414) 449-7593"],
+  ["Joseph C. Morgan","1803 S Eighth St","Rogers, AR 72756-5912","(479) 636-4634"],
+  ["Daniel S. Newton","1812 Chartwell Dr","Fort Wayne, IN 46816-1382","(260) 447-8173"],
+  ["Adam G. Woodard","2739 Westerwood Village Dr","Charlotte, NC 28214-2563","(704) 391-7784"],
+  ["Irene J. Iversen","1411 Legends Ct","Lawrence, KS 66049-5818","(785) 749-7665"],
+  ["Gertrude M. Blackwell","2412 Hardie St","Greensboro, NC 27403-3710","(336) 852-2971"],
+  ["Anthony G. Bartlett","1411 Legends Ct","Lawrence, KS 66049-5818","(785) 749-4565"],
+  ["Brandy M. Baird","2286 Pimmit Run Ln","Falls Church, VA 22043-2260","(703) 942-7928"],
+  ["Andrew C. Wray","2510 E Arkansas Ln, Ste 114","Arlington, TX 76014-1746","(817) 277-8741"],
+  ["Kelly J. Whitehead","1801 S Main St","Findlay, OH 45840-1324","(419) 422-2529"],
+  ["Justin D. Mccormack","2245 N Decatur Blvd","Las Vegas, NV 89108-2910","(702) 638-4228"],
+  ["Michelle T. Latham","32 Stovel Cir","Colorado Springs, CO 80916-4704","(719) 570-4181"],
+  ["Margaret M. Norris","102 Robinson St, Apt 2","Woonsocket, RI 02895-2154","(401) 597-7633"],
+  ["Marjorie L. Holleman","1601 Murdock Rd","Charlotte, NC 28205-2093","(704) 372-4839"],
+  ["Joshua C. Richardson","1601 Murdock Rd","Charlotte, NC 28205-2093","(704) 372-3839"],
+  ["Martina B. Starling","2308 Ashley Rd","Charlotte, NC 28208-4802","(704) 391-7329"],
+  ["James R. Hellman","2227 Woodberry Dr","Greensboro, NC 27403-3749","(336) 315-4986"],
+  ["Dan J. Copeland","4840 Eastern Ave NE","Washington, DC 20017-3129","(202) 832-7673"],
+  ["Michael M. Hill","1201 S Ervay St","Dallas, TX 75215-1124","(214) 747-5018"],
+  ["Diane D. Lovelace","2200 Oneida St","Joliet, IL 60435-6578","(815) 730-7623"],
+  ["Brenda R. Wilson","1110 Dennis Ct","Rodeo, CA 94572-1929","(510) 799-4503"],
+  ["Bernadette J. Hulme","845 Dracut Ln","Schaumburg, IL 60173-5927","(847) 519-7045"]
+  ]
+  
+@@uk_addresses = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798678"],
+  ["Johnny J. Wilson","24 Old Bond St","London, W1S 4AL","020 76294142"],
+  ["Alfred T. Jones","196 Regent Street","London, W1B 5BT","0800 280 2444"],
+  ["Omar B. Camacho","38 Great Castle St","London, W1W 8LG","020 76367700"],
+  ["James D. Heck","43 Brewer Street","London, W1F 9UD","020 7439 8525"],
+  ["Carol J. Quenett","37 Neal St","London, WC2H 9PR","020 72402783"],
+  ["Patrick S. Dillon","34 Floral St","London, WC2E 9DJ","020 78361131"],
+  ["Amy E. Ruth","235 Regent Street","London, W1B 2EL","020 7153 9000"],
+  ["Marco A. Hernandez","","Michelin House, 81 Fulham Rd","London, SW3 6RD?","020 75897401"],
+  ["Ruth M. Alvear","","Benson House, Unit 3, Hatfields","London, SE1 8DQ","020 79286898"],
+  ["Timothy D. Smith","374 Oxford St","London, W1C 1JR","020 74097868"],
+  ["Ruth B. Allisons","199 Regent St","London, W1B 4LZ","020 77344088"],
+  ["Michael D. Adams","21 Great Marlborough Street","London, W1F 7HL","020 7734 4477"],
+  ["Christi R. Sharon","7 Royal Opera Arcade","London, SW1Y 4UY","020 7930 4587"],
+  ["Florence N. Sharp","86 Lower Marsh","London, SE1 7AB","020 74018219"],
+  ["Aharon E. Sharon","78 Neal Street","London, WC2H 9PA","020 7813 3051"],
+  ["Sharon A. Berg","55a Tooley Street","London, SE1 2QN","020 7378 1998"],
+  ["Becky M. Berg","72 Strand","London, WC2N 5LR","0870 376 3373"],
+  ["William F. Maule","2179 Shaftesbury Avenue","London, WC2H 8JR","020 7420 3666"],
+  ["Charlotte S. Sharon","205 Piccadilly","London, W1J 9HD","020 78512400"],
+  ["Katrina B. Nbdelhamid","82 Brewer St","London, W1F 9UA","020 74393705"],
+  ["Lillian L. Sharon","53 Kings Rd","London, SW3 4ND","020 77307562"],
+  ["Daniel M. Cohn","85 Ebury St","Westminster, SW1W 9QU","020 7730 2235"],
+  ["Salomea B. Sharon","24 Denmark St","London, WC2H 8NJ","020 73791139"],
+  ["Sarabeth L. Reingold","32 Great Marlborough St","London, W1F 7JB","087 0376 3287"],
+  ["Tamra A. Sharon","27 Neal Street","Covent Garden, WC2H 9PR","087 0376 3256"],
+  ["Wasiu A. Okeowo","82 Moorgate","London, EC2M 6SE","087 0376 3314"],
+  ["Danielle V. Keys","24 Lower Regent Street","London, SW1Y 4QF","087 0333 9600"],
+  ["Michael B. Haynes","25 Bury Street","London, SW1Y 6AL","020 7807 9990"],
+  ["Grant G. Dakan","504 Oxford St","London, W1C 1HG","020 74950420"],
+  ["David G. Oldfield","97 Hatton Garden","London, EC1N 8NX","020 7405 2453"],
+  ["Michelle A. Nash","89 Oxford Street","London, W1D 2EZ","087 0376 3123"],
+  ["Laura A. Feige","203 Oxford St","London, W1D 2LE","020 72921600"],
+  ["Lora B. Feige","8 Leadenhall Market","London, EC3V 1LR","020 76210959"],
+  ["Horace N. Feige","197 Piccadilly","London, W1J 9LL","020 7734 4551"],
+  ["Herbert H. Feige","14 Portsmouth St","London, WC2A 2ES","020 74059891"],
+  ["Nancy W. Laura","261 Oxford St","London, W1C 2DE","0870 376 3851"]
+ ]
   
   # Pick a first name
-  def pick_first_name(sex, age=:adult)
+  def pick_first_name(sex=nil, age=:adult)
+    sex ||= ['M', 'F'].sample
     if age == :adult
       sex.upcase == 'M' ? @@mens_names.sample : @@womens_names.sample
     else
@@ -68,6 +169,13 @@ class FamilySeed
     @@last_names.sample
   end
 
+  
+  def pick_birth_date(min_age, max_age)
+    base_date = Date::today() - max_age.to_i.years
+    age_days = rand*365.25*(max_age-min_age)
+    birth_date = base_date + age_days.to_i.days
+  end
+  
   def pick_country
     country_code = case rand(100)
       when 0..6 then 'CA'
@@ -117,7 +225,8 @@ class FamilySeed
   def pick_location
     Location.random
   end
-  
+
+ 
   # Make a single person
   def make_a_single(sex=nil)
     sex ||= @@sexes.sample  # pick one randomly if not specified
@@ -137,7 +246,7 @@ class FamilySeed
               :bloodtype => pick_bloodtype,
               :date_active => date_active
               )
-        
+    return h  # Could return the family, it's just for testing in any case 
   end
   
   def add_spouse(member)
@@ -206,11 +315,72 @@ class FamilySeed
     return child
   end  
     
+  def add_contact(member)
+    c = member.contacts.new
+    c.contact_type = ContactType.random 
+    case c.contact_type.description.downcase
+    when /field/
+      addr = ''
+      c.contact_name = member.name
+      c.phone_1 = '0808-999-9999'
+      c.phone_2 = '0707-888-8888' if rand > 0.6
+      c.email_1 = member.first_name + "." + member.last_name + "@example.com"
+      if rand > 0.8
+        c.email_2 = member.first_name + rand(1000).to_s + "@example.com"
+      end
+      if rand > 0.8
+        c.blog = 'http://' + member.first_name + member.last_name + ['blogspot.com','wordpress.com',member.last_name+'.com'].sample
+      end
+      if rand > 0.6
+        c.facebook = 'http://www.facebook.com/group.php?gid=9999999999#!/profile.php?id=8888888888'
+      end
+      c.email_public = rand > 0.5
+      c.skype_public = rand > 0.5
+      c.phone_public = rand > 0.5
+         
+    when 'home country' 
+      addr = case member.country.code
+        when 'US' then @@us_addresses.sample
+        when 'UK' then @@uk_addresses.sample
+        else @@us_addresses.sample
+      end
+      c.contact_name = member.name
+      c.address = addr[1] + "\n" + addr[2]
+      c.email_1 = member.first_name + "." + member.last_name + "@example.com"
+      c.phone_1 = addr[3]
+      c.phone_2 = addr[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
+      c.email_public = rand > 0.5
+      c.skype_public = rand > 0.5
+      c.phone_public = rand > 0.5
+    else
+      addr = case member.country.code
+        when 'US' then @@us_addresses.sample
+        when 'UK' then @@uk_addresses.sample
+        else @@us_addresses.sample
+      end
+      if c.contact_type.description.downcase == 'spouse'
+        sex = opposite_sex(member.sex)
+      else
+        sex = nil
+      end
+      c.contact_name = pick_first_name(sex) + " " + member.last_name
+      c.address = addr[1] + "\n" + addr[2]
+      c.email_1 = c.contact_name.gsub(' ', '.') + "@example.com"
+      c.phone_1 = addr[3]
+      c.phone_2 = addr[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
+      c.email_public = rand > 0.5
+      c.skype_public = rand > 0.5
+      c.phone_public = rand > 0.5
+    end # case contact_type...
+    if c.save
+      puts "contact saved" 
+    else
+      puts "contact not saved, errors = #{c.errors}"
+    end
+    return c
+  end # add_contact
   
-  def pick_birth_date(min_age, max_age)
-    base_date = Date::today() - max_age.to_i.years
-    age_days = rand*365.25*(max_age-min_age)
-    birth_date = base_date + age_days.to_i.days
+  def add_travel(member)
   end
 
   def self.seed
