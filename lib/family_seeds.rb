@@ -103,7 +103,15 @@ class FamilySeed
   end
   
   def pick_status
-    Status.random
+    basic_statuses = ['On the field', 'Home assignment', 'On leave', 'Pipeline', 'Alumni']
+    status = case rand(100)
+      when 0..5   then 'Pipeline'
+      when 10..40 then 'On the field'
+      when 50..65 then 'Home assignment'
+      when 66..75 then 'On leave'
+      when 6..9, 75..100 then 'Alumni'
+    end
+    return Status.find_by_description(status) || Status.find(UNSPECIFIED)
   end
   
   def pick_location
@@ -153,14 +161,37 @@ class FamilySeed
     return spouse
   end  
         
+  def child_status(child, age)
+    if age < 19
+      status = case child.family.head.status.description
+        when 'Alumni' then 'Alumni MK'
+        when 'Pipeline' then 'Pipeline'
+        when 'On the field' then 'On field w parents'
+        when 'Home assignment' then 'Home assignment'
+        when 'On leave' then 'On leave'
+        else 'Unspecified'        
+      end
+    else
+      if age < 22
+        status = 'College'
+      else
+        status = 'Adult MK'
+      end  
+    end      
+    child.status = Status.find_by_description(status) || Status.find(UNSPECIFIED)
+  end
+
   def add_child(member, age)
     child = Member.new(member.attributes)  # This clones all the attributes, then we'll change some
     child.sex = sex ||= @@sexes.sample
     child.first_name = pick_first_name(child.sex, :child)
     child.middle_name = pick_first_name(child.sex, :child)
     child.name = nil
+    child.spouse_id = nil
     child.birth_date = pick_birth_date(age, age+1)
+    child.date_active = nil
     child.ministry = Ministry.find_by_description('MK')  # Could put this somewhere so it's not looked up each time
+    child_status(child,age) # Choose reasonable status (like 'on field') based on parents' status and child's age
     if age < 19
       child.employment_status = EmploymentStatus.find_by_code('MKD')
     else
