@@ -409,14 +409,14 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
       guesthouse = params[:guesthouse] || GUESTHOUSES.sample
       flight = params[:flight] || FLIGHTS.sample
       return_date = params[:return_date] || date + rand(365).days
-      with_spouse = params[:with_spouse] || coin_toss
+      with_spouse = params[:with_spouse] || (coin_toss && member.spouse)
       with_children = params[:with_children] || (coin_toss && member.children)
-      other_traveler_count = params[:other_traveler_count] || [0,0,0,0,0,1,1,1,2,3].sample
+      other_travelers_count = params[:other_travelers_count] || [0,0,0,0,0,1,1,1,2,3].sample
       other_travelers = params[:other_travelers] # This is the list of names
       # Make up some names if there are extra passengers but no names are given
-      if other_traveler_count>0 && other_travelers.nil?
+      if other_travelers_count>0 && other_travelers.nil?
         other_travelers = []
-        other_traveler_count.times { other_travelers << pick_full_name }
+        other_travelers_count.times { other_travelers << pick_full_name }
         other_travelers = other_travelers.join(', ')
       end
       total_passengers = params[:total_passengers]
@@ -424,7 +424,7 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
         total_passengers = 1
         total_passengers += 1 if with_spouse
         total_passengers += member.children.count if with_children
-        total_passengers += other_traveler_count
+        total_passengers += other_travelers_count
       end  
       baggage = params[:baggage] || total_passengers*2
       t = member.travels.create(:date => date, :return_date => return_date,
