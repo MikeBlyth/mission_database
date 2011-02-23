@@ -435,6 +435,10 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
                                 :other_travelers => other_travelers,
                                 :total_passengers => total_passengers, :baggage => baggage)
   end
+
+  def add_field_term(member)
+  end
+
 end
 
 

@@ -133,25 +133,36 @@ include SimTestHelper
       end          
     end #it 'creates a travel record with all the specified parameters'
 
-    it 'calculates total travelers when traveler is alone' do
-      add_travel(@head, :other_travelers_count=>0,
-          :with_spouse=>false, :with_children=>false).total_passengers.should == 1
-    end
+## ** COMMENTED OUT JUST TO SAVE TIME -- They're a bit slow
+##    it 'calculates total travelers when traveler is alone' do
+##      add_travel(@head, :other_travelers_count=>0,
+##          :with_spouse=>false, :with_children=>false).total_passengers.should == 1
+##    end
 
-    it 'calculates total travelers when traveler is accompanied' do
-      add_spouse(@head)
-      2.times {add_child(@head,10)}
-      add_travel(@head, :other_travelers_count=>2,
-          :with_spouse=>true, :with_children=>true).total_passengers.should == 6
-    end
+##    it 'calculates total travelers when traveler is accompanied' do
+##      add_spouse(@head)
+##      2.times {add_child(@head,10)}
+##      add_travel(@head, :other_travelers_count=>2,
+##          :with_spouse=>true, :with_children=>true).total_passengers.should == 6
+##    end
 
-    it 'generates names for other travelers' do
-      t = add_travel(@head, :other_travelers_count=>3)
-      t.other_travelers.length.should > 25
-      t.other_travelers.count(',').should == 2  # Three names separated by 2 commas
-    end  
+##    it 'generates names for other travelers' do
+##      t = add_travel(@head, :other_travelers_count=>3)
+##      t.other_travelers.length.should > 25
+##      t.other_travelers.count(',').should == 2  # Three names separated by 2 commas
+##    end  
   end # Travel records
-  
+
+  describe 'Field terms' do
+
+    it 'creates a field term record' do
+      lambda do
+        add_field_term(@head)
+      end.should change(FieldTerm, :count).by 1
+    end
+
+  end  # describe 'Field terms' do
+
 end
 
 
