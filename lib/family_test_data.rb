@@ -421,6 +421,7 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
       end
       total_passengers = params[:total_passengers]
       if total_passengers.nil?
+#puts "with_spouse=#{with_spouse}, children=#{member.children.count}, other_travelers_count = #{other_travelers_count}"
         total_passengers = 1
         total_passengers += 1 if with_spouse
         total_passengers += member.children.count if with_children
@@ -436,9 +437,36 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
                                 :total_passengers => total_passengers, :baggage => baggage)
   end
 
-  def add_field_term(member)
+  def add_field_term(member, params={})
+    location = params[:location] || Location.random
+    ministry= params[:ministry] || Ministry.random
+    employment_status = params[:employment_status] || EmploymentStatus.random
+    duration = params[:duration] || (rand(46) + 1).months
+    start_date = params[:start_date] 
+    if start_date.nil?
+      # Come up with a reasonable current term based on what the last term, if any, was
+      last_term=member.field_terms.last
+      if last_term.nil?  #if this is the first term being created for the person...
+        start_date=member.date_active
+      else  # base current term on the end of the last term
+        if last_term.end_date.nil?
+          start_date=last_term + (rand(46) + 7).months              
+        else
+          start_date=last_term.end_date + (rand(9) + 3).months                  
+        end
+      end
+    end    
+    end_date  = params[:end_date] || start_date + duration
+    est_start_date  = params[:est_start_date] # No default on this one
+    est_end_date   = params[:est_end_date] || est_start_date + duration if est_start_date
+    employment_status = params[:employment_status] || EmploymentStatus.random
+    f = member.field_terms.create( :location => location, :ministry=>ministry,
+                :start_date=>start_date, :end_date =>end_date,
+                :est_start_date=>est_start_date, :est_end_date=>est_end_date,
+                :employment_status=>employment_status
+                )
   end
 
 end
 
-
+ 

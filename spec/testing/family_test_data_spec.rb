@@ -133,27 +133,35 @@ include SimTestHelper
       end          
     end #it 'creates a travel record with all the specified parameters'
 
-## ** COMMENTED OUT JUST TO SAVE TIME -- They're a bit slow
-##    it 'calculates total travelers when traveler is alone' do
-##      add_travel(@head, :other_travelers_count=>0,
-##          :with_spouse=>false, :with_children=>false).total_passengers.should == 1
-##    end
+# ** COMMENTED OUT JUST TO SAVE TIME -- They're a bit slow
+    it 'calculates total travelers when traveler is alone' do
+      add_travel(@head, :other_travelers_count=>0,
+          :with_spouse=>false, :with_children=>false).total_passengers.should == 1
+    end
 
-##    it 'calculates total travelers when traveler is accompanied' do
-##      add_spouse(@head)
-##      2.times {add_child(@head,10)}
-##      add_travel(@head, :other_travelers_count=>2,
-##          :with_spouse=>true, :with_children=>true).total_passengers.should == 6
-##    end
+    it 'calculates total travelers when traveler is accompanied' do
+      add_spouse(@head)
+      2.times {add_child(@head,10)}
+      add_travel(@head, :other_travelers_count=>2,
+          :with_spouse=>true, :with_children=>true).total_passengers.should == 6
+    end
 
-##    it 'generates names for other travelers' do
-##      t = add_travel(@head, :other_travelers_count=>3)
-##      t.other_travelers.length.should > 25
-##      t.other_travelers.count(',').should == 2  # Three names separated by 2 commas
-##    end  
+    it 'generates names for other travelers' do
+      t = add_travel(@head, :other_travelers_count=>3)
+      t.other_travelers.length.should > 25
+      t.other_travelers.count(',').should == 2  # Three names separated by 2 commas
+    end  
   end # Travel records
 
   describe 'Field terms' do
+
+#  location_id          :integer(4)      default(999999)
+#  ministry_id          :integer(4)      default(999999)
+#  start_date           :date
+#  end_date             :date
+#  est_start_date       :date
+#  est_end_date         :date
+#  employment_status_id :integer(4)      default(999999)
 
     it 'creates a field term record' do
       lambda do
@@ -161,6 +169,32 @@ include SimTestHelper
       end.should change(FieldTerm, :count).by 1
     end
 
+    it 'creates a field_term record with all the specified parameters' do
+      params={:location =>Location.random, :ministry=>Ministry.random,
+          :start_date=>'1994-01-01'.to_date, :end_date=>'1996-06-06'.to_date,
+          :est_start_date=>'1994-01-01'.to_date, :est_end_date=>'1996-06-06'.to_date,
+          :employment_status=>EmploymentStatus.random}
+      t = add_field_term(@head,params)
+      params.each do |key, value|
+        t.send(key).should == params[key]          
+      end          
+    end  
+          
+
+    it 'past field term record has reasonable starting and ending dates' do
+      f = add_field_term(@head)
+      f.start_date.should == @head.date_active
+      term_duration_days = (f.end_date - f.start_date).to_i
+      term_duration_days.should > 180
+      term_duration_days.should < 365*4+1
+    end
+
+    it 'makes a second term start after the end of the first term' do
+      first_term = add_field_term(@head, :duration=>30)
+      second_term = add_field_term(@head)
+      (second_term.start_date - first_term.end_date).to_i.months.should > 1.month
+    end
+  
   end  # describe 'Field terms' do
 
 end
