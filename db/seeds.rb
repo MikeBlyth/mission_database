@@ -11,6 +11,7 @@
 #
 # coding: utf-8
 
+puts "**** Seeding Bloodtype table"
 Bloodtype.delete_all
 x = Bloodtype.new(:abo => 'A', :rh => 'neg', :comment => '', :full => 'A neg')
 x.id = 1
@@ -58,6 +59,7 @@ x = Bloodtype.new(:abo => '', :rh => '', :comment => 'unknown', :full => 'unknow
 x.id = 999999
 x.save
 
+puts "**** Seeding cities table"
 City.delete_all
 x = City.new(:name => 'Jos', :state => 'Plateau', :country => 'NG', :latitude => 9.917, :longitude => 8.9)
 x.id = 1
@@ -125,6 +127,7 @@ x.save
 unspecified_city_id = x.id   # We save this to use in the unspecified location record (see below)
 
 
+puts "**** Seeding contact_types table"
 ContactType.delete_all
 x = ContactType.new(:code => 1, :description => 'on field')
 x.id = 1
@@ -151,6 +154,7 @@ x = ContactType.new(:code => 0, :description => 'unspecified')
 x.id = 999999
 x.save
 
+puts "**** Seeding countries table"
 Country.delete_all
 x = Country.new(:code => 'AD', :name => 'Andorra', :nationality => 'Andorran', :include_in_selection => 0)
 x.id = 1
@@ -891,6 +895,7 @@ x = Country.new(:code => '??', :name => 'Not known', :nationality => 'Not known'
 x.id = 999999
 x.save
 
+puts "**** Seeding education levels table"
 Education.delete_all
 x = Education.new(:description => 'Some school', :code => 10)
 x.id = 16
@@ -932,6 +937,7 @@ x = Education.new(:description => 'unspecified', :code => 99)
 x.id = 999999
 x.save
 
+puts "**** Seeding employment statuses table"
 EmploymentStatus.delete_all
 x = EmploymentStatus.new(:description => 'Adult-MK', :code => 'MKA')
 x.id = 1
@@ -967,6 +973,7 @@ x = EmploymentStatus.new(:description => 'unspecified', :code => '???')
 x.id = 999999
 x.save
 
+puts "**** Seeding locations table"
 Location.delete_all
 x = Location.new(:description => 'Enugu', :city_id => 2, :code => 10101)
 x.id = 1
@@ -1099,6 +1106,7 @@ x = Location.new(:description => 'unspecified', :city_id => unspecified_city_id,
 x.id = 999999
 x.save
 
+puts "**** Seeding ministries table"
 Ministry.delete_all
 x = Ministry.new(:description => 'Evangelism personnel', :code => 110)
 x.id = 1
@@ -1272,6 +1280,7 @@ x = Ministry.new(:description => 'Unspecified', :code => 9999)
 x.id = 999999
 x.save
 
+puts "**** Seeding states table"
 State.delete_all
 x = State.new(:name => 'Abia')
 x.id = 1
@@ -1385,6 +1394,7 @@ x = State.new(:name => 'Unspecified')
 x.id = 999999
 x.save
 
+puts "**** Seeding statuses table"
 Status.delete_all
 x = Status.new(:description => 'Alumni', :code => 'A')
 x.id = 1
@@ -1423,6 +1433,7 @@ x = Status.new(:description => 'Unspecified', :code => 'Z')
 x.id = 999999
 x.save
 
+puts "**** Creating single user, 'Administrator'"
 User.delete_all
 admin = User.create!(:name=>"Administrator", :password=>"ByPrayer", :password_confirmation=>"ByPrayer", 
             :email=>"sample@example.com")

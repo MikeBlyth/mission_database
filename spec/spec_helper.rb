@@ -6,7 +6,7 @@ Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However, 
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
-  
+
   require File.dirname(__FILE__) + "/factories"  
 
   # This file is copied to spec/ when you run 'rails generate rspec:install'
@@ -59,6 +59,14 @@ Spork.prefork do
       fill_in "Password", :with => @user.password
       click_button "Sign in"
   end
+
+  require Rails.root+'app/helpers/application_helper.rb'
+  require Rails.root+'lib/sim_test_helper.rb'
+
+  # This line is ONLY needed when tests require the full set of tables (countries, locations, and so on) found
+  # in seeds.rb. It takes a long time to run seeds, so it should not be included in ordinary testing.
+  require "#{Rails.root}/db/seeds.rb"  
+ 
 
 end # Spork.prefork
 
