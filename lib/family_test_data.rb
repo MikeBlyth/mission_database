@@ -152,6 +152,15 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
   ["Nancy W. Laura","261 Oxford St","London, W1C 2DE","0870 376 3851"]
  ]
 
+AIRPORTS = %w(Abuja London Charlotte Denver Nairobi Accra Lagos Minneapolis Portland Dallas Houston)
+FLIGHTS = %w(BA251 BA92 LH270 US210 KL540 KL541 RY444)
+TRAVEL_PURPOSES = ['Personal','Home assignment','Mission','Medical','Other']
+GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified']
+
+  def coin_toss
+    rand > 0.5
+  end  
+
   # Pick a first name
   def pick_first_name(sex=nil, age=:adult)
     sex ||= ['M', 'F'].sample
@@ -166,6 +175,9 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
     LAST_NAMES.sample
   end
 
+  def pick_full_name(sex=nil, age=:adult)
+    pick_first_name(sex, age) + " " + pick_last_name
+  end  
   
   def pick_birth_date(min_age, max_age)
     base_date = Date::today() - max_age.to_i.years
@@ -339,9 +351,9 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
       if rand > 0.6
         c.facebook = 'http://www.facebook.com/group.php?gid=9999999999#!/profile.php?id=8888888888'
       end
-      c.email_public = rand > 0.5
-      c.skype_public = rand > 0.5
-      c.phone_public = rand > 0.5
+      c.email_public = coin_toss
+      c.skype_public = coin_toss
+      c.phone_public = coin_toss
          
     when 2 #home country
       addr = case member.country.code
@@ -354,9 +366,9 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
       c.email_1 = member.first_name + "." + member.last_name + "@example.com"
       c.phone_1 = addr[3]
       c.phone_2 = addr[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
-      c.email_public = rand > 0.5
-      c.skype_public = rand > 0.5
-      c.phone_public = rand > 0.5
+      c.email_public = coin_toss
+      c.skype_public = coin_toss
+      c.phone_public = coin_toss
     else
       addr = case member.country.code
         when 'US' then US_ADDRESSES.sample
@@ -373,9 +385,9 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
       c.email_1 = c.contact_name.gsub(' ', '.') + "@example.com"
       c.phone_1 = addr[3]
       c.phone_2 = addr[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
-      c.email_public = rand > 0.5
-      c.skype_public = rand > 0.5
-      c.phone_public = rand > 0.5
+      c.email_public = coin_toss
+      c.skype_public = coin_toss
+      c.phone_public = coin_toss
     end # case contact_type...
     if c.save
 #      puts "contact saved" 
@@ -385,7 +397,43 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
     return c
   end # add_contact
   
-  def add_travel(member)
+  def add_travel(member,params={})
+      date = params[:date] || Date::today
+      origin = params[:origin] || AIRPORTS.sample
+      destination = params[:destination] 
+      if destination.nil? 
+        destination = AIRPORTS.sample # There must be a better way to do this, oh well
+        destination = AIRPORTS.sample while origin == destination 
+      end
+      purpose = params[:purpose] || TRAVEL_PURPOSES.sample
+      guesthouse = params[:guesthouse] || GUESTHOUSES.sample
+      flight = params[:flight] || FLIGHTS.sample
+      return_date = params[:return_date] || date + rand(365).days
+      with_spouse = params[:with_spouse] || coin_toss
+      with_children = params[:with_children] || (coin_toss && member.children)
+      other_traveler_count = params[:other_traveler_count] || [0,0,0,0,0,1,1,1,2,3].sample
+      other_travelers = params[:other_travelers] # This is the list of names
+      # Make up some names if there are extra passengers but no names are given
+      if other_traveler_count>0 && other_travelers.nil?
+        other_travelers = []
+        other_traveler_count.times { other_travelers << pick_full_name }
+        other_travelers = other_travelers.join(', ')
+      end
+      total_passengers = params[:total_passengers]
+      if total_passengers.nil?
+        total_passengers = 1
+        total_passengers += 1 if with_spouse
+        total_passengers += member.children.count if with_children
+        total_passengers += other_traveler_count
+      end  
+      baggage = params[:baggage] || total_passengers*2
+      t = member.travels.create(:date => date, :return_date => return_date,
+                                :origin => origin, :destination => destination,
+                                :flight => flight,
+                                :purpose => purpose, :guesthouse => guesthouse,
+                                :with_spouse => with_spouse, :with_children => with_children,
+                                :other_travelers => other_travelers,
+                                :total_passengers => total_passengers, :baggage => baggage)
   end
 end
 

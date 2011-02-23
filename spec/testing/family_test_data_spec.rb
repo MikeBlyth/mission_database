@@ -105,8 +105,37 @@ include SimTestHelper
       c.email_1.should_not be_blank
     end
 
+  end # Contact records
+  
+  describe "travel records" do
 
-  end
+    it 'creates a travel record' do
+      lambda do
+        add_travel(@head)
+      end.should change(Travel, :count).by 1
+    end
+
+    it 'creates a travel record with right date' do
+        add_travel(@head, :date => Date::tomorrow).date.should == Date::tomorrow
+    end
+
+    it 'creates a travel record with all the specified parameters' do
+      params = {:date => Date::tomorrow, :origin => 'LAX', :destination => 'Abuja', :purpose => 'vacation',
+                :guesthouse => 'Lutheran', :return_date => Date::today + 1.month, 
+                :with_spouse => true, :with_children=>true,
+                :total_passengers => 6,
+                :other_travelers => 'Bob, Sally, Jean',
+                :flight => "BA449",
+                :baggage => 10}
+      t = add_travel(@head,params)
+      params.each do |key, value|
+puts "**** #{key} = #{value}"
+        t.send(key).should == params[key]          
+      end          
+    end
+
+
+  end # Travel records
   
 end
 

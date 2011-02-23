@@ -73,6 +73,12 @@ class Member < ActiveRecord::Base
     Member.find(self.id)
   end
 
+  def children
+    age_cutoff = 19
+    birthdate_cutoff = Date::today() - age_cutoff.years
+    family.members.where("birth_date > ?", birthdate_cutoff)
+  end
+
   # Copy last name & other family-level attributes to new member as defaults
   def inherit_from_family
     return unless new_record? &&             # Inheritance only applies to new, unsaved records
@@ -222,6 +228,11 @@ class Member < ActiveRecord::Base
 
   def on_field
     return Status.find(self.status_id).on_field == true 
+  end
+
+  def age_years
+     return nil if self.birth_date.nil? 
+     return (Date.today-self.birth_date)/365.25
   end
 
   # Return string with person's age in _human_ time (as appropriate for age). See time_human.   
