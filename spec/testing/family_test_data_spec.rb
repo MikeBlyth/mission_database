@@ -129,9 +129,13 @@ include SimTestHelper
                 :baggage => 10}
       t = add_travel(@head,params)
       params.each do |key, value|
-puts "**** #{key} = #{value}"
         t.send(key).should == params[key]          
       end          
+
+    it 'calculates total travelers when traveler is alone' do
+      add_travel(@head).total_passengers.should == 1
+    end
+
     end
 
 
