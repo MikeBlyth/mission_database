@@ -225,11 +225,16 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
 
  
   # Make a single person
-  def make_a_single(sex=nil, status=nil)
+  def make_a_single(sex=nil, status_code=nil)
     sex ||= SEXES.sample  # pick one randomly if not specified
+    if status_code
+      status = Status.find_by_code(status_code)
+    else
+      status = pick_status # randomly
+    end
     sim_id = rand(10000) until !Family.find_by_sim_id(sim_id)
     f = Family.create(:last_name=>pick_last_name, :first_name=>pick_first_name(sex), :middle_name => pick_first_name(sex),
-              :status => status || pick_status, :location => pick_location, :sim_id => sim_id)
+              :status => status, :location => pick_location, :sim_id => sim_id)
     head = f.head
     birth_date = pick_birth_date(20,70)
     age = (Date::today()-birth_date)/365  # Gives integer result, which is ok

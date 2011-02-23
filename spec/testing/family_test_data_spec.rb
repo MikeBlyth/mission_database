@@ -25,6 +25,16 @@ include SimTestHelper
     make_a_single("F").sex.should == 'F'
   end
 
+  it "creates single with right s  it 'creates a child with right age and name' do
+    child = add_child(@head,10)
+    child.age.should == '10 years'
+    child.last_name.should == @head.last_name    
+  end
+
+tatus" do
+    make_a_single(nil,'F').status.code.should == 'F'
+  end
+
   it "creates three new singles with family" do
     lambda do
       3.times {make_a_single}
@@ -45,7 +55,8 @@ include SimTestHelper
     @head.spouse.should == spouse
   end
   
-  it 'creates a child with right age and name' do
+  it 'creates a child with right status' do
+    @head.update_attributes(:status=>Status.find_by_code('field')
     child = add_child(@head,10)
     child.age.should == '10 years'
     child.last_name.should == @head.last_name    

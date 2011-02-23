@@ -1396,40 +1396,40 @@ x.save
 
 puts "**** Seeding statuses table"
 Status.delete_all
-x = Status.new(:description => 'Alumni', :code => 'A')
+x = Status.new(:description => 'Alumni', :code => 'alumni')
 x.id = 1
 x.save
-x = Status.new(:description => 'On field w parents', :code => 'C', :active => 1, :on_field => 1)
+x = Status.new(:description => 'On field w parents', :code => 'mkfield', :active => 1, :on_field => 1)
 x.id = 2
 x.save
-x = Status.new(:description => 'On the field', :code => 'F', :active => 1, :on_field => 1)
+x = Status.new(:description => 'On the field', :code => 'field', :active => 1, :on_field => 1)
 x.id = 3
 x.save
-x = Status.new(:description => 'College', :code => 'G')
+x = Status.new(:description => 'College', :code => 'college')
 x.id = 4
 x.save
-x = Status.new(:description => 'Home assignment', :code => 'H', :active => 1)
+x = Status.new(:description => 'Home assignment', :code => 'home_assignment', :active => 1)
 x.id = 5
 x.save
-x = Status.new(:description => 'On leave', :code => 'L')
+x = Status.new(:description => 'On leave', :code => 'leave')
 x.id = 6
 x.save
-x = Status.new(:description => 'Adult MK', :code => 'M')
+x = Status.new(:description => 'Adult MK', :code => 'mkadult')
 x.id = 7
 x.save
-x = Status.new(:description => 'Alumni-Retired', :code => 'R')
+x = Status.new(:description => 'Alumni-Retired', :code => 'retired')
 x.id = 8
 x.save
-x = Status.new(:description => 'With the Lord!', :code => '@', :active => 0, :on_field => 0)
+x = Status.new(:description => 'With the Lord!', :code => 'deceased', :active => 0, :on_field => 0)
 x.id = 11
 x.save
-x = Status.new(:description => 'Pipeline', :code => 'P')
+x = Status.new(:description => 'Pipeline', :code => 'pipeline')
 x.id = 12
 x.save
-x = Status.new(:description => 'Alumni MK', :code => 'B', :active => 0, :on_field => 0)
+x = Status.new(:description => 'Alumni MK', :code => 'mkalumni', :active => 0, :on_field => 0)
 x.id = 13
 x.save
-x = Status.new(:description => 'Unspecified', :code => 'Z')
+x = Status.new(:description => 'Unspecified', :code => 'unspecified')
 x.id = 999999
 x.save
 

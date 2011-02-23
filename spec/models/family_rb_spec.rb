@@ -25,9 +25,9 @@ describe Family do
     @family.last_name = ''
     @family.should_not be_valid
   end
-  it "is not valid without a full name" do
+  it "is valid without a full name" do   # because set_indexed_name_if_empty is called before validation
     @family.name = ''
-    @family.should_not be_valid   # because set_indexed_name_if_empty is called before validation
+    @family.should be_valid 
   end
 
   it "is valid if name is unique" do
