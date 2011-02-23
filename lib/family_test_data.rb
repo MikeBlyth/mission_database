@@ -223,7 +223,6 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
     Location.random
   end
 
- 
   # Make a single person
   def make_a_single(sex=nil, status_code=nil)
     sex ||= SEXES.sample  # pick one randomly if not specified
@@ -274,22 +273,22 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
         
   def child_status(child, age)
     if age < 19
-      status = case child.family.head.status.description
-        when 'Alumni' then 'Alumni MK'
-        when 'Pipeline' then 'Pipeline'
-        when 'On the field' then 'On field w parents'
-        when 'Home assignment' then 'Home assignment'
-        when 'On leave' then 'On leave'
+      status = case child.family.head.status.code
+        when 'alumni' then 'mkalumni'
+        when 'pipeline' then 'pipeline'
+        when 'field' then 'mkfield'
+        when 'home_assignment' then 'home_assignment'
+        when 'leave' then 'leave'
         else 'Unspecified'        
       end
     else
       if age < 22
-        status = 'College'
+        status = 'college'
       else
-        status = 'Adult MK'
+        status = 'mkadult'
       end  
     end      
-    child.status = Status.find_by_description(status) || Status.find(UNSPECIFIED)
+    child.status = Status.find_by_code(status) || Status.find(UNSPECIFIED)
   end
 
   def add_child(member, age)
@@ -317,11 +316,15 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
     return child
   end  
     
-  def add_contact(member)
+  def add_contact(member, contact_type=nil)
     c = member.contacts.new
-    c.contact_type = ContactType.random 
-    case c.contact_type.description.downcase
-    when /field/
+    if contact_type
+      c.contact_type = ContactType.find_by_code(contact_type)
+    else
+      c.contact_type = ContactType.random 
+    end  
+    case c.contact_type.code
+    when 1 # field
       addr = ''
       c.contact_name = member.name
       c.phone_1 = '0808-999-9999'
@@ -340,7 +343,7 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
       c.skype_public = rand > 0.5
       c.phone_public = rand > 0.5
          
-    when 'home country' 
+    when 2 #home country
       addr = case member.country.code
         when 'US' then US_ADDRESSES.sample
         when 'UK' then UK_ADDRESSES.sample
@@ -360,7 +363,7 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
         when 'UK' then UK_ADDRESSES.sample
         else US_ADDRESSES.sample
       end
-      if c.contact_type.description.downcase == 'spouse'
+      if c.contact_type.code == 3
         sex = opposite_sex(member.sex)
       else
         sex = nil
@@ -375,7 +378,7 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
       c.phone_public = rand > 0.5
     end # case contact_type...
     if c.save
-      puts "contact saved" 
+#      puts "contact saved" 
     else
       puts "contact not saved, errors = #{c.errors}"
     end

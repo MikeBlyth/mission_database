@@ -65,7 +65,7 @@ Spork.prefork do
 
   # This line is ONLY needed when tests require the full set of tables (countries, locations, and so on) found
   # in seeds.rb. It takes a long time to run seeds, so it should not be included in ordinary testing.
-  #require "#{Rails.root}/db/seeds.rb"  
+  require "#{Rails.root}/db/seeds.rb"  
  
 
 end # Spork.prefork
