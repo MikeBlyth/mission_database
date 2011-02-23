@@ -219,15 +219,24 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
     Bloodtype.random
   end
   
-  def pick_status
+  def pick_status(age)
     basic_statuses = ['On the field', 'Home assignment', 'On leave', 'Pipeline', 'Alumni']
-    status = case rand(100)
-      when 0..5   then 'Pipeline'
-      when 10..40 then 'On the field'
-      when 50..65 then 'Home assignment'
-      when 66..75 then 'On leave'
-      when 6..9, 75..100 then 'Alumni'
-    end
+    if age < 65
+      status = case rand(100)
+        when 0..5   then 'Pipeline'
+        when 10..40 then 'On the field'
+        when 50..65 then 'Home assignment'
+        when 66..75 then 'On leave'
+        when 6..9, 75..97 then 'Alumni'
+        when 98..99 then 'With the Lord!'
+      end
+    else
+      if age + rand(35) > 100
+        status = 'With the Lord!'
+      else
+        status = ['Alumni', 'Alumni-Retired'].sample
+      end
+    end        
     return Status.find_by_description(status) || Status.find(UNSPECIFIED)
   end
   
@@ -236,30 +245,33 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
   end
 
   # Make a single person
-  def make_a_single(sex=nil, status_code=nil)
-    sex ||= SEXES.sample  # pick one randomly if not specified
+  def make_a_single(params={})
+    sex = params[:sex] || SEXES.sample  # pick one randomly if not specified
+    age = params[:age] || 20 + rand(70)
+    birth_date = pick_birth_date(age,age+1)
+    date_active = params[:date_active] || pick_birth_date(0,age-20)  # Picks a date between when person was 20 and the present
+    status_code = params[:status_code] 
     if status_code
       status = Status.find_by_code(status_code)
     else
-      status = pick_status # randomly
+      status = pick_status(age) # ~ randomly
     end
+    location = params[:location] || pick_location
     sim_id = rand(10000) until !Family.find_by_sim_id(sim_id)
     f = Family.create(:last_name=>pick_last_name, :first_name=>pick_first_name(sex), :middle_name => pick_first_name(sex),
-              :status => status, :location => pick_location, :sim_id => sim_id)
+              :status => status, :location => location, :sim_id => sim_id)
     head = f.head
-    birth_date = pick_birth_date(20,70)
-    age = (Date::today()-birth_date)/365  # Gives integer result, which is ok
-    date_active = pick_birth_date(0,age-20)  # Picks a date between when person was 20 and the present
     head.update_attributes(:birth_date => birth_date, 
               :sex => sex,
-              :ministry=>pick_ministry, 
-              :employment_status=>pick_employment_status,
-              :country=>pick_country, 
-              :education=>pick_education, 
-              :bloodtype => pick_bloodtype,
+              :ministry=>params[:ministry] || pick_ministry, 
+              :employment_status=>params[:employment_status] || pick_employment_status,
+              :country=>params[:country] || pick_country, 
+              :education=>params[:education] || pick_education, 
+              :bloodtype => params[:bloodtype] || pick_bloodtype,
               :date_active => date_active
               )
-    return head  # Could return the family, it's just for testing in any case 
+puts "#{head.name}, #{head.age}, #{head.status.description}"
+    return head 
   end
   
   def add_spouse(member)

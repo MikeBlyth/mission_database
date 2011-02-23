@@ -28,12 +28,12 @@ include SimTestHelper
     end
 
     it "creates single with right sex" do
-      make_a_single("M").sex.should == 'M'
-      make_a_single("F").sex.should == 'F'
+      make_a_single(:sex=>"M").sex.should == 'M'
+      make_a_single(:sex=>"F").sex.should == 'F'
     end
 
     it "creates single with right status" do
-      make_a_single(nil,'field').status.code.should == 'field'
+      make_a_single(:status_code=>'field').status.code.should == 'field'
     end
 
     it "creates three new singles with family" do
@@ -185,7 +185,7 @@ include SimTestHelper
       f = add_field_term(@head)
       f.start_date.should == @head.date_active
       term_duration_days = (f.end_date - f.start_date).to_i
-      term_duration_days.should > 180
+      term_duration_days.should > 27
       term_duration_days.should < 365*4+1
     end
 
