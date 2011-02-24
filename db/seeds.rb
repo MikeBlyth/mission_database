@@ -966,7 +966,7 @@ x.save
 x = EmploymentStatus.new(:description => 'Short Term Associate', :code => 'STA')
 x.id = 9
 x.save
-x = EmploymentStatus.new(:description => 'Visitor', :code => 'VIS')
+x = EmploymentStatus.new(:description => 'Visitor', :code => 'visitor')
 x.id = 10
 x.save
 x = EmploymentStatus.new(:description => 'unspecified', :code => '???')
@@ -1428,6 +1428,12 @@ x.id = 12
 x.save
 x = Status.new(:description => 'Alumni MK', :code => 'mkalumni', :active => 0, :on_field => 0)
 x.id = 13
+x.save
+x = Status.new(:description => 'Visitor (past)', :code => 'visitor_past', :active => 0)
+x.id = 14
+x.save
+x = Status.new(:description => 'Visitor on field', :code => 'visitor', :active => 0)
+x.id = 15
 x.save
 x = Status.new(:description => 'Unspecified', :code => 'unspecified')
 x.id = 999999

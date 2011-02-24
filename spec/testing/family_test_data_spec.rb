@@ -10,7 +10,7 @@ include SimTestHelper
   before(:each) do
     # Start each test with a family and family head already
     # existing.
-    @head = make_a_single
+    @head = make_a_single(:date_active=>Date::today.years_ago(20), :age=>45.0, :status=>'field')
   end    
 
   describe "Creates family members" do
@@ -187,7 +187,6 @@ include SimTestHelper
         t.send(key).should == params[key]          
       end          
     end  
-          
 
     it 'past field term record has reasonable starting and ending dates' do
       f = add_field_term(@head)
@@ -255,14 +254,25 @@ include SimTestHelper
     describe 'travel records' do
     
       before(:each) do
-        add_some_singles(10)
-        add_some_couples(10)
+        add_some_singles(5)
+        add_some_couples(5)
         add_some_children
+        add_some_field_terms
       end
       
       it 'adds some travel records' do
         add_some_travels
         Travel.count.should > 0
+      end
+    
+      it 'adds travel to cover each term' do
+        add_some_travels
+        FieldTerm.all.each do |term|
+          Travel.find_by_member_id_and_date(term.member_id, term.start_date).should_not be_nil
+          if term.end_date < Date::today
+            Travel.find_by_member_id_and_date(term.member_id, term.end_date).should_not be_nil
+          end
+        end            
       end
     
     end # describe travel records    

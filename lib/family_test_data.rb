@@ -33,7 +33,7 @@ LAST_NAMES = %w( Song Wagner McNamara Raynor Wallace Lawrence May Steele Teague 
   %w(  Stevenson Houston Dunn O'Brien Barr Cain Heath Boswell Davis Coleman Norman Burch Weiner Chang Eason Weeks Siegel Hoyle Neal Baker) +
   %w(  Choi Carver Shelton Lyons Dickinson Abbott Hobbs Dodson Burgess Wong Blackburn Middleton Frazier Reid Nance McMahon Miles Kramer Jennings) +
   %w(  Bowles Brown Bolton Craven Hendrix Nichols Saunders Lehman Sherrill Cash Pittman Sullivan Whitehead Mack Rice Ayers Cherry Richmond York) +
-  %w(  Wiley Harrington Reed Nash Wilkerson )
+  %w(  Wiley Harrington Reed Nash Wilkerson Ho Lee Choi Chung Jang Kaldestadt Tranh )
   
 BOYS_NAMES = %w(Jacob William Joshua Christopher Michael Matthew James John David Zachary Austin Brandon Tyler Nicholas Andrew Christian) +
   %w( Joseph Cameron Dylan Daniel Caleb Jonathan Justin Noah Ethan Samuel Hunter Benjamin Robert Alexander Anthony Logan Thomas Ryan Jordan) +
@@ -128,17 +128,17 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
   ["Michael D. Adams","21 Great Marlborough Street","London, W1F 7HL","020 7734 4477"],
   ["Christi R. Sharon","7 Royal Opera Arcade","London, SW1Y 4UY","020 7930 4587"],
   ["Florence N. Sharp","86 Lower Marsh","London, SE1 7AB","020 74018219"],
-  ["Aharon E. Sharon","78 Neal Street","London, WC2H 9PA","020 7813 3051"],
+  ["Aharon E. Karon","78 Neal Street","London, WC2H 9PA","020 7813 3051"],
   ["Sharon A. Berg","55a Tooley Street","London, SE1 2QN","020 7378 1998"],
-  ["Becky M. Berg","72 Strand","London, WC2N 5LR","0870 376 3373"],
+  ["Becky M. Berkeley","72 Strand","London, WC2N 5LR","0870 376 3373"],
   ["William F. Maule","2179 Shaftesbury Avenue","London, WC2H 8JR","020 7420 3666"],
   ["Charlotte S. Sharon","205 Piccadilly","London, W1J 9HD","020 78512400"],
   ["Katrina B. Nbdelhamid","82 Brewer St","London, W1F 9UA","020 74393705"],
-  ["Lillian L. Sharon","53 Kings Rd","London, SW3 4ND","020 77307562"],
+  ["Lillian L. Frieden","53 Kings Rd","London, SW3 4ND","020 77307562"],
   ["Daniel M. Cohn","85 Ebury St","Westminster, SW1W 9QU","020 7730 2235"],
-  ["Salomea B. Sharon","24 Denmark St","London, WC2H 8NJ","020 73791139"],
+  ["Salomea B. Holst","24 Denmark St","London, WC2H 8NJ","020 73791139"],
   ["Sarabeth L. Reingold","32 Great Marlborough St","London, W1F 7JB","087 0376 3287"],
-  ["Tamra A. Sharon","27 Neal Street","Covent Garden, WC2H 9PR","087 0376 3256"],
+  ["Tamra A. Ho","27 Neal Street","Covent Garden, WC2H 9PR","087 0376 3256"],
   ["Wasiu A. Okeowo","82 Moorgate","London, EC2M 6SE","087 0376 3314"],
   ["Danielle V. Keys","24 Lower Regent Street","London, SW1Y 4QF","087 0333 9600"],
   ["Michael B. Haynes","25 Bury Street","London, SW1Y 6AL","020 7807 9990"],
@@ -146,16 +146,22 @@ UK_ADDRESSES = [ ["Kevin D. Beatty","39 Floral St","London, WC2E 9DG","020 73798
   ["David G. Oldfield","97 Hatton Garden","London, EC1N 8NX","020 7405 2453"],
   ["Michelle A. Nash","89 Oxford Street","London, W1D 2EZ","087 0376 3123"],
   ["Laura A. Feige","203 Oxford St","London, W1D 2LE","020 72921600"],
-  ["Lora B. Feige","8 Leadenhall Market","London, EC3V 1LR","020 76210959"],
-  ["Horace N. Feige","197 Piccadilly","London, W1J 9LL","020 7734 4551"],
-  ["Herbert H. Feige","14 Portsmouth St","London, WC2A 2ES","020 74059891"],
-  ["Nancy W. Laura","261 Oxford St","London, W1C 2DE","0870 376 3851"]
+  ["Lora B. King","8 Leadenhall Market","London, EC3V 1LR","020 76210959"],
+  ["Horace N. Bradley","197 Piccadilly","London, W1J 9LL","020 7734 4551"],
+  ["Herbert H. Whitford","14 Portsmouth St","London, WC2A 2ES","020 74059891"],
+  ["Nancy W. Kingsford","261 Oxford St","London, W1C 2DE","0870 376 3851"]
  ]
 
 AIRPORTS = %w(Abuja London Charlotte Denver Nairobi Accra Lagos Minneapolis Portland Dallas Houston)
+AIRPORTS_NG = %w(Abuja Lagos Kano)
+AIRPORTS_INTL = %w(London Charlotte Denver Nairobi Accra Minneapolis Portland Dallas Houston Auckland Sydney Mumbai)
 FLIGHTS = %w(BA251 BA92 LH270 US210 KL540 KL541 RY444)
-TRAVEL_PURPOSES = ['Personal','Home assignment','Mission','Medical','Other']
+TRAVEL_PURPOSES = ['Personal','Home assignment','Mission','Medical', 'Begin Term', 'Other']
 GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified']
+STATUS_CODES = %w( alumni mkfield field college home_assignment leave mkadult retired deceased ) +
+     %w( pipeline mkalumni visitor_past visitor unspecified)
+STATUS_CODES_MEMBERS =  %w( alumni field  home_assignment leave retired deceased )
+
 
   def coin_toss
     rand > 0.5
@@ -220,24 +226,27 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
   end
   
   def pick_status(age)
-    basic_statuses = ['On the field', 'Home assignment', 'On leave', 'Pipeline', 'Alumni']
+#    basic_statuses = ['On the field', 'Home assignment', 'On leave', 'Pipeline', 'Alumni']
+#    basic_status_codes = ['field', 'home assignment', 'leave', 'pipeline', 'alumni']
     if age < 65
       status = case rand(100)
-        when 0..5   then 'Pipeline'
-        when 10..40 then 'On the field'
-        when 50..65 then 'Home assignment'
-        when 66..75 then 'On leave'
-        when 6..9, 75..97 then 'Alumni'
-        when 98..99 then 'With the Lord!'
+        when 0..3   then 'pipeline'
+        when 5..7   then 'visitor'
+        when 8..12  then 'visitor_past'
+        when 13..50 then 'field'
+        when 51..60 then 'home assignment'
+        when 61..67 then 'leave'
+        when 68..97 then 'alumni'
+        when 98..99 then 'deceased'
       end
     else
       if age + rand(35) > 100
-        status = 'With the Lord!'
+        status = 'deceased'
       else
         status = ['Alumni', 'Alumni-Retired'].sample
       end
     end        
-    return Status.find_by_description(status) || Status.find(UNSPECIFIED)
+    return Status.find_by_code(status) || Status.find(UNSPECIFIED)
   end
   
   def pick_location
@@ -258,8 +267,15 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
     else
       status = pick_status(age) # ~ randomly
     end
+    if ['visitor', 'visitor_past', 'pipeline', 'mk_field','mk_adult','college', 'mkalumni'].include?(status.code)
+      date_active = nil
+    end  
+    if ['visitor', 'visitor_past'].include?(status.code)
+      employment_status = EmploymentStatus.find_by_code('visitor')
+    end  
     location = params[:location] || pick_location
     sim_id = rand(10000) until !Family.find_by_sim_id(sim_id)
+    puts "***make single--nil date_active, status=#{status}" if date_active.nil?
     f = Family.create(:last_name=>pick_last_name, :first_name=>pick_first_name(sex), :middle_name => pick_first_name(sex),
               :status => status, :location => location, :sim_id => sim_id)
     head = f.head
@@ -463,7 +479,7 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
     start_date = params[:start_date] 
     if start_date.nil?
       # Come up with a reasonable current term based on what the last term, if any, was
-      last_term=member.field_terms.last
+      last_term = member.field_terms.last
       if last_term.nil?  #if this is the first term being created for the person...
         start_date=member.date_active
       else  # base current term on the end of the last term
@@ -474,6 +490,7 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
         end
       end
     end    
+puts "NIL start_date in add_field_term, member.status=#{member.status.code}, date_active=#{member.date_active}" if start_date.nil?
     return nil if start_date > Date::today
     end_date  = params[:end_date] || start_date + duration
     est_start_date  = params[:est_start_date] # No default on this one
@@ -491,7 +508,7 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
   end  
     
   def add_some_couples(n,params={})
-    n.times do
+    n.times do      
       h = make_a_single(params)
       s = add_spouse(h)
 # puts "Couple: #{h.name}:#{s.first_name}, members.count = #{h.family.members.count}"
@@ -517,15 +534,40 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
 
   def add_some_field_terms
     Member.all.each do |m|
-      add_field_term(m)
-    end  
-  end
+      if STATUS_CODES_MEMBERS.include?(m.status.code) && m.status.code != 'pipeline'
+        length_of_service_years = [(30*rand*rand), 0.17].max # years
+        length_of_service_days = (length_of_service_years*365.25).to_i
+        start_date = m.date_active
+        end_date = m.date_active
+#        puts "#{m.age}: active=#{m.date_active}, length=#{sprintf("%.1f",length_of_service_years)} years:"
+member=m
+puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code}, date_active=#{member.date_active}" if start_date.nil?
+        while start_date < Date::today && ((start_date-m.date_active) < length_of_service_days)
+          t = add_field_term(m) 
+          if t
+#            puts "\t#{t.start_date} to #{t.end_date}, #{(t.end_date-t.start_date).to_i/30} months"
+            start_date = t.end_date + 3.months
+          else
+            start_date = Date::today.tomorrow  
+   #       puts " >>> start_date=#{start_date}, service=#{(start_date-m.date_active)/365.25} years"
+   #       puts " >>> delta=#{(start_date-m.date_active)}, length_of_service=#{length_of_service_days}"
+          end
+        end  
+      end # if STATUS_CODES_...
+    end  # Member.all.each
+  end # add_some_field_terms
   
   def add_some_travels
-    Member.all.each do |m|
-      add_travel(m)
-    end  
-  end
+    FieldTerm.all.each do |term|  # This assumes there are already terms defined!
+      t = add_travel(term.member, :date=>term.start_date, :origin=>AIRPORTS_INTL.sample,
+            :destination=>AIRPORTS_NG.sample, :purpose=>'Begin term', :return_date=>nil)
+      if term.end_date < Date::today
+        add_travel(term.member, :date=>term.end_date, :destination=>AIRPORTS_INTL.sample,
+            :origin=>AIRPORTS_NG.sample, :purpose=>'Home assignment', :return_date=>nil)
+      end      
+#      puts "Travel: member=#{term.member.name}, date=#{term.start_date}, #{t.errors}"
+    end #FieldTerm.all.each
+  end # add some travels
       
 end # module
 
