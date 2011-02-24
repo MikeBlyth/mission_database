@@ -157,11 +157,16 @@ AIRPORTS_NG = %w(Abuja Lagos Kano)
 AIRPORTS_INTL = %w(London Charlotte Denver Nairobi Accra Minneapolis Portland Dallas Houston Auckland Sydney Mumbai)
 FLIGHTS = %w(BA251 BA92 LH270 US210 KL540 KL541 RY444)
 TRAVEL_PURPOSES = ['Personal','Home assignment','Mission','Medical', 'Begin Term', 'Other']
+TRAVEL_PURPOSES_NON_HA = ['Personal', 'Mission','Medical', 'Other']
 GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified']
 STATUS_CODES = %w( alumni mkfield field college home_assignment leave mkadult retired deceased ) +
      %w( pipeline mkalumni visitor_past visitor unspecified)
-STATUS_CODES_MEMBERS =  %w( alumni field  home_assignment leave retired deceased )
-
+STATUS_CODES_MEMBERS =          %w( alumni field home_assignment leave retired deceased )
+EMPLOYMENT_STATUSES = %w( mk_adult mk_dependent career_affiliate ecwa_affiliate ecwa career st_affiliate) +
+                      %w( sta special visitor unspecified)
+SIM_EMPLOYMENT_STATUSES =  %w( mk_dependent career_affiliate career st_affiliate sta special )  
+AFFILIATE_EMPLOYMENT_STATUSES =  %w( career_affiliate st_affiliate  )  
+SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )                   
 
   def coin_toss
     rand > 0.5
@@ -267,9 +272,9 @@ STATUS_CODES_MEMBERS =  %w( alumni field  home_assignment leave retired deceased
     else
       status = pick_status(age) # ~ randomly
     end
-    if ['visitor', 'visitor_past', 'pipeline', 'mk_field','mk_adult','college', 'mkalumni'].include?(status.code)
-      date_active = nil
-    end  
+#    if !STATUS_CODES_MEMBERS.include?(status.code)
+#      date_active = nil
+#    end  
     if ['visitor', 'visitor_past'].include?(status.code)
       employment_status = EmploymentStatus.find_by_code('visitor')
     end  
@@ -345,7 +350,7 @@ STATUS_CODES_MEMBERS =  %w( alumni field  home_assignment leave retired deceased
     else
       child.birth_date = Date.today.years_ago(age)
     end  
-    child.date_active = nil
+    child.date_active = [child.birth_date, member.date_active].max
     child.ministry = Ministry.find_by_description('MK')  # Could put this somewhere so it's not looked up each time
     child_status(child,age) # Choose reasonable status (like 'on field') based on parents' status and child's age
     if age < 19
@@ -471,11 +476,24 @@ STATUS_CODES_MEMBERS =  %w( alumni field  home_assignment leave retired deceased
                                 :total_passengers => total_passengers, :baggage => baggage)
   end
 
+#  STATUS_CODES = %w( alumni mkfield field college home_assignment leave mkadult retired deceased ) +
+#       %w( pipeline mkalumni visitor_past visitor unspecified)
+#  STATUS_CODES_MEMBERS  = %w( alumni field home_assignment leave retired deceased )
+#  EMPLOYMENT_STATUSES = %w( mk_adult mk_dependent career_affiliate ecwa_affiliate ecwa career st_affiliate) +
+#                        %w( sta special visitor unspecified)
+#  SIM_EMPLOYMENT_STATUSES =  %w( mk_dependent career_affiliate career st_affiliate sta special )  
+#  AFFILIATE_EMPLOYMENT_STATUSES =  %w( career_affiliate st_affiliate  )  
+#  SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )                   
   def add_field_term(member, params={})
     location = params[:location] || Location.random
     ministry= params[:ministry] || Ministry.random
     employment_status = params[:employment_status] || EmploymentStatus.random
-    duration = params[:duration] || (rand(46) + 1).months
+    if SHORT_TERM_EMPLOYMENT_STATUSES.include?(employment_status)
+      default_duration = (rand(24)+1).months
+    else
+      default_duration = (rand(46) + 1).months
+    end
+    duration = params[:duration] || default_duration
     start_date = params[:start_date] 
     if start_date.nil?
       # Come up with a reasonable current term based on what the last term, if any, was
@@ -534,8 +552,13 @@ puts "NIL start_date in add_field_term, member.status=#{member.status.code}, dat
 
   def add_some_field_terms
     Member.all.each do |m|
-      if STATUS_CODES_MEMBERS.include?(m.status.code) && m.status.code != 'pipeline'
-        length_of_service_years = [(30*rand*rand), 0.17].max # years
+#      if STATUS_CODES_MEMBERS.include?(m.status.code) && m.status.code != 'pipeline'
+
+        if SHORT_TERM_EMPLOYMENT_STATUSES.include?(m.employment_status)
+          length_of_service_years = [(10*rand*rand), 0.17].max # years
+        else
+          length_of_service_years = [(30*rand*rand), 0.17].max # years
+        end
         length_of_service_days = (length_of_service_years*365.25).to_i
         start_date = m.date_active
         end_date = m.date_active
@@ -553,11 +576,11 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
    #       puts " >>> delta=#{(start_date-m.date_active)}, length_of_service=#{length_of_service_days}"
           end
         end  
-      end # if STATUS_CODES_...
+#      end # if STATUS_CODES_...
     end  # Member.all.each
   end # add_some_field_terms
   
-  def add_some_travels
+  def add_travels_for_field_terms
     FieldTerm.all.each do |term|  # This assumes there are already terms defined!
       t = add_travel(term.member, :date=>term.start_date, :origin=>AIRPORTS_INTL.sample,
             :destination=>AIRPORTS_NG.sample, :purpose=>'Begin term', :return_date=>nil)
@@ -567,8 +590,82 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
       end      
 #      puts "Travel: member=#{term.member.name}, date=#{term.start_date}, #{t.errors}"
     end #FieldTerm.all.each
-  end # add some travels
+  end # add ravels_for_field_terms
       
+  def travel_print(t)
+    s = "*#{t.member.last_name}: #{t.origin}=>#{t.destination} #{t.date} "
+    s << "+spouse " if t.with_spouse
+    s << "+kids " if t.with_children
+    s << "GH = #{t.guesthouse}.\n"
+    s << "\tTtl passengers=#{t.total_passengers}, baggage=#{t.baggage}, other travelers=#{t.other_travelers}"
+    puts s
+  end  
+
+  def field_term_print(t)
+    puts "*#{t.member.last_name} #{t.start_date}--#{t.end_date}" 
+  end
+  
+#  date             :date
+#  return_date      :date
+#  purpose          :string(255)
+#  flight           :string(255)
+#  member_id        :integer(4)
+#  origin           :string(255)
+#  destination      :string(255)
+#  guesthouse       :string(255)
+#  baggage          :integer(4)
+#  total_passengers :integer(4)
+#  confirmed        :date
+#  other_travelers  :string(255)
+#  with_spouse      :boolean(1)
+#  with_children    :boolean(1)
+  def add_other_travels
+    FieldTerm.all.each do |term|  # This assumes there are already terms defined!
+      possible_days = (term.end_date-term.start_date).to_i-90
+      last_trip_end = term.start_date
+      while rand > 0.8 && possible_days>0 do
+        trip_duration = (7+rand(40)).days
+        date =  last_trip_end + (50 + rand(possible_days)).days
+        trip_duration = (7+rand(40)).days
+        return_date = date+trip_duration
+        if return_date > term.end_date
+          return_date = term.end_date.days_ago(10)
+        end
+        if return_date > date
+          with_spouse = coin_toss
+          purpose = TRAVEL_PURPOSES_NON_HA.sample
+          origin = AIRPORTS_NG.sample          
+          destination = AIRPORTS_INTL.sample
+          t = add_travel(term.member, :purpose=>purpose,
+              :date => date, :return_date => return_date,
+              :origin => origin, :destination=>destination,
+              :with_spouse => with_spouse, :with_children => with_spouse,
+              :other_passenger_count => [0,0,0,0,0,1,1,2].sample
+              )              
+          r = add_travel(term.member, :purpose=> purpose,
+              :date => return_date, :return_date => nil,
+              :origin => destination, :destination => origin,
+              :with_spouse => with_spouse, :with_children => with_spouse,
+              :other_passenger_count => [0,0,0,0,0,1,1,2].sample
+              )              
+travel_print(t)
+travel_print(r)
+          last_trip_end = t.return_date
+          possible_days = (term.end_date-t.return_date).to_i-90
+        else
+           last_trip_end = Date::today.tomorrow 
+        end # if return_date > date
+      end # while -- add one trip 
+      t = add_travel(term.member, :date=>term.start_date, :origin=>AIRPORTS_INTL.sample,
+            :destination=>AIRPORTS_NG.sample, :purpose=>'Begin term', :return_date=>nil)
+      if term.end_date < Date::today
+        add_travel(term.member, :date=>term.end_date, :destination=>AIRPORTS_INTL.sample,
+            :origin=>AIRPORTS_NG.sample, :purpose=>'Home assignment', :return_date=>nil)
+      end      
+#      puts "Travel: member=#{term.member.name}, date=#{term.start_date}, #{t.errors}"
+    end #FieldTerm.all.each
+  end # add some travels
+
 end # module
 
  

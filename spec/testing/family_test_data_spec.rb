@@ -254,24 +254,40 @@ include SimTestHelper
     describe 'travel records' do
     
       before(:each) do
+puts "\n\nAdding singles"
         add_some_singles(5)
+puts "Adding couples"
         add_some_couples(5)
+puts "Adding children"
         add_some_children
+puts "Adding field terms"
         add_some_field_terms
       end
       
       it 'adds some travel records' do
-        add_some_travels
+puts "Add some travel records"
+        add_travels_for_field_terms
         Travel.count.should > 0
       end
     
       it 'adds travel to cover each term' do
-        add_some_travels
+puts 'adds travel to cover each term' 
+        add_travels_for_field_terms
         FieldTerm.all.each do |term|
           Travel.find_by_member_id_and_date(term.member_id, term.start_date).should_not be_nil
           if term.end_date < Date::today
             Travel.find_by_member_id_and_date(term.member_id, term.end_date).should_not be_nil
           end
+        end            
+      end
+    
+      it 'adds travel in middle of term' do
+puts 'adds travel in middle of term' 
+        add_other_travels
+        Travel.count.should > 0
+        Travel.all.each do |trip|
+          conditions = "start_date < ? AND end_date > ?"
+          trip.member.field_terms.where(conditions, trip.date, trip.return_date).should_not be_nil
         end            
       end
     

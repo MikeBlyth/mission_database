@@ -939,37 +939,37 @@ x.save
 
 puts "**** Seeding employment statuses table"
 EmploymentStatus.delete_all
-x = EmploymentStatus.new(:description => 'Adult-MK', :code => 'MKA')
+x = EmploymentStatus.new(:description => 'Adult-MK', :code => 'mk_adult')
 x.id = 1
 x.save
-x = EmploymentStatus.new(:description => 'Career-Affiliate', :code => 'CAF')
+x = EmploymentStatus.new(:description => 'Career-Affiliate', :code => 'career_affiliate')
 x.id = 2
 x.save
-x = EmploymentStatus.new(:description => 'Recruited by ECWA-Affiliate', :code => 'ECA')
+x = EmploymentStatus.new(:description => 'Recruited by ECWA-Affiliate', :code => 'ecwa_affiliate')
 x.id = 3
 x.save
-x = EmploymentStatus.new(:description => 'Recruited by ECWA', :code => 'ECW')
+x = EmploymentStatus.new(:description => 'Recruited by ECWA', :code => 'ecwa')
 x.id = 4
 x.save
-x = EmploymentStatus.new(:description => 'Career - Field Staff', :code => 'CAR')
+x = EmploymentStatus.new(:description => 'Career - Field Staff', :code => 'career')
 x.id = 5
 x.save
-x = EmploymentStatus.new(:description => 'MK dependent', :code => 'MKD', :mk_default => true)
+x = EmploymentStatus.new(:description => 'MK dependent', :code => 'mk_dependent', :mk_default => true)
 x.id = 6
 x.save
-x = EmploymentStatus.new(:description => 'ST-Affiliate', :code => 'STF')
+x = EmploymentStatus.new(:description => 'ST-Affiliate', :code => 'st_affiliate')
 x.id = 7
 x.save
-x = EmploymentStatus.new(:description => 'Special Assignment', :code => 'SPC')
+x = EmploymentStatus.new(:description => 'Special Assignment', :code => 'special')
 x.id = 8
 x.save
-x = EmploymentStatus.new(:description => 'Short Term Associate', :code => 'STA')
+x = EmploymentStatus.new(:description => 'Short Term Associate', :code => 'sta')
 x.id = 9
 x.save
 x = EmploymentStatus.new(:description => 'Visitor', :code => 'visitor')
 x.id = 10
 x.save
-x = EmploymentStatus.new(:description => 'unspecified', :code => '???')
+x = EmploymentStatus.new(:description => 'unspecified', :code => 'unspecified')
 x.id = 999999
 x.save
 
