@@ -247,7 +247,9 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
   # Make a single person
   def make_a_single(params={})
     sex = params[:sex] || SEXES.sample  # pick one randomly if not specified
-    age = params[:age] || 20 + rand(70)
+    max_age = params[:max_age] || 90
+    min_age = params[:min_age] || 20
+    age = params[:age] || min_age + rand(max_age-min_age)
     birth_date = pick_birth_date(age,age+1)
     date_active = params[:date_active] || pick_birth_date(0,age-20)  # Picks a date between when person was 20 and the present
     status_code = params[:status_code] 
@@ -270,7 +272,7 @@ GUESTHOUSES = ['Baptist','ECWA','Peniel','Hilton','St. Matthew\s', 'Unspecified'
               :bloodtype => params[:bloodtype] || pick_bloodtype,
               :date_active => date_active
               )
-puts "#{head.name}, #{head.age}, #{head.status.description}"
+# puts "#{head.name}, #{head.age}, #{head.status.description}"
     return head 
   end
   
@@ -322,7 +324,11 @@ puts "#{head.name}, #{head.age}, #{head.status.description}"
     child.middle_name = pick_first_name(child.sex, :child)
     child.name = nil
     child.spouse_id = nil
-    child.birth_date = pick_birth_date(age, age+1)
+    if age.class==Fixnum
+      child.birth_date = pick_birth_date(age, age+1)
+    else
+      child.birth_date = Date.today.years_ago(age)
+    end  
     child.date_active = nil
     child.ministry = Ministry.find_by_description('MK')  # Could put this somewhere so it's not looked up each time
     child_status(child,age) # Choose reasonable status (like 'on field') based on parents' status and child's age
@@ -333,7 +339,7 @@ puts "#{head.name}, #{head.age}, #{head.status.description}"
     end      
     child.bloodtype = pick_bloodtype
     if child.save
-#      puts "Child saved" 
+#      puts "Child #{child.first_name}, #{child.birth_date}, #{child.age}"
     else
       puts "Child not saved, errors = #{child.errors}"
     end
@@ -468,6 +474,7 @@ puts "#{head.name}, #{head.age}, #{head.status.description}"
         end
       end
     end    
+    return nil if start_date > Date::today
     end_date  = params[:end_date] || start_date + duration
     est_start_date  = params[:est_start_date] # No default on this one
     est_end_date   = params[:est_end_date] || est_start_date + duration if est_start_date
@@ -477,8 +484,49 @@ puts "#{head.name}, #{head.age}, #{head.status.description}"
                 :est_start_date=>est_start_date, :est_end_date=>est_end_date,
                 :employment_status=>employment_status
                 )
-  end
+  end # add_field_term
 
-end
+  def add_some_singles(n,params={})
+    n.times { make_a_single(params)}
+  end  
+    
+  def add_some_couples(n,params={})
+    n.times do
+      h = make_a_single(params)
+      s = add_spouse(h)
+# puts "Couple: #{h.name}:#{s.first_name}, members.count = #{h.family.members.count}"
+    end  
+  end  
+
+  def add_some_children
+    distribution=[0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 6]
+    p_twins = 0.03
+    Member.where("spouse_id IS NOT NULL AND sex = 'F' ").each do |head|
+      remaining_kids = distribution.sample
+      child_age = head.age_years - (19+rand(17))   # This is age of first child
+      while child_age >= 0 && remaining_kids >= 0 do
+        remaining_kids += -1
+        add_child(head,child_age)
+        add_child(head,child_age) if rand < p_twins
+        # calculate age of next oldest child
+        child_age = child_age - (1+6*rand*rand)  # where (1+...) is birth interval, average about 2.4 years
+      end
+      
+    end # family each
+  end # add_some_children 
+
+  def add_some_field_terms
+    Member.all.each do |m|
+      add_field_term(m)
+    end  
+  end
+  
+  def add_some_travels
+    Member.all.each do |m|
+      add_travel(m)
+    end  
+  end
+      
+end # module
 
  

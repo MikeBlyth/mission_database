@@ -36,6 +36,14 @@ include SimTestHelper
       make_a_single(:status_code=>'field').status.code.should == 'field'
     end
 
+    it "creates single with right age" do
+      5.times do
+        h = make_a_single(:max_age=>30, :min_age=>30)
+        h.age_years.should > 28
+        h.age_years.should < 32
+      end
+    end
+
     it "creates three new singles with family" do
       lambda do
         3.times {make_a_single}
@@ -194,9 +202,86 @@ include SimTestHelper
       second_term = add_field_term(@head)
       (second_term.start_date - first_term.end_date).to_i.months.should > 1.month
     end
+
+    it 'does not add field terms with future date' do
+      f = add_field_term(@head, :start_date => Date.today + 1.month)
+      f.should be_nil
+    end
   
   end  # describe 'Field terms' do
 
+  describe 'It makes a dataset' do
+  
+    it 'makes multiple singles' do
+      lambda do
+        add_some_singles 3
+      end.should change(Member, :count).by 3
+    end
+    
+    it 'makes multiple couples' do
+      lambda do
+        add_some_couples 3
+      end.should change(Member, :count).by 6
+    end
+
+#    describe 'adds children' do
+
+#      before(:each) do
+#        @head.family.destroy  # Get rid of the family created by default, or else change the before(:each) at top level
+#        add_some_couples(30, :max_age=>50)
+#        # All families should have 2 members now
+#        Family.all.each {|f| f.members.count.should == 2}
+#        add_some_children
+#      end
+#      
+#      it 'adds some children' do
+#        Family.all.each do |f|
+#          report = "#{f.head.age}, #{f.members.count-2} children ("
+#          f.members.find(:all, :offset=>2).each do |kid|
+#            report << "#{kid.age}, "
+#          end
+#          report << ")"
+#          puts report
+#        end  
+#      end # it adds some children
+
+#      it 'ensures all children are born in the past' do
+#        Member.where(:spouse_id => nil).each do |kid| # in this test, that means all the children
+#          kid.age_years.should >= 0
+#        end  
+#      end # it ensures all children...
+#    end # describe adds children
+
+    describe 'travel records' do
+    
+      before(:each) do
+        add_some_singles(10)
+        add_some_couples(10)
+        add_some_children
+      end
+      
+      it 'adds some travel records' do
+        add_some_travels
+        Travel.count.should > 0
+      end
+    
+    end # describe travel records    
+
+    describe 'field_terms' do
+    
+      before(:each) do
+        add_some_singles(10)
+        add_some_couples(10)
+      end
+      
+      it 'adds some field terms' do
+        add_some_field_terms
+        FieldTerm.count.should > 0
+      end
+    
+    end # describe field terms
+    
+  end # 'It makes a dataset'
 end
 
 
