@@ -604,6 +604,10 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
   def field_term_print(t)
     puts "*#{t.member.last_name} #{t.start_date}--#{t.end_date}" 
   end
+ 
+  def contact_print(t)
+    puts "@#{t.member.last_name} (#{t.contact_type.description}): #{t.contact_name}, #{t.phone_1}"
+  end
   
 #  date             :date
 #  return_date      :date
@@ -648,8 +652,8 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
               :with_spouse => with_spouse, :with_children => with_spouse,
               :other_passenger_count => [0,0,0,0,0,1,1,2].sample
               )              
-travel_print(t)
-travel_print(r)
+#travel_print(t)
+#travel_print(r)
           last_trip_end = t.return_date
           possible_days = (term.end_date-t.return_date).to_i-90
         else
@@ -665,6 +669,17 @@ travel_print(r)
 #      puts "Travel: member=#{term.member.name}, date=#{term.start_date}, #{t.errors}"
     end #FieldTerm.all.each
   end # add some travels
+
+  def add_some_contacts
+    Member.all.each do |m|
+      c = add_contact(m, 1)
+contact_print(c)
+      while rand > 0.8
+        c = add_contact(m)
+contact_print(c)
+      end
+    end
+  end # add_some_contacts
 
 end # module
 

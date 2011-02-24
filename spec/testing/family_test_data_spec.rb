@@ -255,9 +255,9 @@ include SimTestHelper
     
       before(:each) do
 puts "\n\nAdding singles"
-        add_some_singles(5)
+        add_some_singles(100)
 puts "Adding couples"
-        add_some_couples(5)
+        add_some_couples(100)
 puts "Adding children"
         add_some_children
 puts "Adding field terms"
@@ -296,17 +296,33 @@ puts 'adds travel in middle of term'
     describe 'field_terms' do
     
       before(:each) do
-        add_some_singles(10)
-        add_some_couples(10)
+puts "field terms -- adding people"
+        add_some_singles(100)
+        add_some_couples(100)
       end
       
       it 'adds some field terms' do
+puts 'adds some field terms' 
         add_some_field_terms
         FieldTerm.count.should > 0
       end
     
     end # describe field terms
+
+    describe 'contacts' do
     
+      before(:each) do
+puts "contacts -- adding people"
+        add_some_singles(50)
+        add_some_couples(50)
+      end
+      
+      it 'adds a lot of contact records' do
+puts 'it adds a lot of contact records' 
+        add_some_contacts
+        (Contact.count.to_f/Member.count).should > 0.5
+      end
+    end # describe 'contacts'
   end # 'It makes a dataset'
 end
 
