@@ -189,16 +189,18 @@ puts "@json_resp = #{@json_resp}"
     selector = case
     when session[:filter] == 'active'
       ['members.status_id IN (?)', ['2','3','5']]
-    when session[:filter] == 'on_field'
-      ['members.status_id IN (?)', ['2','3']]
+    when session[:filter] == 'field'
+      ['members.status_id IN (?)', ['2','3', '15']]
     when session[:filter] == 'home_assignment'
       ['members.status_id IN (?)', ['5']]
-    when session[:filter] == 'ha_or_leave'
+    when session[:filter] == 'home_assignment_or_leave'
       ['members.status_id IN (?)', ['5','6']]
     when session[:filter] == 'pipeline'
       ['members.status_id IN (?)', ['12']]
+    when session[:filter] == 'visitor'
+      ['members.status_id IN (?)', ['14', '15']]
     when session[:filter] == 'other'
-      ['members.status_id NOT IN (?)', ['2','3','5','6','12']]
+      ['members.status_id NOT IN (?)', ['2','3','5','6','12', '14', '15']]
     else
  #     ['?', true]
       ['members.id > 0']  # no filter; use this if can't get "true" to work

@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+ 
 describe Family do
   before(:each) do
     @family= Factory.build(:family)

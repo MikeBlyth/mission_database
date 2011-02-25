@@ -324,4 +324,8 @@ puts 'it adds a lot of contact records'
   end # 'It makes a dataset'
 end
 
+puts "This test file--family_test_data_spec.rb--requires the database to be seeded before it is run"
+puts "If you are getting a lot of errors then the required tables such as Status may not be seeded"
+puts "Seed manually using db/seeds.rb, or in spec_helper.rb, or at the top of this file (remembering"
+puts "that you will have to remove the tables before using most other tests"
 

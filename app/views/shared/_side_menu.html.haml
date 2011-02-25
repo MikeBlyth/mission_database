@@ -14,9 +14,9 @@
         Set member filter
         %ul
           %li= link_to 'Active only', :controller=>'application', :action=>'set_member_filter', :filter => :active 
-          %li= link_to 'On field only', :controller=>'application', :action=>'set_member_filter', :filter => :on_field 
+          %li= link_to 'On field only', :controller=>'application', :action=>'set_member_filter', :filter => :field 
           %li= link_to 'Home assignment',  :controller=>'application', :action=>'set_member_filter', :filter => :home_assignment 
-          %li= link_to 'HA or leave',  :controller=>'application', :action=>'set_member_filter', :filter => :ha_or_leave 
+          %li= link_to 'HA or leave',  :controller=>'application', :action=>'set_member_filter', :filter => :home_assignment_or_leave 
           %li= link_to 'Pipeline',  :controller=>'application', :action=>'set_member_filter', :filter => :pipeline 
           %li= link_to 'Other',  :controller=>'application', :action=>'set_member_filter', :filter => :other 
           %li= link_to 'Clear filter',  :controller=>'application', :action=>'set_member_filter', :filter => :all 

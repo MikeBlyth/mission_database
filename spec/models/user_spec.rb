@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+ 
 def set_password(user, password, confirmation=nil)
   user.password = password
   user.password_confirmation = confirmation || password
