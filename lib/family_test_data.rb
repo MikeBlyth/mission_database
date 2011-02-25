@@ -5,7 +5,20 @@ MENS_NAMES = %w(Patrick Malcolm Francis Sandy Jerome Neal Alex Eric Wesley Frank
   %w( Gene Geoffrey Shawn Vincent Kurt Danny Danny Marshall Jack Benjamin Clifford Martin Jimmy Vincent Sidney Jeff Raymond Roger Troy Neal Martin) +
   %w( Jack Vincent Milton Mitchell Franklin Leroy Glen Bruce Ronnie Jose Robert Stephen Ben Ryan Mark Louis Leo Jerome Vincent Joseph Eric Terry Ken) +
   %w( Clyde Timothy Ted Lester Johnny Louis Ben Brett Glen Don Gregory Randy Sidney Marvin Alex Alexander Karl Robert Bill Clifford Arthur Wesley) +
-  %w( Jeremy Wesley Justin Philip Christopher Brian Juan Leroy Tommy Adam Larry)
+  %w( Jeremy Wesley Justin Philip Christopher Brian Juan Leroy Tommy Adam Larry Aaron Abel Abraham Adam Adolfo Adolph )
+  %w( Adrian Agustin Al Alan Albert Alberto Brent Brett Brian Bruce Bryan Bryant Bryce Bryon Buddy Burton Byron Caleb) +
+  %w( Calvin Cameron Carey Carl Carlos Carlton Carroll Cary Casey Cecil Cedric Cesar Chad Charles Charlie Chase) +
+  %w( Chester Darren Darryl Darwin Daryl Dave David Dean Delbert Demetrius Dennis Derek Derrick Desmond Devin Devon) +
+  %w( Dewey Dexter Diego Domingo Dominic Dominick Don Donald Donnie Doug Douglas Doyle Ernesto Ernie Ervin Erwin Esteban) +
+  %w( Ethan Eugene Evan Everett Fabian Felipe Felix Fernando Fidel Floyd Forrest Francis Francisco Frank Frankie Franklin) +
+  %w( Fred Freddie Freddy Frederick Fredrick Gabriel Garland Garrett Garry Gary Hugo Humberto Ian Ignacio Ira Irvin Irving) +
+  %w( Isaac Isaiah Ismael Israel Ivan Jack Jackie Jackson Jacob Jaime Jake Jonathan Jonathon Jordan Jorge Jose Joseph Josh) +
+  %w( Joshua Juan Julian Julio Julius Junior Justin Karl Keith Kelly Kelvin Ken Kendall Kendrick Kenneth Levi Lewis Lionel) +
+  %w( Lloyd Logan Lonnie Loren Lorenzo Louie Louis Lowell Marcel Marco Marcos Marcus Mario Marion Mark Marlin Marlon Marshall) +
+  %w( Martin Marty Marvin Mason Mathew Matt Pablo Pat Patrick Paul Pedro Percy Perry Pete Peter Phil Philip Phillip Pierre) +
+  %w( Preston Quentin Quinton Rafael Ralph Ramiro Ramon Russel Russell Rusty Ryan Salvador Salvatore Sam Sammie Sammy Samuel) +
+  %w( Santiago Santos Saul Scott Scotty Sean Sergio Seth Shane Shannon Tony Tracy Travis Trent Trevor Troy Tyler Tyrone Tyson) +
+  %w( Van Vance Vaughn Vernon Vicente Victor Vincent Virgil Wade Wallace Walter Warren Wayne )
 
 WOMENS_NAMES = %w( Kristina Paige Sherri Gretchen Karen Elsie Hazel Dolores Marion Beth Julia Jean Kristine Crystal Claire Marian Marcia) +
   %w( Stephanie Gretchen Shelley Priscilla Elsie Beth Erica Katherine Patricia Lois Christina Darlene Shirley Judith Gretchen Glenda) +
@@ -15,8 +28,24 @@ WOMENS_NAMES = %w( Kristina Paige Sherri Gretchen Karen Elsie Hazel Dolores Mari
   %w( Alice Kathleen Amy Martha Lynn Pauline Peggy Donna Doris Kristin Tracey Janet Constance Sarah Gladys Hazel Hazel Kim Alison ) +
   %w(Heather Claire Michele Judy Sandra Billie Katharine Ashley Lauren Carolyn Charlene Ashley Sheryl Linda Sarah Dana Rebecca Glenda) +
   %w( Geraldine Edna Faye Kathy Marguerite Marsha Laura Melinda Eva Edna Penny Glenda Allison Florence Claire Christy Lucy Susan Nancy) +
-  %w( Monica Margaret Miriam Miriam Joanna Stacy Janice Alice )
-
+  %w( Monica Margaret Miriam Miriam Joanna Stacy Janice Alice ) +
+  %w( Mary Patricia Linda Barbara Elizabeth Jennifer Maria Susan Margaret Dorothy Lisa Nancy Karen Betty Helen) +
+  %w( Sandra Donna Carol Ruth Sharon Michelle Laura Sarah Kimberly Deborah Jessica Shirley Cynthia Angela Melissa Brenda) +
+  %w( Amy Anna Rebecca Virginia Kathleen Pamela Martha Debra Amanda Stephanie Carolyn Christine Marie Janet Catherine) +
+  %w( Frances Ann Joyce Diane Alice Julie Heather Teresa Doris Gloria Evelyn Jean Cheryl Mildred Katherine Joan Ashley) +
+  %w( Judith Rose Janice Kelly Nicole Judy Christina Kathy Theresa Beverly Denise Tammy Irene Jane Lori Rachel Marilyn) +
+  %w( Andrea Kathryn Louise Sara Anne Jacqueline Wanda Bonnie Julia Ruby Lois Tina Phyllis Norma Paula Diana Annie Lillian) +
+  %w( Emily Robin Peggy Crystal Gladys Rita Dawn Connie Florence Tracy Edna Tiffany Carmen Rosa Cindy Grace Wendy Victoria) +
+  %w( Edith Kim Sherry Sylvia Josephine Thelma Shannon Sheila Ethel Ellen Elaine Marjorie Carrie Charlotte Monica Esther) +
+  %w( Pauline Emma Juanita Anita Rhonda Hazel Amber Eva Debbie April Leslie Clara Lucille Jamie Joanne Eleanor Valerie Danielle) +
+  %w( Megan Alicia Suzanne Michele Gail Bertha Darlene Veronica Jill Erin Geraldine Lauren Cathy Joann Lorraine Lynn Sally) +
+  %w( Regina Erica Beatrice Dolores Bernice Audrey Yvonne Annette June Samantha Marion Dana Stacy Ana Renee Ida Vivian Roberta) +
+  %w( Holly Brittany Melanie Loretta Yolanda Jeanette Laurie Katie Kristen Vanessa Alma Sue Elsie Beth Jeanne Vicki Carla) +
+  %w( Tara Rosemary Eileen Terri Gertrude Lucy Tonya Ella Stacey Wilma Gina Kristin Jessie Natalie Agnes Vera Willie Charlene) +
+  %w( Bessie Delores Melinda Pearl Arlene Maureen Colleen Allison Tamara Joy Georgia Constance Lillie Claudia Jackie Marcia) +
+  %w( Tanya Nellie Minnie Marlene Heidi Glenda Lydia Viola Courtney Marian Stella Caroline Dora Jo Vickie Mattie Terry Maxine) +
+  %w( Irma Mabel Marsha Myrtle Lena Christy Deanna Patsy Hilda Gwendolyn Jennie Nora Margie Nina Cassandra Leah Penny Kay) 
+  
 LAST_NAMES = %w( Song Wagner McNamara Raynor Wallace Lawrence May Steele Teague Vick Monroe Connolly Middleton Watts Johnston Ross Chung) +
   %w(  Woods Rosenthal Underwood Jones Baker Cross Sharpe Hoyle Allen Grant Diaz Graham Hinton Marsh Watts Christensen Parks Whitehead) +
   %w(  Pearson Graves Love Lamb James Chandler Cowan Golden Bowling Clapp Boykin Sumner Cassidy Davidson Byrne Gross Palmer Rowe Li Justice) +
@@ -33,21 +62,42 @@ LAST_NAMES = %w( Song Wagner McNamara Raynor Wallace Lawrence May Steele Teague 
   %w(  Stevenson Houston Dunn O'Brien Barr Cain Heath Boswell Davis Coleman Norman Burch Weiner Chang Eason Weeks Siegel Hoyle Neal Baker) +
   %w(  Choi Carver Shelton Lyons Dickinson Abbott Hobbs Dodson Burgess Wong Blackburn Middleton Frazier Reid Nance McMahon Miles Kramer Jennings) +
   %w(  Bowles Brown Bolton Craven Hendrix Nichols Saunders Lehman Sherrill Cash Pittman Sullivan Whitehead Mack Rice Ayers Cherry Richmond York) +
-  %w(  Wiley Harrington Reed Nash Wilkerson Ho Lee Choi Chung Jang Kaldestadt Tranh )
+  %w(  Wiley Harrington Reed Nash Wilkerson Ho Lee Choi Chung Jang Kaldestadt Tranh Bond Borlase Botheras Brandle ) +
+  %w(  Buchanan Burger Castro Chamberlain Chang Coleman Collins Cook Conti Corbin Cox Creswell Cunningham Custer Daniels ) +
+  %w( Danielson Davey Davidson Day Decker Dewey Dixon Douglas Duncan Elliott Entz Epple Evans Fabiano Falk Fallon Farmer) +
+  %w( Feldman Ferguson Fisher Fitzsimmons Floyd Forster Foster Fox Francis Frazier Freeman Frieman Gallop Garrett) +
+  %w( George Gibson Goddard Gilbert Gertz Gordon Gould Gray Green Griffith Grove Gunderson Haddad Haile Hall Hamilton) +
+  %w( Hardy Hawthorne Henderson Henning Hoffman Hoffmeier Hoover Howarth Howell Hudson Hunter Hutchinson Hutchison ) +
+  %w( Jackson Jacobson Jensen Johanssen Jardine Jenkins Jung Kayser Kim Ho Kruger Knauff Laird Lambert Lehmann ) +
+  %w( Leonard Leong Lewis Lincoln Little Lockwood Lynch Longworth Ma Martinez Mason Maxwell McFarland McGregor) +
+  %w( McNeilly McIntosh Miller Mitchell Moore Morgan Morris Muir Muller Mullineaux Murray Nash Neal Nielson Noble Norton) +
+  %w( Oakes Osbourne Osborne Oswald Oswold Owens Page Paine Palmer Park Parker Peters Pfeiffer Pierce Paton Piper) +
+  %w( Pomeroy Poole Porter Price Prince Proctor Quinn Redman Reed Reich Reid Reimer Reuter Reynolds Richardson) +
+  %w( Ritchie Robertson Rogers Sanchez Sandvig Sargeant Short Siebert Silver Simpson Sinclair Sott Schroeder ) +
+  %w( Schultz Schneider Shaw Lee Lee Lee Lee Kim Kim Kim Kim Kim Park Park Park Park Lee Lee Lee Lee Kim Kim Kim) +
+  %w( Kim Kim Park Park Park Park )
   
 BOYS_NAMES = %w(Jacob William Joshua Christopher Michael Matthew James John David Zachary Austin Brandon Tyler Nicholas Andrew Christian) +
   %w( Joseph Cameron Dylan Daniel Caleb Jonathan Justin Noah Ethan Samuel Hunter Benjamin Robert Alexander Anthony Logan Thomas Ryan Jordan) +
   %w( Elijah Nathan Aaron Jackson Kevin Jose Isaiah Charles Timothy Luke Jason Gabriel Cody Adam Mason Isaac Seth Brian Eric Nathaniel) +
   %w( Connor Evan Steven Chase Colby Devin Ian Garrett Jalen Kyle Bryan Sean Juan Trevor Patrick Jeremiah Richard Stephen Luis Jared Carlos) +
   %w( Alex Gavin Dalton Carson Chandler Dakota Lucas Tanner Bryson Blake Jesus Antonio Jack Jeremy Spencer Xavier Jesse Landon Tristan Mark) +
-  %w( Kaleb Wesley Jeffrey Kenneth Travis )
+  %w( Kaleb Wesley Jeffrey Kenneth Travis Jack Thomas James Joshua Daniel Harry Samuel Joseph Matthew Callum Luke William Lewis Oliver) +
+  %w( Ryan Benjamin George Liam Jordan Adam Alexander Jake Connor Cameron Nathan Kieran Mohammed Jamie Jacob) +
+  %w( Michael Ben Ethan Charlie Bradley Brandon Aaron Max Dylan Kyle Reece Robert Christopher David Edward) +
+  %w( Charles Owen Louis Alex Joe Rhys Chung-Hee Bon-Hwa Chul-Moo Hyo Hyun-Ki Jae-Hwa Jung-Hwa Sang-Ook )
+
 
 GIRLS_NAMES = %w( Hannah Madison Emily Sarah Taylor Elizabeth Abigail Alexis Anna Kayla Lauren Ashley Jessica Destiny Olivia Brianna Emma Haley Samantha Morgan) +
   %w( Alyssa Sydney Savannah Rachel Megan Grace Jasmine Victoria Caroline Kaitlyn Katherine Jennifer Hailey Mary Jordan Mackenzie Makayla Chloe) +
   %w( Maria Amber Katelyn Jada Allison Natalie Jenna Gabrielle Rebecca Courtney Isabella Julia Alexandra Brittany Sara Autumn Faith Sierra) +
   %w( Summer Bailey Kimberly Stephanie Trinity Brooke Andrea Erin Madeline Zoe Angel Amanda Aaliyah Nicole Kathryn Danielle Shelby Katie Breanna) +
   %w( Laura Lillian Sophia Kaylee Leah Margaret Ashlyn Mckenzie Catherine Skylar Alexandria Christina Caitlin Michelle Heather Cheyenne Kelsey) +
-  %w( Diamond Melissa Gracie Kristen Molly Logan Cassidy Erica Lindsey Lydia )
+  %w( Diamond Melissa Gracie Kristen Molly Logan Cassidy Erica Lindsey Lydia Chloe Emily Megan Charlotte Jessica) +
+  %w( Lauren Sophie Olivia Hannah Lucy Georgia Rebecca Bethany Amy Ellie Katie Emma Abigail Molly Grace Courtney) +
+  %w( Shannon Caitlin Eleanor Jade Ella Leah Alice Holly Laura Anna Jasmine Sarah Elizabeth Amelia Rachel Amber) +
+  %w( Eun-Kyung  Choon-Hee Hae-Won He-Ran Hwa-Young Hyo-Sonn Hyun-Ae Hyun-Ok Jin-Kyong Mee-Yon Mi-Ok Myung-Hee) +
+  %w( Phoebe Natasha Niamh Zoe Paige Nicole Abbie Mia Imogen Lily Alexandra Chelsea Daisy)
   
 SEXES = %w( M F )
   
@@ -164,6 +214,7 @@ STATUS_CODES = %w( alumni mkfield field college home_assignment leave mkadult re
 STATUS_CODES_MEMBERS =          %w( alumni field home_assignment leave retired deceased )
 EMPLOYMENT_STATUSES = %w( mk_adult mk_dependent career_affiliate ecwa_affiliate ecwa career st_affiliate) +
                       %w( sta special visitor unspecified)
+STATUS_CODES_ACTIVE = %w( mkfield field home_assignment leave visitor )
 SIM_EMPLOYMENT_STATUSES =  %w( mk_dependent career_affiliate career st_affiliate sta special )  
 AFFILIATE_EMPLOYMENT_STATUSES =  %w( career_affiliate st_affiliate  )  
 SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )                   
@@ -236,21 +287,23 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
     if age < 65
       status = case rand(100)
         when 0..3   then 'pipeline'
-        when 5..7   then 'visitor'
+        when 4..7   then 'visitor'
         when 8..12  then 'visitor_past'
         when 13..50 then 'field'
-        when 51..60 then 'home assignment'
+        when 51..60 then 'home_assignment'
         when 61..67 then 'leave'
-        when 68..97 then 'alumni'
-        when 98..99 then 'deceased'
+        when 68..99 then 'alumni'
       end
     else
-      if age + rand(35) > 100
-        status = 'deceased'
-      else
-        status = ['Alumni', 'Alumni-Retired'].sample
-      end
+# It's too complicated to include 'deceased' when forming families, so forget it
+#      if age + rand(35) > 100
+#        status = 'deceased'
+#      else
+#        status = ['Alumni', 'Alumni-Retired'].sample
+#      end
+      status = ['alumni', 'retired'].sample
     end        
+puts "Missing status code #{status}" unless Status.find_by_code(status)
     return Status.find_by_code(status) || Status.find(UNSPECIFIED)
   end
   
@@ -261,11 +314,10 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
   # Make a single person
   def make_a_single(params={})
     sex = params[:sex] || SEXES.sample  # pick one randomly if not specified
-    max_age = params[:max_age] || 90
+    max_age = params[:max_age] || 80
     min_age = params[:min_age] || 20
     age = params[:age] || min_age + rand(max_age-min_age)
     birth_date = pick_birth_date(age,age+1)
-    date_active = params[:date_active] || pick_birth_date(0,age-20)  # Picks a date between when person was 20 and the present
     status_code = params[:status_code] 
     if status_code
       status = Status.find_by_code(status_code)
@@ -278,6 +330,11 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
     if ['visitor', 'visitor_past'].include?(status.code)
       employment_status = EmploymentStatus.find_by_code('visitor')
     end  
+    if status.code == 'pipeline'
+      date_active = Date::today + rand(365).days
+    else  
+      date_active = params[:date_active] || pick_birth_date(0,age-20)  # Picks a date between when person was 20 and the present
+    end
     location = params[:location] || pick_location
     sim_id = rand(10000) until !Family.find_by_sim_id(sim_id)
     puts "***make single--nil date_active, status=#{status}" if date_active.nil?
@@ -338,17 +395,17 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
     child.status = Status.find_by_code(status) || Status.find(UNSPECIFIED)
   end
 
-  def add_child(member, age)
+  def add_child(member, age, params={})
     child = Member.new(member.attributes)  # This clones all the attributes, then we'll change some
     child.sex = sex ||= SEXES.sample
     child.first_name = pick_first_name(child.sex, :child)
     child.middle_name = pick_first_name(child.sex, :child)
     child.name = nil
     child.spouse_id = nil
-    if age.class==Fixnum
-      child.birth_date = pick_birth_date(age, age+1)
+    if params[:exact] 
+      child.birth_date = Date.today - (365.25*age).to_i.days
     else
-      child.birth_date = Date.today.years_ago(age)
+      child.birth_date = pick_birth_date(age, age+1)
     end  
     child.date_active = [child.birth_date, member.date_active].max
     child.ministry = Ministry.find_by_description('MK')  # Could put this somewhere so it's not looked up each time
@@ -360,13 +417,20 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
     end      
     child.bloodtype = pick_bloodtype
     if child.save
-#      puts "Child #{child.first_name}, #{child.birth_date}, #{child.age}"
+ #      puts "Child #{child.first_name}, #{child.birth_date}, #{child.age}"
     else
       puts "Child not saved, errors = #{child.errors}"
     end
     return child
   end  
     
+  def pick_ng_phone_number
+    prefix = %w( 0803 0804 0805 0806 0816 0702 0815 0704 0812 0709 ).sample
+    rand3 = sprintf("%03d", rand(1000))
+    rand4 = sprintf("%04d", rand(10000))
+    [prefix, rand3, rand4].join('-')
+  end
+
   def add_contact(member, contact_type=nil)
     c = member.contacts.new
     if contact_type
@@ -374,13 +438,25 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
     else
       c.contact_type = ContactType.random 
     end  
+    if member.country.code == 'US' 
+      # sample_address are like ["Thomas C. Chacon","102 E Johnson St","Cary, NC 27513-4615","(919) 481-8577"]
+      sample_address = US_ADDRESSES.sample
+    else
+      sample_address = UK_ADDRESSES.sample
+    end        
+    c.address = sample_address[1] + "\n" + sample_address[2]
+    c.phone_1 = sample_address[3]
+    c.phone_2 = sample_address[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
+    c.email_public = coin_toss
+    c.skype_public = coin_toss
+    c.phone_public = coin_toss
+    c.email_1 = member.first_name + "." + member.last_name + "@example.com"
+    c.contact_name = member.name
     case c.contact_type.code
     when 1 # field
-      addr = ''
-      c.contact_name = member.name
-      c.phone_1 = '0808-999-9999'
-      c.phone_2 = '0707-888-8888' if rand > 0.6
-      c.email_1 = member.first_name + "." + member.last_name + "@example.com"
+      c.address = ''
+      c.phone_1 = pick_ng_phone_number
+      c.phone_2 = pick_ng_phone_number if rand > 0.6
       if rand > 0.8
         c.email_2 = member.first_name + rand(1000).to_s + "@example.com"
       end
@@ -390,43 +466,23 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
       if rand > 0.6
         c.facebook = 'http://www.facebook.com/group.php?gid=9999999999#!/profile.php?id=8888888888'
       end
-      c.email_public = coin_toss
-      c.skype_public = coin_toss
-      c.phone_public = coin_toss
          
-    when 2 #home country
-      addr = case member.country.code
-        when 'US' then US_ADDRESSES.sample
-        when 'UK' then UK_ADDRESSES.sample
-        else US_ADDRESSES.sample
-      end
-      c.contact_name = member.name
-      c.address = addr[1] + "\n" + addr[2]
-      c.email_1 = member.first_name + "." + member.last_name + "@example.com"
-      c.phone_1 = addr[3]
-      c.phone_2 = addr[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
-      c.email_public = coin_toss
-      c.skype_public = coin_toss
-      c.phone_public = coin_toss
-    else
-      addr = case member.country.code
-        when 'US' then US_ADDRESSES.sample
-        when 'UK' then UK_ADDRESSES.sample
-        else US_ADDRESSES.sample
-      end
-      if c.contact_type.code == 3
-        sex = opposite_sex(member.sex)
-      else
-        sex = nil
-      end
+    when 2 # home country
+    when 3 # spouse
+      sex = opposite_sex(member.sex)
       c.contact_name = pick_first_name(sex) + " " + member.last_name
-      c.address = addr[1] + "\n" + addr[2]
       c.email_1 = c.contact_name.gsub(' ', '.') + "@example.com"
-      c.phone_1 = addr[3]
-      c.phone_2 = addr[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
-      c.email_public = coin_toss
-      c.skype_public = coin_toss
-      c.phone_public = coin_toss
+    when 6 # friend
+      c.contact_name = pick_first_name + ' ' + pick_last_name
+      c.email_1 = c.contact_name.gsub(' ', '.') + "@example.com"
+    else # not one of the above contact types, so a relation (parent or sibling or other)
+      if member.spouse && member.sex.upcase == 'F'
+        last_name = pick_last_name
+      else
+        last_name = member.last_name
+      end  
+      c.contact_name = pick_first_name(sex) + " " + last_name
+      c.email_1 = c.contact_name.gsub(' ', '.') + "@example.com"
     end # case contact_type...
     if c.save
 #      puts "contact saved" 
@@ -502,7 +558,7 @@ SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )
         start_date=member.date_active
       else  # base current term on the end of the last term
         if last_term.end_date.nil?
-          start_date=last_term + (rand(46) + 7).months              
+          start_date=last_term.start_date + (rand(46) + 7).months              
         else
           start_date=last_term.end_date + (rand(9) + 3).months                  
         end
@@ -536,13 +592,13 @@ puts "NIL start_date in add_field_term, member.status=#{member.status.code}, dat
   def add_some_children
     distribution=[0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 6]
     p_twins = 0.03
-    Member.where("spouse_id IS NOT NULL AND sex = 'F' ").each do |head|
+    Member.where("spouse_id IS NOT NULL AND sex = 'F' ").each do |mom|
       remaining_kids = distribution.sample
-      child_age = head.age_years - (19+rand(17))   # This is age of first child
+      child_age = mom.age_years - (19+17*rand)   # This is age of first child
       while child_age >= 0 && remaining_kids >= 0 do
         remaining_kids += -1
-        add_child(head,child_age)
-        add_child(head,child_age) if rand < p_twins
+        add_child(mom,child_age, :exact=>true)
+        add_child(mom,child_age, :exact=>true) if rand < p_twins
         # calculate age of next oldest child
         child_age = child_age - (1+6*rand*rand)  # where (1+...) is birth interval, average about 2.4 years
       end
@@ -551,7 +607,7 @@ puts "NIL start_date in add_field_term, member.status=#{member.status.code}, dat
   end # add_some_children 
 
   def add_some_field_terms
-    Member.all.each do |m|
+    Member.where("date_active IS NOT NULL").each do |m|
 #      if STATUS_CODES_MEMBERS.include?(m.status.code) && m.status.code != 'pipeline'
 
         if SHORT_TERM_EMPLOYMENT_STATUSES.include?(m.employment_status)
@@ -581,7 +637,7 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
   end # add_some_field_terms
   
   def add_travels_for_field_terms
-    FieldTerm.all.each do |term|  # This assumes there are already terms defined!
+    FieldTerm.where("start_date > '1990-01-01'").each do |term|  # This assumes there are already terms defined!
       t = add_travel(term.member, :date=>term.start_date, :origin=>AIRPORTS_INTL.sample,
             :destination=>AIRPORTS_NG.sample, :purpose=>'Begin term', :return_date=>nil)
       if term.end_date < Date::today
@@ -624,59 +680,64 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
 #  with_spouse      :boolean(1)
 #  with_children    :boolean(1)
   def add_other_travels
-    FieldTerm.all.each do |term|  # This assumes there are already terms defined!
-      possible_days = (term.end_date-term.start_date).to_i-90
+    FieldTerm.where("start_date > '1990-01-01'").each do |term|  # This assumes there are already terms defined!
+      possible_days = (term.end_date-term.start_date).to_i-365
       last_trip_end = term.start_date
-      while rand > 0.8 && possible_days>0 do
+      while rand > 0.6 && possible_days>0 do
         trip_duration = (7+rand(40)).days
         date =  last_trip_end + (50 + rand(possible_days)).days
         trip_duration = (7+rand(40)).days
         return_date = date+trip_duration
         if return_date > term.end_date
-          return_date = term.end_date.days_ago(10)
+          return_date = term.end_date - 10.days
         end
-        if return_date > date
-          with_spouse = coin_toss
+        if (return_date > date) 
+          with_spouse = term.member.spouse_id && coin_toss
           purpose = TRAVEL_PURPOSES_NON_HA.sample
           origin = AIRPORTS_NG.sample          
           destination = AIRPORTS_INTL.sample
-          t = add_travel(term.member, :purpose=>purpose,
-              :date => date, :return_date => return_date,
-              :origin => origin, :destination=>destination,
-              :with_spouse => with_spouse, :with_children => with_spouse,
-              :other_passenger_count => [0,0,0,0,0,1,1,2].sample
-              )              
-          r = add_travel(term.member, :purpose=> purpose,
-              :date => return_date, :return_date => nil,
-              :origin => destination, :destination => origin,
-              :with_spouse => with_spouse, :with_children => with_spouse,
-              :other_passenger_count => [0,0,0,0,0,1,1,2].sample
-              )              
+          if (Date::today + 4.months) > date
+            t = add_travel(term.member, :purpose=>purpose,
+                :date => date, :return_date => return_date,
+                :origin => origin, :destination=>destination,
+                :with_spouse => with_spouse, :with_children => with_spouse,
+                :other_passenger_count => [0,0,0,0,0,1,1,2].sample
+                ) 
+            last_trip_end = t.return_date 
 #travel_print(t)
+            if (Date::today + 4.months) > return_date      
+              r = add_travel(term.member, :purpose=> purpose,
+                  :date => return_date, :return_date => nil,
+                  :origin => destination, :destination => origin,
+                  :with_spouse => with_spouse, :with_children => with_spouse,
+                  :other_passenger_count => [0,0,0,0,0,1,1,2].sample
+                )
 #travel_print(r)
-          last_trip_end = t.return_date
-          possible_days = (term.end_date-t.return_date).to_i-90
+            end
+          else # i.e., trip is too far in the future
+            last_trip_end = Date.today + 100.years  # stop trying to generate new trips since this one is already future
+          end # if (Date::today + 4.months) > date
+          possible_days = (term.end_date-last_trip_end).to_i-365
         else
-           last_trip_end = Date::today.tomorrow 
+           last_trip_end = Date::today + 100.years  # stop trying to generate new trips since this one is already future
         end # if return_date > date
       end # while -- add one trip 
-      t = add_travel(term.member, :date=>term.start_date, :origin=>AIRPORTS_INTL.sample,
-            :destination=>AIRPORTS_NG.sample, :purpose=>'Begin term', :return_date=>nil)
-      if term.end_date < Date::today
-        add_travel(term.member, :date=>term.end_date, :destination=>AIRPORTS_INTL.sample,
-            :origin=>AIRPORTS_NG.sample, :purpose=>'Home assignment', :return_date=>nil)
-      end      
 #      puts "Travel: member=#{term.member.name}, date=#{term.start_date}, #{t.errors}"
     end #FieldTerm.all.each
   end # add some travels
 
   def add_some_contacts
     Member.all.each do |m|
-      c = add_contact(m, 1)
-contact_print(c)
-      while rand > 0.8
-        c = add_contact(m)
-contact_print(c)
+      if STATUS_CODES_ACTIVE.include?(m.status.code)  # if in active service, hence with a field address
+        primary_contact_type = 1 # field
+      else
+        primary_contact_type = 2 # home country  
+      end        
+      c = add_contact(m, primary_contact_type)  
+#contact_print(c)
+      while rand > 0.7
+        c = add_contact(m) # with random contact types
+#contact_print(c)
       end
     end
   end # add_some_contacts

@@ -255,11 +255,9 @@ include SimTestHelper
     
       before(:each) do
 puts "\n\nAdding singles"
-        add_some_singles(100)
+        add_some_singles(30)
 puts "Adding couples"
-        add_some_couples(100)
-puts "Adding children"
-        add_some_children
+        add_some_couples(30)
 puts "Adding field terms"
         add_some_field_terms
       end
@@ -273,7 +271,7 @@ puts "Add some travel records"
       it 'adds travel to cover each term' do
 puts 'adds travel to cover each term' 
         add_travels_for_field_terms
-        FieldTerm.all.each do |term|
+        FieldTerm.where("start_date > '1990-01-01'").each do |term|
           Travel.find_by_member_id_and_date(term.member_id, term.start_date).should_not be_nil
           if term.end_date < Date::today
             Travel.find_by_member_id_and_date(term.member_id, term.end_date).should_not be_nil
@@ -297,8 +295,8 @@ puts 'adds travel in middle of term'
     
       before(:each) do
 puts "field terms -- adding people"
-        add_some_singles(100)
-        add_some_couples(100)
+        add_some_singles(10)
+        add_some_couples(10)
       end
       
       it 'adds some field terms' do
@@ -313,8 +311,8 @@ puts 'adds some field terms'
     
       before(:each) do
 puts "contacts -- adding people"
-        add_some_singles(50)
-        add_some_couples(50)
+        add_some_singles(20)
+        add_some_couples(20)
       end
       
       it 'adds a lot of contact records' do
