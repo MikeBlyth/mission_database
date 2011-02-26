@@ -205,10 +205,13 @@ puts "@json_resp = #{@json_resp}"
     return "TRUE" if target_statuses.nil?
     # Find all status records that match that filter
     matches = [] # This will be the list of matching status ids. 
-    Status.where(['
-    Status.all.each do |status|
-      matches << status.id if target_statuses.include? status.code 
-    end  
+    Status.where("statuses.code IN (?)", target_statuses).each do |status|
+      matches << status.id 
+    end
+# puts "cfc matches: #{matches}"
+#    Status.all.each do |status|
+#      matches << status.id if target_statuses.include? status.code 
+#    end  
     return ['members.status_id IN (?)', matches]
 #
 # This is how to do it using the pre-determined record ids, which are determined by seeds.rb
