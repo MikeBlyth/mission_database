@@ -351,4 +351,16 @@ Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
   page.should have_content target_text
 end
 
+Given /^a member with phone "([^"]*)" and email "([^"]*)"$/ do |arg1, arg2|
+  member = Fac
+end
+Given /^a contact record$/ do
+  @contact = Factory(:contact, :member_id => @head.id)
+end
+
+Then /^the report should include the name, phone and email$/ do 
+  page.should have_content @head.last_name
+  page.should have_content @contact.phone_1
+end
+
 

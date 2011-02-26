@@ -21,4 +21,13 @@ Feature: report generation
     When I click on "Blood types" 
     Then I should get a "Blood" PDF report
 
+  Scenario: Generate phone list reports
+    Given that I am signed in
+    And a one-person family
+    And a contact record
+    And I click on "Reports"
+    When I click on "Phone and email" 
+    Then I should get a "Phone" PDF report
+    And the report should include the name, phone and email
+
   

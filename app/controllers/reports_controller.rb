@@ -36,6 +36,22 @@ class ReportsController < ApplicationController
     end
   end
 
+  # Birthday reports
+   def phone_email
+    selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, short_name, birth_date, id")
+    selected = selected.delete_if{|x| x.birth_date && x.age_years < 16 }   # don't include younger kids
+    filter = (session[:filter] || "").gsub('_', ' ')
+    left_head = filter.blank? ? '' : "with status = #{filter}" 
+    output = PhoneEmailReport.new.to_pdf(selected,:left_head=>left_head)
+
+    respond_to do |format|
+      format.pdf do
+        send_data output, :filename => "phonelist.pdf", 
+                          :type => "application/pdf"
+      end
+    end
+  end
+
    def conditions_for_collection
     status_groups = {'active' => %w( field home_assignment mkfield),
                 'field' => %w( field mkfield visitor),
