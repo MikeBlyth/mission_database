@@ -83,19 +83,23 @@ describe MembersController do
       end  
     end
     
-    it "should select members with active status" do
+    it "should select members with the right status" do
       # This checks that the 'conditions_for_collection' method returns the right conditions to match the 
       #   status groups defined above, and that the conditions work to return the right records.
       Member.count.should == @status_codes.count
       @status_groups.each do | category, statuses |
         session[:filter] = category.to_s
-#puts "\n**** Conditions for #{category}=#{statuses}:  #{controller.conditions_for_collection}"      
+#puts "\n**** Conditions for #{category} =#{statuses}:  #{controller.conditions_for_collection}"      
         Member.where(controller.conditions_for_collection).count.should == statuses.count
         Member.where(controller.conditions_for_collection).each do |m|
- #         puts "****> #{m.status.code} #{m.status.id}, matching #{statuses}?"
+#         puts "****> #{m.status.code} #{m.status.id}, matching #{statuses}?"
           statuses.include?(m.status.code).should be_true
         end
       end
+      # An invalid group should return all the members.
+      session[:filter] = 'ALL!'
+      Member.where(controller.conditions_for_collection).count.should == Member.count
+      
     end    #  it "should select members with active status"
 
   end # filtering by status

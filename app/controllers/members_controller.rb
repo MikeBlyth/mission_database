@@ -182,32 +182,58 @@ puts "@json_resp = #{@json_resp}"
   end
 
 
-# criteria based on the filter set in application_controller. 
-# it would better to somehow have these defined other than hard-coding the numbers, if the 
-# users will have access to the table of statuses! Look up the statuses ahead of time and store?
+# Generate a filter string for use in Member.where(conditions_for_collection)...
+# The twist is that we have to use member.status_id in the search string since ActiveScaffold
+# is not doing a joined search and we don't have access to the status_code at the time of the 
+# filtering. So we either have to be sure to have the record ids pre-coded (brittle) or dynamically
+# determine them based on the codes such as 'field' or "home_assignment".
+# 
   def conditions_for_collection
-    selector = case
-    when session[:filter] == 'active'
-      ['members.status_id IN (?)', ['2','3','5']]
-    when session[:filter] == 'field'
-      ['members.status_id IN (?)', ['2','3', '15']]
-    when session[:filter] == 'home_assignment'
-      ['members.status_id IN (?)', ['5']]
-    when session[:filter] == 'home_assignment_or_leave'
-      ['members.status_id IN (?)', ['5','6']]
-    when session[:filter] == 'pipeline'
-      ['members.status_id IN (?)', ['12']]
-    when session[:filter] == 'visitor'
-      ['members.status_id IN (?)', ['14', '15']]
-    when session[:filter] == 'other'
-      ['members.status_id NOT IN (?)', ['2','3','5','6','12', '14', '15']]
-    else
- #     ['?', true]
-      ['members.id > 0']  # no filter; use this if can't get "true" to work
-    end
+    status_groups = {'active' => %w( field home_assignment mkfield),
+                'field' => %w( field mkfield visitor),
+                'home_assignment' => %w( home_assignment ),
+                'home_assignment_or_leave' => %w( home_assignment leave),
+                'pipeline' => %w( pipeline ),
+                'visitor' => %w( visitor visitor_past ),
+                'other' => %w( alumni college mkadult retired deceased mkalumni unspecified )
+                }
+      # The groups reflect the status codes matched by the various filters. So, for example,
+      #   the filter "active" (or :active) should trigger a selection string that includes the statuses with codes
+      #   'field', 'home_assignment', and 'mkfield'
 
-    selector
-  end  
+    target_statuses = status_groups[session[:filter]]
+    return "TRUE" if target_statuses.nil?
+    # Find all status records that match that filter
+    matches = [] # This will be the list of matching status ids. 
+    Status.all.each do |status|
+      matches << status.id if target_statuses.include? status.code 
+    end  
+    return ['members.status_id IN (?)', matches]
+#
+# This is how to do it using the pre-determined record ids, which are determined by seeds.rb
+# but could be changed as users add or remove statuses!
+#    selector = case
+#    when session[:filter] == 'active'
+#      ['members.status_id IN (?)', ['2','3','5']]
+#    when session[:filter] == 'field'
+#      ['members.status_id IN (?)', ['2','3', '15']]
+#    when session[:filter] == 'home_assignment'
+#      ['members.status_id IN (?)', ['5']]
+#    when session[:filter] == 'home_assignment_or_leave'
+#      ['members.status_id IN (?)', ['5','6']]
+#    when session[:filter] == 'pipeline'
+#      ['members.status_id IN (?)', ['12']]
+#    when session[:filter] == 'visitor'
+#      ['members.status_id IN (?)', ['14', '15']]
+#    when session[:filter] == 'other'
+#      ['members.status_id NOT IN (?)', ['2','3','5','6','12', '14', '15']]
+#    else
+# #     ['?', true]
+#      ['members.id > 0']  # no filter; use this if can't get "true" to work
+#    end
+#
+#  return  selector
+  end   # conditions_for_collection
 
 end
   
