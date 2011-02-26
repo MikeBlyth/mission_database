@@ -335,6 +335,8 @@ end
 Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
 # Converts a PDF response to a text one, based on methods in 
 # http://upstre.am/blog/2009/02/testing-pdfs-with-cucumber-and-rails
+#puts "Converting the #{target_text} report from PDF to Text"
+#puts "PDF Page.body = ::#{page.body}::"
   temp_pdf = Tempfile.new('pdf')
   temp_pdf << page.body.force_encoding('UTF-8')
   temp_pdf.close
@@ -348,6 +350,7 @@ Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
   if target_text == '{next month}'
     target_text = Date::MONTHNAMES[Date::today().next_month.month]  # which is the name for the next month from now
   end
+#puts "Page.body = ::#{page.body}::"
   page.should have_content target_text
 end
 
@@ -361,6 +364,22 @@ end
 Then /^the report should include the name, phone and email$/ do 
   page.should have_content @head.last_name
   page.should have_content @contact.phone_1
+end
+
+Given /^a "([^"]*)" record$/ do |record_type|
+  @detail = case record_type
+  when 'travel' then Factory(:travel, :member_id => @head.id)
+  end
+puts "Detail record created = #{@detail.attributes}"
+end
+
+Then /^the report should include the "([^"]*)" information$/ do |report_type|
+  case report_type
+  when 'travel'
+    page.should have_content 'Travel Schedule'
+    page.should have_content @head.last_name
+    page.should have_content @detail.date.to_s
+  end      
 end
 
 
