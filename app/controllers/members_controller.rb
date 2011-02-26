@@ -205,6 +205,7 @@ puts "@json_resp = #{@json_resp}"
     return "TRUE" if target_statuses.nil?
     # Find all status records that match that filter
     matches = [] # This will be the list of matching status ids. 
+    Status.where(['
     Status.all.each do |status|
       matches << status.id if target_statuses.include? status.code 
     end  
