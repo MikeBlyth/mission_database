@@ -41,6 +41,7 @@ module NameHelper
   end
 
   def full_name_short
+puts "Full_name_short: attributes=#{self.attributes}"
     if short_name.blank?
       s = first_name + " " + last_name
     else

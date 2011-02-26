@@ -42,7 +42,7 @@ include ReportsHelper
       move_down 5
       # Define the title 
       if params[:title].class==String
-        title = param[:title]
+        title = params[:title]
       else  
         title = case params[:title] || :month_year        # making :month_year the default
           when :none then ''

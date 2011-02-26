@@ -4,13 +4,16 @@ require 'reports_helper'
 # Prawn document to generate PDF for blood types
 class BirthdayReport < Prawn::Document
 include ReportsHelper
-    def to_pdf(selected,comments)
+    def to_pdf(selected,params={})
     
      # selected is an array of Members (with only some columns defined)
      # first, sort the array by name
      selected.sort! {|x,y| x.last_name_first <=> y.last_name_first}
   #   table_data = [['Last name', 'First name', 'Blood type']]
     text_data = ''
+    title = params[:title] || "Birthdays"
+    left_head = params[:left_head] || "SIM Nigeria Reports"
+    comments = params[:comments] || ''
     selected.each do |m|
       text_data << "#{m.last_name_first(:short=>true, :initial=>true)}:  " 
       if m.birth_date.blank?
@@ -20,7 +23,8 @@ include ReportsHelper
       end
       text_data << "\n\n"
     end
-    page_header(:title=>'Birthdays', :left=>'SIM Nigeria Reports')
+    
+    page_header(:title=>title, :left=>left_head)
     move_down 8
     flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>2, 
       :size=>12, :inline_format => true , :gutter=>15 
