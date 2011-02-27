@@ -89,10 +89,8 @@ describe MembersController do
       Member.count.should == @status_codes.count
       @status_groups.each do | category, statuses |
         session[:filter] = category.to_s
-puts "\n**** Conditions for #{category} =#{statuses}:  #{controller.conditions_for_collection}"      
         Member.where(controller.conditions_for_collection).count.should == statuses.count
         Member.where(controller.conditions_for_collection).each do |m|
-#         puts "****> #{m.status.code} #{m.status.id}, matching #{statuses}?"
           statuses.include?(m.status.code).should be_true
         end
       end

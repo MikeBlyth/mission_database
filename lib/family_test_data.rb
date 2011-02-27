@@ -726,6 +726,16 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
     end #FieldTerm.all.each
   end # add some travels
 
+  def confirm_some_travels
+    future_travels=Travel.where("date > ?", Date::today-30.days)
+    future_travels.each do |t|
+      if coin_toss
+        t.update_attribute(:confirmed, t.date - 60.days)
+        puts "#{t.id} updated to #{t.date}"
+      end  
+    end
+  end
+
   def add_some_contacts
     Member.all.each do |m|
       if STATUS_CODES_ACTIVE.include?(m.status.code)  # if in active service, hence with a field address

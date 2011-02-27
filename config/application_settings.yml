@@ -1,5 +1,6 @@
+# For use with SETTINGSLOGIC
 # See https://github.com/binarylogic/settingslogic
-# Access like this
+# Access variables like this: page_size = Settings.reports.page_size
 # Can set like this if desired:
 #  Settings[:rows_per_screen_page] = 20
 defaults: &defaults
@@ -9,7 +10,9 @@ defaults: &defaults
       birthday_prefix: 'BD: '
   screen:
   rows_per_screen_page: 20
-
+  travel:
+    # Travel to these airports will be reported as arrivals, from them = departures.
+    airports_local: ['Kano', 'Lagos', 'Abuja']
 development:
   <<: *defaults
   screen:

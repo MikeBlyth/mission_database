@@ -54,15 +54,16 @@ class ReportsController < ApplicationController
 
   # Travedl reports
    def travel_schedule
-    selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, short_name, birth_date, id")
-    selected = selected.delete_if{|x| x.birth_date && x.age_years < 16 }   # don't include younger kids
-    filter = (session[:filter] || "").gsub('_', ' ')
-    left_head = filter.blank? ? '' : "with status = #{filter}" 
-    output = PhoneEmailReport.new.to_pdf(selected, :title=>'Travel Schedule', :left_head=>left_head)
+    starting_date = Date::today
+    selected = Travel.where("date > ?", starting_date).order("date ASC")
+    # We will assume for now that we do not need to filter for different member statuses, since if there is a travel
+    # record for someone, it means that we wanted it on the travel schedule.
+    left_head = "#{starting_date}"
+    output = TravelScheduleReport.new.to_pdf(selected, :title=>'Travel Schedule', :left_head=>left_head)
 
     respond_to do |format|
       format.pdf do
-        send_data output, :filename => "phonelist.pdf", 
+        send_data output, :filename => "travel_schedule.pdf", 
                           :type => "application/pdf"
       end
     end

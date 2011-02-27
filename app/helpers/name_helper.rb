@@ -33,6 +33,10 @@ module NameHelper
     last_name_first(:initial=>true, :paren_short => true)
   end
   
+  def short
+    short_name || first_name
+  end
+
   def full_name
     s = self.first_name
     s = s + ' ' + self.middle_name unless self.middle_name.blank?

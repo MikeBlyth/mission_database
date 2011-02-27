@@ -368,9 +368,9 @@ end
 
 Given /^a "([^"]*)" record$/ do |record_type|
   @detail = case record_type
-  when 'travel' then Factory(:travel, :member_id => @head.id)
+  when 'travel' then Factory(:travel, :member_id => @head.id, :date=> Date::tomorrow, :confirmed => Date::yesterday)
   end
-puts "Detail record created = #{@detail.attributes}"
+# puts "Detail record created = #{@detail.attributes}"
 end
 
 Then /^the report should include the "([^"]*)" information$/ do |report_type|
@@ -379,6 +379,7 @@ Then /^the report should include the "([^"]*)" information$/ do |report_type|
     page.should have_content 'Travel Schedule'
     page.should have_content @head.last_name
     page.should have_content @detail.date.to_s
+    page.should have_content @detail.origin
   end      
 end
 
