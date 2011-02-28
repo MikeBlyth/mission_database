@@ -1,34 +1,39 @@
 # == Schema Information
-# Schema version: 20110213084018
+# Schema version: 20110228132351
 #
 # Table name: members
 #
-#  id                   :integer(4)      not null, primary key
-#  last_name            :string(255)
-#  short_name           :string(255)
-#  sex                  :string(255)
-#  created_at           :datetime
-#  updated_at           :datetime
-#  middle_name          :string(255)
-#  family_id            :integer(4)
-#  birth_date           :date
-#  spouse_id            :integer(4)
-#  country_id           :integer(4)      default(999999)
-#  first_name           :string(255)
-#  bloodtype_id         :integer(4)      default(999999)
-#  allergies            :string(255)
-#  medical_facts        :string(255)
-#  medications          :string(255)
-#  status_id            :integer(4)      default(999999)
-#  ministry_comment     :string(255)
-#  qualifications       :string(255)
-#  date_active          :date
-#  ministry_id          :integer(4)      default(999999)
-#  education_id         :integer(4)      default(999999)
-#  location_id          :integer(4)      default(999999)
-#  employment_status_id :integer(4)      default(999999)
-#  name                 :string(255)
-#  name_override        :boolean(1)
+#  id                            :integer(4)      not null, primary key
+#  last_name                     :string(255)
+#  short_name                    :string(255)
+#  sex                           :string(255)
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  middle_name                   :string(255)
+#  family_id                     :integer(4)
+#  birth_date                    :date
+#  spouse_id                     :integer(4)
+#  country_id                    :integer(4)      default(999999)
+#  first_name                    :string(255)
+#  bloodtype_id                  :integer(4)      default(999999)
+#  allergies                     :string(255)
+#  medical_facts                 :string(255)
+#  medications                   :string(255)
+#  status_id                     :integer(4)      default(999999)
+#  ministry_comment              :string(255)
+#  qualifications                :string(255)
+#  date_active                   :date
+#  ministry_id                   :integer(4)      default(999999)
+#  education_id                  :integer(4)      default(999999)
+#  location_id                   :integer(4)      default(999999)
+#  employment_status_id          :integer(4)      default(999999)
+#  name                          :string(255)
+#  name_override                 :boolean(1)
+#  child                         :boolean(1)
+#  work_site_id                  :integer(4)
+#  temporary_location            :string(255)
+#  temporary_location_from_date  :date
+#  temporary_location_until_date :date
 #
 
 class Member < ActiveRecord::Base
@@ -44,6 +49,7 @@ class Member < ActiveRecord::Base
   belongs_to :education
   belongs_to :ministry
   belongs_to :location
+  belongs_to :work_site, :class_name => "Location", :foreign_key => "work_site_id"
   belongs_to :employment_status
   belongs_to :status
   validates_presence_of :last_name, :first_name, :name, :family_id
@@ -120,6 +126,7 @@ class Member < ActiveRecord::Base
    end
 
    def male_female
+    
      return :female if self.sex.upcase == 'F'
      return :male if self.sex.upcase == 'M'
    end
@@ -133,6 +140,7 @@ class Member < ActiveRecord::Base
    end
      
    def spouse_name
+     return nil unless self.spouse
      self.spouse.name
    end
 
@@ -147,25 +155,22 @@ class Member < ActiveRecord::Base
   # If we do it w/o any error checking, must be sure user can only assign a valid member as a spouse
   # (What if someone else deletes the spouse --- don't ever delete anyone :-)
     if !spouse_id.nil? && spouse.spouse_id != self.id
+      spouse.spouse_id = self.id  # my spouse is married to me
+      if self.male?
+        husband = self
+        wife = spouse
+      else
+        wife = self
+        husband = spouse
+      end
+      wife.family_id = husband.family_id
       begin
-        spouse.spouse_id = self.id  # my spouse is married to me
-        if self.male?
-          husband = self
-          wife = spouse
-        else
-          wife = self
-          husband = spouse
-        end
-        wife.family_id = husband.family_id
-# TODO May need to do something in Family object to fix
-#        wife.family_head = false
-#        husband.family_head = true
-
         spouse.save!
         self.save!
         rescue 
-     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
-  logger.error "***Unable to find or update spouse (record id #{spouse_id})"
+   #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
+         logger.error "***Unable to find or update spouse (record id #{spouse_id})"
+         puts "***Unable to find or update spouse (record id #{spouse_id}), error #{spouse.errors}"
       end    
     end
   end

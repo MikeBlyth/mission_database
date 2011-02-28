@@ -120,5 +120,32 @@ describe Family do
     end
 
   end # children list
+
+  describe "helpers" do
+  
+    before(:each) do
+      # Just rename for convenience
+      @family.save # since for the top level default, it's built but not saved so has no id
+      @wife = @family.head
+      @husband = Factory(:member, :family_id => @family.id, :sex => 'M', :spouse_id => @wife_id)
+      @wife.update_attributes(:sex => 'F', :spouse_id => @husband.id)
+    end  
+      
+    it 'returns the husband and wife' do
+      @family.husband.should == @husband
+      @family.wife.should == @wife
+    end
+    
+    it 'returns the couple in husband/wife order' do
+      @family.couple.should == [@husband, @wife]
+    end
+    
+    it 'returns nil for husband/wife of single person' do
+      @family = Factory(:family)
+      @family.husband.should be_nil
+      @family.wife.should be_nil
+    end
+
+  end # helpers  
 end
 

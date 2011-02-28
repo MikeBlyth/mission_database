@@ -54,12 +54,41 @@ class Family < ActiveRecord::Base
     head.full_name_short
   end
 
+  # Array of children as Member objects, sorted
+  def children
+    self.members.where(:child=>true).order("birth_date ASC")
+  end
+  
+  # Array of children's first names sorted oldest to youngest
+  def children_names
+    names = []
+    self.children.each {|child| names << child.first_name}
+    return names
+  end
+  
+  # Husband of family as Member object, nil if single
+  def husband
+    return nil if self.head.spouse.nil?
+    return self.head.male? ? self.head : self.head.spouse
+  end
+  
+  # Wife of family as Member object, nil if single
+  def wife
+    return nil if self.head.spouse.nil?
+    return self.head.female? ? self.head : self.head.spouse
+  end
+  
+  # Husband and wife as array of 2 Member.objects, in order
+  def couple
+    [self.husband, self.wife]
+  end
+  
   # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
  # debugger
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
-            :status=>status, :location=>location, :family =>self)
+            :status=>status, :location=>location, :family =>self, :sex=>'M')
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
   end
   

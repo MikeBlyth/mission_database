@@ -14,7 +14,9 @@ module ApplicationHelper
     end	
 
 end
+
 include ActionView::Helpers::FormOptionsHelper
+
 # TODO: May be best to replace this with the Rails method that does the same thing.
 # http://api.rubyonrails.org/classes/ActionView/Helpers/FormOptionsHelper.html#method-i-option_groups_from_collection_for_select
 def options_for_select_with_grouping(option_list, grouping_column, selected, value_column=:id, label_column=:description)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110217133830) do
+ActiveRecord::Schema.define(:version => 20110228132351) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -149,28 +149,34 @@ ActiveRecord::Schema.define(:version => 20110217133830) do
     t.integer  "family_id"
     t.date     "birth_date"
     t.integer  "spouse_id"
-    t.integer  "country_id",           :default => 999999
+    t.integer  "country_id",                    :default => 999999
     t.string   "first_name"
-    t.integer  "bloodtype_id",         :default => 999999
+    t.integer  "bloodtype_id",                  :default => 999999
     t.string   "allergies"
     t.string   "medical_facts"
     t.string   "medications"
-    t.integer  "status_id",            :default => 999999
+    t.integer  "status_id",                     :default => 999999
     t.string   "ministry_comment"
     t.string   "qualifications"
     t.date     "date_active"
-    t.integer  "ministry_id",          :default => 999999
-    t.integer  "education_id",         :default => 999999
-    t.integer  "location_id",          :default => 999999
-    t.integer  "employment_status_id", :default => 999999
+    t.integer  "ministry_id",                   :default => 999999
+    t.integer  "education_id",                  :default => 999999
+    t.integer  "location_id",                   :default => 999999
+    t.integer  "employment_status_id",          :default => 999999
     t.string   "name"
     t.boolean  "name_override"
+    t.boolean  "child"
+    t.integer  "work_site_id"
+    t.string   "temporary_location"
+    t.date     "temporary_location_from_date"
+    t.date     "temporary_location_until_date"
   end
 
   add_index "members", ["bloodtype_id"], :name => "fk_bloodtypes"
   add_index "members", ["country_id"], :name => "fk_countries"
   add_index "members", ["family_id"], :name => "index_members_on_family_id"
   add_index "members", ["name"], :name => "index_members_on_name", :unique => true
+  add_index "members", ["status_id"], :name => "index_members_on_status_id"
 
   create_table "ministries", :force => true do |t|
     t.string   "description"

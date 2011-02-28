@@ -2,7 +2,7 @@
 require './spec/factories'
  
 class FamilySeed
-include ApplicationHelper
+#include ApplicationHelper
 
   def self.seed
     raise "Don't run this in production!" if Rails.env.production?

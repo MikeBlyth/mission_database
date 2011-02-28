@@ -1,6 +1,9 @@
 # For generating different kinds of reports output to PDF
 # Perhaps should be refactored so that each report is inside its own main model's controller?
 class ReportsController < ApplicationController
+  include AuthenticationHelper
+
+  before_filter :authenticate 
 
   def index
     # this just displays a view that lets the user select from reports
@@ -39,7 +42,7 @@ class ReportsController < ApplicationController
   # Contact reports
    def phone_email
     selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, short_name, birth_date, id")
-    selected = selected.delete_if{|x| x.birth_date && x.age_years < 16 }   # don't include younger kids
+    selected = selected.delete_if{|x| x.birth_date && !x.child }   # don't include the kids
     filter = (session[:filter] || "").gsub('_', ' ')
     left_head = filter.blank? ? '' : "with status = #{filter}" 
     output = PhoneEmailReport.new.to_pdf(selected,:left_head=>left_head)

@@ -2,7 +2,6 @@ Feature: family list view
 
   This simple view shows families and all their members
 
-
   Scenario: Create family
     Given a family with a spouse
     Then the family includes the head and spouse
