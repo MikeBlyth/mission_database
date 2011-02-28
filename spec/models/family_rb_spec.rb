@@ -89,5 +89,36 @@ describe Family do
     Member.count.should == 0
   end
 
+  describe "children list" do
+
+    before(:each) do
+      @children_ages = [1,2,3,4]
+      @family.save!
+      @children_names = []
+      @children_ages.each do |age| 
+        c = Factory(:child, :family_id => @family.id, :birth_date => Date::today-age.years)
+        @children_names << c.first_name
+      end  
+      @children_names.reverse! # now they are sorted by age with oldest first
+    end  
+
+    it "returns a list of children" do
+      @family.children.count.should == @children_ages.count
+    end
+       
+    it "sorts the list of children by age" do
+      last_birth_date = Date.new(1900,1,1)
+      @family.children.each do |c|
+        c.birth_date.should > last_birth_date
+        last_birth_date = c.birth_date
+        puts "Child=#{c.first_name}, #{c.birth_date}"
+      end
+    end
+
+    it "returns a list of children's names" do
+      @family.children_names.should == @children_names
+    end
+
+  end # children list
 end
 

@@ -1,3 +1,5 @@
+# Did this come from Nick Hoffman? I can't find the source or description! (Mike Blyth)
+
 require 'spec_helper'
 require 'auth_spec_helper'
 
@@ -28,7 +30,7 @@ controllers = [
                 [MembersController, :member],
                 [StatesController, :state],
                 [StatusesController, :status],
-                [TravelsController, :travel]
+                [TravelsController, :travel],
               ]  
   
 controllers.each { |controller, obj_sym| generic(controller, obj_sym) }

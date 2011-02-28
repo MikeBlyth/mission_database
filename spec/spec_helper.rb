@@ -75,41 +75,6 @@ Spork.each_run do
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by
         # signing out before this group of tests.
 
-  def deny_all
-    deny_edit
-    deny_update
-    deny_show
-    deny_destroy
-  end
-    
-  def deny_edit
-    it "should deny access to 'edit'" do
-      get :edit, :id => @user
-      response.should redirect_to(signin_path)
-    end
-  end      
-
-  def deny_update
-    it "should deny access to 'update'" do
-      put :update, :id => @user, :user => {}
-      response.should redirect_to(signin_path)
-    end
-  end      
-
-  def deny_show
-    it "should deny access to 'show'" do
-      get :show, :id => @user
-      response.should redirect_to(signin_path)
-    end
-  end      
-
-  def deny_destroy
-    it "should deny access to 'destroy'" do
-      put :destroy, :id => @user
-      response.should redirect_to(signin_path)
-    end
-  end      
-
-end
+end # Spork.each_run
 
 

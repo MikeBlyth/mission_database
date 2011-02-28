@@ -3,6 +3,9 @@
 # signed in. Since it's all sort of a modular, single function (authentication), the method does NOT 
 # create the object or sign-in the user for each test, it just does them all in sequence. Violates some
 # testing principles but keeps things really simple in the spec files. 
+#
+# I can't remember where this came from! I think Nick Hoffman?
+
 module AuthSpecHelper
   def check_authentication(object)
     # First check without signed-in user

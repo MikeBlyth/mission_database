@@ -132,18 +132,24 @@ FactoryGirl.define do
     after_build { |user| user.inherit_from_family}
   end
 
-  factory :member_with_details, :parent=> :member do
-    middle_name 'Midname'
-    short_name 'Shorty'
-    birth_date '1980-01-01'
-    country_id 1
-    date_active '2005-01-01'
-    employment_status_id 1
-    ministry_id 1
-    ministry_comment 'Working with orphans'
-    education_id 1
-    qualifications 'TESOL, qualified midwife'
-  end
+    factory :member_with_details, :parent=> :member do
+      middle_name 'Midname'
+      short_name 'Shorty'
+      birth_date '1980-01-01'
+      country_id 1
+      date_active '2005-01-01'
+      employment_status_id 1
+      ministry_id 1
+      ministry_comment 'Working with orphans'
+      education_id 1
+      qualifications 'TESOL, qualified midwife'
+    end
+
+    factory :child, :parent=> :member do
+      birth_date "1 Jan 2000"
+      sequence(:first_name) {|n| "Child_#{n}" }
+      child true
+    end
   
   factory :ministry do
     id 1
