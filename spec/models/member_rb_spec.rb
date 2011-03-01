@@ -128,17 +128,38 @@ describe Member do
     @head.spouse.should == head2
   end
     
-#  it "cannot marry married person" do
-#    pending
-#  end
-#    
-#  it "cannot marry single person of same sex" do
-#    pending
-#  end
-#  
-#  it "cannot marry underage person" do
-#    pending
-#  end
+  it "can marry single person of opposite sex (with marry method)" do
+    @head.update_attribute(:sex, "M")
+    head2 = Factory(:member, :sex=>"F")
+    @head.marry(head2).should == @head # since successful marriage returns husband's object
+    head2.spouse.should == @head
+    @head.spouse.should == head2
+  end       
+
+  it "cannot marry married person" do
+    @head.update_attribute(:sex, "F")
+    married_man = Factory(:member, :sex=>"M")
+    married_wife = Factory(:member, :sex=>"F")
+    married_wife.marry(married_man).should == married_man # This is just normal, valid, marriage to set up test
+    @head.marry(married_man).should be_nil
+    married_man.marry(@head).should be_nil
+    married_man.spouse.should == married_wife
+    @head.spouse.should be_nil
+  end
+    
+  it "cannot marry single person of same sex" do
+    @head.update_attribute(:sex, "F")
+    head2 = Factory(:member, :sex=>"F")
+    @head.marry(head2).should be_nil
+    head2.spouse.should be_nil
+    @head.spouse.should be_nil
+  end
+  
+  it "cannot marry underage person" do
+    @head.update_attributes(:birth_date=>Date.new(1980,1,1), :sex=>'M')
+    head2 = Factory(:member, :sex=>"F", :birth_date=> Date.yesterday)
+    @head.marry(head2).should be_nil
+  end
   
 end
 

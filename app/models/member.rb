@@ -149,6 +149,17 @@ class Member < ActiveRecord::Base
      self.spouse_id = myspouse.id if myspouse
    end
 
+  def marry(new_spouse)
+    return nil if new_spouse.nil?
+    return nil if new_spouse.sex == self.sex
+    return nil if self.spouse || new_spouse.spouse  # can't marry if either is already married
+    return nil if (self.age_years || 99) < 16 || (new_spouse.age_years || 99) < 16
+    # Now, with all that out of the way
+    self.spouse = new_spouse
+    cross_link_spouses
+    return self.sex == "M" ? self : new_spouse   # for what it's worth, return the husband's object
+  end
+
   def cross_link_spouses
   # Update spouse's record if a spouse is defined. Not sure it's a good idea to do this 
   # automatically ...
@@ -171,8 +182,10 @@ class Member < ActiveRecord::Base
    #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
          logger.error "***Unable to find or update spouse (record id #{spouse_id})"
          puts "***Unable to find or update spouse (record id #{spouse_id}), error #{spouse.errors}"
+         nil
       end    
     end
+    return husband
   end
 
   def check_if_family_head
