@@ -120,46 +120,51 @@ describe Member do
     @head.male_female.should be_nil
   end  
 
-  it "can marry single person of opposite sex" do
-    head2 = Factory(:member, :sex=>ApplicationHelper::opposite_sex(@head.sex))
-    @head.update_attributes(:spouse_id=>head2.id)
-    head2.reload  # since the database copy has been linked to spouse, but not local copy
-    head2.spouse.should == @head
-    @head.spouse.should == head2
-  end
-    
-  it "can marry single person of opposite sex (with marry method)" do
-    @head.update_attribute(:sex, "M")
-    head2 = Factory(:member, :sex=>"F")
-    @head.marry(head2).should == @head # since successful marriage returns husband's object
-    head2.spouse.should == @head
-    @head.spouse.should == head2
-  end       
+  describe "marrying: " do
 
-  it "cannot marry married person" do
-    @head.update_attribute(:sex, "F")
-    married_man = Factory(:member, :sex=>"M")
-    married_wife = Factory(:member, :sex=>"F")
-    married_wife.marry(married_man).should == married_man # This is just normal, valid, marriage to set up test
-    @head.marry(married_man).should be_nil
-    married_man.marry(@head).should be_nil
-    married_man.spouse.should == married_wife
-    @head.spouse.should be_nil
-  end
+    before(:each) do
+      @head.update_attributes(:sex=>'M', :birth_date=>Date.new(1980,1,1))
+      @man = @head
+      @woman = Factory(:member, :sex=>"F", :birth_date=>Date.new(1980,1,1))
+    end
+
+    it "can marry single person of opposite sex by setting spouse_id" do
+      @man.update_attributes(:spouse_id=>@woman.id)
+      @woman.reload  # since the database copy has been linked to spouse, but not local copy
+      @woman.spouse.should == @man
+      @man.spouse.should == @woman
+    end
+      
+    it "can marry single person of opposite sex (with marry method)" do
+      @man.marry(@woman).should == @man # since successful marriage returns husband's object
+      @woman.spouse.should == @man
+      @man.spouse.should == @woman
+    end       
+
+    it "cannot marry married person" do
+      # Set up a married couple
+      married_man = Factory(:member, :sex=>"M")
+      married_wife = Factory(:member, :sex=>"F")
+      married_wife.marry(married_man).should == married_man # This is just normal, valid, marriage to set up test
+      # Single should not be able to marry married person
+      @woman.marry(married_man).should be_nil
+      married_man.marry(@woman).should be_nil
+      married_man.spouse.should == married_wife  # making sure it wasn't changed or dropped along the way
+      @woman.spouse.should be_nil
+    end
+      
+    it "cannot marry single person of same sex" do
+      @man.update_attribute(:sex, "F")
+      another_woman = @man  # just a way of getting a woman without creating a new database record
+      @woman.marry(another_woman).should be_nil
+      @woman.spouse.should be_nil
+      another_woman.spouse.should be_nil
+    end
     
-  it "cannot marry single person of same sex" do
-    @head.update_attribute(:sex, "F")
-    head2 = Factory(:member, :sex=>"F")
-    @head.marry(head2).should be_nil
-    head2.spouse.should be_nil
-    @head.spouse.should be_nil
-  end
-  
-  it "cannot marry underage person" do
-    @head.update_attributes(:birth_date=>Date.new(1980,1,1), :sex=>'M')
-    head2 = Factory(:member, :sex=>"F", :birth_date=> Date.yesterday)
-    @head.marry(head2).should be_nil
-  end
-  
+    it "cannot marry underage person" do
+      @woman.update_attributes(:birth_date=> Date.yesterday)
+      @man.marry(@woman).should be_nil
+    end
+  end # describe marrying  
 end
 
