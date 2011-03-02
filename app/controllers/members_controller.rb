@@ -23,7 +23,8 @@ class MembersController < ApplicationController
           :country_name,
           :date_active, :status, :employment_status,
           :ministry, :ministry_comment, 
-          :location, :education, :qualifications,
+          :location, :work_site, :temporary_location, :temporary_location_from_date, :temporary_location_until_date,
+          :education, :qualifications,
           :contacts, :field_terms, :travels,
           :bloodtype, :allergies, :medications
           ]
