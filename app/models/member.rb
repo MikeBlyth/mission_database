@@ -72,14 +72,6 @@ class Member < ActiveRecord::Base
     return spouse.nil?
   end
   
-  def xx(v=5)
-    self.update_attributes(:status_id=>v)
-    puts "Status_id = #{status_id}"
-    save
-    puts "Status_id after save = #{status_id}"
-    Member.find(self.id)
-  end
-
   def children
     age_cutoff = 19
     birthdate_cutoff = Date::today() - age_cutoff.years
