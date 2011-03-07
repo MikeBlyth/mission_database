@@ -5,7 +5,7 @@ class TravelsController < ApplicationController
   active_scaffold :travel do |config|
   #  config.columns[:member].actions_for_association_links = [:show]
    config.subform.layout = :vertical
-   config.columns = [:member, :date, :origin, :destination, :flight, :guesthouse,
+   config.columns = [:member, :date, :arrival, :origin, :destination, :flight, :guesthouse,
      :return_date, :with_spouse, :with_children, :other_travelers, :baggage, :total_passengers, :confirmed]
    config.columns[:member].form_ui = :select 
 #   config.columns[:member].options = {:draggable_lists => true}
@@ -18,4 +18,18 @@ class TravelsController < ApplicationController
    
     
   end
+
+# Generate a filter string for use in Travel.where(conditions_for_collection)...
+  def conditions_for_collection
+    selector = case session[:travel_filter]
+      when  'arrivals'   then ['travels.arrival = TRUE AND travels.date >= (?)', Date::today]
+      when  'departures' then ['travels.arrival = FALSE AND travels.date >= (?)', Date::today]
+      when  'all_dates'  then TRUE
+      when  'current'    then ['travels.date >= (?)', Date::today]
+      else ['travels.date >= (?)', Date::today]
+    end
+puts "Travel selector = #{selector}"
+    return selector
+  end
+  
 end 

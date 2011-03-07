@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110228132351) do
+ActiveRecord::Schema.define(:version => 20110307141121) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -226,6 +226,7 @@ ActiveRecord::Schema.define(:version => 20110228132351) do
     t.string   "other_travelers"
     t.boolean  "with_spouse"
     t.boolean  "with_children"
+    t.boolean  "arrival"
   end
 
   create_table "users", :force => true do |t|

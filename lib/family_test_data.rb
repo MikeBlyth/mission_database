@@ -498,8 +498,9 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
       destination = params[:destination] 
       if destination.nil? 
         destination = AIRPORTS.sample # There must be a better way to do this, oh well
-        destination = AIRPORTS.sample while origin == destination 
+        destination = AIRPORTS.sample while origin == destination # Make sure we didn't pick origin as destination
       end
+      arrival = params[:arrival] || (Settings.travel.airports_local.include? destination)  # set as arrival or departure
       purpose = params[:purpose] || TRAVEL_PURPOSES.sample
       guesthouse = params[:guesthouse] || GUESTHOUSES.sample
       flight = params[:flight] || FLIGHTS.sample
@@ -525,6 +526,7 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
       baggage = params[:baggage] || total_passengers*2
       t = member.travels.create(:date => date, :return_date => return_date,
                                 :origin => origin, :destination => destination,
+                                :arrival => arrival,
                                 :flight => flight,
                                 :purpose => purpose, :guesthouse => guesthouse,
                                 :with_spouse => with_spouse, :with_children => with_children,
@@ -639,31 +641,16 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
   def add_travels_for_field_terms
     FieldTerm.where("start_date > '1990-01-01'").each do |term|  # This assumes there are already terms defined!
       t = add_travel(term.member, :date=>term.start_date, :origin=>AIRPORTS_INTL.sample,
-            :destination=>AIRPORTS_NG.sample, :purpose=>'Begin term', :return_date=>nil)
+            :destination=>AIRPORTS_NG.sample, :purpose=>'Begin term', :return_date=>nil, :arrival=>true)
+            
       if term.end_date < Date::today
         add_travel(term.member, :date=>term.end_date, :destination=>AIRPORTS_INTL.sample,
-            :origin=>AIRPORTS_NG.sample, :purpose=>'Home assignment', :return_date=>nil)
+            :origin=>AIRPORTS_NG.sample, :purpose=>'Home assignment', :return_date=>nil, :arrival=>false)
       end      
 #      puts "Travel: member=#{term.member.name}, date=#{term.start_date}, #{t.errors}"
     end #FieldTerm.all.each
-  end # add ravels_for_field_terms
+  end # add travels_for_field_terms
       
-  def travel_print(t)
-    s = "*#{t.member.last_name}: #{t.origin}=>#{t.destination} #{t.date} "
-    s << "+spouse " if t.with_spouse
-    s << "+kids " if t.with_children
-    s << "GH = #{t.guesthouse}.\n"
-    s << "\tTtl passengers=#{t.total_passengers}, baggage=#{t.baggage}, other travelers=#{t.other_travelers}"
-    puts s
-  end  
-
-  def field_term_print(t)
-    puts "*#{t.member.last_name} #{t.start_date}--#{t.end_date}" 
-  end
- 
-  def contact_print(t)
-    puts "@#{t.member.last_name} (#{t.contact_type.description}): #{t.contact_name}, #{t.phone_1}"
-  end
   
 #  date             :date
 #  return_date      :date
@@ -694,14 +681,15 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
         if (return_date > date) 
           with_spouse = term.member.spouse_id && coin_toss
           purpose = TRAVEL_PURPOSES_NON_HA.sample
-          origin = AIRPORTS_NG.sample          
-          destination = AIRPORTS_INTL.sample
+          origin = rand<0.90 ? AIRPORTS_NG.sample : ''
+          destination = rand<0.90 ? AIRPORTS_INTL.sample : ''
           if (Date::today + 4.months) > date
             t = add_travel(term.member, :purpose=>purpose,
                 :date => date, :return_date => return_date,
                 :origin => origin, :destination=>destination,
                 :with_spouse => with_spouse, :with_children => with_spouse,
-                :other_passenger_count => [0,0,0,0,0,1,1,2].sample
+                :other_passenger_count => [0,0,0,0,0,1,1,2].sample,
+                :arrival => false
                 ) 
             last_trip_end = t.return_date 
 #travel_print(t)
@@ -710,7 +698,8 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
                   :date => return_date, :return_date => nil,
                   :origin => destination, :destination => origin,
                   :with_spouse => with_spouse, :with_children => with_spouse,
-                  :other_passenger_count => [0,0,0,0,0,1,1,2].sample
+                  :other_passenger_count => [0,0,0,0,0,1,1,2].sample,
+                  :arrival => true
                 )
 #travel_print(r)
             end
@@ -751,6 +740,23 @@ puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code
       end
     end
   end # add_some_contacts
+
+  def travel_print(t)
+    s = "*#{t.member.last_name}: #{t.origin}=>#{t.destination} #{t.date} "
+    s << "+spouse " if t.with_spouse
+    s << "+kids " if t.with_children
+    s << "GH = #{t.guesthouse}.\n"
+    s << "\tTtl passengers=#{t.total_passengers}, baggage=#{t.baggage}, other travelers=#{t.other_travelers}"
+    puts s
+  end  
+
+  def field_term_print(t)
+    puts "*#{t.member.last_name} #{t.start_date}--#{t.end_date}" 
+  end
+ 
+  def contact_print(t)
+    puts "@#{t.member.last_name} (#{t.contact_type.description}): #{t.contact_name}, #{t.phone_1}"
+  end
 
 end # module
 

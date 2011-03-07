@@ -20,6 +20,13 @@
           %li= link_to 'Pipeline',  :controller=>'application', :action=>'set_member_filter', :filter => :pipeline 
           %li= link_to 'Other',  :controller=>'application', :action=>'set_member_filter', :filter => :other 
           %li= link_to 'Clear filter',  :controller=>'application', :action=>'set_member_filter', :filter => :all 
+      %li 
+        Set travel filter
+        %ul
+          %li= link_to 'All current travel', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :current
+          %li= link_to 'Current arrivals', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :arrivals
+          %li= link_to 'Current departures', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :departures
+          %li= link_to 'Include past', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :all_dates
       %li= link_to "Sign out", signout_path, :method => :delete       
     %hr
     %ul.links

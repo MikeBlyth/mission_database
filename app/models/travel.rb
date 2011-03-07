@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110307141121
 #
 # Table name: travels
 #
@@ -20,6 +20,7 @@
 #  other_travelers  :string(255)
 #  with_spouse      :boolean(1)
 #  with_children    :boolean(1)
+#  arrival          :boolean(1)
 #
 
 class Travel < ActiveRecord::Base

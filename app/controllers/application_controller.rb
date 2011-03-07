@@ -20,7 +20,14 @@ class ApplicationController < ActionController::Base
     filter = params[:filter] ||= []
     session[:filter] = filter
     flash[:notice] = "Filter changed: now showing #{@@filter_notices[filter]}."
-      
+    redirect_to(request.referer)
+  end
+  
+  def set_travel_filter
+    filter = params[:travel_filter] ||= []
+    session[:travel_filter] = filter
+    flash[:notice] = "Filter changed: now showing #{@@filter_notices[filter]}."
+puts "**** Setting travel filter to #{filter}"
     redirect_to(request.referer)
   end
   
