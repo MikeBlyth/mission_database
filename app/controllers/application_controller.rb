@@ -8,10 +8,14 @@ class ApplicationController < ActionController::Base
   @@filter_notices = {
     'all' => "everyone",
     'active' => "active members",
-    'on_field' => "on field",
-    'home_assignment' => "on home assignment",
-    'ha_or_leave' => "on home assignment or leave",
+    'field' => "members on field",
+    'home_assignment' => "members on home assignment",
+    'home_assignment_or_leave' => "members on home assignment or leave",
     'pipeline' => "in pipeline",
+    'arrivals' => 'current arrivals',
+    'departures' => 'current departures',
+    'current' => 'current arrivals and departures',
+    'all_dates' => 'all travel including from the past',
     'other' => "other (alumni, retired, deceased, etc.)"
   }
 
@@ -19,15 +23,14 @@ class ApplicationController < ActionController::Base
   def set_member_filter
     filter = params[:filter] ||= []
     session[:filter] = filter
-    flash[:notice] = "Filter changed: now showing #{@@filter_notices[filter]}."
+    flash[:notice] = "Showing #{@@filter_notices[filter]}."
     redirect_to(request.referer)
   end
   
   def set_travel_filter
     filter = params[:travel_filter] ||= []
     session[:travel_filter] = filter
-    flash[:notice] = "Filter changed: now showing #{@@filter_notices[filter]}."
-puts "**** Setting travel filter to #{filter}"
+    flash[:notice] = "Showing #{@@filter_notices[filter]}."
     redirect_to(request.referer)
   end
   

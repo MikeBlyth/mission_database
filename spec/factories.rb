@@ -193,6 +193,7 @@ FactoryGirl.define do
     purpose 'Home assignment'
     origin 'Abuja'
     destination 'Charlotte'
+    arrival true
     guesthouse 'Baptist'
     baggage '2'
     total_passengers '1'
@@ -209,6 +210,7 @@ FactoryGirl.define do
     purpose ''
     origin 'London'
     destination 'Abuja'
+    arrival false
     guesthouse 'Baptist'
     baggage '3'
     total_passengers '1'

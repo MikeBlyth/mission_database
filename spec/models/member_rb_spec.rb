@@ -144,25 +144,20 @@ describe Member do
         married_woman.marry(married_man).should == married_man # This is just normal, valid, marriage to set up test
         # Single should not be able to marry married person
         @man.update_attributes(:spouse_id=>married_woman.id) # attempted 'marriage'
-        married_woman.reload  # since the database copy has been linked to spouse, but not local copy
-        married_man.spouse.should == married_woman  # making sure it wasn't changed or dropped along the way
-        married_woman.spouse.should == married_man
-        @man.spouse.should be_nil # i.e. the marriage didn't work
+        @man.errors[:spouse].should include "proposed spouse is already married"
       end
 
       it "cannot marry single person of same sex" do
         @man.update_attribute(:sex, "F")
         another_woman = @man  # just a way of getting a woman without creating a new database record
         @woman.update_attributes(:spouse_id=>another_woman.id) # The 'marriage'
-        @woman.spouse.should be_nil
-        another_woman.spouse.should be_nil
+        @woman.errors[:spouse].should include "spouse can't be same sex" 
       end
       
       it "cannot marry underage person" do
         @woman.update_attributes(:birth_date=> Date.yesterday)
         @man.update_attributes(:spouse_id=>@woman.id) # The 'marriage'
-        @man.spouse.should be_nil
-        @woman.spouse.should be_nil
+        @man.errors[:spouse].should include "spouse not old enough to be married" 
       end
  
     end # by setting spouse_id

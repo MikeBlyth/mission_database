@@ -55,6 +55,7 @@ class Member < ActiveRecord::Base
   validates_presence_of :last_name, :first_name, :name, :family_id
   validates_uniqueness_of :spouse_id, :allow_blank=>true
   validate :family_record_exists
+  validate :valid_spouse
   validates_uniqueness_of :name, :id
 
   after_initialize :inherit_from_family
@@ -102,6 +103,16 @@ class Member < ActiveRecord::Base
     #   it fails when id = nil, so we resort to Family.find_by_id(family_id)
     errors.add(:family, "must belong to an existing family") unless 
         family_id && Family.find_by_id(family_id)
+  end
+
+  def valid_spouse
+    return if self.spouse.nil? 
+    errors.add(:spouse, "spouse can't be same sex") if
+      self.sex == spouse.sex
+    errors.add(:spouse, "spouse not old enough to be married") if
+      (spouse.age_years || 99)< 16
+    errors.add(:spouse, "proposed spouse is already married") if
+      spouse.spouse_id && (spouse.spouse_id != self.id)
   end
 
   def country_name
@@ -166,6 +177,12 @@ class Member < ActiveRecord::Base
   # If we do it w/o any error checking, must be sure user can only assign a valid member as a spouse
   # (What if someone else deletes the spouse --- don't ever delete anyone :-)
     if !spouse_id.nil? && spouse.spouse_id != self.id
+#puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
+      if spouse.sex == self.sex
+        self.update_attribute(:spouse_id, nil)
+#puts "**** Same sex, spouse changed to #{self.spouse_id}"
+        return nil
+      end  
       spouse.spouse_id = self.id  # my spouse is married to me
       if self.male?
         husband = self

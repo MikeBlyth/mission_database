@@ -26,9 +26,8 @@ class TravelsController < ApplicationController
       when  'departures' then ['travels.arrival = FALSE AND travels.date >= (?)', Date::today]
       when  'all_dates'  then TRUE
       when  'current'    then ['travels.date >= (?)', Date::today]
-      else ['travels.date >= (?)', Date::today]
+      else ['travels.date >= (?)', Date::today] # This will include nil case where filter has not been set for session
     end
-puts "Travel selector = #{selector}"
     return selector
   end
   
