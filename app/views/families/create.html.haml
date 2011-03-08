@@ -38,8 +38,8 @@
     = form.label :status, "Status"
     - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
     = form.select(:status, status_choices)    
-    = form.label :location, "Location"
-    = form.select(:location, location_choices(@record[:location_id]))    
+    = form.label :residence_location, "Location"
+    = form.select(:residence_location, location_choices(@record[:residence_location_id]))    
 
   .actions
     = form.submit "Create"

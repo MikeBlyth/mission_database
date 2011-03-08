@@ -1,21 +1,21 @@
 # == Schema Information
-# Schema version: 20110213084018
+# Schema version: 20110308202950
 #
 # Table name: families
 #
-#  id            :integer(4)      not null, primary key
-#  head_id       :integer(4)
-#  status_id     :integer(4)      default(999999)
-#  location_id   :integer(4)      default(999999)
-#  created_at    :datetime
-#  updated_at    :datetime
-#  last_name     :string(255)
-#  first_name    :string(255)
-#  middle_name   :string(255)
-#  short_name    :string(255)
-#  name          :string(255)
-#  sim_id        :string(255)
-#  name_override :boolean(1)
+#  id                    :integer(4)      not null, primary key
+#  head_id               :integer(4)
+#  status_id             :integer(4)      default(999999)
+#  residence_location_id :integer(4)      default(999999)
+#  created_at            :datetime
+#  updated_at            :datetime
+#  last_name             :string(255)
+#  first_name            :string(255)
+#  middle_name           :string(255)
+#  short_name            :string(255)
+#  name                  :string(255)
+#  sim_id                :string(255)
+#  name_override         :boolean(1)
 #
 
 class Family < ActiveRecord::Base
@@ -25,7 +25,7 @@ class Family < ActiveRecord::Base
   has_many :members, :dependent => :delete_all
       # :delete_all is used so the members will be destroyed without any error checking
   belongs_to :status
-  belongs_to :location
+  belongs_to :residence_location, :class_name => "Location", :foreign_key => "residence_location_id"
   before_validation :set_indexed_name_if_empty
   validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
@@ -88,7 +88,7 @@ class Family < ActiveRecord::Base
  # debugger
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
-            :status=>status, :location=>location, :family =>self, :sex=>'M')
+            :status=>status, :residence_location=>residence_location, :family =>self, :sex=>'M')
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
   end
   

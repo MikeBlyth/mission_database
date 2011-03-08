@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110307141121) do
+ActiveRecord::Schema.define(:version => 20110308202950) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(:version => 20110307141121) do
 
   create_table "families", :force => true do |t|
     t.integer  "head_id"
-    t.integer  "status_id",     :default => 999999
-    t.integer  "location_id",   :default => 999999
+    t.integer  "status_id",             :default => 999999
+    t.integer  "residence_location_id", :default => 999999
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "last_name"
@@ -117,15 +117,15 @@ ActiveRecord::Schema.define(:version => 20110307141121) do
 
   create_table "field_terms", :force => true do |t|
     t.integer  "member_id"
-    t.integer  "location_id",          :default => 999999
-    t.integer  "ministry_id",          :default => 999999
+    t.integer  "primary_work_location_id", :default => 999999
+    t.integer  "ministry_id",              :default => 999999
     t.date     "start_date"
     t.date     "end_date"
     t.date     "est_start_date"
     t.date     "est_end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "employment_status_id", :default => 999999
+    t.integer  "employment_status_id",     :default => 999999
   end
 
   create_table "locations", :force => true do |t|
@@ -161,12 +161,12 @@ ActiveRecord::Schema.define(:version => 20110307141121) do
     t.date     "date_active"
     t.integer  "ministry_id",                   :default => 999999
     t.integer  "education_id",                  :default => 999999
-    t.integer  "location_id",                   :default => 999999
+    t.integer  "residence_location_id",         :default => 999999
     t.integer  "employment_status_id",          :default => 999999
     t.string   "name"
     t.boolean  "name_override"
     t.boolean  "child"
-    t.integer  "work_site_id"
+    t.integer  "work_location_id"
     t.string   "temporary_location"
     t.date     "temporary_location_from_date"
     t.date     "temporary_location_until_date"
@@ -236,7 +236,8 @@ ActiveRecord::Schema.define(:version => 20110307141121) do
     t.datetime "updated_at"
     t.string   "encrypted_password"
     t.string   "salt"
-    t.boolean  "admin",              :default => false
+    t.boolean  "admin",                 :default => false
+    t.string   "encrypted_db_password"
   end
 
   add_index "users", ["name"], :name => "index_users_on_name", :unique => true

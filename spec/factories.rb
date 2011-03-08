@@ -95,7 +95,7 @@ FactoryGirl.define do
 #    member_id 1
     member { |a| a.association :member }
     employment_status_id 5
-    location_id 26
+    primary_work_location_id 26
     ministry_id 6
     start_date '1 Jan 2008'
     end_date '31 Dec 2010'  

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110228132351
+# Schema version: 20110308202950
 #
 # Table name: members
 #
@@ -25,12 +25,12 @@
 #  date_active                   :date
 #  ministry_id                   :integer(4)      default(999999)
 #  education_id                  :integer(4)      default(999999)
-#  location_id                   :integer(4)      default(999999)
+#  residence_location_id         :integer(4)      default(999999)
 #  employment_status_id          :integer(4)      default(999999)
 #  name                          :string(255)
 #  name_override                 :boolean(1)
 #  child                         :boolean(1)
-#  work_site_id                  :integer(4)
+#  work_location_id              :integer(4)
 #  temporary_location            :string(255)
 #  temporary_location_from_date  :date
 #  temporary_location_until_date :date
@@ -48,8 +48,8 @@ class Member < ActiveRecord::Base
   belongs_to :bloodtype 
   belongs_to :education
   belongs_to :ministry
-  belongs_to :location
-  belongs_to :work_site, :class_name => "Location", :foreign_key => "work_site_id"
+  belongs_to :residence_location, :class_name => "Location", :foreign_key => "residence_location_id"
+  belongs_to :work_location, :class_name => "Location", :foreign_key => "work_location_id"
   belongs_to :employment_status
   belongs_to :status
   validates_presence_of :last_name, :first_name, :name, :family_id
@@ -84,8 +84,7 @@ class Member < ActiveRecord::Base
                   family_id && Family.find_by_id(family_id) # must belong to existing family
     self.last_name = family.last_name
     self.status = family.status
-    self.location = family.location
-#puts "**** Inherited from family; status_id = #{self.status_id}"
+    self.residence_location = family.residence_location
   end
 
   # Valid record must be linked to an existing family

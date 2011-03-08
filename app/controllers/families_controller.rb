@@ -5,17 +5,17 @@ class FamiliesController < ApplicationController
   
   active_scaffold :family do |config|
      list.sorting = {:name => 'ASC'}
-    config.columns = [:name, :name_override, :first_name, :last_name, :middle_name, :sim_id, :members, :location, :status]
+    config.columns = [:name, :name_override, :first_name, :last_name, :middle_name, :sim_id, :members, :residence_location, :status]
     update.columns.exclude :members 
     update.columns.exclude :members, :first_name, :last_name, :middle_name 
     create.columns.exclude :members
     list.columns.exclude  :name_override, :first_name, :last_name, :middle_name
     config.columns[:status].inplace_edit = true
-    config.columns[:location].inplace_edit = true
+    config.columns[:residence_location].inplace_edit = true
 #    config.update.link = false  # Do not include a link to "Edit" on each line
 #    config.delete.link = false  # Do not include a link to "Delete" on each line
     config.columns[:members].associated_limit = nil    # show all members, no limit to how many
-    config.columns[:location].form_ui = :select 
+    config.columns[:residence_location].form_ui = :select 
     config.columns[:status].form_ui = :select
     config.columns[:name].description = "This is the name by which the family will be known"
     config.columns[:first_name].description = "of individual or head of family"

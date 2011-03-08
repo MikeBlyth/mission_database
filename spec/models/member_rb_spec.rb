@@ -85,7 +85,7 @@ describe Member do
   it "copies inherited fields from family when new" do
     Factory(:city)
     @location = Factory(:location)
-    @family = Factory(:family, :status=>@status, :location=>@location)
+    @family = Factory(:family, :status=>@status, :residence_location=>@location)
     @member = new_family_member
     @member.last_name.should == @family.last_name
     @member.status.should == @family.status
@@ -98,7 +98,7 @@ describe Member do
     new_status = Factory(:status)
     city=Factory(:city)
     new_location = Factory(:location)
-    @member.update_attributes(:status=>new_status, :location=>new_location, :last_name=>new_last_name)
+    @member.update_attributes(:status=>new_status, :residence_location=>new_location, :last_name=>new_last_name)
     retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
     retrieved.last_name.should == new_last_name
     retrieved.status.should == new_status

@@ -1,0 +1,12 @@
+%h1 Edit Member #{@member.name}
+= form_for(@member) do |f| 
+  .field
+    = f.label :name
+    %br
+    = f.text_field :name 
+    = f.label :residence_location
+    = f.text_field :residence_location
+    = f.label :work_location
+    = f.text_field :work_location
+  .actions
+    = f.submit "Create"

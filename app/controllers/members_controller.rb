@@ -11,7 +11,7 @@ class MembersController < ApplicationController
 
     config.label = "Members"
     list.columns = [:name, 
-          :birth_date, :spouse, :family, :country_name, :status, :contacts, :travels, :field_terms]
+          :birth_date, :spouse, :residence_location, :country_name, :status, :contacts, :travels, :field_terms]
     list.columns.exclude :travel,
                           :bloodtype, :allergies, :medical_facts, :medications
     config.columns[:name].sort_by :sql
@@ -24,13 +24,28 @@ class MembersController < ApplicationController
           :country_name,
           :date_active, :status, :employment_status,
           :ministry, :ministry_comment, 
-          :location, :work_site, :temporary_location, :temporary_location_from_date, :temporary_location_until_date,
+          :residence_location, :work_location, :temporary_location, :temporary_location_from_date, :temporary_location_until_date,
           :education, :qualifications,
           :contacts, :field_terms, :travels,
           :bloodtype, :allergies, :medications
           ]
     show.columns.exclude    :last_name, :first_name, :middle_name, :short_name, :name_override
     update.columns.exclude :family_name
+ 
+    update.columns = [:name, :name_override,
+          :last_name, :first_name, :middle_name, :short_name, :sex,
+          :birth_date, :spouse, 
+          :family_name,
+          :country_name,
+          :date_active, :status, :employment_status,
+          :ministry, :ministry_comment, 
+          :residence_location, :work_location,
+          :temporary_location, :temporary_location_from_date, :temporary_location_until_date,         
+          :education, :qualifications,
+          :bloodtype, :allergies, :medications,
+          :contacts, :travels,
+           ]
+ 
     create.columns.exclude :family_name
     config.columns[:country].actions_for_association_links = []
     config.columns[:country].css_class = :hidden
@@ -44,9 +59,7 @@ class MembersController < ApplicationController
     config.columns[:ministry].form_ui = :select 
     config.columns[:status].form_ui = :select 
     config.columns[:employment_status].form_ui = :select 
-    config.columns[:location].form_ui = :select 
-    config.columns[:location].label = 'Residence location' 
-    config.columns[:work_site].label = 'Work location' 
+    config.columns[:residence_location].form_ui = :select 
     config.columns[:status].inplace_edit = true
     config.columns[:field_terms].collapsed = true
     config.columns[:travels].collapsed = true
@@ -60,7 +73,7 @@ class MembersController < ApplicationController
    config.actions.exclude :search
    config.actions.add :field_search
    config.field_search.human_conditions = true
-   config.field_search.columns = [:last_name]#, :location, :birth_date, :bloodtype, :status]
+   config.field_search.columns = [:last_name]#, :residence_location, :birth_date, :bloodtype, :status]
    config.create.link.page = false 
   end
 
@@ -100,7 +113,7 @@ class MembersController < ApplicationController
                               :status => head.status,
                               :date_active => head.date_active,
                               :employment_status => head.employment_status,
-                              :location => head.location )
+                              :residence_location => head.location )
         @headline = "Add Spouse for #{head.full_name}"
       elsif params[:type] == 'child'
         @record = Member.new( :family => family,
@@ -108,7 +121,7 @@ class MembersController < ApplicationController
                               :country_id => head.country_id,
                               :status => head.status,
                               :date_active => head.date_active,
-                              :location => head.location )
+                              :residence_location => head.location )
         @headline = "Add Child for #{head.full_name}"
       end  
 
@@ -185,7 +198,11 @@ puts "@json_resp = #{@json_resp}"
     end
   end
 
-
+  def do_update
+    puts "**** do_update: params=#{params}"
+    super
+    puts "**** do_update after super: params=#{params}"
+  end
 # Generate a filter string for use in Member.where(conditions_for_collection)...
 # The twist is that we have to use member.status_id in the search string since ActiveScaffold
 # is not doing a joined search and we don't have access to the status_code at the time of the 

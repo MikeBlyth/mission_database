@@ -57,7 +57,7 @@ describe Family do
 
   it "creates a corresponding family head in the members table" do
     city=Factory.create(:city)
-    @family.location = Factory.create(:location)
+    @family.residence_location = Factory.create(:location)
     @family.status = Factory.create(:status)
     @family.save!    # has to be saved in order to create the member
     head = @family.head

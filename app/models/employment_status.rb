@@ -13,10 +13,12 @@
 
 class EmploymentStatus < ActiveRecord::Base
 has_many :members, :foreign_key => "employment_status_id"
+has_many :field_terms
+
 include ModelHelper
 
   validates_presence_of :description, :code
-    validates_uniqueness_of :code, :description
+  validates_uniqueness_of :code, :description
 
   def to_label
     "#{description}"
