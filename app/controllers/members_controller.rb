@@ -45,6 +45,8 @@ class MembersController < ApplicationController
     config.columns[:status].form_ui = :select 
     config.columns[:employment_status].form_ui = :select 
     config.columns[:location].form_ui = :select 
+    config.columns[:location].label = 'Residence location' 
+    config.columns[:work_site].label = 'Work location' 
     config.columns[:status].inplace_edit = true
     config.columns[:field_terms].collapsed = true
     config.columns[:travels].collapsed = true

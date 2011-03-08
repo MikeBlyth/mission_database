@@ -11,6 +11,20 @@ module MembersHelper
     end  
   end
 
+  def location_form_column(record, params)
+    result = "<select id='record_location' name='record[location]' class='location-input'>"
+    result << location_choices(@record[:location_id])
+    result << "</select>"
+    return raw(result) 
+  end
+
+  def work_site_form_column(record, params)
+    result = "<select id='record_work_site' name='record[work_site]' class='work_site-input'>"
+    result << location_choices(@record[:work_site_id])
+    result << "</select>"
+    return raw(result) 
+  end
+
   def spouse_form_column(record,params)
     # Generate the select input ourselves
     result = "<select id='record_spouse' name='record[spouse]' class='spouse-input'>" + 
