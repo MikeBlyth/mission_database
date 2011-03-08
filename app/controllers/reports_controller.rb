@@ -97,6 +97,8 @@ class ReportsController < ApplicationController
     return ['members.status_id IN (?)', matches]
   end
   
+  # Return starting date for calendar. If the date is not specified in params,
+  #    use the first of the next month.
   def date_for_calendar
     if params[:date].respond_to?(:month)
       date = params[:date]
@@ -107,12 +109,13 @@ class ReportsController < ApplicationController
     return date
   end
 
+  # Set up a new calendar object using parameters supplied in params, or defaults
   def calendar_setup
     date = date_for_calendar
     page_size = params[:page_size] || Settings.reports.page_size
     page_layout = params[:page_layout] || :landscape
     box = params[:box] || false
-    title = "#{Date::MONTHNAMES[date.month]} #{date.year.to_s}"
+    title = params[:title] || "#{Date::MONTHNAMES[date.month]} #{date.year.to_s}"
     title << " [filter = #{session[:filter]}]"
     return CalendarMonthPdf.new(:title=>title, :date=>date, :page_size=>page_size, :page_layout=>page_layout, :box=>box)
   end
@@ -135,31 +138,72 @@ class ReportsController < ApplicationController
     end
   end
  
-  # Test showing how to generate tables with Prawn
-   def tabletest
-    selected = Member.select("family_id, last_name, first_name, bloodtype_id, status_id")
-    selected = selected.delete_if{|x| !x.on_field || x.bloodtype_id.nil? }   # delete members not on the field
-    output = TableTest.new.to_pdf(selected,"Includes only those currently on the field")
+  def travel_calendar
+    # Set up the calendar form for right month (page size, titles, etc.)
+    calendar = calendar_setup
+       
+    # Select the people born this month and to put on the calendar
+    travel_data = travel_calendar_data({:date=>date_for_calendar})
+
+    # Actually print the strings
+    calendar.put_data_into_days(travel_data)
 
     respond_to do |format|
       format.pdf do
-        send_data output, :filename => "tabletest.pdf", 
+        send_data calendar.render, :filename => "travel_calendar.pdf", 
                           :type => "application/pdf"
       end
     end
   end
 
-  # Test showing how to use multi-column layout with Prawn and our own (temporary?) flow_in_columns method
-   def multi_col_test
-    output = MultiColumnTest.new.to_pdf()
+  def birthday_travel_calendar
+    # Set up the calendar form for right month (page size, titles, etc.)
+    calendar = calendar_setup
+       
+    # Select the people born this month and to put on the calendar
+    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
+
+    # Select the people born this month and to put on the calendar
+    travel_data = travel_calendar_data({:date=>date_for_calendar})
+
+    # Actually print the strings
+    merged = merge_calendar_data([travel_data, birthday_data])
+    calendar.put_data_into_days(merged)
 
     respond_to do |format|
       format.pdf do
-        send_data output, :filename => "test.pdf", 
+        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
                           :type => "application/pdf"
       end
     end
   end
+ 
+ 
+#  # Test showing how to generate tables with Prawn
+#   def tabletest
+#    selected = Member.select("family_id, last_name, first_name, bloodtype_id, status_id")
+#    selected = selected.delete_if{|x| !x.on_field || x.bloodtype_id.nil? }   # delete members not on the field
+#    output = TableTest.new.to_pdf(selected,"Includes only those currently on the field")
+
+#    respond_to do |format|
+#      format.pdf do
+#        send_data output, :filename => "tabletest.pdf", 
+#                          :type => "application/pdf"
+#      end
+#    end
+#  end
+
+#  # Test showing how to use multi-column layout with Prawn and our own (temporary?) flow_in_columns method
+#   def multi_col_test
+#    output = MultiColumnTest.new.to_pdf()
+
+#    respond_to do |format|
+#      format.pdf do
+#        send_data output, :filename => "test.pdf", 
+#                          :type => "application/pdf"
+#      end
+#    end
+#  end
 
 private
 
@@ -181,6 +225,36 @@ private
     return data
   end # birthday_calendar_data
 
+  # Generate data structure for travel to insert into calendar
+  def travel_calendar_data(params={})
+    prefixes = {true=>Settings.reports.travel_calendar.arrival_prefix, false=>Settings.reports.travel_calendar.departure_prefix}
+    starting_date = params[:date]
+    selected = Travel.where("date > ? and date < ?", starting_date, starting_date.next_month).order("date ASC")
+    # Make a hash like { 1 => {:text=>"AR: John Doe\nDP: Mary Smith"}, 8 => {:text=>"AR: Adam Smith\n"}}
+    data = {} 
+    selected.each do |trip|
+      data[trip.date.day] ||= {:text=>''}
+      data[trip.date.day][:text] << prefixes[trip.arrival?] + trip.member.full_name_short + "\n" 
+    end
+    return data
+  end # travel_calendar_data
 
+  def merge_calendar_data(data_hashes)
+    merged = {}
+    data_hashes.each do |data_hash|
+      data_hash.each do |date, content|
+        merged[date] ||= {:text=>''}
+        content.each do |key, value|  # Remember content is a hash with text plus options
+          if key == :text
+            merged[date][:text] << value
+          else
+            merged[date][key] ||= value  # Idea here is to set the parameter only once, first come first saved
+          end    
+        end # of each element in content for this date in this data_hash
+      end  # of data_hash.each, handling a single list such as the travel data  
+    end  # of data_hashes.each, handling the whole set of data to be merged
+    return merged
+  end # of merge_calendar_data
+  
 
 end

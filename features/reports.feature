@@ -38,4 +38,11 @@ Feature: report generation
     Then I should get a "Travel" PDF report
     And the report should include the "travel" information
 
+  Scenario: Generate birthday calendar
+    Given that I am signed in
+    And I click on "Reports"
+    When I click on "Travel calendar" 
+    Then I should get a "{next month}" PDF report
+
+
   

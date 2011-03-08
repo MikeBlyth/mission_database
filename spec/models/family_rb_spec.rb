@@ -78,12 +78,12 @@ describe Family do
     Family.count.should == 0        
   end
 
-  it "can be deleted while it contains members" do
+  it "can be deleted while it contains spouse" do
     @family.save!
     head = @family.head
     Family.count.should == 1
     Member.count.should == 1
-    spouse = Factory(:member, :family=>@family, :spouse=> head)
+    spouse = Factory(:member, :family=>@family, :spouse=> head, :sex=>head.other_sex)
     @family.destroy
     Family.count.should == 0
     Member.count.should == 0
@@ -111,7 +111,7 @@ describe Family do
       @family.children.each do |c|
         c.birth_date.should > last_birth_date
         last_birth_date = c.birth_date
-        puts "Child=#{c.first_name}, #{c.birth_date}"
+# puts "**** Child=#{c.first_name}, #{c.birth_date}"
       end
     end
 

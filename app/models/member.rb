@@ -142,6 +142,14 @@ class Member < ActiveRecord::Base
      return self.male_female == :female
    end
      
+   def other_sex
+     case self.sex
+       when 'M', 'm' then 'F'
+       when 'F', 'f' then 'M'
+       else              nil
+     end  
+   end  
+
    def spouse_name
      return nil unless self.spouse
      self.spouse.name

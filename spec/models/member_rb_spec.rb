@@ -120,6 +120,15 @@ describe Member do
     @head.male_female.should be_nil
   end  
 
+  it 'returns "other sex"' do
+    @head.update_attribute(:sex,'M')
+    @head.other_sex.should == 'F'    
+    @head.update_attribute(:sex,'F')
+    @head.other_sex.should == 'M'    
+    @head.update_attribute(:sex,nil)
+    @head.other_sex.should be_nil    
+  end
+
   describe "marrying: " do
 
     before(:each) do

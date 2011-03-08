@@ -8,8 +8,11 @@ defaults: &defaults
     page_size: 'A4'
     birthday_calendar:
       birthday_prefix: 'BD: '
+    travel_calendar:
+      arrival_prefix: 'AR: '
+      departure_prefix: 'DP: '  
   screen:
-  rows_per_screen_page: 20
+    rows_per_screen_page: 20
   travel:
     # Travel to these airports will be reported as arrivals, from them = departures.
     airports_local: ['Kano', 'Lagos', 'Abuja']
