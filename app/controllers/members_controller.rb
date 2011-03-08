@@ -14,7 +14,8 @@ class MembersController < ApplicationController
           :birth_date, :spouse, :family, :country_name, :status, :contacts, :travels, :field_terms]
     list.columns.exclude :travel,
                           :bloodtype, :allergies, :medical_facts, :medications
-    list.sorting = {:name => 'ASC'}
+    config.columns[:name].sort_by :sql
+    config.list.sorting = {:name => 'ASC'}
     show.columns = create.columns = update.columns = 
         [ :name, :name_override,
           :last_name, :first_name, :middle_name, :short_name, :sex,

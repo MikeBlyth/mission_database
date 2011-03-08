@@ -41,13 +41,12 @@ end
 def location_choices(selected=999999)
 cities = City.where(true).order('name')
 return option_groups_from_collection_for_select(cities, :locations_sorted, :name, :id, :description, selected)
-  selections =  Location.select("id, city_id, description")
-  hashed_locations = []
-  selections.each do | selection |
-    hashed_locations << {:id => selection.id, :city=>selection.city.name, :description => selection.description}
-  end
-  options_for_select_with_grouping(hashed_locations, :city, selected)
-  
+#  selections =  Location.select("id, city_id, description")
+#  hashed_locations = []
+#  selections.each do | selection |
+#    hashed_locations << {:id => selection.id, :city=>selection.city.name, :description => selection.description}
+#  end
+#  options_for_select_with_grouping(hashed_locations, :city, selected)
 end
 
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on
