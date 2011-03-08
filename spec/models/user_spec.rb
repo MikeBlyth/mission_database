@@ -175,5 +175,19 @@ describe User do
     end
   end # "admin attribute" 
 
+  describe "database password" do
+
+    before(:each) do
+      @user = User.create!(@attr)
+      @db_password = "secret password"
+    end
+
+    it "should store database password" do
+      @user.reload
+      @user.encrypted_db_password.should == @db_password
+    end
+        
+  end
+  
 end
 

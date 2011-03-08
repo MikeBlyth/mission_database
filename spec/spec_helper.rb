@@ -71,7 +71,7 @@ Spork.prefork do
 end # Spork.prefork
 
 Spork.each_run do
-  load Rails.root+'app/models/member.rb'
+  load Rails.root+'app/models/user.rb'
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by
         # signing out before this group of tests.

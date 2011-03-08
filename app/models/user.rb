@@ -1,16 +1,17 @@
 # == Schema Information
-# Schema version: 20110228132351
+# Schema version: 20110308084653
 #
 # Table name: users
 #
-#  id                 :integer(4)      not null, primary key
-#  name               :string(255)
-#  email              :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#  encrypted_password :string(255)
-#  salt               :string(255)
-#  admin              :boolean(1)
+#  id                    :integer(4)      not null, primary key
+#  name                  :string(255)
+#  email                 :string(255)
+#  created_at            :datetime
+#  updated_at            :datetime
+#  encrypted_password    :string(255)
+#  salt                  :string(255)
+#  admin                 :boolean(1)
+#  encrypted_db_password :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -37,6 +38,13 @@ class User < ActiveRecord::Base
 
   before_validation :insert_dummy_password_if_blank                     
   before_save :encrypt_password
+  before_validation :encrypt_db_password
+
+
+  def encrypt_db_password
+    self.encrypted_db_password = 'secret password'
+  end
+
 
   # How to allow updates to work when the password fields are blank (meaning password does not change)
   def insert_dummy_password_if_blank

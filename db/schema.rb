@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110307141121) do
+ActiveRecord::Schema.define(:version => 20110308084653) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -236,7 +236,8 @@ ActiveRecord::Schema.define(:version => 20110307141121) do
     t.datetime "updated_at"
     t.string   "encrypted_password"
     t.string   "salt"
-    t.boolean  "admin",              :default => false
+    t.boolean  "admin",                 :default => false
+    t.string   "encrypted_db_password"
   end
 
   add_index "users", ["name"], :name => "index_users_on_name", :unique => true
