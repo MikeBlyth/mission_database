@@ -72,6 +72,8 @@ class ReportsController < ApplicationController
     end
   end
 
+   # 
+   # TODO Does this actually have to be here duplicating the one in members_controller?
    def conditions_for_collection
     status_groups = {'active' => %w( field home_assignment mkfield),
                 'field' => %w( field mkfield visitor),
@@ -95,48 +97,39 @@ class ReportsController < ApplicationController
     return ['members.status_id IN (?)', matches]
   end
   
-  def birthday_calendar
-    # Settings
-    page_size = params[:page_size] || Settings.reports.page_size
+  def date_for_calendar
     if params[:date].respond_to?(:month)
       date = params[:date]
     else
       next_m = Date::today().next_month
       date = Date.new(next_m.year, next_m.month, 1)
     end
-    page_layout = params[:page_layout] || :landscape
-    box = params[:box] || true
-    prefix = Settings.reports.birthday_calendar.birthday_prefix # Something like "BD: " or icon of a cake, to precede each name
+    return date
+  end
 
-    # Select the people born this month and to put on the calendar
+  def calendar_setup
+    date = date_for_calendar
+    page_size = params[:page_size] || Settings.reports.page_size
+    page_layout = params[:page_layout] || :landscape
+    box = params[:box] || false
     title = "#{Date::MONTHNAMES[date.month]} #{date.year.to_s}"
     title << " [filter = #{session[:filter]}]"
-    selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, birth_date, short_name, status_id")
-    calendar = CalendarMonthPdf.new(:title=>title, :date=>date, :page_size=>page_size, :page_layout=>page_layout, :box=>box)
+    return CalendarMonthPdf.new(:title=>title, :date=>date, :page_size=>page_size, :page_layout=>page_layout, :box=>box)
+  end
 
-    # Make a hash like { 1 => "BD: John Doe\nBD: Mary Smith", 8 => "BD: Adam Smith\n"}
-    msg = {} 
-    selected.each do |m|
-      puts m.attributes
-      if m.birth_date && (m.birth_date.month == 3 ) # Select people who were born in this month
-        msg[m.birth_date.day] ||= ''
-        msg[m.birth_date.day] << prefix + m.full_name_short + "\n" 
-      end
-    end
+  def birthday_calendar
+    # Set up the calendar form for right month (page size, titles, etc.)
+    calendar = calendar_setup
+       
+    # Select the people born this month and to put on the calendar
+    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
 
     # Actually print the strings
-    msg.each do |day,names|  # For each day with birthdays, print the names list. 
-        calendar.in_day(day) do
-          calendar.move_down 11
-          calendar.text names, :align=> :left, :valign=>:top, :size=>8
-        end
-    end    
-    # calendar.in_day(1) {calendar.text "1"} # Just an example of how to write text in the box
-    # calendar.in_day(20) {calendar.stroke_bounds} # Just an example of drawing a box inside the calendar date box
+    calendar.put_data_into_days(birthday_data)
 
     respond_to do |format|
       format.pdf do
-        send_data calendar.render, :filename => "calendar.pdf", 
+        send_data calendar.render, :filename => "birthday_calendar.pdf", 
                           :type => "application/pdf"
       end
     end
@@ -167,4 +160,27 @@ class ReportsController < ApplicationController
       end
     end
   end
+
+private
+
+  # Generate data structure for birthdays to insert into calendar
+  def birthday_calendar_data(params={})
+    prefix = Settings.reports.birthday_calendar.birthday_prefix # Something like "BD: " or icon of a cake, to precede each name
+    month = params[:month] || 1
+    selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, birth_date, short_name, status_id")
+
+    # Make a hash like { 1 => {:text=>"BD: John Doe\nBD: Mary Smith"}, 8 => {:text=>"BD: Adam Smith\n"}}
+    # Using the inner hash leaves us room to add options/parameters in the future
+    data = {} 
+    selected.each do |m|
+      if m.birth_date && (m.birth_date.month == month ) # Select people who were born in this month
+        data[m.birth_date.day] ||= {:text=>''}
+        data[m.birth_date.day][:text] << prefix + m.full_name_short + "\n" 
+      end
+    end
+    return data
+  end # birthday_calendar_data
+
+
+
 end

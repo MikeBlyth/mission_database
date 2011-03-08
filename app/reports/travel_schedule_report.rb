@@ -1,7 +1,7 @@
 # require 'prawn_extend'
 require 'reports_helper'
 
-# Prawn document to generate PDF for blood types
+# Prawn document to generate PDF for travel schedule
 class TravelScheduleReport < Prawn::Document
 include ReportsHelper
     def to_pdf(selected,params={})
@@ -27,10 +27,11 @@ include ReportsHelper
       text_data << " #{travel.member.last_name}" 
       text_data << " w kids" if travel.with_children 
       text_data << ": "
-      if Settings.travel.airports_local.include?(travel.origin)
-        text_data << "Dep #{travel.origin} to #{travel.destination}"
-      else
+#      if !Settings.travel.airports_local.include?(travel.origin)
+      if travel.arrival?
         text_data << "Arr #{travel.destination} from #{travel.origin}"
+      else
+        text_data << "Dep #{travel.origin} to #{travel.destination}"
       end 
       text_data << " on #{travel.flight}" if travel.flight
       text_data << " with #{travel.other_travelers}" if travel.other_travelers

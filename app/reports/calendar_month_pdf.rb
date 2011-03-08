@@ -87,6 +87,22 @@ include ReportsHelper
     # 
     alias in_day in_box_for_day    
 
+    # Use a hash structure to put data into days on the calendar. For each element of the hash,
+    # the key is the date and the value is another hash to include text and any other parameters
+    # Example:
+    # {25 => {:text=>'Christmas', :align=>:center, :valign=>:center, :font_size=>12}, 31=>{:text=>"New Year's Eve"} }
+    def put_data_into_days(data_hash)
+      data_hash.each do |day, data|  
+        align = data[:align] || :left
+        valign = data[:valign] || :top
+        font_size = data[:font_size] || 8
+        self.in_day(day) do  # in_day(day) puts us into the right box
+          self.move_down 11
+          self.text data[:text], :align=> align, :valign=>valign, :size=>font_size
+        end
+      end # each data_hash
+    end # put_data_into_days(data_hash)
+
 private
 
     # For any date, find where it goes (zero-based row & column) in a one-month calendar of that month
