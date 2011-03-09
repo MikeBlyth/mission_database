@@ -22,6 +22,7 @@ module MembersHelper
   def work_location_form_column(record, params)
     result = "<select id='record_work_location' name='record[work_location]' class='work_location-input'>"
     result << location_choices(@record[:work_location_id])
+#puts "**** #{@record[:work_location_id]}, #{@record.attributes}, record--#{record[:work_location_id]}, #{record.attributes}"
     result << "</select>"
     return raw(result) 
   end

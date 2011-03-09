@@ -8,7 +8,7 @@ describe Family do
   it "has the right 'unspecified' defaults when created" do
     m = Family.new
     m.status_id.should == 999999
-    m.location_id.should == 999999
+    m.residence_location_id.should == 999999
     m.sim_id.should == nil
   end    
 
@@ -65,7 +65,7 @@ describe Family do
     head.family.should == @family
     head.name.should == @family.name
     head.status.should == @family.status
-    head.location.should == @family.location
+    head.residence_location.should == @family.residence_location
   end
   
   it "can be deleted when it contains no members" do

@@ -14,7 +14,7 @@ class Member
             :birth_date => '1980-01-01',
             :country_id => 1,
             :status => Status.first,
-            :location => Location.first,
+            :residence_location => Location.first,
             :date_active => '2005-01-01',
             :employment_status_id => 1,
             :ministry_id => 1,

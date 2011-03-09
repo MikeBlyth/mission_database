@@ -40,7 +40,7 @@ describe Member do
     m.ministry_id.should == 999999
     m.education_id.should == 999999
     m.employment_status_id.should == 999999
-    m.location_id.should == 999999
+    m.residence_location_id.should == 999999
   end    
 
   it "makes a 'name' (full name) by default" do
@@ -89,7 +89,7 @@ describe Member do
     @member = new_family_member
     @member.last_name.should == @family.last_name
     @member.status.should == @family.status
-    @member.location.should == @family.location
+    @member.residence_location.should == @family.residence_location
     
   end
   
@@ -102,7 +102,7 @@ describe Member do
     retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
     retrieved.last_name.should == new_last_name
     retrieved.status.should == new_status
-    retrieved.location.should == new_location
+    retrieved.residence_location.should == new_location
   end
 
   it 'male_female reports sex as :male if male' do

@@ -2,7 +2,7 @@
   include SimTestHelper
     
   def construct_family
-    @family = Factory.create(:family, :status=>@status, :location=>@location)
+    @family = Factory.create(:family, :status=>@status, :residence_location=>@location)
     @head = @family.head
   end
 
@@ -208,7 +208,7 @@ Then /^I should see a valid form for updating a family$/ do
 #  find_field("First name").value.should == @family.first_name
   find_field("SIM").value.should == @family.sim_id.to_s
   find_field("Status").value.should == @family.status_id.to_s
-  find_field("Location").value.should == @family.location_id.to_s
+  find_field("Location").value.should == @family.residence_location_id.to_s
 end
 
 Given /^a form filled in for a new family$/ do
@@ -246,7 +246,7 @@ Then /^I should see a valid form for a new family$/ do
   find_field("SIM").value.blank?.should be true
 #  find_field("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
   find_field("record_status").value.should == "999999"
-  find_field("record_location").value.should == "999999"
+  find_field("record_residence_location").value.should == "999999"
   page.should have_content "Create a New Individual or Family"
   page.should have_content "Click to allow editing"
   page.should have_selector "input", :id=> 'record_name' 
@@ -256,7 +256,7 @@ Then /^I should see a customized form for a new family$/ do
 #  find_field("First name").value.should == @family.first_name
 #  find_field("SIM").value.should == @family.sim_id.to_s
 #  find_field("Status").value.should == @family.status_id.to_s
-#  find_field("Location").value.should == @family.location_id.to_s
+#  find_field("residence_location").value.should == @family.residence_location_id.to_s
 end
 
 Then /^I should see a button for adding a spouse$/ do
@@ -276,7 +276,7 @@ Given /^that I am updating a family$/ do
   construct_family
   @head.add_details
   @head.status_id.should == @status.id
-  @head.location_id.should == @location.id
+  @head.residence_location_id.should == @location.id
   visit edit_family_path :id=>@family.id
 end
 
@@ -300,7 +300,7 @@ Then /^the form should be pre\-set to add a spouse$/ do
   find_field("Country name").value.should == @head.country.name
 #  find_field("Date active").value.should == @head.date_active
   find_field("Status").value.to_s.should == @head.status_id.to_s
-  find_field("Location").value.to_s.should == @head.location_id.to_s
+  find_field("record[residence_location]").value.to_s.should == @head.residence_location_id.to_s
 end
 
 Then /^the form should be pre\-set to add a child$/ do
@@ -311,7 +311,7 @@ Then /^the form should be pre\-set to add a child$/ do
   find_field("Country name").value.should == @head.country.name
 #  find_field("Date active").value.should == @head.date_active
   find_field("Status").value.to_s.should == @head.status_id.to_s
-  find_field("Location").value.to_s.should == @head.location_id.to_s
+  find_field("record[residence_location]").value.to_s.should == @head.residence_location_id.to_s
 end
 
 Given /^I am viewing the family list$/ do

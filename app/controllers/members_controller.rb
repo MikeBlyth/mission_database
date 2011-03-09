@@ -11,9 +11,7 @@ class MembersController < ApplicationController
 
     config.label = "Members"
     list.columns = [:name, 
-          :birth_date, :spouse, :residence_location, :country_name, :status, :contacts, :travels, :field_terms]
-    list.columns.exclude :travel,
-                          :bloodtype, :allergies, :medical_facts, :medications
+          :spouse, :residence_location, :work_location, :country_name, :status, :contacts]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = create.columns = update.columns = 
@@ -59,7 +57,9 @@ class MembersController < ApplicationController
     config.columns[:ministry].form_ui = :select 
     config.columns[:status].form_ui = :select 
     config.columns[:employment_status].form_ui = :select 
-    config.columns[:residence_location].form_ui = :select 
+  #  config.columns[:residence_location].form_ui = :select 
+    config.columns[:residence_location].inplace_edit = true
+    config.columns[:work_location].inplace_edit = true
     config.columns[:status].inplace_edit = true
     config.columns[:field_terms].collapsed = true
     config.columns[:travels].collapsed = true
@@ -113,7 +113,7 @@ class MembersController < ApplicationController
                               :status => head.status,
                               :date_active => head.date_active,
                               :employment_status => head.employment_status,
-                              :residence_location => head.location )
+                              :residence_location => head.residence_location )
         @headline = "Add Spouse for #{head.full_name}"
       elsif params[:type] == 'child'
         @record = Member.new( :family => family,
@@ -121,7 +121,7 @@ class MembersController < ApplicationController
                               :country_id => head.country_id,
                               :status => head.status,
                               :date_active => head.date_active,
-                              :residence_location => head.location )
+                              :residence_location => head.residence_location )
         @headline = "Add Child for #{head.full_name}"
       end  
 
@@ -198,11 +198,6 @@ puts "@json_resp = #{@json_resp}"
     end
   end
 
-  def do_update
-    puts "**** do_update: params=#{params}"
-    super
-    puts "**** do_update after super: params=#{params}"
-  end
 # Generate a filter string for use in Member.where(conditions_for_collection)...
 # The twist is that we have to use member.status_id in the search string since ActiveScaffold
 # is not doing a joined search and we don't have access to the status_code at the time of the 
