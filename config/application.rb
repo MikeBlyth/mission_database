@@ -38,7 +38,10 @@ module SIM
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password]
+    config.filter_parameters += [:password, :password_confirmation] # these are included by default anyway
+    config.filter_parameters += [:medical_facts, :medications, :blood_type, :blood_type_id] # these are included by default anyway
+    config.filter_parameters += [:passport, :passport_number] # these are included by default anyway
+    
   
     # autoload everything in the /lib path  
     config.autoload_paths += %W(#{Rails.root}/app/validators)
