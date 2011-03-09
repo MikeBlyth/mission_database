@@ -99,7 +99,14 @@ describe User do
     it "should reject passwords containing the user email (case insensitive)" do
       set_password(@user, @user.email.upcase).should_not be_valid
       set_password(@user, @user.email.upcase[1..6]).should_not be_valid
-      
+    end
+
+    it "should reject passwords containing only numbers" do
+      set_password(@user, '123454382').should_not be_valid
+    end
+
+    it "should accept passwords with DOUBLE characters" do
+      set_password(@user, 'bbcddffaa').should be_valid
     end
 
     it "should reject passwords containing repeated characters" do
@@ -173,6 +180,13 @@ describe User do
       @user.toggle!(:admin)
       @user.should be_admin
     end
+
+    it "cannot delete the last admin user" do
+      @user.toggle!(:admin)
+      @user.destroy.should be_false
+    end
+    
+
   end # "admin attribute" 
 
 end

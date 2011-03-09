@@ -38,6 +38,15 @@ class User < ActiveRecord::Base
 
   before_validation :insert_dummy_password_if_blank                     
   before_save :encrypt_password
+  before_destroy :do_not_delete_last_admin
+  
+  def do_not_delete_last_admin
+    if User.find_all_by_admin(true) == [self]
+      errors[:delete] << 'Cannot delete last administrator' 
+      return false
+    end
+    return true
+  end  
 
   # How to allow updates to work when the password fields are blank (meaning password does not change)
   def insert_dummy_password_if_blank
@@ -53,6 +62,7 @@ class User < ActiveRecord::Base
     errors.add('password','cannot contain your email address') if password =~ Regexp.new(email, true)
     errors.add('password','cannot contain your email address') if email =~ Regexp.new(password, true)
     errors.add('password','cannot contain repeated characters') if password =~ /(\w)\1\1/
+    errors.add('password','cannot contain only numbers') if password =~ /^[0-9]*$/
   end
 
   # Return true if the user's password matches the submitted password.

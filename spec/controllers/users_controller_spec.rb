@@ -189,6 +189,25 @@ describe UsersController do
     end
   end # describe "PUT 'update'" do
   
+  describe "sign in" do
+      before(:each) {test_sign_out}
+
+    it "signs the user out" do
+      controller.should_not be_signed_in  # since test_sign_out called in before(:each)
+    end        
+
+    it "does not sign in user with wrong password" do
+      @user.update_attribute(:password, "wrong password")
+      controller.should_not be_signed_in
+    end
+
+    it "does not sign in with sql injection" do
+      @user.update_attribute(:password, "fakepass' OR 'a' = 'a")
+      controller.should_not be_signed_in
+    end      
+
+  end
+
   # Check that access to controller is blocked when user is not logged in (use deny_access method defined in spec_helper)
   # "authentication before controller access"
   describe "authentication before controller access" do
