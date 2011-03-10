@@ -62,6 +62,7 @@ Spork.prefork do
 
   require Rails.root+'app/helpers/application_helper.rb'
   require Rails.root+'lib/sim_test_helper.rb'
+  require 'cover_me'  # This is for CoverMe code coverage
 
   # This line is ONLY needed when tests require the full set of tables (countries, locations, and so on) found
   # in seeds.rb. It takes a long time to run seeds, so it should not be included in ordinary testing.

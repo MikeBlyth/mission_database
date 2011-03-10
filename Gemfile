@@ -31,6 +31,7 @@ group :development, :test do
   gem "cucumber-rails", ">= 0.3.2"
   gem "webrat", ">= 0.7.2"
   gem "capybara"
+#  gem "rcov"
   gem "launchy"
   gem "factory_girl", "2.0.0.beta1"
   gem "factory_girl_rails", "1.1.beta1"
@@ -42,6 +43,7 @@ end
 
 group :test do
   gem "spork"	
+  gem 'cover_me'
   gem "autotest"
   gem "redgreen"
   gem "test-unit", "1.2.3"

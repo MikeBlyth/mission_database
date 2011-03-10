@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
     errors.add('password','cannot contain your email address') if password =~ Regexp.new(email, true)
     errors.add('password','cannot contain your email address') if email =~ Regexp.new(password, true)
     errors.add('password','cannot contain repeated characters') if password =~ /(\w)\1\1/
-    errors.add('password','cannot contain only numbers') if password =~ /^[0-9]*$/
+    errors.add('password','cannot contain only numbers') if password =~ /\A[0-9]*\Z/
   end
 
   # Return true if the user's password matches the submitted password.

@@ -12,6 +12,7 @@ class SessionsController < ApplicationController
       @title = "Sign in"
       render 'new'
     else
+      reset_session  # ? needed for security (session fixation, hijacking)
       sign_in user
       redirect_to root_path
     end
