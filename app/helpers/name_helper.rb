@@ -2,14 +2,14 @@ module NameHelper
   
 # EXAMPLES OF NAME FORMS 
 # to_label:         Blyth, Michael
-# indexed_name:     Blyth, Michael J. (Mike)
+# indexed_name:     Blyth, Michael (Mike) J.
 # full_name:        Michael John Blyth
 # full_name_short:  Mike Blyth
-# full_name_with_short: Michael John Blyth (Mike)
+# full_name_with_short_name: Michael John Blyth (Mike)
 # last_name_first:  Blyth, Michael John    (default)
 #  :initial=>true   Blyth, Michael J.
-#  :short=>true     Blyth, Mike J.
-#  :short_paren=>true Blyth, Michael John (Mike)
+#  :short=>true     Blyth, Mike John
+#  :short_paren=>true Blyth, Michael (Mike) John 
 #  :middle=>false   Blyth, Michael  
 
   # Before validation, create the name column if it is empty
@@ -20,7 +20,7 @@ module NameHelper
   end    
 
   def to_label
-    last_name_first
+    last_name_first(:middle=>false)
   end
   
   def to_s
@@ -52,12 +52,25 @@ module NameHelper
     end
   end
 
+  def middle_initial
+    return nil if middle_name.blank?
+    return middle_name[0]+'.'
+  end
+
   def full_name_with_short_name
     s = self.full_name
     s = s + ' (' + self.short_name + ')' unless (self.short_name.blank? ) || self.short_name.eql?(self.first_name)
     return s
   end
-  
+
+  # First (or short) & middle names + last name only if different from family.last_name
+  def name_optional_last
+    n = short
+    n << " #{middle_initial}" if middle_initial
+    n << " #{last_name}" if last_name != family.last_name
+    return n
+  end
+    
   # Full name with last name first: Johnson, Alan Mark
   # Options
   # * :short => _boolean_ default false; use the short form of first name (e.g. "Al")
@@ -72,12 +85,12 @@ module NameHelper
       first = first_name
     end
     if options[:initial] && !middle_name.blank?   # use middle initial rather than whole middle name?
-      middle = middle_name[0] << '.'
+      middle = middle_initial
     else
       middle = middle_name || ''
     end
-    if (options[:paren_short]) && !short_name.blank? && short_name =! first
-      first = first + " x(#{short_name})"
+    if (options[:paren_short]) && !short_name.blank? && short_name != first
+      first = first + " (#{short_name})"
     end
     s = last_name + ', ' + first 
     s << (' ' + middle) unless options[:middle] == false || middle.empty?

@@ -1,5 +1,6 @@
 include ApplicationHelper
 
+
 describe Member do
   before(:each) do
     @status = Factory(:status)
@@ -127,6 +128,77 @@ describe Member do
     @head.other_sex.should == 'M'    
     @head.update_attribute(:sex,nil)
     @head.other_sex.should be_nil    
+  end
+
+  describe "names: " do
+
+    before(:each) do
+      @member.first_name = 'Katarina'
+      @member.middle_name = 'Saunders'
+      @member.last_name = 'Patterson'
+      @member.short_name = 'Kate'
+      @family.update_attribute(:last_name,'Patterson')
+    end  
+    
+    it "handles various name forms when middle and short names present" do
+      @member.indexed_name.should == 'Patterson, Katarina (Kate) S.'
+      @member.short.should == 'Kate'
+      @member.middle_initial.should == 'S.'
+      @member.to_label.should == 'Patterson, Katarina'
+      @member.full_name.should == 'Katarina Saunders Patterson'
+      @member.full_name_short.should == 'Kate Patterson'
+      @member.full_name_with_short_name.should == 'Katarina Saunders Patterson (Kate)'
+      @member.last_name_first.should == 'Patterson, Katarina Saunders'
+      @member.last_name_first(:initial=>true).should == 'Patterson, Katarina S.'
+      @member.last_name_first(:short=>true).should == 'Patterson, Kate Saunders'
+      @member.last_name_first(:paren_short=>true).should == 'Patterson, Katarina (Kate) Saunders'
+      @member.last_name_first(:middle=>false).should == 'Patterson, Katarina'
+      @member.last_name_first(:short=>true, :initial=>true).should == 'Patterson, Kate S.'
+    end
+
+    it "handles various name forms when short but not middle name is present" do
+      @member.middle_name = nil
+      @member.indexed_name.should == 'Patterson, Katarina (Kate)'
+      @member.short.should == 'Kate'
+      @member.middle_initial.should == nil
+      @member.to_label.should == 'Patterson, Katarina'
+      @member.full_name.should == 'Katarina Patterson'
+      @member.full_name_short.should == 'Kate Patterson'
+      @member.full_name_with_short_name.should == 'Katarina Patterson (Kate)'
+      @member.last_name_first.should == 'Patterson, Katarina'
+      @member.last_name_first(:initial=>true).should == 'Patterson, Katarina'
+      @member.last_name_first(:short=>true).should == 'Patterson, Kate'
+      @member.last_name_first(:paren_short=>true).should == 'Patterson, Katarina (Kate)'
+      @member.last_name_first(:middle=>false).should == 'Patterson, Katarina'
+      @member.last_name_first(:short=>true, :initial=>true).should == 'Patterson, Kate'
+    end
+
+    it "handles various name forms when middle but not short name is present" do
+      @member.short_name = nil
+      @member.indexed_name.should == 'Patterson, Katarina S.'
+      @member.short.should == 'Katarina'
+      @member.middle_initial.should == 'S.'
+      @member.to_label.should == 'Patterson, Katarina'
+      @member.full_name.should == 'Katarina Saunders Patterson'
+      @member.full_name_short.should == 'Katarina Patterson'
+      @member.full_name_with_short_name.should == 'Katarina Saunders Patterson'
+      @member.last_name_first.should == 'Patterson, Katarina Saunders'
+      @member.last_name_first(:initial=>true).should == 'Patterson, Katarina S.'
+      @member.last_name_first(:short=>true).should == 'Patterson, Katarina Saunders'
+      @member.last_name_first(:paren_short=>true).should == 'Patterson, Katarina Saunders'
+      @member.last_name_first(:middle=>false).should == 'Patterson, Katarina'
+      @member.last_name_first(:short=>true, :initial=>true).should == 'Patterson, Katarina S.'
+    end
+
+    it "name_optional_last suppresses last name when equal to family last name" do
+      @member.name_optional_last.should == 'Kate S.'
+    end
+    
+    it "name_optional_last includes last name when not equal to family last name" do
+      @member.last_name = 'Smith'
+      @member.name_optional_last.should == 'Kate S. Smith'
+    end
+    
   end
 
   describe "marrying: " do
