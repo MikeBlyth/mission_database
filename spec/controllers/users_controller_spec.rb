@@ -5,40 +5,40 @@ Webrat.configure do |config|
   config.mode = :rails
 end
 
-  def deny_all
-    deny_edit
-    deny_update
-    deny_show
-    deny_destroy
+def deny_all
+  deny_edit
+  deny_update
+  deny_show
+  deny_destroy
+end
+  
+def deny_edit
+  it "should deny access to 'edit'" do
+    get :edit, :id => @user
+    response.should redirect_to(signin_path)
   end
-    
-  def deny_edit
-    it "should deny access to 'edit'" do
-      get :edit, :id => @user
-      response.should redirect_to(signin_path)
-    end
-  end      
+end      
 
-  def deny_update
-    it "should deny access to 'update'" do
-      put :update, :id => @user, :user => {}
-      response.should redirect_to(signin_path)
-    end
-  end      
+def deny_update
+  it "should deny access to 'update'" do
+    put :update, :id => @user, :user => {}
+    response.should redirect_to(signin_path)
+  end
+end      
 
-  def deny_show
-    it "should deny access to 'show'" do
-      get :show, :id => @user
-      response.should redirect_to(signin_path)
-    end
-  end      
+def deny_show
+  it "should deny access to 'show'" do
+    get :show, :id => @user
+    response.should redirect_to(signin_path)
+  end
+end      
 
-  def deny_destroy
-    it "should deny access to 'destroy'" do
-      put :destroy, :id => @user
-      response.should redirect_to(signin_path)
-    end
-  end      
+def deny_destroy
+  it "should deny access to 'destroy'" do
+    put :destroy, :id => @user
+    response.should redirect_to(signin_path)
+  end
+end      
 
 describe UsersController do
   render_views
@@ -55,7 +55,7 @@ describe UsersController do
     end
     it "should have the right title" do
       get 'new'
-      response.should have_selector("title", :content => "Sign up")
+      response.should have_selector("title", :content => "New user")
     end
     it "should find the right user" do
       get :show, :id => @user

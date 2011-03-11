@@ -17,6 +17,7 @@ gem 'mysql2'
 gem 'prawn', ">=0.10.0", :git => "git://github.com/sandal/prawn" , :submodules => true
 gem 'haml' 
 gem 'jrails'
+gem 'cancan'
 gem "active_scaffold_vho"
 gem 'settingslogic'
 # gem 'RedCloth'

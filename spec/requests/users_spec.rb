@@ -11,11 +11,12 @@ describe "Users" do
         it "should not create a new user with missing values" do
           lambda do
             visit new_user_path
+# save_and_open_page( )
             fill_in "Name",         :with => ""
             fill_in "Email",        :with => ""
             fill_in "Password",     :with => ""
             fill_in "Confirmation", :with => ""
-            click_button "Create"
+            click_button "user_submit"
             page.should have_content("Email can't be blank")
             page.should have_content("Name can't be blank")
             page.should have_content("Email is invalid")
@@ -44,7 +45,7 @@ describe "Users" do
     it "should not have field for Admin privileges" do
       visit edit_user_path @user
       page.should have_content("Edit User")
-      page.should have_field("Administrator")
+      page.should_not have_field("Administrator")
     end
 
   end # by Administrator 

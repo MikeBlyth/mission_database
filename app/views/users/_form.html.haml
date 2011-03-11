@@ -1,25 +1,17 @@
-= form_for(@user) do |f| 
-  = render 'shared/error_messages', :object => f.object
-  .field
-    = f.label :name
-    %br
-    = f.text_field :name 
-  .field
-    = f.label :email
-    %br
-    = f.text_field :email 
-  .field
-    = f.label :password
-    %br
-    = f.password_field :password 
-  .field
-    = f.label :password_confirmation, "Confirmation"
-    %br
-    = f.password_field :password_confirmation 
-  - if current_user_admin?
-    .field
-      = f.label :admin, "Administrator"
-      %br
-      = f.check_box :admin 
-  .actions
-    = f.submit "Create"
+.field
+  = formobject.label :name
+  %br
+  = formobject.text_field :name 
+.field
+  = formobject.label :email
+  %br
+  = formobject.text_field :email 
+.field
+  = formobject.label :password
+  %br
+  = formobject.password_field :password 
+.field
+  = formobject.label :password_confirmation, "Confirmation"
+  %br
+  = formobject.password_field :password_confirmation 
+

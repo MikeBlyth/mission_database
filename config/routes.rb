@@ -50,8 +50,12 @@ SIM::Application.routes.draw do
   resources :statuses do as_routes end
   resources :field_terms do as_routes end
   resources :travels do as_routes end
-  resources :users
-
+  resources :users do
+    member do
+      put 'update_roles'
+    end
+  end
+  
   get "members/index"
 
   # The priority is based upon order of creation:

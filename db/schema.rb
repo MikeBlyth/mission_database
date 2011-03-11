@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110308202950) do
+ActiveRecord::Schema.define(:version => 20110310144121) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -188,6 +188,13 @@ ActiveRecord::Schema.define(:version => 20110308202950) do
   add_index "ministries", ["code"], :name => "index_ministry_codes_on_code", :unique => true
   add_index "ministries", ["description"], :name => "index_ministry_codes_on_description", :unique => true
 
+  create_table "roles", :force => true do |t|
+    t.string   "name"
+    t.string   "encrypted_key"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "states", :force => true do |t|
     t.string   "name"
     t.string   "zone"
@@ -238,6 +245,12 @@ ActiveRecord::Schema.define(:version => 20110308202950) do
     t.string   "salt"
     t.boolean  "admin",                 :default => false
     t.string   "encrypted_db_password"
+    t.boolean  "medical"
+    t.boolean  "personnel"
+    t.boolean  "travel"
+    t.boolean  "member"
+    t.boolean  "immigration"
+    t.boolean  "asst_personnel"
   end
 
   add_index "users", ["name"], :name => "index_users_on_name", :unique => true
