@@ -25,7 +25,7 @@ class MembersController < ApplicationController
           :residence_location, :work_location, :temporary_location, :temporary_location_from_date, :temporary_location_until_date,
           :education, :qualifications,
           :contacts, :field_terms, :travels,
-          :bloodtype, :allergies, :medications
+          :health_data
           ]
     show.columns.exclude    :last_name, :first_name, :middle_name, :short_name, :name_override
     update.columns.exclude :family_name

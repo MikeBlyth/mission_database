@@ -1,0 +1,2 @@
+module HealthDataHelper
+end

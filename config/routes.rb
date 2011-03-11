@@ -34,7 +34,6 @@ SIM::Application.routes.draw do
 
 #  resources :jqueries do as_routes end
 
-#  devise_for :users
   resources :bloodtypes do as_routes end
   resources :cities do as_routes end
   resources :contact_types do as_routes end
@@ -43,6 +42,7 @@ SIM::Application.routes.draw do
   resources :educations do as_routes end
   resources :employment_statuses do as_routes end
   resources :families do as_routes end
+  resources :health_data do as_routes end
   resources :locations do as_routes end
   resources :members do as_routes end
   resources :ministries do as_routes end

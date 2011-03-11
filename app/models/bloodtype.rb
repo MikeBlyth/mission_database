@@ -15,6 +15,7 @@
 class Bloodtype < ActiveRecord::Base
 
   has_many :members
+  has_many :health_data
   validates_uniqueness_of :full
   def to_label
     "#{full}"
