@@ -1,6 +1,6 @@
 #links
   %p Main Menu
-  %p= signed_in? ? "Signed in" : "Not signed in" 
+  %p= signed_in? ? "Signed in as #{current_user.name}" : "Not signed in" 
   - if signed_in? 
     %ul.links
       %li= link_to 'Families', families_path 

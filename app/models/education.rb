@@ -17,8 +17,13 @@ include ModelHelper
   validates_uniqueness_of :code, :description
 
   def to_label
-    "#{description}"
+    self.to_s
   end
+  
+  def to_s
+    self.description
+  end
+
 
 def cwd
   return self.code_with_description

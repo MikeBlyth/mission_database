@@ -18,7 +18,11 @@ include ModelHelper
   validates_presence_of :code, :description
 
   def to_label
-    "#{description}"
+    self.to_s
+  end
+  
+  def to_s
+    self.description
   end
 
 

@@ -4,8 +4,6 @@ class UsersController < ApplicationController
   include AuthorizationHelper
   
   before_filter :authenticate 
-  before_filter :correct_user, :only => [:edit, :update]
-  before_filter :administrator, :only => [:new, :create, :destroy, :update_roles]
 
   def index
     @users = User.all
@@ -37,10 +35,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def administrator
+    self.admin?
+  end
+
   def edit
   #   @user = User.find(params[:id])  # User is already found by private (authentication) method correct_user, below
+    @user = User.find(params[:id])
     @title = "Edit user"
   end
+
+  def edit_roles
+    @user = User.find(params[:id])
+    @title = "Edit roles"
+  end    
 
   def update
     @user = User.find(params[:id])
@@ -61,6 +69,8 @@ class UsersController < ApplicationController
         @user.update_attribute(role, value)
       end
     end
+    flash[:success] = "Profile updated."
+    redirect_to @user
   end  
   
   # TODO

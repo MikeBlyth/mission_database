@@ -26,6 +26,10 @@ class City < ActiveRecord::Base
     locations.sort_by {|x| x.description}
   end
   
+  def to_s
+    self.name
+  end
+
 protected
 
   def nigeria

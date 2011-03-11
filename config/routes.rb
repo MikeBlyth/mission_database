@@ -52,6 +52,7 @@ SIM::Application.routes.draw do
   resources :travels do as_routes end
   resources :users do
     member do
+      get 'edit_roles'
       put 'update_roles'
     end
   end

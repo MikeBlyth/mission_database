@@ -24,7 +24,11 @@ include ModelHelper
   validates_numericality_of :city_id, :only_integer => true
 
   def to_label
-    "#{description}"
+    self.to_s
+  end
+  
+  def to_s
+    self.description
   end
 
   

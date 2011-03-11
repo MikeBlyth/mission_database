@@ -1,24 +1,22 @@
 .field
-  = formobject.label :admin, "System Administrator"
-  %br
-  = formobject.check_box :admin 
+  = formobject.check_box :member 
+  = formobject.label :member, "Member"
 .field
-  = formobject.label :medical, "Medical"
-  %br
   = formobject.check_box :medical 
+  = formobject.label :medical, "Medical"
 .field
-  = formobject.label :personnel, "Personnel Manager"
-  %br
   = formobject.check_box :personnel 
+  = formobject.label :personnel, "Personnel Manager"
 .field
-  = formobject.label :asst_personnel, "Personnel Assistant"
-  %br
   = formobject.check_box :asst_personnel
+  = formobject.label :asst_personnel, "Personnel Assistant"
 .field
-  = formobject.label :travel, "Travel"
-  %br
   = formobject.check_box :travel 
+  = formobject.label :travel, "Travel"
 .field
-  = formobject.label :immigration, "Immigration"
-  %br
   = formobject.check_box :immigration 
+  = formobject.label :immigration, "Immigration"
+.field
+  = formobject.check_box :admin 
+  = formobject.label :admin, "System Administrator"
+

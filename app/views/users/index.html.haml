@@ -11,6 +11,7 @@
       %td= user.email
       %td= user.admin
       %td= link_to 'Edit', edit_user_path(user)
+      %td= link_to 'Roles', edit_roles_user_path(user)
       %td= link_to 'Delete', user, :confirm=> 'Are you sure?', :method => :delete 
 
 = link_to 'New User', new_user_path

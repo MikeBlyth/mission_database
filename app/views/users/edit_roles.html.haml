@@ -1,0 +1,6 @@
+%h1 Edit #{@user.name} roles
+= form_for @user, :url => { :action => "update_roles" } do |f| 
+  = render 'shared/error_messages', :object => f.object
+  = render 'roles_form', :formobject=>f 
+  .actions
+    = f.submit 

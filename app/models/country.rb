@@ -18,8 +18,12 @@ class Country < ActiveRecord::Base
   has_many :members
 
   def to_label
-    "#{name}"
+    self.name
   end
+  def to_s
+    self.name
+  end
+
 
 #  def self.find(id, options={})
 #    x = super id

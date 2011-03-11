@@ -1,27 +1,28 @@
-%h1 #{@record.full_name}
+%h3 #{@record.full_name}
 %table
   - if @record.spouse
     %tr
       %td.label Spouse
-      %td= @record.spouse
+      %td= @record.spouse.name_optional_last
   %tr
     %td.label SIM Family ID
     %td= @record.family.sim_id
-    %td.label Birth date
-    %td= @record.birth_date    
+    - if (can? :read, :personnel) || (can? :read, :medical)
+      %td.label Birth date
+      %td= @record.birth_date    
     %td.label Sex
     %td= @record.sex
     %td.label Nationality
     %td= @record.country.nationality
   %tr
     %td.label Home location
-    %td= @record.residence_location.to_label
+    %td= @record.residence_location
     %td.label Ministry
-    %td= "#{@record.ministry.to_label} #{@record.ministry_comment}" 
+    %td= "#{@record.ministry} #{@record.ministry_comment}" 
     %td.label Ministry location
-    %td= @record.work_location.to_label
+    %td= @record.work_location
     %td.label Status
-    %td= @record.status.to_label
+    %td= @record.status
   - if @record.temporary_location
     %tr
       %td.label Temporary location
@@ -29,12 +30,21 @@
       %td.label dates
       %td= "#{@record.temporary_location_from_date} to #{@record.temporary_location_until_date}"
   %tr
-    %td.label Allergies
-    %td= @record.allergies
-    %td 
-    %td= 1
-    %td 
-    %td= 1
-    %td 
-    %td= 1
-    
+    - if can? :read, :medical
+      %td.label Allergies
+      %td= @record.allergies
+  - if can? :read, :personnel
+    %tr
+      %td.label Birth date  
+      %td= @record.birth_date    
+      %td.label Education  
+      %td= @record.education    
+      %td.label Qualifications  
+      %td= @record.qualifications
+      %td.label Date active  
+      %td= @record.date_active
+      %td.label Employment  
+      %td= @record.employment_status    
+            
+           
+        

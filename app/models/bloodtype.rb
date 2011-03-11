@@ -20,4 +20,7 @@ class Bloodtype < ActiveRecord::Base
   def to_label
     "#{full}"
   end
+  def to_s
+    "#{full}"
+  end
 end
