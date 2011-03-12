@@ -162,6 +162,32 @@ describe User do
     end # "authenticate method"
   end # PASSWORD ENCRYPTION
 
+  describe "password integrity" do
+  
+    before :each do
+      @u = User.create!(@attr)
+      @hashed = @u.encrypted_password
+      @user = User.find(@u.id)  # may be same as reload, but should clear passwords
+    end
+    
+    it "updates password with mass assignment including password" do
+      @user.update_attributes(:name=>'Newname', :password=>'NewPassword', 
+                              :password_confirmation=>'NewPassword')
+      @user.encrypted_password.should_not == @hashed
+    end
+    
+    it "keeps password with mass assignment not including password" do
+      @user.update_attributes(:name=>'Newname', :admin=>false, :medical=>true)
+      @user.encrypted_password.should == @hashed
+    end
+    
+    it "keeps password with update_attribute (skips validation)" do
+      @user.update_attribute(:name,'Newname')
+      @user.encrypted_password.should == @hashed
+    end
+    
+  end
+
   describe "admin attribute" do
 
     before(:each) do

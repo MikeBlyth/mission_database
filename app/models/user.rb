@@ -23,6 +23,9 @@
 class User < ActiveRecord::Base
   attr_accessor :password, :password_confirmation
   attr_accessible :name, :email, :password, :password_confirmation
+  # should password be protected attribute? Since only the user or admin can edit
+  #   the user object at all, and both should be able to change the password, there
+  #   seems to be no reason to protect it.
 
   email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
@@ -40,9 +43,8 @@ class User < ActiveRecord::Base
 #                      :on => :create
                       
   # Custom validations for password
-  validate :validate_password
-
   before_validation :insert_dummy_password_if_blank                     
+  validate :validate_password
   before_save :encrypt_password
   before_destroy :do_not_delete_last_admin
   
@@ -54,7 +56,11 @@ class User < ActiveRecord::Base
     return true
   end  
 
-  # How to allow updates to work when the password fields are blank (meaning password does not change)
+  # How to allow updates to work when the password fields are blank 
+  # (meaning password does not change)? Validation will fail if it sees blank
+  # password, so one way to trick it is to insert a dummy password but only
+  # for existing records, since they already have encrypted passwords saved.
+  # Encrypt_password then treats the dummy as empty and does not encrypt it.
   def insert_dummy_password_if_blank
     # if the fields are blank AND the record exists... (use find rather than new_record to be SURE)
     if password.blank? && password_confirmation.blank? && id && User.find(id)
@@ -91,7 +97,7 @@ class User < ActiveRecord::Base
     DUMMY_PASSWORD = Digest::SHA2.hexdigest('C+r+z*y#38729221')[0..30]
     
     def encrypt_password
-      return if password == DUMMY_PASSWORD
+      return if password == DUMMY_PASSWORD || password.blank?
       self.salt = make_salt if new_record?
       self.encrypted_password = encrypt(password)
     end
