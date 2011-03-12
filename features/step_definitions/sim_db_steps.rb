@@ -46,6 +46,20 @@ Given /^that I am signed in$/ do
     click_button "Sign in"
 end
 
+Given /^that I am signed in as an administrator$/ do
+    return if cookies[:remember_token]
+    user = Factory(:user, :admin=>true)
+    # There might already be countries (seed_tables may have been called). Otherwise
+    #    we need to create them since we will be directed to members table, which 
+    #    has a column for countries
+    Factory(:country) unless Country.count > 0
+    Factory(:country_unspecified) unless Country.exists?(UNSPECIFIED)
+    visit signin_path
+    fill_in "Name",    :with => user.name
+    fill_in "Password", :with => user.password
+    click_button "Sign in"
+end
+
 Given /^a one-person family$/ do
   construct_family
 end

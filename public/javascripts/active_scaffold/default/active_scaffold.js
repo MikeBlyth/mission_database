@@ -140,7 +140,11 @@ $(document).ready(function() {
           csrf_token = $('meta[name=csrf-token]').first(),
           my_parent = span.parent(),
           column_heading = null;
-      
+
+      if(!(my_parent.is('td') || my_parent.is('th'))){
+          my_parent = span.parents('td').eq(0);
+      }
+
       if (my_parent.is('td')) {
         var column_no = my_parent.prevAll('td').length;
         column_heading = my_parent.closest('.active-scaffold').find('th:eq(' + column_no + ')');
@@ -563,7 +567,8 @@ var ActiveScaffold = {
 
   delete_subform_record: function(record) {
     if (typeof(record) == 'string') record = '#' + record;
-    var errors = $(record).prev();
+    record = $(record);
+    var errors = record.prev();
     if (errors.hasClass('association-record-errors')) {
       this.replace_html(errors, '');
     }
@@ -701,6 +706,31 @@ var ActiveScaffold = {
         ActiveScaffold.report_500_response(active_scaffold_id)
       }
     });
+  },
+
+  // element is tbody id
+  mark_records: function(element, options) {
+    if (typeof(element) == 'string') element = '#' + element;
+    var element = $(element);
+    var mark_checkboxes = $('#' + element.attr('id') + ' > tr.record td.marked-column input[type="checkbox"]');
+    mark_checkboxes.each(function (index) {
+      var item = $(this);
+     if(options.checked === true) {
+       item.attr('checked', 'checked');
+     } else {
+       item.removeAttr('checked');
+     }
+     item.attr('value', ('' + !options.checked));
+    });
+    if(options.include_mark_all === true) {
+      var mark_all_checkbox = element.prev('thead').find('th.marked-column_heading span input[type="checkbox"]');
+      if(options.checked === true) {
+        mark_all_checkbox.attr('checked', 'checked');
+      } else {
+        mark_all_checkbox.removeAttr('checked');
+      }
+      mark_all_checkbox.attr('value', ('' + !options.checked));
+    }
   }
 }
 

@@ -21,15 +21,15 @@ class TravelsController < ApplicationController
     config.list.sorting = { :date => :asc }
   end
 
-  def do_new
-    puts "** Travel do_new #{params}"
-    super
-  end  
+#  def do_new
+#    puts "** Travel do_new #{params}"
+#    super
+#  end  
 
-  def do_create
-      puts "** Travel do_create #{params}"
-    super
-  end  
+#  def do_create
+#      puts "** Travel do_create #{params}, can = #{can? :create, Travel}"
+#    super
+#  end  
 
 # Generate a filter string for use in Travel.where(conditions_for_collection)...
   def conditions_for_collection

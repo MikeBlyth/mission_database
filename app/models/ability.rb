@@ -9,7 +9,7 @@ class Ability
       return
     end
 
-puts "****** Initialize user #{user.name}, admin=#{user.admin?}, travel=#{user.travel?}"      
+# puts "****** Initialize user #{user.name}, admin=#{user.admin?}, travel=#{user.travel?}"      
     # First the basics
     if user.admin?
       can :manage, :all
@@ -18,24 +18,21 @@ puts "****** Initialize user #{user.name}, admin=#{user.admin?}, travel=#{user.t
     #  if we don't want system admin to have access to these
     else
       can :read, :all
-      cannot :read, [:medical, :personnel]  # Confidential fields
+#      cannot :read, [Medical, Personnel]  # Confidential fields
     end
 
 # Then some fine-tuning
     if user.personnel?
       can :manage, :all
-      cannot :manage, [:bloodtype, :role, :medical]
-      can :read, :bloodtype, :medical     # assuming this is ok
+      cannot [:create, :update, :destroy], [Bloodtype, Role]
     end
     
     if user.medical?
-      can :manage, [:medical, :bloodtype]
+      can :manage, Bloodtype
     end
 
     if user.travel?
-puts "This user can manage travel!"
-      can :manage, [:bloodtype, :city, :contact, :country, :family, :field_term] 
-
+      can :manage, Travel
     end    
     
   end  # initialize
