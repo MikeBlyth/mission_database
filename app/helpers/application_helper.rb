@@ -16,6 +16,8 @@ module ApplicationHelper
 end
 
 include ActionView::Helpers::FormOptionsHelper
+require "#{Rails.root}/config/initializers/date_formats.rb"
+  #This shouldn't be necessary but some formats are not "sticking" in 3.0.4 when defined in initializers
 
 # TODO: May be best to replace this with the Rails method that does the same thing.
 # http://api.rubyonrails.org/classes/ActionView/Helpers/FormOptionsHelper.html#method-i-option_groups_from_collection_for_select

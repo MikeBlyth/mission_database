@@ -8,8 +8,8 @@
     %td.label SIM Family ID
     %td= @record.family.sim_id
     - if (can? :read, :personnel) || (can? :read, :medical)
-      %td.label Birth date
-      %td= @record.birth_date    
+      %td.label Birthday
+      %td= @record.birth_date.to_s(:short)    
     %td.label Sex
     %td= @record.sex
     %td.label Nationality
@@ -28,21 +28,21 @@
       %td.label Temporary location
       %td= @record.temporary_location
       %td.label dates
-      %td= "#{@record.temporary_location_from_date} to #{@record.temporary_location_until_date}"
+      %td= "#{@record.temporary_location_from_date.to_s(:short)} to #{@record.temporary_location_until_date.to_s(:short)}"
   %tr
-    - if can? :read, :medical
+    - if can? :read, HealthData
       %td.label Allergies
       %td= @record.allergies
   - if can? :read, :personnel
     %tr
       %td.label Birth date  
-      %td= @record.birth_date    
+      %td= @record.birth_date.to_s(:default)    
       %td.label Education  
       %td= @record.education    
       %td.label Qualifications  
       %td= @record.qualifications
       %td.label Date active  
-      %td= @record.date_active
+      %td= @record.date_active.to_s(:default)
       %td.label Employment  
       %td= @record.employment_status    
             

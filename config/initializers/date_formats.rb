@@ -1,0 +1,9 @@
+Date::DATE_FORMATS[:int_short] = "%e %b"     # 9 Mar
+Date::DATE_FORMATS[:int_default] = "%e %b %y"# 9 Mar 11
+Date::DATE_FORMATS[:int_long] = "%e %B %Y"   # 9 March 2011
+Date::DATE_FORMATS[:short] = "%e %b"     # 9 Mar
+Date::DATE_FORMATS[:default] = "%e %b %y" # 9 Mar 11
+Date::DATE_FORMATS[:long] = "%e %B %Y"   # 9 March 2011
+Date::DATE_FORMATS[:us_short] = "%b %e"     # Mar 9
+Date::DATE_FORMATS[:us_default] = "%b %e, %Y"# Mar 9, 2011
+Date::DATE_FORMATS[:us_long] = "%B %e, %Y"   # March 9, 2011

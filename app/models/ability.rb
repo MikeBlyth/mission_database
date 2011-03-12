@@ -18,7 +18,7 @@ class Ability
     #  if we don't want system admin to have access to these
     else
       can :read, :all
-#      cannot :read, [Medical, Personnel]  # Confidential fields
+      cannot :read, [HealthData]  # Confidential fields
     end
 
 # Then some fine-tuning
@@ -28,7 +28,7 @@ class Ability
     end
     
     if user.medical?
-      can :manage, Bloodtype
+      can :manage, [Bloodtype, HealthData]
     end
 
     if user.travel?
