@@ -32,19 +32,19 @@
   %tr
     - if can? :read, HealthData
       %td.label Allergies
-      %td= @record.allergies
-  - if can? :read, :personnel
+      %td= @record.health_data.allergies
+  - if can? :read, PersonnelData
     %tr
       %td.label Birth date  
       %td= @record.birth_date.to_s(:default)    
       %td.label Education  
-      %td= @record.education    
+      %td= @record.personnel_data.education    
       %td.label Qualifications  
-      %td= @record.qualifications
+      %td= @record.personnel_data.qualifications
       %td.label Date active  
-      %td= @record.date_active.to_s(:default)
+      %td= @record.personnel_data.date_active.to_s(:default)
       %td.label Employment  
-      %td= @record.employment_status    
+      %td= @record.personnel_data.employment_status    
             
            
         

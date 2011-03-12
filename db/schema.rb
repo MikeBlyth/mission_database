@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110311123449) do
+ActiveRecord::Schema.define(:version => 20110312214702) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20110311123449) do
     t.string   "issues"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "allergies"
   end
 
   create_table "locations", :force => true do |t|
@@ -160,18 +161,10 @@ ActiveRecord::Schema.define(:version => 20110311123449) do
     t.integer  "spouse_id"
     t.integer  "country_id",                    :default => 999999
     t.string   "first_name"
-    t.integer  "bloodtype_id",                  :default => 999999
-    t.string   "allergies"
-    t.string   "medical_facts"
-    t.string   "medications"
     t.integer  "status_id",                     :default => 999999
     t.string   "ministry_comment"
-    t.string   "qualifications"
-    t.date     "date_active"
     t.integer  "ministry_id",                   :default => 999999
-    t.integer  "education_id",                  :default => 999999
     t.integer  "residence_location_id",         :default => 999999
-    t.integer  "employment_status_id",          :default => 999999
     t.string   "name"
     t.boolean  "name_override"
     t.boolean  "child"
@@ -181,7 +174,6 @@ ActiveRecord::Schema.define(:version => 20110311123449) do
     t.date     "temporary_location_until_date"
   end
 
-  add_index "members", ["bloodtype_id"], :name => "fk_bloodtypes"
   add_index "members", ["country_id"], :name => "fk_countries"
   add_index "members", ["family_id"], :name => "index_members_on_family_id"
   add_index "members", ["name"], :name => "index_members_on_name", :unique => true
@@ -196,6 +188,17 @@ ActiveRecord::Schema.define(:version => 20110311123449) do
 
   add_index "ministries", ["code"], :name => "index_ministry_codes_on_code", :unique => true
   add_index "ministries", ["description"], :name => "index_ministry_codes_on_description", :unique => true
+
+  create_table "personnel_data", :force => true do |t|
+    t.integer  "member_id"
+    t.string   "qualifications"
+    t.integer  "education_id"
+    t.integer  "employment_status_id"
+    t.date     "date_active"
+    t.string   "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "roles", :force => true do |t|
     t.string   "name"
