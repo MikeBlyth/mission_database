@@ -6,46 +6,51 @@ Webrat.configure do |config|
 end
 
 describe TravelsController do
+
+  describe "role based authorization" do
+
+    before(:each) do
+        @user = Factory(:user, :travel=>true)
+        test_sign_in(@user)
+        @object = Factory.build(:travel)
+    end
+
+    describe "for authorized users" do
+    
+      it "should have access to new object form" do
+#        Travel.should_receive(:new)
+puts "Get new with auth user, @user.travel=#{@user.travel}"
+        get :new
+        response.should render_template('create')
+      end
+      
+      it "can create new object" do
+        lambda do
+          post :create, :record => {:date=>Date.today, :member_id => @object.member_id}
+        end.should change(Travel, :count).by(1)      
+      end
+
+    end # for authorized users
+
+    describe "for unauthorized users" do
+    
+      before(:each) {@user.update_attribute(:travel, false)}
+      
+      it "should have not access to new object form" do
+#        Travel.should_not_receive(:new)
+        get :new
+      end
+      
+      it "can create new object" do
+        lambda do
+          post :create, :record => {:date=>Date.today, :member_id => @object.member_id}
+        end.should change(Travel, :count).by(0)      
+      end
+
+    end # for authorized users
+
+  end # role based authorization
   
-
-#  describe "authentication before controller access" do
-
-#    describe "for signed-in users" do
-# 
-#      before(:each) do
-#        @user = Factory(:user)
-#        test_sign_in(@user)
-#      end
-#      
-#      it "should allow access to 'new'" do
-#        Member.should_receive(:new)
-#        get :new
-#      end
-#      
-#      it "should allow access to 'destroy'" do
-#        # Member.should_receive(:destroy) # Why can't this work ??
-#        put :destroy, :id => @member.id
-#        response.should_not redirect_to(signin_path)
-#      end
-#      
-#      it "should allow access to 'update'" do
-#        # Member.should_receive(:update)
-#        put :update, :id => @member.id, :record => @member.attributes, :member => @member.attributes
-#        response.should_not redirect_to(signin_path)
-#      end
-#      
-#    end # for signed-in users
-
-#    describe "for non-signed-in users" do
-
-#      it "should deny access to 'new'" do
-#        get :new
-#        response.should redirect_to(signin_path)
-#      end
-
-#    end # for non-signed-in users
-
-#  end # describe "authentication before controller access"
 
   describe 'filtering' do
 

@@ -1,6 +1,8 @@
 class TravelsController < ApplicationController
   before_filter :authenticate #, :only => [:edit, :update]
   include AuthenticationHelper
+
+  load_and_authorize_resource
   
   active_scaffold :travel do |config|
     #  config.columns[:member].actions_for_association_links = [:show]
@@ -18,6 +20,16 @@ class TravelsController < ApplicationController
     config.columns[:total_passengers].description = "Total number of passengers beyond first"
     config.list.sorting = { :date => :asc }
   end
+
+  def do_new
+    puts "** Travel do_new #{params}"
+    super
+  end  
+
+  def do_create
+      puts "** Travel do_create #{params}"
+    super
+  end  
 
 # Generate a filter string for use in Travel.where(conditions_for_collection)...
   def conditions_for_collection

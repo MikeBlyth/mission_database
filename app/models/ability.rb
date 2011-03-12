@@ -1,13 +1,15 @@
 class Ability
   include CanCan::Ability
-
+  include AuthorizationHelper
+  
   def initialize(user)
 #    user ||= User.new # guest user (not logged in)
     if user.nil?
       cannot :manage, :all
       return
     end
-      
+
+puts "****** Initialize user #{user.name}, admin=#{user.admin?}, travel=#{user.travel?}"      
     # First the basics
     if user.admin?
       can :manage, :all
@@ -31,7 +33,9 @@ class Ability
     end
 
     if user.travel?
-      can :manage, :travel
+puts "This user can manage travel!"
+      can :manage, [:bloodtype, :city, :contact, :country, :family, :field_term] 
+
     end    
     
   end  # initialize
