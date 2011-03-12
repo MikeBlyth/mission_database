@@ -2,11 +2,12 @@ class UsersController < ApplicationController
 
   include AuthenticationHelper
   include AuthorizationHelper
+
+load_and_authorize_resource
   
-  before_filter :authenticate 
+#  before_filter :authenticate 
 
   def index
-    @users = User.all
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @cities }
@@ -15,16 +16,16 @@ class UsersController < ApplicationController
 
   def show
     @title = 'User'
-    @user = User.find(params[:id])
+#    @user = User.find(params[:id])
   end
 
   def new
     @title = "New user"
-    @user = User.new
+#    @user = User.new
   end
  
   def create
-    @user = User.new(params[:user])
+#    @user = User.new(params[:user])
     if @user.save
       sign_in @user
       flash[:success] = "Successfully added user."

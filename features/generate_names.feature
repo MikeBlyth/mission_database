@@ -7,9 +7,9 @@ Feature: Member generates unique "indexed" name
    
   Scenarios: Put some description here, add more scenarios
     |last_name|first_name|middle_name|short_name|name|
-    |Cooper   |Donald    |John       |Jack      | Cooper, Donald J.   | 
+    |Cooper   |Donald    |John       |Jack      | Cooper, Donald (Jack) J.   | 
     |Cooper   |Jordan    |Franklin   |          | Cooper, Jordan F.          | 
     |Cooper   |Samuel    |           |Samuel    | Cooper, Samuel             | 
-    |Cooper   |K.        |Quilton    |Jack      | Cooper, K. Q.       |
+    |Cooper   |K.        |Quilton    |Jack      | Cooper, K. (Jack) Q.       |
 
       

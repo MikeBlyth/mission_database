@@ -6,6 +6,7 @@ describe "Users" do
     before(:each) { integration_test_sign_in(:admin=>true)}
 
     describe "creating new user" do
+
       describe "failure" do
 
         it "should not create a new user with missing values" do
@@ -42,7 +43,7 @@ describe "Users" do
       end # Describe success
     end # Creating New User
 
-    it "should not have field for Admin privileges" do
+    it "edit form should not have field for Admin privileges" do
       visit edit_user_path @user
       page.should have_content("Edit User")
       page.should_not have_field("Administrator")
@@ -56,14 +57,13 @@ describe "Users" do
     it "should not create a new user even with good values" do
       visit new_user_path @user
       page.should have_selector("title", :content => "SIM")
-      page.should have_selector("div.flash.error")
+      page.should have_selector("div.flash.alert")
     end
 
-    it "should not have field for Admin privileges" do
-      visit edit_user_path @user
-      page.should have_content("Edit User")
-      page.should have_no_field("Administrator")
+    it 'should allow user to edit his own record' do
+      pending
     end
+
   end # "by Non-administrator"
 
   describe "sign in/out" do

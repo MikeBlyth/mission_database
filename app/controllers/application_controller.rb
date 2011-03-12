@@ -1,9 +1,19 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   include SessionsHelper  # sign in, sign out, current user, etc.
+
   ActiveScaffold.set_defaults do |config| 
     config.ignore_columns.add [:created_at, :updated_at, :lock_version]
   end
+
+  rescue_from CanCan::AccessDenied do |exception|
+    if !signed_in? 
+      redirect_to signin_path
+    else  
+      redirect_to request.referer, :alert => exception.message
+    end
+  end
+
 
   @@filter_notices = {
     'all' => "everyone",
