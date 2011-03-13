@@ -108,6 +108,10 @@ FactoryGirl.define do
     est_end_date '30 Jan 2013'  
   end
 
+  factory :health_data do
+    member { |a| a.association :member }
+  end    
+
   factory :location do
     sequence(:id) {|n| n}
     sequence(:code) {|n| 20+n}
@@ -124,8 +128,6 @@ FactoryGirl.define do
   end
   
   factory :member do 
-#    association :family
-#    family_id @family_id
     family { |a| a.association :family }
     sequence(:first_name) {|n| "Person_#{n}" }
     sex ['M','F'].shuffle[0]    # randomly pick M or F
@@ -137,12 +139,8 @@ FactoryGirl.define do
       short_name 'Shorty'
       birth_date '1980-01-01'
       country_id 1
-      date_active '2005-01-01'
-      employment_status_id 1
       ministry_id 1
       ministry_comment 'Working with orphans'
-      education_id 1
-      qualifications 'TESOL, qualified midwife'
     end
 
     factory :child, :parent=> :member do
@@ -162,6 +160,14 @@ FactoryGirl.define do
     code 0
     description 'Unspecified'
   end
+
+  factory :personnel_data do
+    member { |a| a.association :member }
+    employment_status_id 1
+    education_id 1
+    qualifications 'TESOL, qualified midwife'
+    date_active '2005-01-01'
+  end    
 
   factory :state do
     id 1

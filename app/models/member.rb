@@ -54,6 +54,8 @@ class Member < ActiveRecord::Base
 
   after_initialize :inherit_from_family
   before_validation :set_indexed_name_if_empty
+  after_create :create_personnel_data
+  after_create :create_health_data
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse

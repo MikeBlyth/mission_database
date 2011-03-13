@@ -15,7 +15,7 @@
 #
 
 class PersonnelData < ActiveRecord::Base
- belongs_to :member
+ belongs_to :member, :autosave => true
  belongs_to :education
  belongs_to :employment_status
 end

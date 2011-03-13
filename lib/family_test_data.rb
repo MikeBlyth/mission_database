@@ -335,20 +335,25 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
     else  
       date_active = params[:date_active] || pick_birth_date(0,age-20)  # Picks a date between when person was 20 and the present
     end
-    location = params[:location] || pick_location
+    location = params[:residence_location] || pick_location
     sim_id = rand(10000) until !Family.find_by_sim_id(sim_id)
     puts "***make single--nil date_active, status=#{status}" if date_active.nil?
     f = Family.create(:last_name=>pick_last_name, :first_name=>pick_first_name(sex), :middle_name => pick_first_name(sex),
-              :status => status, :location => location, :sim_id => sim_id)
+              :status => status, :residence_location => location, :sim_id => sim_id)
     head = f.head
     head.update_attributes(:birth_date => birth_date, 
               :sex => sex,
               :ministry=>params[:ministry] || pick_ministry, 
-              :employment_status=>params[:employment_status] || pick_employment_status,
               :country=>params[:country] || pick_country, 
+              )
+
+   head.personnel_data.update_attributes(
+              :employment_status=>params[:employment_status] || pick_employment_status,
               :education=>params[:education] || pick_education, 
-              :bloodtype => params[:bloodtype] || pick_bloodtype,
               :date_active => date_active
+              )
+   head.health_data.update_attributes(
+              :bloodtype => params[:bloodtype] || pick_bloodtype
               )
 # puts "#{head.name}, #{head.age}, #{head.status.description}"
     return head 
@@ -363,12 +368,12 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
     spouse.birth_date = member.birth_date + (rand(2000) - 1000).days
     spouse.ministry = pick_ministry
     spouse.country = pick_country if rand > 0.85
-    spouse.education = pick_education
-    spouse.bloodtype = pick_bloodtype
     spouse.spouse = member
     if spouse.save
 #      puts "Spouse saved" 
       member.update_attributes(:spouse => spouse)
+      spouse.personnel_data.update_attribute(:education, pick_education) # Need this until autosave is working!
+      spouse.health_data.update_attribute(:bloodtype, pick_bloodtype)
     else
       puts "Spouse not saved, errors = #{spouse.errors}"
     end
@@ -398,6 +403,7 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
   def add_child(member, age, params={})
     child = Member.new(member.attributes)  # This clones all the attributes, then we'll change some
     child.sex = sex ||= SEXES.sample
+    child.child = true
     child.first_name = pick_first_name(child.sex, :child)
     child.middle_name = pick_first_name(child.sex, :child)
     child.name = nil
@@ -407,17 +413,11 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
     else
       child.birth_date = pick_birth_date(age, age+1)
     end  
-    child.date_active = [child.birth_date, member.date_active].max
     child.ministry = Ministry.find_by_description('MK')  # Could put this somewhere so it's not looked up each time
     child_status(child,age) # Choose reasonable status (like 'on field') based on parents' status and child's age
-    if age < 19
-      child.employment_status = EmploymentStatus.find_by_code('MKD')
-    else
-      child.employment_status = EmploymentStatus.find_by_code('MKA')
-    end      
-    child.bloodtype = pick_bloodtype
     if child.save
  #      puts "Child #{child.first_name}, #{child.birth_date}, #{child.age}"
+      child.health_data.update_attribute(:bloodtype , pick_bloodtype)
     else
       puts "Child not saved, errors = #{child.errors}"
     end
@@ -543,7 +543,7 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
 #  AFFILIATE_EMPLOYMENT_STATUSES =  %w( career_affiliate st_affiliate  )  
 #  SHORT_TERM_EMPLOYMENT_STATUSES = %w( st_affiliate sta special visitor )                   
   def add_field_term(member, params={})
-    location = params[:location] || Location.random
+    location = params[:residence_location] || Location.random
     ministry= params[:ministry] || Ministry.random
     employment_status = params[:employment_status] || EmploymentStatus.random
     if SHORT_TERM_EMPLOYMENT_STATUSES.include?(employment_status)
@@ -557,7 +557,7 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
       # Come up with a reasonable current term based on what the last term, if any, was
       last_term = member.field_terms.last
       if last_term.nil?  #if this is the first term being created for the person...
-        start_date=member.date_active
+        start_date=member.personnel_data.date_active
       else  # base current term on the end of the last term
         if last_term.end_date.nil?
           start_date=last_term.start_date + (rand(46) + 7).months              
@@ -566,24 +566,23 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
         end
       end
     end    
-puts "NIL start_date in add_field_term, member.status=#{member.status.code}, date_active=#{member.date_active}" if start_date.nil?
     return nil if start_date > Date::today
     end_date  = params[:end_date] || start_date + duration
     est_start_date  = params[:est_start_date] # No default on this one
     est_end_date   = params[:est_end_date] || est_start_date + duration if est_start_date
     employment_status = params[:employment_status] || EmploymentStatus.random
-    f = member.field_terms.create( :location => location, :ministry=>ministry,
+    f = member.field_terms.create( :primary_work_location => location, :ministry=>ministry,
                 :start_date=>start_date, :end_date =>end_date,
                 :est_start_date=>est_start_date, :est_end_date=>est_end_date,
                 :employment_status=>employment_status
                 )
   end # add_field_term
 
-  def add_some_singles(n,params={})
+  def add_some_singles(n=50,params={})
     n.times { make_a_single(params)}
   end  
     
-  def add_some_couples(n,params={})
+  def add_some_couples(n=100,params={})
     n.times do      
       h = make_a_single(params)
       s = add_spouse(h)
@@ -609,32 +608,27 @@ puts "NIL start_date in add_field_term, member.status=#{member.status.code}, dat
   end # add_some_children 
 
   def add_some_field_terms
-    Member.where("date_active IS NOT NULL").each do |m|
-#      if STATUS_CODES_MEMBERS.include?(m.status.code) && m.status.code != 'pipeline'
-
+    Member.all.each do |m|
+      if m.personnel_data.date_active
         if SHORT_TERM_EMPLOYMENT_STATUSES.include?(m.employment_status)
           length_of_service_years = [(10*rand*rand), 0.17].max # years
         else
           length_of_service_years = [(30*rand*rand), 0.17].max # years
         end
         length_of_service_days = (length_of_service_years*365.25).to_i
-        start_date = m.date_active
-        end_date = m.date_active
-#        puts "#{m.age}: active=#{m.date_active}, length=#{sprintf("%.1f",length_of_service_years)} years:"
-member=m
-puts "NIL start_date in add_some_field_terms, member.status=#{member.status.code}, date_active=#{member.date_active}" if start_date.nil?
-        while start_date < Date::today && ((start_date-m.date_active) < length_of_service_days)
+        start_date = m.personnel_data.date_active
+        end_date = m.personnel_data.date_active
+        while start_date < Date::today && ((start_date-m.personnel_data.date_active) < length_of_service_days)
           t = add_field_term(m) 
           if t
-#            puts "\t#{t.start_date} to #{t.end_date}, #{(t.end_date-t.start_date).to_i/30} months"
             start_date = t.end_date + 3.months
           else
             start_date = Date::today.tomorrow  
-   #       puts " >>> start_date=#{start_date}, service=#{(start_date-m.date_active)/365.25} years"
-   #       puts " >>> delta=#{(start_date-m.date_active)}, length_of_service=#{length_of_service_days}"
+   #       puts " >>> start_date=#{start_date}, service=#{(start_date-m.personnel_data.date_active)/365.25} years"
+   #       puts " >>> delta=#{(start_date-m.personnel_data.date_active)}, length_of_service=#{length_of_service_days}"
           end
-        end  
-#      end # if STATUS_CODES_...
+        end # while  
+      end  # m.personnel.personnel_data.date_active
     end  # Member.all.each
   end # add_some_field_terms
   

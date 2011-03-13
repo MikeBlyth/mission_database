@@ -14,7 +14,6 @@
 #
 
 class HealthData < ActiveRecord::Base
-  belongs_to :member
+  belongs_to :member, :autosave => true
   belongs_to :bloodtype
-
 end
