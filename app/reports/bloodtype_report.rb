@@ -12,19 +12,20 @@ include ReportsHelper
   #   table_data = [['Last name', 'First name', 'Blood type']]
     text_data = ''
     selected.each do |m|
-      text_data << "#{m.last_name}, #{m.first_name}: <i>#{m.bloodtype.full}</i>\n\n"
+      text_data << "#{m.last_name}, #{m.first_name}: <i>#{m.health_data.bloodtype.full}</i>\n\n"
     end
     page_header(:title=>'Blood Types', :left=>'SIM Nigeria Reports')
     move_down 8
     flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
       :size=>10,  :gutter=>5 , :inline_format => true
     # Now sort by bloodtype 
-    selected.sort! {|x,y| (x.bloodtype.full+x.last_name_first) <=> (y.bloodtype.full+y.last_name_first)}
+    selected.sort! {|x,y| (x.health_data.bloodtype.full+x.last_name_first) <=> 
+                          (y.health_data.bloodtype.full+y.last_name_first)}
     text_data = ''
     current_blood_type = ''
     selected.each do |m|
-      if current_blood_type != m.bloodtype.full
-        current_blood_type = m.bloodtype.full
+      if current_blood_type != m.health_data.bloodtype.full
+        current_blood_type = m.health_data.bloodtype.full
         text_data << "\n-- Type #{current_blood_type} --\n\n"
       end
       text_data << m.last_name_first(:initial => true) << "\n"

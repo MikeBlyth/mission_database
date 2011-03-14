@@ -33,6 +33,8 @@
     - if can? :read, HealthData
       %td.label Allergies
       %td= @record.health_data.allergies
+      %td.label Bloodtype
+      %td= @record.health_data.bloodtype
   - if can? :read, PersonnelData
     %tr
       %td.label Birth date  
@@ -42,7 +44,7 @@
       %td.label Qualifications  
       %td= @record.personnel_data.qualifications
       %td.label Date active  
-      %td= @record.personnel_data.date_active.to_s(:default)
+      %td= @record.personnel_data.date_active
       %td.label Employment  
       %td= @record.personnel_data.employment_status    
             

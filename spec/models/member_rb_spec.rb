@@ -35,12 +35,9 @@ describe Member do
 
   it "has the right 'unspecified' defaults when created" do
     m = Member.new
-    m.bloodtype_id.should == 999999
     m.country_id.should == 999999
     m.status_id.should == 999999
     m.ministry_id.should == 999999
-    m.education_id.should == 999999
-    m.employment_status_id.should == 999999
     m.residence_location_id.should == 999999
   end    
 

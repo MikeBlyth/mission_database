@@ -3,6 +3,15 @@ module MembersHelper
 #    "Here we are!"
 #    collection_select(:record, :state_id, State.find(:all, :order => "name"), :id, :name, {}, options)
 #  end
+
+  def options_for_association_conditions(association)
+    if [:health_data, :personnel_data].include? association.name 
+      ['false']
+    else
+      super
+    end
+  end
+
   def spouse_column(record)
     if record.spouse
       record.spouse.short_name || record.spouse.first_name

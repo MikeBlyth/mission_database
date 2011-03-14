@@ -11,8 +11,8 @@ class ReportsController < ApplicationController
 
    # Blood Type Reports
    def bloodtypes
-     selected = Member.select("family_id, last_name, first_name, middle_name, bloodtype_id, status_id")
-     selected = selected.delete_if{|x| !x.on_field || x.bloodtype_id.nil? }   # delete members not on the field
+     selected = Member.select("family_id, last_name, first_name, middle_name, status_id")
+     selected = selected.delete_if{|x| !x.on_field || x.health_data.nil?  }   # delete members not on the field
      output = BloodtypeReport.new.to_pdf(selected,"Includes only those currently on the field")
 
      respond_to do |format|
@@ -41,8 +41,9 @@ class ReportsController < ApplicationController
 
   # Contact reports
    def phone_email
-    selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, short_name, birth_date, id")
-    selected = selected.delete_if{|x| x.birth_date && !x.child }   # don't include the kids
+    selected = Member.where(conditions_for_collection).
+                      where("child is false").
+            select("family_id, child, last_name, first_name, middle_name, short_name, birth_date, id")
     filter = (session[:filter] || "").gsub('_', ' ')
     left_head = filter.blank? ? '' : "with status = #{filter}" 
     output = PhoneEmailReport.new.to_pdf(selected,:left_head=>left_head)

@@ -15,10 +15,10 @@ describe MembersController do
 
   describe "authentication before controller access" do
 
-    describe "for signed-in users" do
+    describe "for signed-in admin users" do
  
       before(:each) do
-        @user = Factory(:user)
+        @user = Factory(:user, :admin=>true)
         test_sign_in(@user)
       end
       

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110312214702) do
+ActiveRecord::Schema.define(:version => 20110314092350) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -167,7 +167,7 @@ ActiveRecord::Schema.define(:version => 20110312214702) do
     t.integer  "residence_location_id",         :default => 999999
     t.string   "name"
     t.boolean  "name_override"
-    t.boolean  "child"
+    t.boolean  "child",                         :default => false
     t.integer  "work_location_id"
     t.string   "temporary_location"
     t.date     "temporary_location_from_date"

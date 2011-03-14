@@ -19,7 +19,9 @@
     @children = []
     names.each do |name|
 #puts "****+++ Constructing child #{name} #{@family.last_name}"
-      @children << construct_member({:first_name => name}.merge(params))
+      @children << construct_member({:first_name => name, 
+                                     :child=>true,
+                                     :birth_date=>Date.today - 1.year}.merge(params))
     end  
   end  
 
@@ -134,7 +136,7 @@ Then /^I should see the editing form for the family head$/ do
   find_field("record[spouse]").value.should == @spouse.id.to_s
   page.should have_content @spouse.first_name
   find_field("Country").value.should == @country.name
-  find_field("Employment status").value.should == @head.employment_status_id.to_s
+  find_field("Employment status").value.should == @head.personnel_data.employment_status_id.to_s
   find_field("Ministry").value.should == @head.ministry_id.to_s
   
 end  
@@ -378,6 +380,10 @@ end
 Then /^the report should include the name, phone and email$/ do 
   page.should have_content @head.last_name
   page.should have_content @contact.phone_1
+end
+
+Then /^the report should not include "([^"]*)"$/ do |arg1|
+  page.should_not have_content arg1
 end
 
 Given /^a "([^"]*)" record$/ do |record_type|

@@ -8,7 +8,7 @@
 
 module AuthSpecHelper
   def check_authentication(object)
-    # First check without signed-in user
+    # First check without signed-in user -- should be able to do nothing
     get :new
     response.should redirect_to(signin_path)
     #  it "should deny access to 'edit'" do
@@ -26,7 +26,8 @@ module AuthSpecHelper
     put :destroy, :id => object.id
     response.should redirect_to(signin_path)
     #
-    @user = Factory(:user)
+    # Then check as user with admin privileges -- should be able to do everything
+    @user = Factory(:user, :admin=>true)
     test_sign_in(@user)
     #
     get :new

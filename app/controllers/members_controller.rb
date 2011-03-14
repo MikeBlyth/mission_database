@@ -16,51 +16,34 @@ class MembersController < ApplicationController
     config.list.sorting = {:name => 'ASC'}
     show.columns = create.columns = update.columns = 
         [ :name, :name_override,
+          :family,
           :last_name, :first_name, :middle_name, :short_name, :sex,
           :birth_date, :spouse, 
           :family_name,
           :country_name,
-          :date_active, :status, :employment_status,
+          :status, 
           :ministry, :ministry_comment, 
           :residence_location, :work_location, :temporary_location, :temporary_location_from_date, :temporary_location_until_date,
-          :education, :qualifications,
-          :contacts, :field_terms, :travels,
-          :health_data
+          :contacts, :travels,
+          :health_data,
+          :personnel_data, :field_terms, 
           ]
     show.columns.exclude    :last_name, :first_name, :middle_name, :short_name, :name_override
     update.columns.exclude :family_name
- 
-    update.columns = [:name, :name_override,
-          :last_name, :first_name, :middle_name, :short_name, :sex,
-          :birth_date, :spouse, 
-          :family_name,
-          :country_name,
-          :date_active, :status, :employment_status,
-          :ministry, :ministry_comment, 
-          :residence_location, :work_location,
-          :temporary_location, :temporary_location_from_date, :temporary_location_until_date,         
-          :education, :qualifications,
-          :bloodtype, :allergies, :medications,
-          :contacts, :travels,
-           ]
  
     create.columns.exclude :family_name
     config.columns[:country].actions_for_association_links = []
     config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]
-#    config.delete.link = false
-    config.columns[:bloodtype].form_ui = :select 
     config.columns[:family].form_ui = :select 
     config.columns[:education].form_ui = :select 
     config.columns[:sex].options[:options] = [['Female', 'F'], ['Male', 'M']]
     config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
     config.columns[:status].form_ui = :select 
-    config.columns[:employment_status].form_ui = :select 
-  #  config.columns[:residence_location].form_ui = :select 
+    config.columns[:status].inplace_edit = true
     config.columns[:residence_location].inplace_edit = true
     config.columns[:work_location].inplace_edit = true
-    config.columns[:status].inplace_edit = true
     config.columns[:field_terms].collapsed = true
     config.columns[:travels].collapsed = true
     config.columns[:contacts].collapsed = true
@@ -98,6 +81,31 @@ class MembersController < ApplicationController
       format.js
     end
   end
+
+  def convert_keys_to_id(params, *keys_to_change)
+    keys_to_change.each do |k|
+      v = params.delete(k)
+      params[(k.to_s << '_id').to_sym] = v unless v.blank?  # resinsert value but with _id added to key
+    end
+    params
+  end
+    
+  def do_create
+    super
+puts "\n****** After super record=#{@record.attributes}"
+puts "\n****** After super params[:record]=#{params[:record]}"
+    health_data = convert_keys_to_id(params[:record][:health_data], :bloodtype)
+    personnel_data = convert_keys_to_id(params[:record][:personnel_data], 
+        :education, :employment_status)
+    if health_data
+      @record.health_data.update_attributes(health_data)
+      puts "Updated health_data"
+    end
+    if personnel_data
+      @record.personnel_data.update_attributes(personnel_data)
+      puts "Updated personnel_data"
+    end
+  end  
   
   def do_new
     super
@@ -111,8 +119,6 @@ class MembersController < ApplicationController
                               :spouse => head,
                               :country_id => head.country_id,
                               :status => head.status,
-                              :date_active => head.date_active,
-                              :employment_status => head.employment_status,
                               :residence_location => head.residence_location )
         @headline = "Add Spouse for #{head.full_name}"
       elsif params[:type] == 'child'
@@ -120,7 +126,6 @@ class MembersController < ApplicationController
                               :last_name=> family.last_name, 
                               :country_id => head.country_id,
                               :status => head.status,
-                              :date_active => head.date_active,
                               :residence_location => head.residence_location )
         @headline = "Add Child for #{head.full_name}"
       end  
