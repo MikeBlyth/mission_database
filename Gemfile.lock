@@ -184,10 +184,6 @@ GEM
     verification (1.0.1)
       actionpack (~> 3.0.0)
       activesupport (~> 3.0.0)
-    webrat (0.7.3)
-      nokogiri (>= 1.2.0)
-      rack (>= 1.0)
-      rack-test (>= 0.5.3)
     xpath (0.1.3)
       nokogiri (~> 1.3)
     yamler (0.1.0)
@@ -220,4 +216,3 @@ DEPENDENCIES
   spork
   test-unit (= 1.2.3)
   ttfunk (~> 1.0.0)!
-  webrat (>= 0.7.2)

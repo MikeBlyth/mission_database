@@ -12,7 +12,8 @@ describe SessionsController do
 
     it "should have the right title" do
       get :new
-      response.should have_selector("title", :content => "Sign in")
+      puts response.to_yaml
+      response.body.should =~ /Please sign in/i
     end
   end
 
@@ -26,12 +27,12 @@ describe SessionsController do
 
       it "should re-render the new page" do
         post :create, :session => @attr
-        response.should render_template('new')
+        page.should render_template('new')
       end
 
       it "should have the right title" do
         post :create, :session => @attr
-        response.should have_selector("title", :content => "Sign in")
+        response.body.should =~ /Please sign in/i
       end
 
       it "should have a flash.now message" do
@@ -55,7 +56,7 @@ describe SessionsController do
 
       it "should redirect to the user show page" do
         post :create, :session => @attr
-        response.should redirect_to(root_path)
+        page.should redirect_to(root_path)
       end
     end # with valid credentials
 
@@ -67,7 +68,7 @@ describe SessionsController do
       test_sign_in(Factory(:user))
       delete :destroy
       controller.should_not be_signed_in
-      response.should redirect_to(root_path)
+      page.should redirect_to(root_path)
     end
   end
   

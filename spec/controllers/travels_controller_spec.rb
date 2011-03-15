@@ -1,9 +1,9 @@
 require 'spec_helper'
-require "webrat"
+#require "webrat"
 
-Webrat.configure do |config|
-  config.mode = :rails
-end
+#Webrat.configure do |config|
+#  config.mode = :rails
+#end
 
 describe TravelsController do
 

@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'sim_test_helper'
 
-require "webrat"
+#require "webrat"
 
-Webrat.configure do |config|
-  config.mode = :rails
-end
+#Webrat.configure do |config|
+#  config.mode = :rails
+#end
 
 #def select_second_option(id)
 ## from Jason Neylon's Blog http://bit.ly/gIPq1R

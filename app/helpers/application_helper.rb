@@ -15,7 +15,7 @@ module ApplicationHelper
 
 end
 
-include ActionView::Helpers::FormOptionsHelper
+# include ActionView::Helpers::FormOptionsHelper
 require "#{Rails.root}/config/initializers/date_formats.rb"
   #This shouldn't be necessary but some formats are not "sticking" in 3.0.4 when defined in initializers
 

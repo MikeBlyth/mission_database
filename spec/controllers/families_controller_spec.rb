@@ -5,12 +5,11 @@ require 'spec_helper'
 #  config.mode = :rails
 #end
 
-describe MembersController do
+describe FamiliesController do
   
   before(:each) do
     @family = Factory(:family)
     @member = @family.head
-    Factory(:country_unspecified)
   end
 
   describe "authentication before controller access" do
@@ -23,19 +22,21 @@ describe MembersController do
       end
       
       it "should allow access to 'new'" do
-        Member.should_receive(:new)
+        Family.should_receive(:new)
         get :new
       end
       
       it "should allow access to 'destroy'" do
-        # Member.should_receive(:destroy) # Why can't this work ??
-        put :destroy, :id => @member.id
-        response.should_not redirect_to(signin_path)
+        # Family.should_receive(:destroy) # Why can't this work ??
+        lambda do
+          put :destroy, :id => @family.id
+          response.should_not redirect_to(signin_path)
+        end.should change(Family, :count).by(-1)  
       end
       
       it "should allow access to 'update'" do
-        # Member.should_receive(:update)
-        put :update, :id => @member.id, :record => @member.attributes, :member => @member.attributes
+        # Family.should_receive(:update)
+        put :update, :id => @family.id, :record => @family.attributes, :family => @family.attributes
         response.should_not redirect_to(signin_path)
       end
       
@@ -56,7 +57,7 @@ describe MembersController do
 
     before(:each) do
       load "#{Rails.root}/db/seeds.rb" # A SLOW (~10 seconds) process
-      Member.delete_all
+      Family.delete_all
       # This list should include all the status codes in use (or at least in seeds.rb)
       @status_codes = %w( alumni mkfield field college home_assignment leave mkadult retired deceased ) +
                      %w( pipeline mkalumni visitor_past visitor unspecified)
@@ -74,31 +75,31 @@ describe MembersController do
                   :visitor => ['visitor', 'visitor_past'],
                   :other => @status_codes - ['field', 'home_assignment', 'mkfield', 'visitor', 'visitor_past', 'leave', 'pipeline']
                   }
-      # Create a member for each status
+      # Create a family for each status
       @status_codes.each do |status_code|
         status=Status.find_by_code(status_code)
         puts "**** status code '#{status_code}' not found in Status table created by seeds.rb" unless status
         status.should_not be_nil # If it's nil, it means the codes in this test do not match those in seeds.rb
-        member = Factory(:family, :status_id=>status.id)
+        family = Factory(:family, :status_id=>status.id)
       end  
     end
     
-    it "should select members with the right status" do
+    it "should select families with the right status" do
       # This checks that the 'conditions_for_collection' method returns the right conditions to match the 
       #   status groups defined above, and that the conditions work to return the right records.
-      Member.count.should == @status_codes.count
+      Family.count.should == @status_codes.count
       @status_groups.each do | category, statuses |
         session[:filter] = category.to_s
-        Member.where(controller.conditions_for_collection).count.should == statuses.count
-        Member.where(controller.conditions_for_collection).each do |m|
+        Family.where(controller.conditions_for_collection).count.should == statuses.count
+        Family.where(controller.conditions_for_collection).each do |m|
           statuses.include?(m.status.code).should be_true
         end
       end
-      # An invalid group should return all the members.
+      # An invalid group should return all the familys.
       session[:filter] = 'ALL!'
-      Member.where(controller.conditions_for_collection).count.should == Member.count
+      Family.where(controller.conditions_for_collection).count.should == family.count
       
-    end    #  it "should select members with active status"
+    end    #  it "should select families with active status"
 
   end # filtering by status
 

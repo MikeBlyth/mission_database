@@ -19,11 +19,11 @@ describe "Users" do
             fill_in "Confirmation", :with => ""
             click_button "user_submit"
 #            page.should have_content("Email can't be blank")
-            response.should contain("Email can't be blank")
-            response.should contain("Name can't be blank")
-            response.should contain("Email is invalid")
-            response.should contain("Password can't be blank")
-            response.should contain("too short")
+            page.should have_content("Email can't be blank")
+            page.should have_content("Name can't be blank")
+            page.should have_content("Email is invalid")
+            page.should have_content("Password can't be blank")
+            page.should have_content("too short")
           end.should_not change(User, :count)
         end # it should
       end #failure
@@ -37,7 +37,7 @@ describe "Users" do
             fill_in "Password",     :with => "foobar"
             fill_in "Confirmation", :with => "foobar"
             click_button "Create"
-            response.should have_selector("div.flash.success",
+            page.should have_selector("div.flash.success",
                                           :content => "Successfully")
           end.should change(User, :count).by(1)
         end #it should
@@ -46,8 +46,8 @@ describe "Users" do
 
     it "edit form should not have field for Admin privileges" do
       visit edit_user_path @user
-      response.should contain("Edit User")
-      response.should_not contain("Administrator")
+      page.should have_content("Edit User")
+      page.should_not have_content("Administrator")
     end
 
   end # by Administrator 
@@ -57,8 +57,8 @@ describe "Users" do
 
     it "should not create a new user even with good values" do
       visit new_user_path @user
-      response.should have_selector("title", :content => "SIM")
-      response.should have_selector("div.flash.alert")
+      page.should have_selector("title", :content => "SIM")
+      page.should have_selector("div.flash.alert")
     end
 
     it 'should allow user to edit his own record' do
@@ -75,7 +75,7 @@ describe "Users" do
         fill_in "Name",    :with => ""
         fill_in "Password", :with => ""
         click_button "Sign in"
-        response.should have_selector("div.flash.error", :content => "Invalid")
+        page.should have_selector("div.flash.error", :content => "Invalid")
       end
     end #failure
 
@@ -86,9 +86,9 @@ describe "Users" do
         fill_in "Name",    :with => user.name
         fill_in "Password", :with => user.password
         click_button "Sign in"
-        response.should have_selector("a", :content => "Sign out")
+        page.should have_selector("a", :content => "Sign out")
         click_link "Sign out"
-        response.should have_selector("a", :content => "Sign in")
+        page.should have_selector("a", :content => "Sign in")
       end
     end #success
   end # sign in/out
