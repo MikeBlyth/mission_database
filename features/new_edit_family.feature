@@ -38,7 +38,7 @@ Feature: Forms for creating and updating families
     When I select "update family"
     Then I should not see a button for adding a spouse
     
-  Scenario: I should be able to add spouse from family edit form
+  Scenario: I should get a form to add spouse from family edit form
     Given that I am signed in as an administrator
     And that I am updating a family
     When I click on "Add spouse"
@@ -51,3 +51,13 @@ Feature: Forms for creating and updating families
     When I click on "Add child"
     Then I should see a form titled "Add Child for"
     And the form should be pre-set to add a child
+    
+  @now
+  Scenario: I should be able to add spouse 
+    Given that I am signed in as an administrator
+    And that I have a form to add a spouse
+    When I input values for spouse
+    And I click on "Create"
+    Then the spouse should be created
+
+    

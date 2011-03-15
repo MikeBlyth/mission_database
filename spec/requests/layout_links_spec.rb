@@ -1,9 +1,9 @@
 require 'spec_helper'
-require "webrat"
+require 'capybara/rspec'
 
-Webrat.configure do |config|
-  config.mode = :rails
-end
+#Webrat.configure do |config|
+#  config.mode = :rails
+#end
 
 describe "LayoutLinks" do
 

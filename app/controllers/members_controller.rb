@@ -18,6 +18,7 @@ class MembersController < ApplicationController
         [ :name, :name_override,
           :family,
           :last_name, :first_name, :middle_name, :short_name, :sex,
+          :child,
           :birth_date, :spouse, 
           :family_name,
           :country_name,
@@ -30,7 +31,7 @@ class MembersController < ApplicationController
           ]
     show.columns.exclude    :last_name, :first_name, :middle_name, :short_name, :name_override
     update.columns.exclude :family_name
- 
+    
     create.columns.exclude :family_name
     config.columns[:country].actions_for_association_links = []
     config.columns[:country].css_class = :hidden
@@ -92,11 +93,13 @@ class MembersController < ApplicationController
     
   def do_create
     super
-puts "\n****** After super record=#{@record.attributes}"
-puts "\n****** After super params[:record]=#{params[:record]}"
+#puts "\n****** After super record=#{@record.attributes}"
+#puts "\n****** After super params[:record]=#{params[:record]}"
     health_data = convert_keys_to_id(params[:record][:health_data], :bloodtype)
     personnel_data = convert_keys_to_id(params[:record][:personnel_data], 
         :education, :employment_status)
+    @record.create_health_data unless @record.health_data
+    @record.create_personnel_data unless @record.personnel_data
     if health_data
       @record.health_data.update_attributes(health_data)
       puts "Updated health_data"

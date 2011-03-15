@@ -1,65 +1,60 @@
-  require 'sim_test_helper'
-  include SimTestHelper
-    
-  def construct_family
-    @family = Factory.create(:family, :status=>@status, :residence_location=>@location)
-    @head = @family.head
-  end
-
-  def construct_member(params={})
-    m = Factory.create(:member, {:family=>@family}.merge(params))
-  end
+require 'sim_test_helper'
+include SimTestHelper
   
-  def create_spouse(params={})
-    @spouse_name = params[:first_name] || "Sally"
-    @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
-  end
+def construct_family
+  @family = Factory.create(:family, :status=>@status, :residence_location=>@location)
+  @head = @family.head
+end
 
-  def create_children(names=['Child'],params={})
-    @children = []
-    names.each do |name|
+def construct_member(params={})
+  m = Factory.create(:member, {:family=>@family}.merge(params))
+end
+
+def create_spouse(params={})
+  @spouse_name = params[:first_name] || "Sally"
+  @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
+end
+
+def create_children(names=['Child'],params={})
+  @children = []
+  names.each do |name|
 #puts "****+++ Constructing child #{name} #{@family.last_name}"
-      @children << construct_member({:first_name => name, 
-                                     :child=>true,
-                                     :birth_date=>Date.today - 1.year}.merge(params))
-    end  
+    @children << construct_member({:first_name => name, 
+                                   :child=>true,
+                                   :birth_date=>Date.today - 1.year}.merge(params))
   end  
+end  
 
-  def set_up_statuses
-    @status = Factory.create(:status)
-  end
-  
-  def set_up_employment_statuses
-    @employment_status = EmploymentStatus.create(:code=>200, :description => "EmploymentStatus")
-    EmploymentStatus.create(:code=>300, :description => "MK dependent", :mk_default => true)
-  end
+def set_up_statuses
+  Factory(:status_unspecified)
+  @status = Factory.create(:status)
+end
+
+def set_up_employment_statuses
+  @employment_status = EmploymentStatus.create(:code=>200, :description => "EmploymentStatus")
+  EmploymentStatus.create(:code=>300, :description => "MK dependent", :mk_default => true)
+end
+
+def sign_in(params={})
+  return if cookies[:remember_token]
+  # There might already be countries (seed_tables may have been called). Otherwise
+  #    we need to create them since we will be directed to members table, which 
+  #    has a column for countries
+  Factory(:country) unless Country.count > 0
+  Factory(:country_unspecified) unless Country.exists?(UNSPECIFIED)
+  @user = Factory(:user, params)
+  visit signin_path
+  fill_in "Name",    :with => @user.name
+  fill_in "Password", :with => @user.password
+  click_button "Sign in"
+end  
 
 Given /^that I am signed in$/ do
-    return if cookies[:remember_token]
-    user = Factory(:user)
-    # There might already be countries (seed_tables may have been called). Otherwise
-    #    we need to create them since we will be directed to members table, which 
-    #    has a column for countries
-    Factory(:country) unless Country.count > 0
-    Factory(:country_unspecified) unless Country.exists?(UNSPECIFIED)
-    visit signin_path
-    fill_in "Name",    :with => user.name
-    fill_in "Password", :with => user.password
-    click_button "Sign in"
+    sign_in
 end
 
 Given /^that I am signed in as an administrator$/ do
-    return if cookies[:remember_token]
-    user = Factory(:user, :admin=>true)
-    # There might already be countries (seed_tables may have been called). Otherwise
-    #    we need to create them since we will be directed to members table, which 
-    #    has a column for countries
-    Factory(:country) unless Country.count > 0
-    Factory(:country_unspecified) unless Country.exists?(UNSPECIFIED)
-    visit signin_path
-    fill_in "Name",    :with => user.name
-    fill_in "Password", :with => user.password
-    click_button "Sign in"
+    sign_in(:admin=>true)
 end
 
 Given /^a one-person family$/ do
@@ -403,4 +398,22 @@ Then /^the report should include the "([^"]*)" information$/ do |report_type|
   end      
 end
 
+Given /^that I have a form to add a spouse$/ do
+  sign_in(:admin=>true)
+  set_up_statuses
+  construct_family
+  visit edit_family_path(@family.id)
+  click_link_or_button "Add spouse"
+  save_and_open_page
+end
+
+When /^I input values for spouse$/ do
+  fill_in "First name", :with => "Sally"
+  select("Unspecified")
+  click_link_or_button "Create"
+end
+
+Then /^the spouse should be created$/ do
+  pending # express the regexp above with the code you wish you had
+end
 
