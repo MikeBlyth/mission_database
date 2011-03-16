@@ -12,7 +12,7 @@ describe SessionsController do
 
     it "should have the right title" do
       get :new
-      puts response.to_yaml
+ #  puts response.to_yaml
       response.body.should =~ /Please sign in/i
     end
   end

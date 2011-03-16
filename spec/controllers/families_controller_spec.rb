@@ -97,8 +97,7 @@ describe FamiliesController do
       end
       # An invalid group should return all the familys.
       session[:filter] = 'ALL!'
-      Family.where(controller.conditions_for_collection).count.should == family.count
-      
+      Family.where(controller.conditions_for_collection).count.should == Family.count
     end    #  it "should select families with active status"
 
   end # filtering by status

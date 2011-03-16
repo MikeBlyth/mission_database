@@ -118,7 +118,7 @@ When /^I view the list of families$/ do
 end
 
 When /^I edit the family head$/ do
-  @head.add_details   # give @head the various attributes we're going to check on the form
+  add_details(@head)   # give @head the various attributes we're going to check on the form
   seed_tables
   visit edit_member_path @head
 end  
@@ -285,7 +285,7 @@ end
 Given /^that I am updating a family$/ do
   seed_tables
   construct_family
-  @head.add_details
+  add_details(@head)
   @head.status_id.should == @status.id
   @head.residence_location_id.should == @location.id
   visit edit_family_path :id=>@family.id
@@ -306,7 +306,7 @@ end
 Then /^the form should be pre\-set to add a spouse$/ do
   find_field("Last name").value.should == @family.last_name
   find_field("First name").value.blank?.should be true
-  find_field("Sex").value.should == ApplicationHelper::opposite_sex(@head.sex)
+  find_field("Sex").value.should == @head.other_sex
   find_field("record[spouse]").value.should == @head.id.to_s
   find_field("Country name").value.should == @head.country.name
 #  find_field("Date active").value.should == @head.date_active
@@ -404,7 +404,7 @@ Given /^that I have a form to add a spouse$/ do
   construct_family
   visit edit_family_path(@family.id)
   click_link_or_button "Add spouse"
-  save_and_open_page
+#  save_and_open_page
 end
 
 When /^I input values for spouse$/ do

@@ -55,7 +55,7 @@ include SimTestHelper
         check 'Child'  
         fill_in "Birth date", :with => "2000-01-01"
         fill_in "Country name", :with => "Afghanistan"
-        select 'On field_2'
+        select 'On field'
         select 'Evangelism'
         fill_in 'Ministry comment', :with=> "ministry comment"
         select 'JETS', :from=>'record_residence_location'
@@ -83,7 +83,7 @@ include SimTestHelper
       m.child.should == true
       m.birth_date.should == Date.new(2000,1,1)
       m.country.name.should == 'Afghanistan'
-      m.status.description.should == 'On field_2'
+      m.status.description.should =~ /On field/
       m.ministry.description.should == 'Evangelism'
       m.ministry_comment.should ==   "ministry comment"    
       m.residence_location.description.should == 'JETS'

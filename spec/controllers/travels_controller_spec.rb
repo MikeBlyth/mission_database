@@ -19,7 +19,6 @@ describe TravelsController do
     
       it "should have access to new object form" do
 #        Travel.should_receive(:new)
-puts "Get new with auth user, @user.travel=#{@user.travel}"
         get :new
         response.should render_template('create')
       end

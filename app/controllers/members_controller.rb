@@ -2,8 +2,9 @@ class MembersController < ApplicationController
   helper :countries
   helper :name_column
 
+  load_and_authorize_resource
+
   include AuthenticationHelper
-  include ApplicationHelper
 
   before_filter :authenticate #, :only => [:edit, :update]
 
@@ -100,17 +101,12 @@ class MembersController < ApplicationController
         :education, :employment_status)
     @record.create_health_data unless @record.health_data
     @record.create_personnel_data unless @record.personnel_data
-    if health_data
-      @record.health_data.update_attributes(health_data)
-      puts "Updated health_data"
-    end
-    if personnel_data
-      @record.personnel_data.update_attributes(personnel_data)
-      puts "Updated personnel_data"
-    end
+    @record.health_data.update_attributes(health_data) if health_data
+    @record.personnel_data.update_attributes(personnel_data) if personnel_data
   end  
   
   def do_new
+#puts "**** do_new"
     super
     if params[:family]
       family = Family.find_by_id(params[:family])
@@ -118,7 +114,7 @@ class MembersController < ApplicationController
       if params[:type] == 'spouse'
         @record = Member.new( :family => family,
                               :last_name=> family.last_name, 
-                              :sex => opposite_sex(head.sex),
+                              :sex => head.other_sex,
                               :spouse => head,
                               :country_id => head.country_id,
                               :status => head.status,
@@ -136,21 +132,28 @@ class MembersController < ApplicationController
     end
   end
 
-# TODO REMOVE OR DISABLE WHEN FINISHED DEBUGGING
-############## ONLY FOR TROUBLESHOOTING! ************************
   def do_show
     super
-    if @record.family.nil?
-      begin
-          f = Family.new(:head => @record)
-          f.id = @record.family_id
-          f.save
-      rescue
-         puts "****** ERROR  #{$!}"
-      end
-    end
   end    
   
+  def do_update
+ #   @record.previous_spouse = @record.spouse if @record
+    super
+  end    
+  
+  # Override the ActiveScaffold method so that we can pass errors in flash
+  def do_destroy
+    @record = find_if_allowed(params[:id], :delete)
+    @record.previous_spouse = @record.spouse
+    begin
+      self.successful = @record.destroy
+    rescue
+      flash[:warning] = as_(:cant_destroy_record, :record => @record.to_label)
+      flash[:warning] << " because #{@record.errors[:delete]}"
+      self.successful = false
+    end
+  end
+
   def set_full_names
     Member.find(:all).each do |m| 
       if m.name.blank? || (m.first_name == m.short_name)
@@ -191,18 +194,6 @@ class MembersController < ApplicationController
 puts "@json_resp = #{@json_resp}"
     respond_to do |format|
       format.js { render :json => @json_resp }
-    end
-  end
-
-  # Override the ActiveScaffold method so that we can pass errors in flash
-  def do_destroy
-    @record = find_if_allowed(params[:id], :delete)
-    begin
-      self.successful = @record.destroy
-    rescue
-      flash[:warning] = as_(:cant_destroy_record, :record => @record.to_label)
-      flash[:warning] << " because #{@record.errors[:delete]}"
-      self.successful = false
     end
   end
 

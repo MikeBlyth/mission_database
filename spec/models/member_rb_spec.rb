@@ -1,6 +1,3 @@
-include ApplicationHelper
-
-
 describe Member do
   before(:each) do
     @status = Factory(:status)
@@ -272,6 +269,39 @@ describe Member do
         @woman.update_attributes(:birth_date=> Date.yesterday)
         @man.marry(@woman).should be_nil
       end
+    end
+
+    it "does not delete a still-married member" do
+      @man.marry(@woman)
+      lambda {@woman.destroy}.should_not change(Member, :count)
+      @man.spouse.should == @woman
+      @woman.errors.should_not be_empty
+    end
+    
+    it "de-links spouse when its own spouse is set to nil" do
+      # The member itself can't detect that the spouse has been changed, so the controller must
+      # set the previous_spouse when this happens
+      @man.marry(@woman)
+      @man.previous_spouse = @woman   # This must be done by controller in real life
+      @man.update_attributes(:spouse=>nil)
+      @woman.spouse.should be_nil
+    end      
+
+    it "does not update spouse when prev spouse still links to it" do
+      # I.e., can't change A's spouse from B to C if B still thinks he's married to A 
+      # The member itself can't detect that the spouse has been changed, so the controller must
+      # set the previous_spouse when this happens
+      @man.marry(@woman)
+      new_wife = Factory(:member, :sex=>'F')
+      @man.previous_spouse = @woman   # This must be done by controller in real life
+      @man.update_attributes(:spouse=>new_wife)
+      @woman.spouse.should == @man  # still
+      @man.errors.should_not be_empty
+    end      
+
+    it "handles missing spouse by resetting spouse_id" do
+      @man.update_attribute(:spouse_id, 99999) # Note that this bypasses validation
+      @man.reload.spouse.should == nil
     end
   end # describe marrying  
 end

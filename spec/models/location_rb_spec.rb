@@ -1,9 +1,6 @@
-require 'spec_helper'
-require 'application_helper'
-require 'sim_test_helper'
- 
 describe Location do
 include SimTestHelper
+include LocationHelper
 
   it "makes a nice selection list from locations" do
     setup_cities

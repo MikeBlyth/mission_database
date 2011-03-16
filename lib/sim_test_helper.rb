@@ -1,14 +1,11 @@
 require Rails.root.join('spec/factories')
-require 'member'
-require 'application_helper'
+#require 'application_helper'
 
-
-# Why can't this go in the module?
-class Member
-  def add_details
-  #debugger
+module SimTestHelper
+#  include ApplicationHelper
+  def add_details(member)
     location = Location.last
-    self.update_attributes(:middle_name => 'Midname',
+    member.update_attributes(:middle_name => 'Midname',
             :short_name => 'Shorty',
             :sex => 'M',
             :birth_date => '1980-01-01',
@@ -18,21 +15,14 @@ class Member
             :ministry_id => 1,
             :ministry_comment => 'Working with orphans'
             )
-    self.personnel_data.update_attributes(
+    member.personnel_data.update_attributes(
             :date_active => '2005-01-01',
             :employment_status_id => 1,
             :education_id => 1,
             :qualifications => 'TESOL, qualified midwife')
   end
-end
-
-
-module SimTestHelper
-  include ApplicationHelper
 
   def test_init
- #   require 'cleaner'
- #   include SimTestHelper
     SimTestHelper::seed_tables
     @f = Factory.create(:family)
     @h = @f.head

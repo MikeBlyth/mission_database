@@ -6,6 +6,8 @@ Spork.prefork do
   # if you change any configuration or code from libraries loaded here, you'll
   # need to restart spork for it take effect.
 
+puts "SPORK PREFORK ..."
+
   require File.dirname(__FILE__) + "/factories"  
 
   # This file is copied to spec/ when you run 'rails generate rspec:install'
@@ -60,7 +62,7 @@ Spork.prefork do
       click_button "Sign in"
   end
 
-  require Rails.root+'app/helpers/application_helper.rb'
+#>  require Rails.root+'app/helpers/application_helper.rb'
   require Rails.root+'lib/sim_test_helper.rb'
   require 'cover_me'  # This is for CoverMe code coverage
 
@@ -72,7 +74,9 @@ Spork.prefork do
 end # Spork.prefork
 
 Spork.each_run do
+puts "SPORK EACH_RUN ..."
   load Rails.root+'app/models/member.rb'
+#>  load Rails.root+'app/helpers/application_helper.rb'
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by
         # signing out before this group of tests.

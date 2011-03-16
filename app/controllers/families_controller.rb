@@ -35,25 +35,26 @@ class FamiliesController < ApplicationController
     
   end  
   def conditions_for_collection
-    selector = case
-    when session[:filter] == 'active'
-      ['families.status_id IN (?)', ['2','3','5']]
-    when session[:filter] == 'on_field'
-      ['families.status_id IN (?)', ['2','3']]
-    when session[:filter] == 'home_assignment'
-      ['families.status_id IN (?)', ['5']]
-    when session[:filter] == 'ha_or_leave'
-      ['families.status_id IN (?)', ['5','6']]
-    when session[:filter] == 'pipeline'
-      ['families.status_id IN (?)', ['12']]
-    when session[:filter] == 'other'
-      ['families.status_id NOT IN (?)', ['2','3','5','6','12']]
-    else
- #     ['?', true]
-      ['families.id > 0']
-    end
+    status_groups = {'active' => %w( field home_assignment mkfield),
+                'field' => %w( field mkfield visitor),
+                'home_assignment' => %w( home_assignment ),
+                'home_assignment_or_leave' => %w( home_assignment leave),
+                'pipeline' => %w( pipeline ),
+                'visitor' => %w( visitor visitor_past ),
+                'other' => %w( alumni college mkadult retired deceased mkalumni unspecified )
+                }
+      # The groups reflect the status codes matched by the various filters. So, for example,
+      #   the filter "active" (or :active) should trigger a selection string that includes the statuses with codes
+      #   'field', 'home_assignment', and 'mkfield'
 
-    selector
+    target_statuses = status_groups[session[:filter]]
+    return "TRUE" if target_statuses.nil?
+    # Find all status records that match that filter
+    matches = [] # This will be the list of matching status ids. 
+    Status.where("statuses.code IN (?)", target_statuses).each do |status|
+      matches << status.id 
+    end
+    return ['families.status_id IN (?)', matches]
   end  
 
   def create_respond_to_html 

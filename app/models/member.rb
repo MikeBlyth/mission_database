@@ -31,6 +31,8 @@
 class Member < ActiveRecord::Base
   include NameHelper
   
+  attr_accessor :previous_spouse  # to help with cross-linking when changing/deleting spouse
+  
   has_many :contacts, :dependent => :destroy 
   has_many :travels, :dependent => :destroy 
   has_many :field_terms,  :dependent => :destroy 
@@ -102,6 +104,8 @@ class Member < ActiveRecord::Base
       (spouse.age_years || 99)< 16
     errors.add(:spouse, "proposed spouse is already married") if
       spouse.spouse_id && (spouse.spouse_id != self.id)
+    errors.add(:spouse, "must un-marry existing spouse first") if
+      @previous_spouse && (@previous_spouse.spouse_id == self.id) && (spouse != @previous_spouse)
   end
 
   def country_name
@@ -173,34 +177,45 @@ class Member < ActiveRecord::Base
   # automatically ...
   # If we do it w/o any error checking, must be sure user can only assign a valid member as a spouse
   # (What if someone else deletes the spouse --- don't ever delete anyone :-)
-    if !spouse_id.nil? && spouse.spouse_id != self.id
-#puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
-      if spouse.sex == self.sex
-        self.update_attribute(:spouse_id, nil)
-#puts "**** Same sex, spouse changed to #{self.spouse_id}"
-        return nil
-      end  
-      spouse.spouse_id = self.id  # my spouse is married to me
-      if self.male?
-        husband = self
-        wife = spouse
-      else
-        wife = self
-        husband = spouse
-      end
-      wife.family_id = husband.family_id
-      begin
-        spouse.save!
-        self.save!
-        rescue 
-   #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
-         logger.error "***Unable to find or update spouse (record id #{spouse_id})"
-         puts "***Unable to find or update spouse (record id #{spouse_id}), error #{spouse.errors}"
-         nil
-      end    
+    #puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}"
+    if spouse_id.nil? && @previous_spouse   # we've just removed spouse, so need to do same to prev spouse
+      @previous_spouse.update_attribute(:spouse, nil)
+      return nil
     end
-    return husband
-  end
+    if spouse_id # 
+      if !spouse  # i.e. if spouse not found in db, db is corrupted
+        spouse_id = nil
+        return nil
+      end 
+      if spouse.spouse_id != self.id # spouse exists but is not linked back to member
+        #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
+        if spouse.sex == self.sex
+          self.update_attribute(:spouse_id, nil)
+          #puts "**** Same sex, spouse changed to #{self.spouse_id}"
+          return nil
+        end  
+        spouse.spouse_id = self.id  # my spouse is married to me
+        if self.male?
+          husband = self
+          wife = spouse
+        else
+          wife = self
+          husband = spouse
+        end
+        wife.family_id = husband.family_id
+        begin
+          spouse.save!
+          self.save!
+          rescue 
+     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
+           logger.error "***Unable to find or update spouse (record id #{spouse_id})"
+           puts "***Unable to find or update spouse (record id #{spouse_id}), error #{spouse.errors}"
+           nil
+        end # rescue block    
+        return husband
+      end # if spouse.spouse_id != self.id
+    end # if spouse_id  
+  end # cross_link_spouses
 
   def check_if_family_head
     if family_head
@@ -214,9 +229,10 @@ class Member < ActiveRecord::Base
   def check_if_spouse
     # if there IS a valid spouse, remove the spouse's link to this member
     orphan_spouse = Member.find_by_spouse_id(self.id)
+# puts "**** Orphan_spouse = #{orphan_spouse.name if orphan_spouse}"
     if orphan_spouse
-      errors[:delete] << "can't delete while still spouse of #{orphan_spouse.to_label}"
- #     raise ActiveRecord::RecordInvalid
+      self.errors.add(:delete, "can't delete while still spouse of #{orphan_spouse.to_label}")
+      return false
     else
       return true
     end  
@@ -249,8 +265,9 @@ class Member < ActiveRecord::Base
     # delete from possibilities everyone
     # who is married to someone else.
     # (even works if our own id is still nil, undefined)
+ #puts "***** Original Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
     possibilities.delete_if {|x| x.spouse_id && x.spouse_id != self.id}
-# puts "***** Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
+ #puts "***** Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
     return possibilities 
   end
   
