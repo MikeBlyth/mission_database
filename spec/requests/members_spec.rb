@@ -7,16 +7,13 @@ require 'sim_test_helper'
 #  config.mode = :rails
 #end
 
-#def select_second_option(id)
-## from Jason Neylon's Blog http://bit.ly/gIPq1R
-#  second_option_xpath = "//*[@id='#{id}']/option[2]/"
-##  second_option = find(:xpath, second_option_xpath).text
-#  second_option = field_by_xpath(second_option_xpath)
-#puts second_option.content if second_option.respond_to? :content
-#puts second_option.methods
-
-#  select(second_option, :from => id)
-#end
+def select_second_option(id)
+# from Jason Neylon's Blog http://bit.ly/gIPq1R
+# original  second_option_xpath = "//*[@id='#{id}']/option[2]"
+  second_option_xpath = "//select[@id='#{id}']/option[2]"
+  second_option = find(:xpath, second_option_xpath).text
+  select(second_option, :from => id)
+end
 
 describe "Members" do
 include SimTestHelper
@@ -30,12 +27,12 @@ include SimTestHelper
       seed_tables
     end  
 
-    it "should create a new user with minimal values" do
+    it "should create a new member with minimal values" do
       lambda do
         visit new_member_path
-#        select_second_option('record_family_')  # Family 
+        select_second_option('record_family_')  # Family 
         fill_in "Last name", :with => "#{@head.last_name}"
-        select("* #{@family.name}", :from=> 'record_family_')
+#        select("* #{@family.name}", :from=> 'record_family_')
         fill_in "First name", :with => "Sally"
         click_button "Create"
       end.should change(Member, :count).by(1)

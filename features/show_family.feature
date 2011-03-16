@@ -34,6 +34,13 @@ Feature: family list view
   Scenarios: no spouse and two children
     |  spouse | first_child  |  second_child |
     | --nil-- |   Maxwell    | Gwendolyn |
+
+  @now
+  Scenario: View shows list of first names
+    Given a family with a "Wife" and "Big Kid" and "Baby"
+    And that I am signed in
+    When I view the list of families
+    Then I see the "Wife, Big Kid, Baby"
  
 
     

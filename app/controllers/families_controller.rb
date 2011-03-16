@@ -25,6 +25,12 @@ class FamiliesController < ApplicationController
     config.delete.link.confirm = "\n"+"*" * 60 + "\nAre you sure you want to delete this family and all its members??!!\n" + "*" * 60
   end
   
+  def do_update
+    puts "**** familes do_update, params=#{params}"
+    super
+    puts "**** after update family.reslocid=#{@record.residence_location_id}"
+  end
+  
   def add_family_member
     record = Member.new(:last_name=>'NewMember', :first_name=>'Guess')
     params[:record] = {:last_name=>'NewMember', :first_name=>'Guess'}

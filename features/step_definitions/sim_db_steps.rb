@@ -206,7 +206,6 @@ When /^I select "new family"$/ do
 end
 
 When /^I select "update family"$/ do
-
   visit edit_family_path @family
 end
 
@@ -329,16 +328,12 @@ Given /^I am viewing the family list$/ do
   visit families_path
 end
 
-When /^I select the delete link$/ do
-  pending # express the regexp above with the code you wish you had
-end
-
 Then /^I should see an error message$/ do
   pending # express the regexp above with the code you wish you had
 end
 
-Then /^the family should still be present$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^the list should not show the family$/ do
+  page.should have_content("Deleted * #{@family.last_name}")
 end
 
 ###################### REPORTS #####################################
@@ -411,9 +406,12 @@ When /^I input values for spouse$/ do
   fill_in "First name", :with => "Sally"
   select("Unspecified")
   click_link_or_button "Create"
+  page.should have_content "Created #{@family.last_name}, Sally" 
 end
 
-Then /^the spouse should be created$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^the new member message should be shown$/ do
+# For some reason, this doesn't work. Page shows the Create Member page for new spouse, even though
+# the last event was clicking the "Create" button above. So, moved the test to that "When"
+#  page.should have_content "Created #{@family.last_name}, Sally" 
 end
 

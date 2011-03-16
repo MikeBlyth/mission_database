@@ -99,7 +99,37 @@ describe FamiliesController do
       session[:filter] = 'ALL!'
       Family.where(controller.conditions_for_collection).count.should == Family.count
     end    #  it "should select families with active status"
-
   end # filtering by status
 
+  describe 'residence of family members' do
+
+    before(:each) do
+      @user = Factory(:user, :admin=>true)
+      test_sign_in(@user)
+      @original_location = Factory(:location, :description=>"Original Location")
+      @new_location = Factory(:location, :description=>"New Location")
+      @family = Factory(:family,:residence_location=>@original_location)
+      @member = @family.head
+      @spouse = Factory(:member, :family=>@family, :last_name=>@family.last_name)
+    end
+    
+    it "should change when family location is changed" do
+      new_attributes = {'residence_location' => @new_location.id.to_s} 
+      put :update, :id => @family.id, :record => new_attributes
+      @family.reload.residence_location_id.should == @new_location.id
+      @member.residence_location.should == @new_location
+      @spouse.residence_location.should == @new_location
+    end
+    
+    it "should not change when family location is not changed" do
+      same_attributes = {'residence_location' => @original_location.id.to_s} 
+      @member.update_attribute(:residence_location, @new_location) # customize one of the members' location
+      put :update, :id => @family.id, :record => same_attributes
+      @family.reload.residence_location_id.should == @original_location.id
+      @member.residence_location.should == @new_location
+      @spouse.residence_location.should == @original_location
+    end
+
+  end    
+  
 end

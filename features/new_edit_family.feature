@@ -58,6 +58,6 @@ Feature: Forms for creating and updating families
     And that I have a form to add a spouse
     When I input values for spouse
     And I click on "Create"
-    Then the spouse should be created
+    Then the new member message should be shown
 
     
