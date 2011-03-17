@@ -52,4 +52,8 @@ config.action_controller.perform_caching             = false
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+#  # In production mode, enforce use of https://
+#  config.middleware.use Rack::SslEnforcer
+
 end

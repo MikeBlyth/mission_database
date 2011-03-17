@@ -9,7 +9,8 @@ class ApplicationController < ActionController::Base
 before_filter :require_https #, :only => [:login, :signup, :change_password] 
 
 def require_https
-  redirect_to :protocol => "https://" unless (@request.ssl? or local_request?)
+#  puts "require_https, protocol = #{request.protocol}, #{request.host}"
+  redirect_to :protocol => "https://" unless (request.protocol=='https://' or request.host=='localhost')
 end
 
   rescue_from CanCan::AccessDenied do |exception|
