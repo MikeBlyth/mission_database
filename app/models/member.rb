@@ -177,7 +177,7 @@ class Member < ActiveRecord::Base
   # automatically ...
   # If we do it w/o any error checking, must be sure user can only assign a valid member as a spouse
   # (What if someone else deletes the spouse --- don't ever delete anyone :-)
-    #puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}"
+#    puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}"
     if spouse_id.nil? && @previous_spouse   # we've just removed spouse, so need to do same to prev spouse
       @previous_spouse.update_attribute(:spouse, nil)
       return nil

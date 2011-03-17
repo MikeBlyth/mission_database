@@ -25,12 +25,16 @@ class FamiliesController < ApplicationController
     config.delete.link.confirm = "\n"+"*" * 60 + "\nAre you sure you want to delete this family and all its members??!!\n" + "*" * 60
   end
   
-  def do_update
-    puts "**** familes do_update, params=#{params}"
-    super
-    puts "**** after update family.reslocid=#{@record.residence_location_id}"
-  end
-  
+  # Intercept record after it's been found by AS update process, before it's been changed, and
+  #   save the existing residence_location and status so Family model can deal with any changes
+  def update_save(params={})
+    if @record
+      @record.previous_residence_location = @record.residence_location 
+      @record.previous_status = @record.status
+    end  
+    super(params)
+  end    
+
   def add_family_member
     record = Member.new(:last_name=>'NewMember', :first_name=>'Guess')
     params[:record] = {:last_name=>'NewMember', :first_name=>'Guess'}

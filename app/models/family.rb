@@ -20,6 +20,8 @@
 
 class Family < ActiveRecord::Base
   include NameHelper
+
+  attr_accessor :previous_residence_location, :previous_status
   
   belongs_to :head, :class_name => "Member"
   has_many :members, :dependent => :delete_all
@@ -31,6 +33,8 @@ class Family < ActiveRecord::Base
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
 
   after_create :create_family_head_member
+  after_save   :update_member_locations
+  after_save   :update_member_statuses
 
   def to_label
     "* #{name}"
@@ -41,6 +45,25 @@ class Family < ActiveRecord::Base
     self.members.each {|m| m.destroy}
     self.destroy
   end
+
+  # Copy family residence locations to all family members, but only when changed.
+  # This means that one can individualize locations of members, but individualized values will
+  # be overwritten when the family residence location is changed again.
+  def update_member_locations
+    if self.residence_location != @previous_residence_location
+      self.members.each {|m| m.update_attribute(:residence_location, self.residence_location)}
+    end  
+  end
+
+  # Copy family status to all family members, but only when changed.
+  # This means that one can individualize locations of members, but individualized values will
+  # be overwritten when the family status is changed again.
+  def update_member_statuses
+    if self.status != @previous_status
+      self.members.each {|m| m.update_attribute(:status, self.status)}
+    end  
+  end
+
 
   def to_s
     to_label

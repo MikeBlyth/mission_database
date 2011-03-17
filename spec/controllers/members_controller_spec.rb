@@ -23,7 +23,6 @@ describe MembersController do
       end
       
       it "should allow access to 'new'" do
-puts 'Should allow access to new'
         Member.should_receive(:new).at_least(1).times # not sure why, but it is receiving msg twice!
         get :new
       end
@@ -102,5 +101,24 @@ puts 'Should allow access to new'
     end    #  it "should select members with active status"
 
   end # filtering by status
+
+  describe 'Handling spouses' do
+  
+    before(:each) do
+      @spouse = Factory.build(:member, :family_id=>@family.id, :sex=>@member.other_sex, :spouse=>@member)
+      @user = Factory(:user, :admin=>true)
+      test_sign_in(@user)
+    end  
+  
+    it 'sets previous_spouse in an update' do
+      @spouse.save
+      @member.reload.spouse.should == @spouse
+      @spouse.spouse.should == @member
+      put :update, :id => @member.id, :record => {'short_name' => 'Nicky', 'spouse'=>""}
+      @member.reload.spouse.should == nil
+      @spouse.reload.spouse.should == nil
+    end  
+
+  end
 
 end

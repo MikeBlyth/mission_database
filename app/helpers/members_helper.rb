@@ -55,7 +55,7 @@ module MembersHelper
     # !   in order to place it there.
 #puts "**** MembersHelper spouse_form_column: record.name=#{record.name}, spouse_id=#{record.spouse_id}"
 #puts "* --- spouse=#{record.spouse.attributes if record.spouse.respond_to? :attributes}"
-    if !record.new_record? && record.spouse_id && record.spouse.spouse_id != record.id
+    if !record.new_record? && record.spouse_id && record.spouse && record.spouse.spouse_id != record.id
       my_name = record.full_name_short
       spouse_name = record.spouse.full_name_short
       spouse_first_name = record.spouse.first_name

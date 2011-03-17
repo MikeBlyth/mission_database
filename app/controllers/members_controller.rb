@@ -63,20 +63,6 @@ class MembersController < ApplicationController
   end
 
 
-#  def destroy
-#puts "**** Members_controller : destroy #{params}, Member.count=#{Member.count}"
-#    @member = Member.find(params[:id])
-#    @member.destroy
-#puts "**** Members_controller: destroyed, Member.count=#{Member.count}"
-
-#    respond_to do |format|
-#puts "**** Members_controller: redirecting"
-#      format.html { redirect_to(members_url) }
-#      format.xml  { head :ok }
-#    end
-#  end
-
-
   def edit_inline
     respond_to do |format|
       puts "**** Edit Inline"
@@ -136,9 +122,9 @@ class MembersController < ApplicationController
     super
   end    
   
-  def do_update
- #   @record.previous_spouse = @record.spouse if @record
-    super
+  def update_save(params={})
+    @record.previous_spouse = @record.spouse if @record
+    super(params)
   end    
   
   # Override the ActiveScaffold method so that we can pass errors in flash
