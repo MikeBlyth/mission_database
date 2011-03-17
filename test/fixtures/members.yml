@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110312214702
+# Schema version: 20110317120234
 #
 # Table name: members
 #
@@ -22,7 +22,7 @@
 #  name                          :string(255)
 #  name_override                 :boolean(1)
 #  child                         :boolean(1)
-#  work_location_id              :integer(4)
+#  work_location_id              :integer(4)      default(999999)
 #  temporary_location            :string(255)
 #  temporary_location_from_date  :date
 #  temporary_location_until_date :date

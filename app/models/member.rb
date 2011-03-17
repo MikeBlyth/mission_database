@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110312214702
+# Schema version: 20110317120234
 #
 # Table name: members
 #
@@ -22,7 +22,7 @@
 #  name                          :string(255)
 #  name_override                 :boolean(1)
 #  child                         :boolean(1)
-#  work_location_id              :integer(4)
+#  work_location_id              :integer(4)      default(999999)
 #  temporary_location            :string(255)
 #  temporary_location_from_date  :date
 #  temporary_location_until_date :date
@@ -72,6 +72,7 @@ class Member < ActiveRecord::Base
     return spouse.nil?
   end
   
+  # Make array of children. This version uses age rather than child attribute as criterion
   def children
     age_cutoff = 19
     birthdate_cutoff = Date::today() - age_cutoff.years
@@ -96,6 +97,7 @@ class Member < ActiveRecord::Base
         family_id && Family.find_by_id(family_id)
   end
 
+  # Validate spouse based on opposite sex, age, single ...
   def valid_spouse
     return if self.spouse.nil? 
     errors.add(:spouse, "spouse can't be same sex") if
@@ -126,11 +128,9 @@ class Member < ActiveRecord::Base
    def family_name= (name)
      my_head = Member.find_by_name(name)
      self.family_id = my_head.family_id if my_head
-#puts "******Family_name= function. Name=#{name}, family_head=#{family_head.to_label if family_head}"
    end
 
    def male_female
-    
      return :female if self.sex.upcase == 'F'
      return :male if self.sex.upcase == 'M'
    end
@@ -156,10 +156,11 @@ class Member < ActiveRecord::Base
      self.spouse.name
    end
 
-   def spouse_name= (name)
-     myspouse = Member.find_by_name(name)
-     self.spouse_id = myspouse.id if myspouse
-   end
+#   # Set spouse by looking up name 
+#   def spouse_name= (name)
+#     myspouse = Member.find_by_name(name)
+#     self.spouse_id = myspouse.id if myspouse
+#   end
 
   def marry(new_spouse)
     return nil if new_spouse.nil?
@@ -172,26 +173,26 @@ class Member < ActiveRecord::Base
     return self.sex == "M" ? self : new_spouse   # for what it's worth, return the husband's object
   end
 
+  # Update spouse's record if a spouse is defined. 
   def cross_link_spouses
-  # Update spouse's record if a spouse is defined. Not sure it's a good idea to do this 
-  # automatically ...
-  # If we do it w/o any error checking, must be sure user can only assign a valid member as a spouse
-  # (What if someone else deletes the spouse --- don't ever delete anyone :-)
 #    puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}"
-    if spouse_id.nil? && @previous_spouse   # we've just removed spouse, so need to do same to prev spouse
+    # If we've just removed spouse, we need to unlink the spouse, too
+    if spouse_id.nil? && @previous_spouse
       @previous_spouse.update_attribute(:spouse, nil)
       return nil
     end
+    # Make sure the spouse links back to self...
     if spouse_id # 
       if !spouse  # i.e. if spouse not found in db, db is corrupted
         spouse_id = nil
         return nil
       end 
-      if spouse.spouse_id != self.id # spouse exists but is not linked back to member
+      if spouse.spouse_id != self.id # spouse is not linked back to member
         #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
+        # Register error if same sex
         if spouse.sex == self.sex
           self.update_attribute(:spouse_id, nil)
-          #puts "**** Same sex, spouse changed to #{self.spouse_id}"
+          self.errors.add[:spouse, "Spouse can't be same sex"]    
           return nil
         end  
         spouse.spouse_id = self.id  # my spouse is married to me
@@ -227,9 +228,8 @@ class Member < ActiveRecord::Base
   end
   
   def check_if_spouse
-    # if there IS a valid spouse, remove the spouse's link to this member
+    # if someone is married to me, don't delete me from the database
     orphan_spouse = Member.find_by_spouse_id(self.id)
-# puts "**** Orphan_spouse = #{orphan_spouse.name if orphan_spouse}"
     if orphan_spouse
       self.errors.add(:delete, "can't delete while still spouse of #{orphan_spouse.to_label}")
       return false
@@ -259,7 +259,7 @@ class Member < ActiveRecord::Base
     age_18_date = Date.today - 18.years
     my_last_name = self.last_name
     possibilities = Member.where(:last_name => my_last_name, 
-                  :sex => spouse_sex).
+                  :sex => spouse_sex, :child=>false).
     #              where("birth_date <= ? OR birth_date IS NULL", age_18_date).
                   order("name")
     # delete from possibilities everyone
