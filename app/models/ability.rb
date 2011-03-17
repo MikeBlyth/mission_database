@@ -26,9 +26,14 @@ class Ability
       can :manage, :all
       cannot [:create, :update, :destroy], [Bloodtype, Role]
     end
+
+    if user.asst_personnel? # Personnel assistant
+      can :manage, [Member, Contact]
+    end
     
     if user.medical?
-      can :manage, [Bloodtype, HealthData]
+      can :manage, [Member, Bloodtype, HealthData]
+      cannot [:create, :destroy], [Member]
     end
 
     if user.travel?
