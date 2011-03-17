@@ -6,6 +6,12 @@ class ApplicationController < ActionController::Base
     config.ignore_columns.add [:created_at, :updated_at, :lock_version]
   end
 
+before_filter :require_https #, :only => [:login, :signup, :change_password] 
+
+def require_https
+  redirect_to :protocol => "https://" unless (@request.ssl? or local_request?)
+end
+
   rescue_from CanCan::AccessDenied do |exception|
 # puts "CanCan AccessDenied #{exception.message}"
     if !signed_in? 
@@ -32,6 +38,7 @@ class ApplicationController < ActionController::Base
 
   # Set persistent filter for whether active, on-field, or all members will be shown
   def set_member_filter
+puts "set_member_filter, #{params[:filter]}"
     filter = params[:filter] ||= []
     session[:filter] = filter
     flash[:notice] = "Showing #{@@filter_notices[filter]}."
