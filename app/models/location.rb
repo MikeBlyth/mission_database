@@ -15,13 +15,12 @@ class Location < ActiveRecord::Base
 include ModelHelper
 
   belongs_to :city
-  has_many :members
-  has_many :families
-  has_many :field_terms
+  has_many :members, :foreign_key => "residence_location_id"
+  has_many :families, :foreign_key => "residence_location_id"
+  has_many :field_terms, :foreign_key => "primary_work_location_id"
   validates_presence_of :description, :code, :city
   validates_uniqueness_of :code, :description
   validates_numericality_of :code, :only_integer => true
-  validates_numericality_of :city_id, :only_integer => true
 
   def to_label
     self.to_s

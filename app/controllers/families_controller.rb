@@ -10,6 +10,8 @@ class FamiliesController < ApplicationController
     update.columns.exclude :members, :first_name, :last_name, :middle_name 
     create.columns.exclude :members
     list.columns.exclude  :name_override, :first_name, :last_name, :middle_name
+    update.columns << :head
+    config.columns[:head].form_ui = :select
     config.columns[:status].inplace_edit = true
     config.columns[:residence_location].inplace_edit = true
 #    config.update.link = false  # Do not include a link to "Edit" on each line
