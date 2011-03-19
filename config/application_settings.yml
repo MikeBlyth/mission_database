@@ -16,6 +16,7 @@ defaults: &defaults
   travel:
     # Travel to these airports will be reported as arrivals, from them = departures.
     airports_local: ['Kano', 'Lagos', 'Abuja']
+    include_spouse_name_in_list: false
 development:
   <<: *defaults
   screen:

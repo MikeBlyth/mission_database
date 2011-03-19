@@ -31,6 +31,8 @@ class TravelsController < ApplicationController
     config.columns[:other_travelers].inplace_edit = true
     config.columns[:baggage].inplace_edit = true
     config.columns[:total_passengers].inplace_edit = true
+  #  config.columns[:total_passengers].label = 'Psgrs'
+    config.list.label = "Travel schedule"
     config.columns[:confirmed].inplace_edit = true
     config.list.sorting = { :date => :asc }
   end
