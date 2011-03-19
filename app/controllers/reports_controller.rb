@@ -11,8 +11,16 @@ class ReportsController < ApplicationController
 
    # Blood Type Reports
    def bloodtypes
-     selected = Member.select("family_id, last_name, first_name, middle_name, status_id")
-     selected = selected.delete_if{|x| !x.on_field || x.health_data.nil?  }   # delete members not on the field
+     selected = Member.select("family_id, last_name, first_name, middle_name, status_id, id, child")
+#selected.each {|x| puts ">> #{x.first_name}, #{x.status.description}, #{x.on_field}, #{x.health_data.bloodtype_id}, #{x.health_data.bloodtype}" }
+     # Delete members we don't want on the report
+     selected = selected.delete_if{|x| 
+                                    !x.on_field || 
+                                    x.health_data.nil? || 
+                                    x.child || 
+                                    x.health_data.bloodtype.nil? || 
+                                    x.health_data.bloodtype_id == UNSPECIFIED
+                                    } 
      output = BloodtypeReport.new.to_pdf(selected,"Includes only those currently on the field")
 
      respond_to do |format|
@@ -59,7 +67,7 @@ class ReportsController < ApplicationController
   # Travedl reports
    def travel_schedule
     starting_date = Date::today
-    selected = Travel.where("date > ?", starting_date).order("date ASC")
+    selected = Travel.where("date >= ?", starting_date).order("date ASC")
     # We will assume for now that we do not need to filter for different member statuses, since if there is a travel
     # record for someone, it means that we wanted it on the travel schedule.
     left_head = "#{starting_date}"

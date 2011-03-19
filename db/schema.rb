@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
 
   create_table "families", :force => true do |t|
     t.integer  "head_id"
-    t.integer  "status_id"
-    t.integer  "residence_location_id"
+    t.integer  "status_id",             :default => 999999
+    t.integer  "residence_location_id", :default => 999999
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "last_name"
@@ -111,7 +111,7 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
     t.string   "middle_name"
     t.string   "short_name"
     t.string   "name"
-    t.integer  "name_override",         :limit => 1, :default => 0
+    t.boolean  "name_override", :default => false
     t.string   "sim_id"
   end
 
@@ -159,16 +159,16 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
     t.integer  "family_id"
     t.date     "birth_date"
     t.integer  "spouse_id"
-    t.integer  "country_id"
+    t.integer  "country_id",        :default => 999999
     t.string   "first_name"
-    t.integer  "status_id"
+    t.integer  "status_id",         :default => 999999
     t.string   "ministry_comment"
-    t.integer  "ministry_id"
-    t.integer  "residence_location_id"
+    t.integer  "ministry_id",       :default => 999999
+    t.integer  "residence_location_id",  :default => 999999
     t.string   "name"
     t.boolean  "name_override"
-    t.integer  "child",                         :limit => 1, :default => 0
-    t.integer  "work_location_id"
+    t.boolean  "child", :default => false
+    t.integer  "work_location_id",  :default => 999999
     t.string   "temporary_location"
     t.date     "temporary_location_from_date"
     t.date     "temporary_location_until_date"
@@ -177,6 +177,7 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
   add_index "members", ["country_id"], :name => "fk_countries"
   add_index "members", ["family_id"], :name => "index_members_on_family_id"
   add_index "members", ["name"], :name => "index_members_on_name", :unique => true
+  add_index "members", ["status_id"], :name => "index_members_on_status_id"
 
   create_table "ministries", :force => true do |t|
     t.string   "description"

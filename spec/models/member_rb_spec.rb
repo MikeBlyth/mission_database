@@ -18,6 +18,7 @@ describe Member do
 
   it "is valid with valid attributes" do
     @member.should be_valid
+    @member.child.should be_false
   end
 
   it "is not valid without a first name" do

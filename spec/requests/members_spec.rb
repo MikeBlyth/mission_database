@@ -68,9 +68,8 @@ include SimTestHelper
         fill_in "Qualifications", :with=> "Very qualified"
         select 'Career'
         fill_in "Date active", :with => "2000-02-01"
-        fill_in "Comments", :with => "What a lot of info to fill in."
+        fill_in "record[personnel_data][comments]", :with => "What a lot of info to fill in."
         click_button "Create"
-      #save_and_open_page( )
       end.should change(Member, :count).by(1)
       m = Member.last
       m.first_name.should == 'Samuel'

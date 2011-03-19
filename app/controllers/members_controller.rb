@@ -92,7 +92,7 @@ class MembersController < ApplicationController
   end  
   
   def do_new
-#puts "**** do_new"
+#puts "**** do_new, params=#{params}"
     super
     if params[:family]
       family = Family.find_by_id(params[:family])

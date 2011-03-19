@@ -258,6 +258,7 @@ class Member < ActiveRecord::Base
 #puts "**** Possible Spouses called for member #{self.last_name}, #{self.spouse_id}, #{spouse_sex}"
     age_18_date = Date.today - 18.years
     my_last_name = self.last_name
+# Member.all.each {|m| puts "** Member #{m.id}, name=#{m.name}, child=#{m.child} " }
     possibilities = Member.where(:last_name => my_last_name, 
                   :sex => spouse_sex, :child=>false).
     #              where("birth_date <= ? OR birth_date IS NULL", age_18_date).
@@ -265,9 +266,9 @@ class Member < ActiveRecord::Base
     # delete from possibilities everyone
     # who is married to someone else.
     # (even works if our own id is still nil, undefined)
- #puts "***** Original Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
+# puts "***** Original Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
     possibilities.delete_if {|x| x.spouse_id && x.spouse_id != self.id}
- #puts "***** Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
+# puts "***** Possibilities = #{possibilities.each {|x| x.to_label + '::'}}"
     return possibilities 
   end
   
@@ -276,7 +277,7 @@ class Member < ActiveRecord::Base
   end
 
   def on_field
-    return Status.find(self.status_id).on_field == true 
+    return self.status_id && Status.find(self.status_id).on_field 
   end
 
   def age_years

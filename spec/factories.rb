@@ -183,12 +183,26 @@ FactoryGirl.define do
     sequence(:id) {|n| n}
     sequence(:code) {|n| 100+n}
     sequence(:description) {|n|  "On field_#{n}" }
+    on_field true
+    active true
   end
 
   factory :status_unspecified, :parent => :status do 
     id 999999
     code 0
     description "Unspecified"
+  end
+
+  factory :status_inactive, :parent => :status do 
+    description "Not active"
+    on_field false
+    active false
+  end
+
+  factory :status_home_assignment, :parent => :status do 
+    description "Home assignment"
+    on_field false
+    active true
   end
 
   factory :travel do

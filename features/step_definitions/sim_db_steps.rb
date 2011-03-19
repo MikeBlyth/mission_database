@@ -2,7 +2,7 @@ require 'sim_test_helper'
 include SimTestHelper
   
 def construct_family
-  @family = Factory.create(:family, :status=>@status, :residence_location=>@location)
+  @family = Factory(:family)
   @head = @family.head
 end
 
@@ -27,7 +27,7 @@ end
 
 def set_up_statuses
   Factory(:status_unspecified)
-  @status = Factory.create(:status)
+  @status = Factory(:status)
 end
 
 def set_up_employment_statuses
@@ -64,6 +64,21 @@ end
 Given /^a family without a spouse$/ do
   construct_family
 end
+
+Given /^basic statuses$/ do
+  @status_on_field = Factory(:status, :description=>'On field')
+  @status_unspecified = Factory(:status_unspecified)
+  @status_inactive = Factory(:status_inactive)
+  @status_home_assignment = Factory(:status_home_assignment)
+end  
+
+Given /^a blood type "([^"]*)"$/ do |bloodtype|
+  if bloodtype=='unspecified'
+    Factory(:bloodtype_unspecified)
+  else
+    @bloodtype = Factory(:bloodtype, :full=>bloodtype)
+  end  
+end  
 
 Given /^a family with a spouse$/ do
   construct_family
@@ -125,6 +140,7 @@ end
 
 Then /^I should see the editing form for the family head$/ do
   page.should have_content "Update #{@head.to_label}"
+#save_and_open_page
   find_field("Last name").value.should == @head.last_name
   find_field("First name").value.should == @head.first_name
   find_field("Sex").value.should == @head.sex
@@ -267,6 +283,7 @@ Then /^I should see a customized form for a new family$/ do
 #  find_field("SIM").value.should == @family.sim_id.to_s
 #  find_field("Status").value.should == @family.status_id.to_s
 #  find_field("residence_location").value.should == @family.residence_location_id.to_s
+pending
 end
 
 Then /^I should see a button for adding a spouse$/ do
@@ -285,6 +302,7 @@ Given /^that I am updating a family$/ do
   seed_tables
   construct_family
   add_details(@head)
+  @family.update_attributes(:residence_location=>@location, :status=>@status)
   @head.status_id.should == @status.id
   @head.residence_location_id.should == @location.id
   visit edit_family_path :id=>@family.id
@@ -308,20 +326,17 @@ Then /^the form should be pre\-set to add a spouse$/ do
   find_field("Sex").value.should == @head.other_sex
   find_field("record[spouse]").value.should == @head.id.to_s
   find_field("Country name").value.should == @head.country.name
-#  find_field("Date active").value.should == @head.date_active
-  find_field("Status").value.to_s.should == @head.status_id.to_s
-  find_field("record[residence_location]").value.to_s.should == @head.residence_location_id.to_s
+  find_field("Status").value.to_s.should == @family.status_id.to_s
+  find_field("record[residence_location]").value.to_s.should == @family.residence_location_id.to_s
 end
 
 Then /^the form should be pre\-set to add a child$/ do
   find_field("Last name").value.should == @family.last_name
   find_field("First name").value.blank?.should be true
-#  find_field("Sex").value.should == ApplicationHelper::opposite_sex(@head.sex)
   find_field("record[spouse]").value.should == ''
   find_field("Country name").value.should == @head.country.name
-#  find_field("Date active").value.should == @head.date_active
-  find_field("Status").value.to_s.should == @head.status_id.to_s
-  find_field("record[residence_location]").value.to_s.should == @head.residence_location_id.to_s
+  find_field("Status").value.to_s.should == @family.status_id.to_s
+  find_field("record[residence_location]").value.to_s.should == @family.residence_location_id.to_s
 end
 
 Given /^I am viewing the family list$/ do
@@ -356,7 +371,7 @@ Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
   if target_text == '{next month}'
     target_text = Date::MONTHNAMES[Date::today().next_month.month]  # which is the name for the next month from now
   end
-#puts "Page.body = ::#{page.body}::"
+#puts "Page.body = ::#{page.body}::" if target_text=="Travel"
   page.should have_content target_text
 end
 
@@ -372,13 +387,17 @@ Then /^the report should include the name, phone and email$/ do
   page.should have_content @contact.phone_1
 end
 
+Then /^the report should include "([^"]*)"$/ do |arg1|
+  page.should have_content arg1
+end
+
 Then /^the report should not include "([^"]*)"$/ do |arg1|
   page.should_not have_content arg1
 end
 
 Given /^a "([^"]*)" record$/ do |record_type|
   @detail = case record_type
-  when 'travel' then Factory(:travel, :member_id => @head.id, :date=> Date::tomorrow, :confirmed => Date::yesterday)
+  when 'travel' then Factory(:travel, :member_id => @head.id, :date=> Date::today + 1.day, :confirmed => Date::yesterday)
   end
 # puts "Detail record created = #{@detail.attributes}"
 end
@@ -414,4 +433,17 @@ Then /^the new member message should be shown$/ do
 # the last event was clicking the "Create" button above. So, moved the test to that "When"
 #  page.should have_content "Created #{@family.last_name}, Sally" 
 end
+
+Given /^a member "([^"]*)" with bloodtype "([^"]*)" and status "([^"]*)"$/ do |first_name, bloodtype, status|
+  status = Status.find_by_description(status)
+  bloodtype = Bloodtype.find_by_full(bloodtype)
+  m = Factory(:member, :family_id => @family.id, :first_name => first_name, :status_id => status.id)
+  m.update_attribute(:status, status)
+#m.reload
+#puts "created member #{first_name} w status=#{status.id}=#{status.description}"
+#puts "...so now..."
+#Member.all.each {|x| puts ">> #{x.first_name}, #{x.status_id}, #{x.on_field}, #{x.health_data.bloodtype}" }
+  m.health_data.update_attribute(:bloodtype_id, bloodtype.id) 
+end
+
 
