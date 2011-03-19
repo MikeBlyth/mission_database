@@ -35,6 +35,22 @@ class TravelsController < ApplicationController
     config.list.sorting = { :date => :asc }
   end
 
+  def do_create
+    super
+    # This creates a return trip automatically
+    if @record.return_date
+      params[:record][:date] = @record.return_date
+      params[:record][:destination] = @record.origin
+      params[:record][:origin] = @record.destination
+      params[:record][:return_date] = nil
+      params[:record][:arrival] = !@record.arrival
+      params[:record][:confirmed] = nil
+      super
+      flash[:notice] = 'Return trip also created'
+    end
+#    puts "do_create: @record=#{@record.attributes}"
+  end
+
 # Generate a filter string for use in Travel.where(conditions_for_collection)...
   def conditions_for_collection
     selector = case session[:travel_filter]

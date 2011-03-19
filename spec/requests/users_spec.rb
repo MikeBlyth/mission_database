@@ -7,41 +7,35 @@ describe "Users" do
 
     describe "creating new user" do
 
-      describe "failure" do
-
-        it "should not create a new user with missing values" do
-          lambda do
-            visit new_user_path
-# save_and_open_response( )
-            fill_in "Name",         :with => ""
-            fill_in "Email",        :with => ""
-            fill_in "Password",     :with => ""
-            fill_in "Confirmation", :with => ""
-            click_button "user_submit"
+      it "should not create a new user with missing values" do
+        lambda do
+          visit new_user_path
+          fill_in "Name",         :with => ""
+          fill_in "Email",        :with => ""
+          fill_in "Password",     :with => ""
+          fill_in "Confirmation", :with => ""
+          click_button "user_submit"
 #            page.should have_content("Email can't be blank")
-            page.should have_content("Email can't be blank")
-            page.should have_content("Name can't be blank")
-            page.should have_content("Email is invalid")
-            page.should have_content("Password can't be blank")
-            page.should have_content("too short")
-          end.should_not change(User, :count)
-        end # it should
-      end #failure
+          page.should have_content("Email can't be blank")
+          page.should have_content("Name can't be blank")
+          page.should have_content("Email is invalid")
+          page.should have_content("Password can't be blank")
+          page.should have_content("too short")
+        end.should_not change(User, :count)
+      end # it should
 
-      describe "success" do
-        it "should create a new user with good values" do
-          lambda do
-            visit new_user_path
-            fill_in "Name",         :with => "Example User"
-            fill_in "Email",        :with => "user@example.com"
-            fill_in "Password",     :with => "foobar"
-            fill_in "Confirmation", :with => "foobar"
-            click_button "Create"
-            page.should have_selector("div.flash.success",
-                                          :content => "Successfully")
-          end.should change(User, :count).by(1)
-        end #it should
-      end # Describe success
+      it "should create a new user with good values" do
+        lambda do
+          visit new_user_path
+          fill_in "Name",         :with => "Example User"
+          fill_in "Email",        :with => "user@example.com"
+          fill_in "Password",     :with => "foobar"
+          fill_in "Confirmation", :with => "foobar"
+          click_button "Create"
+          page.should have_selector("div.flash.success",
+                                        :content => "Successfully")
+        end.should change(User, :count).by(1)
+      end #it should
     end # Creating New User
 
     it "edit form should not have field for Admin privileges" do

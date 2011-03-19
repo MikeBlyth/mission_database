@@ -203,15 +203,15 @@ puts "@json_resp = #{@json_resp}"
       #   'field', 'home_assignment', and 'mkfield'
 
     target_statuses = status_groups[session[:filter]]
-puts "Conditions for collection: filter=#{session[:filter]}"
-puts "conditions_for_collection=TRUE" if target_statuses.nil?
+#puts "Conditions for collection: filter=#{session[:filter]}"
+#puts "conditions_for_collection=TRUE" if target_statuses.nil?
     return "TRUE" if target_statuses.nil?
     # Find all status records that match that filter
     matches = [] # This will be the list of matching status ids. 
     Status.where("statuses.code IN (?)", target_statuses).each do |status|
       matches << status.id 
     end
-puts "conditions_for_collection=#{['members.status_id IN (?)', matches]}"
+#puts "conditions_for_collection=#{['members.status_id IN (?)', matches]}"
     return ['members.status_id IN (?)', matches]
 #
 # This is how to do it using the pre-determined record ids, which are determined by seeds.rb

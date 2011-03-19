@@ -6,7 +6,6 @@ require 'spec_helper'
 #end
 
 describe TravelsController do
-  render_views
   
   describe "role based authorization" do
 
@@ -21,7 +20,6 @@ describe TravelsController do
       it "should have access to new object form" do
 #        Travel.should_receive(:new)
         get :new
-save_and_open_page
         response.should render_template('create')
       end
       
@@ -85,12 +83,10 @@ save_and_open_page
   describe "automatic return trip" do
     
     before(:each) do
-        @user = Factory(:user, :travel=>true)
+        @user = Factory(:user, :admin=>true)
         test_sign_in(@user)
         @member = Factory(:family).head
-        @attr = {:member=>"@member.id", :date=>Date.today}
-           
-        @object = Factory.build(:travel, :date=>Date.today, :return_date=>nil)
+        @attr = {:member=>"#{@member.id}", :date=>Date.today, :arrival=>false, :confirmed=>Date.today}
     end
     
     it "should not be created when new travel has no return date" do
@@ -107,6 +103,10 @@ save_and_open_page
         return_trip = Travel.last
         return_trip.date.should == @attr[:return_date]
         return_trip.return_date.should == nil
+        return_trip.origin.should == @attr[:destination]
+        return_trip.destination.should == @attr[:origin]
+        return_trip.arrival.should be_true
+        return_trip.confirmed.should be_nil
     end
  
   end
