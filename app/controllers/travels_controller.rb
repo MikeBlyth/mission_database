@@ -8,7 +8,14 @@ class TravelsController < ApplicationController
     #  config.columns[:member].actions_for_association_links = [:show]
     config.subform.layout = :vertical
     config.columns = [:member, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,
-     :return_date, :with_spouse, :with_children, :other_travelers, :baggage, :total_passengers, :confirmed]
+      :return_date, :with_spouse, :with_children, :total_passengers, :confirmed]
+    show.columns = create.columns = update.columns =  [:member, :date, :time, :arrival, :origin, :destination, :flight, 
+      :term_passage, :personal, :ministry_related, :purpose, 
+      :own_arrangements, :guesthouse, :driver_accom, 
+      :return_date, :return_time, 
+      :with_spouse, :with_children, :other_travelers, 
+      :baggage, :total_passengers, :confirmed,
+      :comments ]
     config.columns[:member].form_ui = :select 
     #   config.columns[:member].options = {:draggable_lists => true}
     config.columns[:member].description = "Person booked for; first create a new member or visitor if necessary."

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110317120234) do
+ActiveRecord::Schema.define(:version => 20110319143535) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -102,8 +102,8 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
 
   create_table "families", :force => true do |t|
     t.integer  "head_id"
-    t.integer  "status_id",             :default => 999999
-    t.integer  "residence_location_id", :default => 999999
+    t.integer  "status_id"
+    t.integer  "residence_location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "last_name"
@@ -111,12 +111,13 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
     t.string   "middle_name"
     t.string   "short_name"
     t.string   "name"
+    t.integer  "name_override",         :limit => 1, :default => 0
     t.string   "sim_id"
-    t.boolean  "name_override"
   end
 
   create_table "field_terms", :force => true do |t|
     t.integer  "member_id"
+    t.integer  "employment_status_id",     :default => 999999
     t.integer  "primary_work_location_id", :default => 999999
     t.integer  "ministry_id",              :default => 999999
     t.date     "start_date"
@@ -125,7 +126,6 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
     t.date     "est_end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "employment_status_id",     :default => 999999
   end
 
   create_table "health_data", :force => true do |t|
@@ -133,9 +133,9 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
     t.integer  "bloodtype_id"
     t.string   "current_meds"
     t.string   "issues"
+    t.string   "allergies"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "allergies"
   end
 
   create_table "locations", :force => true do |t|
@@ -159,16 +159,16 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
     t.integer  "family_id"
     t.date     "birth_date"
     t.integer  "spouse_id"
-    t.integer  "country_id",                    :default => 999999
+    t.integer  "country_id"
     t.string   "first_name"
-    t.integer  "status_id",                     :default => 999999
+    t.integer  "status_id"
     t.string   "ministry_comment"
-    t.integer  "ministry_id",                   :default => 999999
-    t.integer  "residence_location_id",         :default => 999999
+    t.integer  "ministry_id"
+    t.integer  "residence_location_id"
     t.string   "name"
     t.boolean  "name_override"
-    t.boolean  "child",                         :default => false
-    t.integer  "work_location_id",              :default => 999999
+    t.integer  "child",                         :limit => 1, :default => 0
+    t.integer  "work_location_id"
     t.string   "temporary_location"
     t.date     "temporary_location_from_date"
     t.date     "temporary_location_until_date"
@@ -177,7 +177,6 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
   add_index "members", ["country_id"], :name => "fk_countries"
   add_index "members", ["family_id"], :name => "index_members_on_family_id"
   add_index "members", ["name"], :name => "index_members_on_name", :unique => true
-  add_index "members", ["status_id"], :name => "index_members_on_status_id"
 
   create_table "ministries", :force => true do |t|
     t.string   "description"
@@ -192,12 +191,12 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
   create_table "personnel_data", :force => true do |t|
     t.integer  "member_id"
     t.string   "qualifications"
-    t.integer  "education_id"
-    t.integer  "employment_status_id"
-    t.date     "date_active"
     t.string   "comments"
+    t.integer  "employment_status_id"
+    t.integer  "education_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "date_active"
   end
 
   create_table "roles", :force => true do |t|
@@ -246,6 +245,14 @@ ActiveRecord::Schema.define(:version => 20110317120234) do
     t.boolean  "with_spouse"
     t.boolean  "with_children"
     t.boolean  "arrival"
+    t.time     "time"
+    t.time     "return_time"
+    t.string   "driver_accom"
+    t.string   "comments"
+    t.boolean  "term_passage"
+    t.boolean  "personal"
+    t.boolean  "ministry_related"
+    t.boolean  "own_arrangements"
   end
 
   create_table "users", :force => true do |t|

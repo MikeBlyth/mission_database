@@ -68,6 +68,7 @@ GEM
     celerity (0.8.8)
     childprocess (0.1.7)
       ffi (~> 0.6.3)
+    chronic (0.3.0)
     columnize (0.3.2)
     configatron (2.6.4)
       yamler (>= 0.1.0)
@@ -198,6 +199,7 @@ DEPENDENCIES
   autotest
   cancan
   capybara
+  chronic
   cover_me
   cucumber-rails (>= 0.3.2)
   database_cleaner (>= 0.5.2)
