@@ -18,6 +18,7 @@ class Ability
     #  if we don't want system admin to have access to these
     else
       can :read, :all
+      can :update, User
       cannot :read, [HealthData, PersonnelData]  # Confidential fields
     end
 

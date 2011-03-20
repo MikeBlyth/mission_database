@@ -56,7 +56,16 @@ describe "Users" do
     end
 
     it 'should allow user to edit his own record' do
-      pending
+#puts "Edit own record for user #{@user.id}, path=#{edit_user_path @user}"
+      visit edit_user_path @user
+      page.should have_content("Edit User")
+    end
+
+    it 'should not allow user to edit other user records' do
+      other_user = Factory(:user)
+#puts "#{@user.id} edit record for other user #{other_user.id}, path=#{edit_user_path other_user}"
+      visit edit_user_path other_user
+      page.should_not have_content("Edit User")
     end
 
   end # "by Non-administrator"

@@ -41,7 +41,7 @@ load_and_authorize_resource
   end
 
   def edit
-  #   @user = User.find(params[:id])  # User is already found by private (authentication) method correct_user, below
+    correct_user # from authentication_helper; redirects to root if user is not the same as the record being operated on
     @user = User.find(params[:id])
     @title = "Edit user"
   end
@@ -52,6 +52,7 @@ load_and_authorize_resource
   end    
 
   def update
+    return unless correct_user # from authentication_helper; redirects to root if user is not the same as the record being operated on
     @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       flash[:success] = "Profile updated."
