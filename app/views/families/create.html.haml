@@ -1,56 +1,58 @@
-%h3 Create a New Individual or Family
+.active-scaffold
+  %h3 Create a New Individual or Family
 
-= form_for :record, :url => { :action => "create" } do |form| 
-  %h4 Information for the individual or <em>head</em> of family
-  %p 
-    %table
-      %tr
-        %td
-          = form.label :last_name
-          %br
-          = form.text_field :last_name, :class=> "last_name-input"
-        %td
-          = form.label :first_name
-          %br
-          = form.text_field :first_name, :class=> "first_name-input"
-        %td
-          = form.label :middle_name
-          %br
-          = form.text_field :middle_name, :class=> "middle_name-input"
-        %td
-          = form.label :short_name
-          %br
-          = form.text_field :short_name, :class=> "short_name-input"
-  %hr
-  %h4 Information for individual or <em>entire family</em>
-  %p
-    = form.label :name, 'Name to identify family'
-    %a.allow_edit{:href=>'#', :id=> "allow_edit_#{params[:id]}"} Click to allow editing
-    %br
-    = form.text_field :name
-    = form.label :name_override
-    = form.check_box :name_override
-  %p
+  = form_for :record, :url => { :action => "create" } do |form| 
+    = render 'shared/error_messages', :object => @record
+    %h4 Information for the individual or <em>head</em> of family
+    %p 
+      %table
+        %tr
+          %td
+            = form.label :last_name
+            %br
+            = form.text_field :last_name, :class=> "last_name-input"
+          %td
+            = form.label :first_name
+            %br
+            = form.text_field :first_name, :class=> "first_name-input"
+          %td
+            = form.label :middle_name
+            %br
+            = form.text_field :middle_name, :class=> "middle_name-input"
+          %td
+            = form.label :short_name
+            %br
+            = form.text_field :short_name, :class=> "short_name-input"
+    %hr
+    %h4 Information for individual or <em>entire family</em>
+    %p
+      = form.label :name, 'Name to identify family'
+      %a.allow_edit{:href=>'#', :id=> "allow_edit_#{params[:id]}"} Click to allow editing
+      %br
+      = form.text_field :name
+      = form.label :name_override
+      = form.check_box :name_override
+    %p
 
-  %p
-    = form.label :sim_id, 'SIM ID'
-    = form.text_field :sim_id, :class => 'sim_id-input'
-    = form.label :status, "Status"
-    - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
-    = form.select(:status, status_choices)    
-    = form.label :residence_location, "Location"
-    = form.select(:residence_location, location_choices(@record[:residence_location_id]))    
+    %p
+      = form.label :sim_id, 'SIM ID'
+      = form.text_field :sim_id, :class => 'sim_id-input'
+      = form.label :status, "Status"
+      - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
+      = form.select(:status, status_choices)    
+      = form.label :residence_location, "Location"
+      = form.select(:residence_location, location_choices(@record[:residence_location_id]))    
 
-  .actions
-    = form.submit "Create"
+    .actions
+      = form.submit "Create"
+      = link_to "Cancel", families_path, :class=>"as_cancel"
+  / 
+    %h4 Family Members
+    #family_members{:style=>'margin-left: 10px'}
 
-/ 
-  %h4 Family Members
-  #family_members{:style=>'margin-left: 10px'}
-
-    - @record.members.each do  |m|
-      %p= link_to 'Edit', edit_member_path(m), {:remote=>"true", :position=>"after", :class=>"edit as_action"}  
-      %span= m.to_label + " (#{m.sex})"
+      - @record.members.each do  |m|
+        %p= link_to 'Edit', edit_member_path(m), {:remote=>"true", :position=>"after", :class=>"edit as_action"}  
+        %span= m.to_label + " (#{m.sex})"
 
 
 

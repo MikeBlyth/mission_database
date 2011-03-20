@@ -2,6 +2,7 @@ class FamiliesController < ApplicationController
   helper :name_column
   before_filter :authenticate #, :only => [:edit, :update]
   include AuthenticationHelper
+  include ApplicationHelper
   
   active_scaffold :family do |config|
      list.sorting = {:name => 'ASC'}
@@ -37,6 +38,15 @@ class FamiliesController < ApplicationController
     super(params)
   end    
 
+  def do_create
+    super
+    if !@record.valid?
+      puts "Invalid new family -- errors: #{@record.errors}"
+        render :action => "create" 
+      return
+    end
+  end    
+
   def add_family_member
     record = Member.new(:last_name=>'NewMember', :first_name=>'Guess')
     params[:record] = {:last_name=>'NewMember', :first_name=>'Guess'}
@@ -70,11 +80,11 @@ class FamiliesController < ApplicationController
   end  
 
   def create_respond_to_html 
-   redirect_to edit_member_path @record.head
+   redirect_to edit_member_path @record.head if @record.valid?
   end  
 
   def create_respond_to_js
-   redirect_to edit_member_path @record.head
+   redirect_to edit_member_path @record.head if @record.valid?
   end  
 
 end

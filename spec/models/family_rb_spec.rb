@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Family do
   before(:each) do
     @family= Factory.build(:family)
+    @head = @family.head
   end    
 
   it "has the right 'unspecified' defaults when created" do
@@ -44,11 +45,19 @@ describe Family do
     unique_columns.each {|col| @family.send(col.to_s+"=", "7070") } # these fields are now unique
     @family.send(dup_column.to_s + "=", "9999")  # this field is a duplicate
     @family.valid?
-    @family.errors[dup_column].should == ["has already been taken"] 
+    @family.errors[dup_column].should be_true
   end
 
-  it "is invalid if name already exists in database" do
+  it "is invalid if name is duplicate" do
     should_reject_duplicate(:name, [:sim_id])
+  end
+
+  it "is invalid if name matches existing member" do
+    @family.save
+    @family.update_attribute(:name, "Any name")  # So we test dup head name, not family name
+    @new_family = Factory.build(:family, :name=>@family.head.name)
+    @new_family.valid?
+    @family.errors[:name].should be_true    # ie there is an error against Name
   end
 
   it "is invalid if SIM ID already exists in database" do

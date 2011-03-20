@@ -8,8 +8,9 @@
       =# %li= link_to "User Settings", edit_user_path(current_user)       
       %li= link_to 'Travel', travels_path 
       %li= link_to 'Contacts', contacts_path 
-      %li= link_to 'Users',users_path
       %li= link_to 'Reports', :controller=>'reports', :action=>'index'      
+      - if can? :create, User
+        %li= link_to 'Users',users_path 
       %li 
         Set member filter
         %ul
@@ -27,6 +28,7 @@
           %li= link_to 'Current arrivals', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :arrivals
           %li= link_to 'Current departures', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :departures
           %li= link_to 'Include past', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :all_dates
+      %li= link_to "Edit your user info", edit_user_path(current_user)
       %li= link_to "Sign out", signout_path, :method => :delete       
     %hr
     %ul.links
@@ -43,8 +45,6 @@
       %li= link_to 'Status codes', statuses_path 
     - if current_user_admin?
       %hr
-      %ul.links
-        %li= link_to 'Add User', new_user_path 
   - else 
     %p Please sign in 
     = link_to "Sign in", signin_path

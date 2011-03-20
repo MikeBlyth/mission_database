@@ -31,6 +31,7 @@ class Family < ActiveRecord::Base
   before_validation :set_indexed_name_if_empty
   validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
+  validate :name_not_exists
 
   after_create :create_family_head_member
   after_save   :update_member_locations
@@ -109,10 +110,20 @@ class Family < ActiveRecord::Base
   # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
  # debugger
+ puts "create_family_head_member"
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
             :status=>status, :residence_location=>residence_location, :family =>self, :sex=>'M')
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
+  end
+
+  def name_not_exists
+    if Member.find_by_name(self.name)
+      errors.add(:name, "#{name} already exists for family or member. Modify name to avoid duplication.")
+      return false
+    else
+      return true
+    end
   end
   
 end

@@ -1,6 +1,9 @@
-%h1 User information
-= "Name: #{@user.name}"
-%br
-= render 'roles_form'
-.actions
-= f.submit "Update"
+.active-scaffold
+  %h1 User information
+  = "Name: #{@user.name}"
+  %br
+  = render 'roles_form'
+  .actions
+  = f.submit "Update"
+  = link_to "Cancel!", users_path,  :class=>"as_cancel"
+

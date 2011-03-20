@@ -27,9 +27,9 @@ describe "LayoutLinks" do
       page.should have_no_link("Sign in")
     end
 
-    it "should not have a link to add users" do
+    it "should not have a link to users" do
       visit root_path
-      page.should have_no_link("Add User")
+      page.should have_no_link("Users")
     end
 
   end # "when signed in as ordinary user"
@@ -45,9 +45,9 @@ describe "LayoutLinks" do
       page.should have_no_link("Sign in")
     end
 
-    it "should have a link to add users" do
+    it "should have a link to users" do
       visit root_path
-      page.should have_link("Add User")
+      page.should have_link("Users")
     end
 
   end # "when signed in as administrator"

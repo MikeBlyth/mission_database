@@ -8,6 +8,10 @@ load_and_authorize_resource
 #  before_filter :authenticate 
 
   def index
+    unless can? :create, User
+      redirect_to root_path
+      return
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @cities }
