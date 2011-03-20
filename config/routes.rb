@@ -25,6 +25,7 @@ SIM::Application.routes.draw do
    
   match 'reports/bloodtypes' => 'reports#bloodtypes', :defaults => {:format => 'pdf'}, :as => 'bloodtype_report'
   match 'reports/birthdays' => 'reports#birthdays', :as => 'birthday_report'
+  match 'reports/calendar' => 'reports#calendar', :as => 'calendar_report'
   match 'reports/birthday_calendar' => 'reports#birthday_calendar', :as => 'birthday_calendar_report'
   match 'reports/travel_calendar' => 'reports#travel_calendar', :as => 'travel_calendar_report'
   match 'reports/birthday_travel_calendar' => 'reports#birthday_travel_calendar', :as => 'birthday_travel_calendar_report'

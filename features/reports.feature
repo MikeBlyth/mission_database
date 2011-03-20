@@ -8,11 +8,50 @@ Feature: report generation
     When I click on "Birthday list" 
     Then I should get a "Birthday" PDF report
 
+  @calendar
   Scenario: Generate birthday calendar
     Given that I am signed in
-    And I click on "Reports"
-    When I click on "Birthday calendar" 
+    And basic statuses
+    And a one-person family
+    And "John" has a birthday
+    And "Mary" is traveling 
+    When I click on "Reports"
+    And I check "Birthdays" 
+    And I uncheck "Travel"
+    And I click on "Generate"
     Then I should get a "{next month}" PDF report
+    And the report should include "John"
+    And the report should not include "Mary"
+
+  @calendar
+  Scenario: Generate travel calendar
+    Given that I am signed in
+    And basic statuses
+    And a one-person family
+    And "John" has a birthday
+    And "Mary" is traveling 
+    When I click on "Reports"
+    And I uncheck "Birthdays" 
+    And I check "Travel"
+    And I click on "Generate"
+    Then I should get a "{next month}" PDF report
+    And the report should not include "John"
+    And the report should include "Mary"
+
+  @calendar
+  Scenario: Generate combined calendar
+    Given that I am signed in
+    And basic statuses
+    And a one-person family
+    And "John" has a birthday
+    And "Mary" is traveling 
+    When I click on "Reports"
+    And I check "Birthdays" 
+    And I check "Travel"
+    And I click on "Generate"
+    Then I should get a "{next month}" PDF report
+    And the report should include "John"
+    And the report should include "Mary"
 
   Scenario: Generate bloodtype reports
     Given that I am signed in
@@ -48,12 +87,6 @@ Feature: report generation
     When I click on "Travel schedule" 
     Then I should get a "Travel" PDF report
     And the report should include the "travel" information
-
-  Scenario: Generate birthday calendar
-    Given that I am signed in
-    And I click on "Reports"
-    When I click on "Travel calendar" 
-    Then I should get a "{next month}" PDF report
 
 
   

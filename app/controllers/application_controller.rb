@@ -6,12 +6,12 @@ class ApplicationController < ActionController::Base
     config.ignore_columns.add [:created_at, :updated_at, :lock_version]
   end
 
-before_filter :require_https #, :only => [:login, :signup, :change_password] 
+  before_filter :require_https #, :only => [:login, :signup, :change_password] 
 
-def require_https
-  redirect_to :protocol => "https://" unless (request.protocol=='https://' or request.host=='localhost' or
-      request.host == 'test.host' or request.remote_addr == '127.0.0.1')
-end
+  def require_https
+    redirect_to :protocol => "https://" unless (request.protocol=='https://' or request.host=='localhost' or
+        request.host == 'test.host' or request.remote_addr == '127.0.0.1')
+  end
 
   rescue_from CanCan::AccessDenied do |exception|
 # puts "CanCan AccessDenied #{exception.message}"
@@ -21,7 +21,6 @@ end
       redirect_to request.referer, :alert => exception.message
     end
   end
-
 
   @@filter_notices = {
     'all' => "everyone",

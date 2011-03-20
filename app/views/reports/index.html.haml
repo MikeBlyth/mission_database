@@ -6,8 +6,16 @@
   %li= link_to "Birthday list", "/reports/birthdays.pdf"
   %li= link_to "Blood types", "/reports/bloodtypes.pdf"
 %h4 Calendars
-%ul
-  %li= link_to "Birthday calendar", "/reports/birthday_calendar.pdf"  
-  %li= link_to "Travel calendar", "/reports/travel_calendar.pdf"
-  %li= link_to "Combined calendar", "/reports/birthday_travel_calendar.pdf"  
-
+= form_tag('/reports/calendar.pdf', :method => "get")
+= check_box_tag(:birthdays)
+= label_tag(:birthdays, "Birthdays")
+= check_box_tag(:travel)
+= label_tag(:travel, "Travel")
+= check_box_tag(:events)
+= label_tag(:events, "Other events")
+%br
+%p For which month?
+= select_month(Time.now.next_month)
+= select_year(Time.now.next_month)
+%br
+= submit_tag "Generate"

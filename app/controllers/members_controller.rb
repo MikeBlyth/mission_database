@@ -11,8 +11,8 @@ class MembersController < ApplicationController
   active_scaffold :member do |config|
 
     config.label = "Members"
-    list.columns = [:name, 
-          :spouse, :residence_location, :work_location, :country_name, :status, :contacts]
+    list.columns = [:name, :spouse, 
+          :child, :residence_location, :work_location, :country_name, :status, :contacts]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = create.columns = update.columns = 
@@ -44,6 +44,7 @@ class MembersController < ApplicationController
     config.columns[:ministry].form_ui = :select 
     config.columns[:status].form_ui = :select 
     config.columns[:status].inplace_edit = true
+    config.columns[:child].inplace_edit = true
     config.columns[:residence_location].inplace_edit = true
     config.columns[:work_location].inplace_edit = true
     config.columns[:field_terms].collapsed = true

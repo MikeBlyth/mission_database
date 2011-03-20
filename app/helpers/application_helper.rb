@@ -13,6 +13,14 @@ module ApplicationHelper
       return 'M' if s.downcase[0] == 'f'
     end	
 
+    # Join the elements in array a with delimiter (default ", ")
+    #   but first trim whitespace from elements and delete blank elements
+    # Example
+    # smart_join([' a ', '', nil, 3.5, "25\n"]) -> "a, 3.5, 25" 
+    def smart_join(a, delim=', ')
+      a.collect{|x| (x || '').to_s.strip}.delete_if{|x| x.blank?}.join(delim)
+    end
+
 end
 
 require "#{Rails.root}/config/initializers/date_formats.rb"

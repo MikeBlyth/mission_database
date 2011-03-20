@@ -371,7 +371,7 @@ Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
   if target_text == '{next month}'
     target_text = Date::MONTHNAMES[Date::today().next_month.month]  # which is the name for the next month from now
   end
-#puts "Page.body = ::#{page.body}::" if target_text=="Travel"
+# puts "Page.body = ::#{page.body}::" # if target_text=="{next month}"
   page.should have_content target_text
 end
 
@@ -445,5 +445,16 @@ Given /^a member "([^"]*)" with bloodtype "([^"]*)" and status "([^"]*)"$/ do |f
 #Member.all.each {|x| puts ">> #{x.first_name}, #{x.status_id}, #{x.on_field}, #{x.health_data.bloodtype}" }
   m.health_data.update_attribute(:bloodtype_id, bloodtype.id) 
 end
+
+Given /^"([^"]*)" has a birthday$/ do |first_name|
+  m = Factory(:member,  :family_id => @family.id, :first_name => first_name, 
+            :birth_date => Date.today + 1.month - 20.years)
+end
+
+Given /^"([^"]*)" is traveling$/ do |first_name|
+  m = Factory(:member,  :family_id => @family.id, :first_name => first_name)
+  t = Factory(:travel, :member_id => m.id, :date => Date.today + 1.month, :arrival=>true)
+end
+
 
 

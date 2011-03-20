@@ -6,7 +6,8 @@ require 'spec_helper'
 #end
 
 describe ReportsController do
- 
+include ApplicationHelper
+
   reports = %w(bloodtypes birthdays birthday_calendar phone_email travel_schedule)
   describe "authentication before controller access" do
 
@@ -44,6 +45,14 @@ describe ReportsController do
     end
     
   end # describe "calendar reports"  
+
+  describe "smart_join" do  # This isn't really in reports_controller, but in application_helper.
+    it "works" do
+      smart_join([' a ', '', nil, 25, "\ncat\t\n"]).should == "a, 25, cat"
+      smart_join([' a ', '', nil, 25, "\ncat\t\n"], "::").should == "a::25::cat"
+    end
+  end  
+    
 
 end # describe ReportsController
 

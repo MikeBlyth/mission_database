@@ -51,7 +51,7 @@ class ReportsController < ApplicationController
    def phone_email
     selected = Member.where(conditions_for_collection).
                       where("child is false").
-            select("family_id, child, last_name, first_name, middle_name, short_name, birth_date, id")
+            select("family_id, child, last_name, first_name, middle_name, short_name, id")
     filter = (session[:filter] || "").gsub('_', ' ')
     left_head = filter.blank? ? '' : "with status = #{filter}" 
     output = PhoneEmailReport.new.to_pdf(selected,:left_head=>left_head)
@@ -109,12 +109,13 @@ class ReportsController < ApplicationController
   # Return starting date for calendar. If the date is not specified in params,
   #    use the first of the next month.
   def date_for_calendar
-    if params[:date].respond_to?(:month)
-      date = params[:date]
+    if params[:date]
+      date = Date.new(params[:date][:year].to_i, params[:date][:month].to_i, 1)
     else
       next_m = Date::today().next_month
       date = Date.new(next_m.year, next_m.month, 1)
     end
+#puts "date_for_calendar = #{date}"
     return date
   end
 
@@ -129,19 +130,45 @@ class ReportsController < ApplicationController
     return CalendarMonthPdf.new(:title=>title, :date=>date, :page_size=>page_size, :page_layout=>page_layout, :box=>box)
   end
 
-  def birthday_calendar
+  def calendar
+    # Set up the calendar form for right month (page size, titles, etc.)
+#puts "Calendar, params=#{params}"
+    calendar = calendar_setup
+       
+    birthday_data = params[:birthdays] ? birthday_calendar_data({:month=>date_for_calendar.month}) : []
+    travel_data = params[:travel] ? travel_calendar_data({:date=>date_for_calendar}) : []
+
+    # Merge the different arrays of data--birthdays, travel, anything else
+    merged = merge_calendar_data([travel_data, birthday_data])
+
+    # Actually print the strings
+    calendar.put_data_into_days(merged)
+
+    respond_to do |format|
+      format.pdf do
+        send_data calendar.render, :filename => "calendar.pdf", 
+                          :type => "application/pdf"
+      end
+    end
+  end
+ 
+  def birthday_travel_calendar
     # Set up the calendar form for right month (page size, titles, etc.)
     calendar = calendar_setup
        
     # Select the people born this month and to put on the calendar
     birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
 
+    # Select the people born this month and to put on the calendar
+    travel_data = travel_calendar_data({:date=>date_for_calendar})
+
     # Actually print the strings
-    calendar.put_data_into_days(birthday_data)
+    merged = merge_calendar_data([travel_data, birthday_data])
+    calendar.put_data_into_days(merged)
 
     respond_to do |format|
       format.pdf do
-        send_data calendar.render, :filename => "birthday_calendar.pdf", 
+        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
                           :type => "application/pdf"
       end
     end
@@ -165,19 +192,15 @@ class ReportsController < ApplicationController
     end
   end
 
-  def birthday_travel_calendar
+  def birthday_calendar
     # Set up the calendar form for right month (page size, titles, etc.)
     calendar = calendar_setup
        
     # Select the people born this month and to put on the calendar
     birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
 
-    # Select the people born this month and to put on the calendar
-    travel_data = travel_calendar_data({:date=>date_for_calendar})
-
     # Actually print the strings
-    merged = merge_calendar_data([travel_data, birthday_data])
-    calendar.put_data_into_days(merged)
+    calendar.put_data_into_days(birthday_data)
 
     respond_to do |format|
       format.pdf do

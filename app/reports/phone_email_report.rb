@@ -4,6 +4,8 @@ require 'reports_helper'
 # Prawn document to generate PDF for blood types
 class PhoneEmailReport < Prawn::Document
 include ReportsHelper
+include ApplicationHelper
+
     def to_pdf(selected,params={})
     
      # selected is an array of Members (with only some columns defined)
@@ -18,7 +20,7 @@ include ReportsHelper
       text_data << "#{member.last_name_first(:short=>true, :middle=>false)}:  " 
       field_contact = member.contacts.find_by_contact_type_id(1)
       if field_contact
-        text_data << [field_contact.phone_1, field_contact.phone_2, field_contact.email_1, field_contact.email_2].join(', ')
+        text_data << smart_join([field_contact.phone_1, field_contact.phone_2, field_contact.email_1, field_contact.email_2])
         
       end
     text_data << "\n\n"
