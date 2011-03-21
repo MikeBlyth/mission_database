@@ -110,7 +110,6 @@ class Family < ActiveRecord::Base
   # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
  # debugger
- puts "create_family_head_member"
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
             :status=>status, :residence_location=>residence_location, :family =>self, :sex=>'M')
@@ -121,11 +120,15 @@ class Family < ActiveRecord::Base
   # * a member with that name exists and is the head-of-family OR
   # * the record is new and the name fields are valid for a new member
   def name_not_exists
-    if Member.find_by_name(self.name)
-      errors.add(:name, "#{name} already exists for family or member. Modify name to avoid duplication.")
-      return false
+    if self.new_record?
+      if Member.find_by_name(self.name)
+        errors.add(:name, "#{name} already exists for family or member. Modify name to avoid duplication.")
+        return false
+      else
+        return true
+      end
     else
-      return true
+      
     end
   end
   

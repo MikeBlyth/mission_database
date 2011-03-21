@@ -274,7 +274,6 @@ Then /^I should see a valid form for a new family$/ do
   find_field("record_status").value.should == "999999"
   find_field("record_residence_location").value.should == "999999"
   page.should have_content "Create a New Individual or Family"
-  page.should have_content "Click to allow editing"
   page.should have_selector "input", :id=> 'record_name' 
 end
 
