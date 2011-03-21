@@ -1,7 +1,13 @@
 module TravelsHelper
   def member_column(record)
-    result = record.member.full_name_short
-    if record.with_spouse
+    if record.respond_to?(:full_name_short)
+      member = record 
+    else
+      member = record.member
+      return '' unless member.respond_to?(:full_name_short)
+    end    
+    result = record.class == Travel ? member.full_name_short : member.last_name_first(:initial=>true)
+    if record.respond_to?(:with_spouse) && record.with_spouse
       if record.member.spouse && # There is a spouse listed in the database
          Settings.travel.include_spouse_name_in_list  # the setting is on
         result = "#{record.member.short} & #{record.member.spouse.short} #{record.member.last_name}" 

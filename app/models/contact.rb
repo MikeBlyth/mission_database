@@ -39,7 +39,4 @@ class Contact < ActiveRecord::Base
     end  
   end
 
-
-protected
-  
 end
