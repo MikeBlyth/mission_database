@@ -110,6 +110,7 @@ class MembersController < ApplicationController
       elsif params[:type] == 'child'
         @record = Member.new( :family => family,
                               :last_name=> family.last_name, 
+                              :child => true,
                               :country_id => head.country_id,
                               :status => head.status,
                               :residence_location => head.residence_location )
