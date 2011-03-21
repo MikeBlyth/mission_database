@@ -74,11 +74,8 @@ div.states-view {
 .family_info p {
   padding-top: 0.3em; }
 
-.family_members, .add_family_members {
+.family_members h5, .add_family_members h5 {
   margin-top: 1em; }
-  .family_members a, .family_members p, .add_family_members a, .add_family_members p {
-    margin-left: 1em;
-    margin-top: 0.3em; }
 
 .sim_id-input {
   width: 60px; }
@@ -105,5 +102,5 @@ table.new_family {
   table.new_family td {
     width: 25%; }
 
-div.actions {
-  margin-top: 20px; }
+a.big-link {
+  font: bold 14px arial, sans-serif; }

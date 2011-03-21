@@ -56,7 +56,8 @@
             = form.label :residence_location, "Location"
             %br
             = form.select(:residence_location, location_choices(@record[:residence_location_id]))    
-    .actions
+    .form-footer
+      %br
       = form.submit "Create"
       = link_to "Cancel", families_path, :class=>"as_cancel"
   / 
