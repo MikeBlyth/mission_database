@@ -30,11 +30,14 @@ div.states-view {
 .guesthouse-input {
   width: 150px; }
 
-.name-input, .family-input, .spouse-input, .country-input,
+.name-input, .family-input, .spouse-input {
+  width: 200px; }
+
+.country-input,
 .status-input, .employment_status-input, .ministry-input,
 .ministry_comment-input, .location-input, .qualifications-input,
 .education-input {
-  width: 250; }
+  width: 250px; }
 
 #menu {
   background: #eeeeee;
@@ -59,9 +62,6 @@ div.states-view {
   left: 150px;
   padding-left: 10px; }
 
-h2 {
-  color: red; }
-
 #notice {
   padding: 0.5em;
   margin: 10px;
@@ -80,6 +80,9 @@ h2 {
     margin-left: 1em;
     margin-top: 0.3em; }
 
+.sim_id-input {
+  width: 60px; }
+
 .test {
   color: red;
   background: blue; }
@@ -90,3 +93,17 @@ td.label {
 
 .hidden {
   display: none; }
+
+label.required {
+  font-style: italic;
+  color: black; }
+
+table.new_family {
+  width: 400px; }
+  table.new_family tbody {
+    vertical-align: top; }
+  table.new_family td {
+    width: 25%; }
+
+div.actions {
+  margin-top: 20px; }

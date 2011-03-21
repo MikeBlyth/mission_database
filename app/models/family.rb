@@ -117,6 +117,9 @@ class Family < ActiveRecord::Base
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
   end
 
+  # When validating a family, verify on the head-of-family NAME that either
+  # * a member with that name exists and is the head-of-family OR
+  # * the record is new and the name fields are valid for a new member
   def name_not_exists
     if Member.find_by_name(self.name)
       errors.add(:name, "#{name} already exists for family or member. Modify name to avoid duplication.")

@@ -52,7 +52,7 @@ describe Family do
     should_reject_duplicate(:name, [:sim_id])
   end
 
-  it "is invalid if name matches existing member" do
+  it "is invalid if new and name matches existing member" do
     @family.save
     @family.update_attribute(:name, "Any name")  # So we test dup head name, not family name
     @new_family = Factory.build(:family, :name=>@family.head.name)
