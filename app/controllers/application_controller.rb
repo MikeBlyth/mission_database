@@ -51,5 +51,7 @@ puts "set_member_filter, #{params[:filter]}"
     flash[:notice] = "Showing #{@@filter_notices[filter]}."
     redirect_to(request.referer)
   end
+
+  
   
 end

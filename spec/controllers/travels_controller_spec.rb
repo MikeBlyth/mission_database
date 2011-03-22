@@ -109,6 +109,19 @@ describe TravelsController do
         return_trip.confirmed.should be_nil
     end
  
-  end
+  end #automatic return trip
+  
+  # Allow travel records that are not attached to a member -- such as for guests, teams etc.
+  describe "Guest passengers" do
+
+    before(:each) do
+        @user = Factory(:user, :travel=>true)
+        test_sign_in(@user)
+        @object = Factory.build(:travel)
+    end
+
+    
+    
+  end # Guest passengers
   
 end
