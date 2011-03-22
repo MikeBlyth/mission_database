@@ -74,7 +74,16 @@ class Travel < ActiveRecord::Base
 
   # "Virtual column" for use in listing travels
   def traveler_name
-    traveler.name
+    result = traveler.full_name_short
+    if with_spouse
+      if member && member.spouse && # There is a spouse listed in the database
+           Settings.travel.include_spouse_name_in_list  # the setting is on
+        result = "#{member.short} & #{member.spouse.short} #{member.last_name}" 
+      else
+        result = "M/M " + result 
+      end
+    end
+    result
   end  
   
   # Ensure that record has either a valid member or something in other_travelers

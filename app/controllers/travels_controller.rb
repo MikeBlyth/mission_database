@@ -7,7 +7,7 @@ class TravelsController < ApplicationController
   active_scaffold :travel do |config|
     #  config.columns[:member].actions_for_association_links = [:show]
     config.subform.layout = :vertical
-    config.columns = [:member, :traveler_name, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,
+    config.columns = [:traveler_name, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,
       :return_date, :with_spouse, :with_children, :total_passengers, :confirmed]
     show.columns = create.columns = update.columns =  [:member, :date, :time, :arrival, :origin, :destination, :flight, 
       :term_passage, :personal, :ministry_related, :purpose, 
