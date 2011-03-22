@@ -24,9 +24,8 @@ describe TravelsController do
       end
       
       it "can create new object" do
-puts "**** member_id=#{@object.member_id} => #{@object.member.name}"
         lambda do
-          post :create, :record => {:date=>Date.today, :member => @object.member}
+          post :create, :record => {:date=>Date.today, :member => @object.member_id}
         end.should change(Travel, :count).by(1)      
       end
 
@@ -41,7 +40,7 @@ puts "**** member_id=#{@object.member_id} => #{@object.member.name}"
         get :new
       end
       
-      it "can create new object" do
+      it "cannot create new object" do
         lambda do
           post :create, :record => {:date=>Date.today, :member_id => @object.member_id}
         end.should change(Travel, :count).by(0)      
