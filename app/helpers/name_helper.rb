@@ -67,7 +67,7 @@ module NameHelper
   def name_optional_last
     n = short
     n << " #{middle_initial}" if middle_initial
-    n << " #{last_name}" if last_name != family.last_name
+    n << " #{last_name}" if !family || (last_name != family.last_name)
     return n
   end
     

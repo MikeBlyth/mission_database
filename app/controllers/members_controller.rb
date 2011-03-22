@@ -12,7 +12,7 @@ class MembersController < ApplicationController
 
     config.label = "Members"
     list.columns = [:name, :spouse, 
-          :child, :residence_location, :work_location, :country_name, :status, :contacts]
+          :child, :residence_location, :work_location, :travels, :field_terms, :status, :contacts]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = create.columns = update.columns = 
@@ -48,7 +48,9 @@ class MembersController < ApplicationController
     config.columns[:residence_location].inplace_edit = true
     config.columns[:work_location].inplace_edit = true
     config.columns[:field_terms].collapsed = true
+    config.columns[:field_terms].associated_limit = 2
     config.columns[:travels].collapsed = true
+    config.columns[:travels].associated_limit = 2
     config.columns[:contacts].collapsed = true
     config.columns[:family].actions_for_association_links = [:list]
 
