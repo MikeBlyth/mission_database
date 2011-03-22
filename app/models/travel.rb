@@ -59,7 +59,7 @@ class Travel < ActiveRecord::Base
   # be free-floating, not associated with a member. In this case, corresponding to the "else"
   # clause below, we generate a temporary Member object just so that we have the name
   # values available, extracted from the first of the "extra_travelers" names.
-  def member
+  def traveler
     if member_id
       Member.find(member_id)
     else
@@ -75,6 +75,9 @@ class Travel < ActiveRecord::Base
   # Ensure that record has either a valid member or something in other_travelers
   def name_info
     return true if Member.find_by_id(self.member_id) || (! self.other_travelers.blank?)
+puts "**** member_id=#{member_id} => #{member.name if member_id}"
     errors[:member] << "Must use existing member or enter name in 'Other travelers'"
+puts "****#{errors[:member]}"
+    return false
   end
 end

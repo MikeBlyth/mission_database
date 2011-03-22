@@ -24,8 +24,9 @@ describe TravelsController do
       end
       
       it "can create new object" do
+puts "**** member_id=#{@object.member_id} => #{@object.member.name}"
         lambda do
-          post :create, :record => {:date=>Date.today, :member_id => @object.member_id}
+          post :create, :record => {:date=>Date.today, :member => @object.member}
         end.should change(Travel, :count).by(1)      
       end
 
@@ -117,9 +118,15 @@ describe TravelsController do
     before(:each) do
         @user = Factory(:user, :travel=>true)
         test_sign_in(@user)
-        @object = Factory.build(:travel)
+        @attr = {:member=>'999999', :date=>Date.today, :other_travelers=>'Guest traveler'}
     end
 
+    it "should add 'Guest' travel if member_id is 'Unspecified'" do
+        lambda do
+          post :create, :record=>@attr
+        end.should change(Travel, :count).by(1)
+        Travel.last.traveler.full_name.should == 'Guest traveler'
+    end        
     
     
   end # Guest passengers

@@ -45,6 +45,10 @@ class TravelsController < ApplicationController
   end
 
   def do_create
+    if params[:record][:member] == UNSPECIFIED.to_s
+      params[:record].delete(:member)
+    end  
+puts "**** Do_Create: Params=#{params}"
     super
     # This creates a return trip automatically
     if @record.return_date
