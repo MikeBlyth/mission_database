@@ -7,7 +7,7 @@ class TravelsController < ApplicationController
   active_scaffold :travel do |config|
     #  config.columns[:member].actions_for_association_links = [:show]
     config.subform.layout = :vertical
-    config.columns = [:member, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,
+    config.columns = [:member, :traveler_name, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,
       :return_date, :with_spouse, :with_children, :total_passengers, :confirmed]
     show.columns = create.columns = update.columns =  [:member, :date, :time, :arrival, :origin, :destination, :flight, 
       :term_passage, :personal, :ministry_related, :purpose, 
@@ -19,6 +19,7 @@ class TravelsController < ApplicationController
     config.columns[:member].form_ui = :select 
     #   config.columns[:member].options = {:draggable_lists => true}
     config.columns[:member].description = "Person booked for; first create a new member or visitor if necessary."
+    config.columns[:member].clear_link
     config.columns[:date].sort_by :sql
     config.columns[:baggage].description = "Number of pieces of baggage"
     config.columns[:other_travelers].description = "Names of other travelers (optional)"
@@ -45,7 +46,8 @@ class TravelsController < ApplicationController
   end
 
   def do_create
-    if params[:record][:member] == UNSPECIFIED.to_s
+    # Are we making travel record for a guest rather than an existing member?
+    if params[:guest] || params[:record][:member] == UNSPECIFIED.to_s
       params[:record].delete(:member)
     end  
     super

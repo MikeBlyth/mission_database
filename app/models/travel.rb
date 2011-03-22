@@ -71,6 +71,11 @@ class Travel < ActiveRecord::Base
                  :name => "#{name[2]}, #{name[0]} #{name[1]}".strip)
     end
   end    
+
+  # "Virtual column" for use in listing travels
+  def traveler_name
+    traveler.name
+  end  
   
   # Ensure that record has either a valid member or something in other_travelers
   def name_info

@@ -1,15 +1,29 @@
 module TravelsHelper
+  
+  def traveler_name(record)
+    record.traveler.full_name_short 
+  end
+  
   def member_column(record)
-    if record.respond_to?(:full_name_short)
-      member = record 
+    if record.class == Travel
+      result = traveler_name(record)
+puts "member_column travel result = #{result}"
     else
-      member = record.member
-      return '' unless member.respond_to?(:full_name_short)
+      # set 'member' to be either the record itself, if it responds to name methods, or
+      # to the member to which this record belongs ('member = record.member')
+      if record.respond_to?(:full_name_short)
+        member = record 
+      else
+        member = record.member
+        return '' unless member.respond_to?(:full_name_short)
+      end
+      result = member.last_name_first(:initial=>true)
     end    
-    result = record.class == Travel ? member.full_name_short : member.last_name_first(:initial=>true)
+
+    # Now add spouse's name, or 'M/M', if the record has with_spouse
     if record.respond_to?(:with_spouse) && record.with_spouse
-      if record.member.spouse && # There is a spouse listed in the database
-         Settings.travel.include_spouse_name_in_list  # the setting is on
+      if record.member && record.member.spouse && # There is a spouse listed in the database
+           Settings.travel.include_spouse_name_in_list  # the setting is on
         result = "#{record.member.short} & #{record.member.spouse.short} #{record.member.last_name}" 
       else
         result = "M/M " + result 
