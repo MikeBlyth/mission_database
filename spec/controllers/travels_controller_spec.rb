@@ -127,6 +127,20 @@ describe TravelsController do
         Travel.last.traveler.full_name.should == 'Guest traveler'
     end        
     
+    it "should add 'Guest' travel if member_id is empty" do
+        @attr[:member] = ''
+        lambda do
+          post :create, :record=>@attr
+        end.should change(Travel, :count).by(1)
+        Travel.last.traveler.full_name.should == 'Guest traveler'
+    end        
+    
+    it "should not add 'Guest' travel if other_travelers is empty" do
+        @attr[:other_travelers] = ''
+        lambda do
+          post :create, :record=>@attr
+        end.should change(Travel, :count).by(0)
+    end        
     
   end # Guest passengers
   
