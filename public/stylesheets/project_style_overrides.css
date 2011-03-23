@@ -107,67 +107,64 @@ a.big-link {
   font: bold 14px arial, sans-serif; }
 
 div.new_travel {
-  background: #aaaaaa;
-  position: relative; }
+  position: relative;
+  height: 390px;
+  background-color: #daffcd;
+  padding: 20px; }
+  div.new_travel div.col_1 {
+    background-color: #c2efc2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 300px;
+    padding: 5px;
+    height: 350px; }
+  div.new_travel div.col_2 {
+    background-color: #aaccaa;
+    position: absolute;
+    top: 0px;
+    left: 310px;
+    width: 300px;
+    padding: 5px;
+    height: 350px; }
+  div.new_travel div.col_3 {
+    background-color: #c2efc2;
+    position: absolute;
+    top: 0px;
+    left: 620px;
+    width: 300px;
+    padding: 5px;
+    height: 350px; }
+  div.new_travel div.form-footer {
+    position: absolute;
+    top: 350px;
+    left: 0px; }
+  div.new_travel table, div.new_travel td {
+    border-collapse: collapse;
+    border: 0px solid red;
+    border-bottom: 0px solid red;
+    border-left: 0px solid red; }
+
+.active-scaffold .active-scaffold td {
+  border-bottom: 0px;
+  border-left: 0px;
+  background-color: transparent; }
 
 div.passengers {
-  background: #aaffaa;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 300px;
   padding-left: 10px; }
 
-div.date_route {
-  background: #aaeeaa;
-  position: absolute;
-  top: 0px;
-  left: 300px;
-  width: 300px;
-  padding-left: 10px; }
+div.traveler_names select {
+  height: 200px; }
 
-div.travel_category {
-  background: #aaeecc;
-  position: absolute;
-  top: 0px;
-  left: 800px;
-  width: 200px;
-  padding-left: 10px; }
-
-div.travel_other {
-  background: #cceeaa;
-  position: absolute;
-  top: 0px;
-  left: 500px;
-  width: 300px;
-  padding-left: 10px; }
-
-div.spouse_kids {
-  position: static;
-  background: #eeccaa; }
+div.spouse_kids table {
+  width: 80%; }
 
 div.with_children {
-  background: #aaeecc;
-  position: relative;
-  top: 0px;
-  left: 150px;
-  width: 120px;
   padding-left: 10px; }
 
 div.with_spouse {
-  background: #aaeecc;
-  position: relative;
-  top: 0px;
-  left: 0px;
-  width: 120px;
   padding-left: 10px; }
 
-div.other_passengers {
-  background: #aabbcc;
-  position: static;
-  padding-left: 10px; }
-
-div.total_passengers {
-  background: #aacccc;
-  position: static;
-  padding-left: 10px; }
+div.travel_date {
+  padding: 0px;
+  margin: 0px; }
