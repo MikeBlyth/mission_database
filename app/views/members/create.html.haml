@@ -1,0 +1,58 @@
+.active-scaffold
+  %h4 Enter  Information for New Member
+  = render 'shared/error_messages', :object => @record
+  .new_member
+    = form_for :record, :url => { :action => "create" } do |form| 
+      .name_info
+        %table
+          %tr
+            %td
+              = form.label :last_name
+              %br
+              = form.text_field :last_name, :class => 'last_name-input required'
+            %td
+              = form.label :first_name
+              %br
+              = form.text_field :first_name, :class => 'first_name-input required'
+            %td
+              = form.label :middle_name
+              %br
+              = form.text_field :middle_name, :class => 'middle_name-input required'
+            %td
+              = form.label :short_name
+              %br
+              = form.text_field :short_name, :class => 'short_name-input required'
+          %tr
+            %td
+              .family
+                = form.label :family,"", :class=>'required'
+                %br
+                = form.collection_select(:family, 
+                  Family.select(" name, id").order("name"), 
+                  :id, :name, {})
+            %td
+              .sex
+                = form.label :sex
+                %br
+                = form.select(:sex, [['Male','M'], ['Female','F']])
+            %td
+              .birth_date        
+                = form.label :birth_date, :class => 'birth_date-input'
+                %br
+                = form.text_field :birth_date, :class => 'birth_date-input date-input datepicker '
+            %td
+              .child      
+                = form.check_box :child
+                = form.label :child, :class => 'child-input'
+          %tr
+            %td
+              .spouse
+                = form.label :spouse, :class => 'spouse-input'
+                %br
+                = spouse_form_column(@record,params)
+      .form-footer
+        %br
+        = form.submit "Create"
+        = link_to "Cancel", families_path, :class=>"as_cancel"
+    
+ 

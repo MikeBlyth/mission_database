@@ -74,6 +74,7 @@ class MembersController < ApplicationController
   end
 
   def convert_keys_to_id(params, *keys_to_change)
+    return params if keys_to_change.nil? || params.nil?
     keys_to_change.each do |k|
       v = params.delete(k)
       params[(k.to_s << '_id').to_sym] = v unless v.blank?  # resinsert value but with _id added to key
