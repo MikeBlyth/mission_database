@@ -108,7 +108,7 @@ a.big-link {
 
 div.new_travel {
   position: relative;
-  height: 390px;
+  height: 470px;
   background-color: #daffcd;
   padding: 20px; }
   div.new_travel div.col_1 {
@@ -118,7 +118,7 @@ div.new_travel {
     left: 0px;
     width: 300px;
     padding: 5px;
-    height: 350px; }
+    height: 440px; }
   div.new_travel div.col_2 {
     background-color: #aaccaa;
     position: absolute;
@@ -126,7 +126,7 @@ div.new_travel {
     left: 310px;
     width: 300px;
     padding: 5px;
-    height: 350px; }
+    height: 440px; }
   div.new_travel div.col_3 {
     background-color: #c2efc2;
     position: absolute;
@@ -134,10 +134,10 @@ div.new_travel {
     left: 620px;
     width: 300px;
     padding: 5px;
-    height: 350px; }
+    height: 440px; }
   div.new_travel div.form-footer {
     position: absolute;
-    top: 350px;
+    top: 450px;
     left: 0px; }
   div.new_travel table, div.new_travel td {
     border-collapse: collapse;
@@ -153,8 +153,12 @@ div.new_travel {
 div.passengers {
   padding-left: 10px; }
 
+div.travel_category, div.spouse_kids, div.total_passengers,
+div.other_travelers {
+  margin-top: 0.8em; }
+
 div.traveler_names select {
-  height: 200px; }
+  height: 180px; }
 
 div.spouse_kids table {
   width: 80%; }

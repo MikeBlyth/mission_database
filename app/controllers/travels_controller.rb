@@ -50,18 +50,30 @@ class TravelsController < ApplicationController
     if params[:guest] || params[:record][:member] == UNSPECIFIED.to_s
       params[:record].delete(:member)
     end  
-    super
-    # This creates a return trip automatically
-    if @record.return_date
-      params[:record][:date] = @record.return_date
-      params[:record][:destination] = @record.origin
-      params[:record][:origin] = @record.destination
-      params[:record][:return_date] = nil
-      params[:record][:arrival] = !@record.arrival
-      params[:record][:confirmed] = nil
-      super
-      flash[:notice] = 'Return trip also created'
+    members = params[:record][:member]  # Might be array, might be singleton
+    if members.class != Array
+      members = [members]  # Convert to an array if it's a singleton
     end
+
+    # Now iterate through the array of members and generate the same travel 
+    # record for each one
+    saved_record_params = params[:record].clone # save parameters since we may alter them
+    members.each do |member|
+      params[:record][:member] = member   # Set member for each iteration
+      super      # Active scaffold creates the record
+      # This creates a return trip automatically
+      if @record.return_date
+        params[:record][:date] = @record.return_date
+        params[:record][:destination] = @record.origin
+        params[:record][:origin] = @record.destination
+        params[:record][:return_date] = nil
+        params[:record][:arrival] = !@record.arrival
+        params[:record][:confirmed] = nil
+        super # Active scaffold creates the return record
+        flash[:notice] = 'Return trip also created'
+      end # if @record.return_date, create return trip
+      params[:record] = saved_record_params.clone
+    end # members.each
 #    puts "do_create: @record=#{@record.attributes}"
   end
 

@@ -143,5 +143,36 @@ describe TravelsController do
     end        
     
   end # Guest passengers
+
+  describe "Multiple members to add" do
+
+    before(:each) do
+      @user = Factory(:user, :travel=>true)
+      test_sign_in(@user)
+      @member_1 = Factory(:member)
+      @member_2 = Factory(:member, :last_name=>"Francis")
+      @member_3 = Factory(:member, :last_name=>"Ghandi")
+      @ids = [@member_1.id.to_s, @member_2.id.to_s, @member_3.id.to_s]    
+      @attr = {:member=>@ids, :date=>Date.today}
+    end
+
+    it "generates record for single member in array" do
+      @attr[:member] = [@member_1.id.to_s]  # Just use the first one
+      lambda do
+        post :create, :record=>@attr
+      end.should change(Travel, :count).by(1)
+    end        
+      
+    it "generates record for multiple members in array" do
+      lambda do
+        post :create, :record=>@attr
+      end.should change(Travel, :count).by(@ids.count)
+      @ids.each do |member_id|
+        Travel.find_by_member_id(member_id).should_not be_nil
+      end  
+    end        
+
+  end # Multiple members
+  
   
 end

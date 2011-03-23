@@ -8,11 +8,13 @@
           %h5 Travelers
           .traveler_names
             = render 'shared/error_messages', :object => @record
-            = form.label :member,"", :class=>'required'
+            = form.label :member,"Persons in this database:", :class=>'required'
             %br
             = form.collection_select(:member, 
               Member.select("last_name, first_name, middle_name, short_name, name, id").order("name"), 
               :id, :name, {}, :multiple=>true)    
+            %p You can select multiple travelers if they all have exactly the same |
+              trip details. Be sure to review the results. |
           .spouse_kids
             %table
               %tr
@@ -29,9 +31,15 @@
             %br
             = form.text_field :other_travelers, :class => 'other_travelers-input'
           .total_passengers       
-            = form.label :total_passengers
-            %br
-            = form.text_field :total_passengers, :class => 'total_passengers-input'
+            %table
+              %tr
+                %td
+                  = form.label :total_passengers
+                  %br
+                  = form.text_field :total_passengers, :class => 'total_passengers-input'
+                %td
+                  %p If selecting multiple members, enter "1" since each member will have his own |
+                    trip generated. |
       .col_2
         .date_route
           %h5 Trip Information
@@ -120,7 +128,7 @@
                   = form.text_field :baggage, :class => 'baggage-input'
               %td
                 .confirmed      
-                  = form.label :confirmed
+                  = form.label :confirmed, "Date confirmed"
                   %br
                   = form.text_field :confirmed, :class => 'confirmed-input datepicker'
           .comments       

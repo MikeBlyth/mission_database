@@ -110,7 +110,8 @@ a.big-link
   
 div.new_travel
   position: relative
-  height: 390px
+  $height: 470px
+  height: $height
   background-color: #DAFFCD
   padding: 20px
   div.col_1
@@ -120,7 +121,7 @@ div.new_travel
     left: 0px
     width: 300px
     padding: 5px 
-    height: 350px
+    height: $height - 30px
   div.col_2
     background-color: #ACA
     position: absolute
@@ -128,7 +129,7 @@ div.new_travel
     left: 310px
     width: 300px
     padding: 5px 
-    height: 350px
+    height: $height - 30px
   div.col_3
     background-color: #C2EFC2
     position: absolute
@@ -136,10 +137,10 @@ div.new_travel
     left: 620px
     width: 300px
     padding: 5px 
-    height: 350px
+    height: $height - 30px
   div.form-footer
     position: absolute
-    top: 350px
+    top: $height - 20px
     left: 0px
   table, td
     border-collapse: collapse
@@ -155,6 +156,10 @@ div.new_travel
 div.passengers
   padding-left: 10px 
 
+div.travel_category, div.spouse_kids, div.total_passengers, 
+div.other_travelers
+  margin-top: 0.8em
+
 div.date_route
 
 div.travel_category
@@ -163,7 +168,7 @@ div.travel_other
 
 div.traveler_names
   select
-    height: 200px
+    height: 180px
 div.spouse_kids
   table
     width: 80%

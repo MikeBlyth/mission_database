@@ -21,7 +21,7 @@ describe "Travels" do
         member = Factory(:member)
         visit new_travel_path
         fill_in "Date", :with => '2020-01-01'
-        fill_in "Other travelers", :with => 'Santa Claus'
+        fill_in "record[other_travelers]", :with => 'Santa Claus'
         click_button "Create"
       end.should change(Travel, :count).by(1)
     end      
