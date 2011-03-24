@@ -1,16 +1,17 @@
 class AdminController < ActionController::Base
   protect_from_forgery
 
-  before_filter :authenticate #, :only => [:edit, :update]
+  before_filter :authenticate_admin #, :only => [:edit, :update]
   include AuthenticationHelper
   include ApplicationHelper
   include SessionsHelper
   
   # Do various things to clean the database
   def clean_database
-    @report = ''
-    clean_members
-    clean_families
+    fix = params[:fix]=='true'  # This boolean determines whether we actually make changes to the database
+    @report = ""
+    clean_members(fix)
+    clean_families(fix)
     flash[:notice] = 'Database cleaned'
   end
 
@@ -45,7 +46,7 @@ private
 
   # Describe in detail what things to check and fix in Members table
   def clean_members(fix=false)
-    @report << "*** Checking Members ***\n"
+    @report << "<strong>*** Checking Members ***</strong>\n"
     Member.all.each do |m|
       check_and_fix_link(m, :residence_location, :name)
       check_and_fix_link(m, :work_location, :name)
@@ -56,11 +57,11 @@ private
       m.save if (m.changed_attributes.count > 0) & fix
     end # each member
     @report << "\nEnd of Members:"
-    @report << (fix ? " fixes made as shown" : " no changes made because 'fix' not specified.")
+    @report << (fix ? " fixes made as shown.\n" : " no changes made because 'fix' not specified.\n")
   end # clean database
 
   def clean_families(fix=false)
-    @report << "*** Checking Families ***\n"
+    @report << "\n<strong>*** Checking Families ***</strong>\n"
     Family.all.each do |m|
       check_and_fix_link(m, :residence_location, :name)
       check_and_fix_link(m, :head, :name)

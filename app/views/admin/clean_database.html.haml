@@ -1,3 +1,6 @@
 .active-scaffold
   %h4 Database Cleaning Report
   = raw("<pre>#{@report} </pre>")
+  = link_to "Cancel", root_path, :class=>"as_cancel"
+  = link_to "Make changes (cannot be undone!)", clean_database_path(:fix=>true)
+
