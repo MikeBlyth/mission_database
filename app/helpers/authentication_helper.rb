@@ -8,6 +8,10 @@ module AuthenticationHelper
       deny_access unless signed_in?
     end
 
+    def authenticate_admin
+      deny_access unless signed_in? && current_user.admin?
+    end  
+
     # Check that the user is an administrator or operating on his own user record
     def correct_user
 #puts "authentication_helper correct_user: params=#{params}"

@@ -32,6 +32,7 @@ SIM::Application.routes.draw do
 #  match 'reports/tabletest' => 'reports#tabletest'
 #  match 'reports/multi_col_test' => 'reports#multi_col_test'
 
+  match 'admin/clean_database' => 'admin#clean_database', :as => 'clean_database'
 
 #  resources :jqueries do as_routes end
 
