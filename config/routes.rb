@@ -16,7 +16,6 @@ SIM::Application.routes.draw do
   match 'autocomplete/family'
   match 'autocomplete/spouse'
   match 'autocomplete_searches/index'
-  match 'reports/:action(.:format)' => 'reports#:action'
   match 'members/set_full_names'
   match 'members/spouse_select'
 
@@ -29,6 +28,9 @@ SIM::Application.routes.draw do
   match 'reports/birthday_calendar' => 'reports#birthday_calendar', :as => 'birthday_calendar_report'
   match 'reports/travel_calendar' => 'reports#travel_calendar', :as => 'travel_calendar_report'
   match 'reports/birthday_travel_calendar' => 'reports#birthday_travel_calendar', :as => 'birthday_travel_calendar_report'
+  match 'reports/whereis' => 'reports#whereis', :as => 'whereis_report'
+  match 'reports/index' => 'reports#index', :as => 'reports'
+  match 'reports/:action(.:format)' => 'reports#:action'
 #  match 'reports/tabletest' => 'reports#tabletest'
 #  match 'reports/multi_col_test' => 'reports#multi_col_test'
 

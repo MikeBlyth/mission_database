@@ -9,6 +9,23 @@ class ReportsController < ApplicationController
     # this just displays a view that lets the user select from reports
   end
 
+  def whereis
+    selected = Member.where(conditions_for_collection).
+             select("last_name, first_name, middle_name, short_name, residence_location_id, work_location_id," +
+                     " temporary_location, temporary_location_from_date, temporary_location_until_date")
+    
+    member_locations = selected.collect{|m| {:name=>m.last_name_first(:initial=>true, :short=>true),
+                                             :location=>m.current_location}}
+    output = WhereisReport.new.to_pdf(member_locations)
+
+    respond_to do |format|
+      format.pdf do
+       send_data output, :filename => "where_is.pdf", 
+                         :type => "application/pdf"
+      end
+    end
+  end
+
    # Blood Type Reports
    def bloodtypes
      selected = Member.select("family_id, last_name, first_name, middle_name, status_id, id, child")

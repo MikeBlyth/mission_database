@@ -88,5 +88,15 @@ Feature: report generation
     Then I should get a "Travel" PDF report
     And the report should include the "travel" information
 
+  @whereis
+  Scenario: Generate where_is report
+    Given that I am signed in
+    And locations defined 
+    And a one-person family
+    And I click on "Reports"
+    When I click on "Where is" 
+    Then I should get a "Where Is" PDF report
+    And the report should include the "Where Is" information
+    
 
   

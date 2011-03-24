@@ -4,6 +4,7 @@ include SimTestHelper
 def construct_family
   @family = Factory(:family)
   @head = @family.head
+puts "**** Constructed family, head=#{@head.attributes}"
 end
 
 def construct_member(params={})
@@ -70,6 +71,11 @@ Given /^basic statuses$/ do
   @status_unspecified = Factory(:status_unspecified)
   @status_inactive = Factory(:status_inactive)
   @status_home_assignment = Factory(:status_home_assignment)
+end  
+
+Given /^locations defined$/ do
+  @location = Factory(:location)
+  @location_unspecified = Factory(:location_unspecified)
 end  
 
 Given /^a blood type "([^"]*)"$/ do |bloodtype|
@@ -408,7 +414,12 @@ Then /^the report should include the "([^"]*)" information$/ do |report_type|
     page.should have_content @head.last_name
     page.should have_content @detail.date.to_s
     page.should have_content @detail.origin
-  end      
+  when 'Where Is'
+puts "**** #{@head.residence_location_id}"
+    page.should have_content @head.last_name
+    page.should have_content @head.residence_location.description
+  end  
+    
 end
 
 Given /^that I have a form to add a spouse$/ do

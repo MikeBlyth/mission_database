@@ -290,6 +290,15 @@ class Member < ActiveRecord::Base
      return nil if self.birth_date.nil? 
      return time_human((Date.today - self.birth_date) * SECONDS_PER_DAY)
   end
+  
+  def current_location
+    r = Location.find_by_id(residence_location_id || UNSPECIFIED)
+puts "#{residence_location_id}, #{r}"
+    residence = r.id==UNSPECIFIED ? '?' : r.description
+    r = Location.find_by_id(work_location_id || UNSPECIFIED)
+    work = r.id==UNSPECIFIED ? '?' : r.description
+    return "#{residence} (#{work})"
+  end
 
    # return a string in days, weeks, months, or years, whatever makes sense for the age, from
    # time (t) in seconds. Sensible rounding is applied as we would normally describe someone's age.

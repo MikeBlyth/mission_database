@@ -5,6 +5,8 @@
   %li= link_to "Travel schedule", "/reports/travel_schedule.pdf"
   %li= link_to "Birthday list", "/reports/birthdays.pdf"
   %li= link_to "Blood types", "/reports/bloodtypes.pdf"
+  %li= link_to "Where is everyone?", "/reports/whereis.pdf"
+%hr
 %h4 Calendars
 = form_tag('/reports/calendar.pdf', :method => "get")
 = check_box_tag(:birthdays)
