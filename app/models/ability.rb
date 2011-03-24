@@ -29,7 +29,7 @@ class Ability
     end
 
     if user.asst_personnel? # Personnel assistant
-      can :manage, [Member, Contact]
+      can :manage, [Family, Member, Contact]
     end
     
     if user.medical?

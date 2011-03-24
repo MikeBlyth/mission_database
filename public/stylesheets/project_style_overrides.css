@@ -20,7 +20,7 @@ div.states-view {
 .total_passengers-input, .baggage-input, .time-input {
   width: 50px; }
 
-.state-input, .date-input, .birth_date-input, .date_active-input,
+.state-input, .date-input, .datepicker, .date_picker, .birth_date-input, .date_active-input,
 .start_date-input, .end_date-input, .est_start_date-input, .sex-input,
 .est_end_date-input, .return_date-input, .confirmed-input,
 .origin-input, .destination-input, .guesthouse-input,
@@ -28,7 +28,7 @@ div.states-view {
   width: 100px; }
 
 .first_name-input, .last_name-input, .middle_name-input,
-.short_name-input {
+.short_name-input, .temporary_location-input {
   width: 150px; }
 
 .name-input, .family-input, .spouse-input {
@@ -106,12 +106,12 @@ table.new_family {
 a.big-link {
   font: bold 14px arial, sans-serif; }
 
-div.new_travel {
+div.new_travel, div.new_member {
   position: relative;
   height: 470px;
   background-color: #daffcd;
   padding: 20px; }
-  div.new_travel div.col_1 {
+  div.new_travel div.col_1, div.new_member div.col_1 {
     background-color: #c2efc2;
     position: absolute;
     top: 0px;
@@ -119,7 +119,7 @@ div.new_travel {
     width: 300px;
     padding: 5px;
     height: 440px; }
-  div.new_travel div.col_2 {
+  div.new_travel div.col_2, div.new_member div.col_2 {
     background-color: #aaccaa;
     position: absolute;
     top: 0px;
@@ -127,7 +127,7 @@ div.new_travel {
     width: 300px;
     padding: 5px;
     height: 440px; }
-  div.new_travel div.col_3 {
+  div.new_travel div.col_3, div.new_member div.col_3 {
     background-color: #c2efc2;
     position: absolute;
     top: 0px;
@@ -135,11 +135,11 @@ div.new_travel {
     width: 300px;
     padding: 5px;
     height: 440px; }
-  div.new_travel div.form-footer {
+  div.new_travel div.form-footer, div.new_member div.form-footer {
     position: absolute;
     top: 450px;
     left: 0px; }
-  div.new_travel table, div.new_travel td {
+  div.new_travel table, div.new_travel td, div.new_member table, div.new_member td {
     border-collapse: collapse;
     border: 0px solid red;
     border-bottom: 0px solid red;
@@ -172,3 +172,6 @@ div.with_spouse {
 div.travel_date {
   padding: 0px;
   margin: 0px; }
+
+div.temporary_location_dates {
+  padding-left: 1em; }
