@@ -20,8 +20,16 @@ describe Location do
       @family = Factory(:family)
     end
     
+    it "does destroy if there are no existing linked records" do
+      lambda do
+        @location.destroy
+      end.should change(Location, :count).by(-1)
+    end
+    
+
     it "does not destroy if there is existing family" do
       @family.update_attribute(:residence_location, @location)
+      @family.head.update_attribute(:residence_location, nil)
       lambda do
         @location.destroy
       end.should_not change(Location, :count)
@@ -29,6 +37,20 @@ describe Location do
       
     it "does not destroy if there is existing member w residence" do
       @family.head.update_attribute(:residence_location, @location)
+      lambda do
+        @location.destroy
+      end.should_not change(Location, :count)
+    end
+      
+    it "does not destroy if there is existing member w work location" do
+      @family.head.update_attribute(:work_location, @location)
+      lambda do
+        @location.destroy
+      end.should_not change(Location, :count)
+    end
+      
+    it "does not destroy if there is existing field_term w work location" do
+      f = Factory(:field_term, :primary_work_location => @location)
       lambda do
         @location.destroy
       end.should_not change(Location, :count)

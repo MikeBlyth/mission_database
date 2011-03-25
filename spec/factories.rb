@@ -40,6 +40,12 @@ FactoryGirl.define do
     description 'on field'
   end  
 
+  factory :contact_type_unspecified, :parent => :contact_type do
+    id 999999
+    code 999999
+    description "?"
+  end 
+  
   factory :country do
     id 1
     code 'AF'

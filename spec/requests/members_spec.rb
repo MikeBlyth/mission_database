@@ -30,7 +30,7 @@ include SimTestHelper
     it "should create a new member with minimal values" do
       lambda do
         visit new_member_path
-        select_second_option('record_family_')  # Family 
+        select_second_option('record_family')  # Family 
         fill_in "Last name", :with => "#{@head.last_name}"
 #        select("* #{@family.name}", :from=> 'record_family_')
         fill_in "First name", :with => "Sally"
@@ -44,7 +44,7 @@ include SimTestHelper
         visit new_member_path
 #save_and_open_page( )
         fill_in "Last name", :with => "#{@head.last_name}"
-        select("* #{@family.name}", :from=> 'record_family_')
+        select("#{@family.name}", :from=> 'record_family')
         fill_in "First name", :with => "Samuel"
         fill_in "Middle name", :with => "Jonah"
         fill_in "Short name", :with => "Sam"

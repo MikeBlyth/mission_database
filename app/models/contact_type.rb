@@ -11,7 +11,6 @@
 #
 
 class ContactType < ActiveRecord::Base
-include ModelHelper
   include ModelHelper
   before_destroy :check_for_linked_records
   has_many :contacts

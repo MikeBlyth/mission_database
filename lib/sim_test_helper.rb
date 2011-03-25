@@ -88,6 +88,25 @@ module SimTestHelper
     @locations = Location.all
   end
 
+  # Given parent (like :status) and child (like :member), check that the parent record
+  # cannot be deleted if there are still children linked to it. For example, we should
+  # not be able to delete a status record if there are still members who have that status.
+  # Example: test_check_before_destroy(:status, :member)
+  def test_check_before_destroy(parent, child)
+    @parent = Factory(parent)
+    @other_parent = Factory((parent.to_s+'_unspecified').to_sym)
+    @child = Factory(child, parent=>@other_parent)
+    lambda do
+      @parent.destroy
+    end.should change(parent.to_s.camelcase.constantize, :count).by(-1)
+  
+    @child = Factory(child)
+    @child.update_attribute(parent, @parent)
+    lambda do
+      @parent.destroy
+    end.should_not change(parent.to_s.camelcase.constantize, :count)
+  end    
+  
 # see https://github.com/shyouhei/ruby/blob/trunk/ext/syck/lib/syck.rb#L436
     def y( object, *objects )
         objects.unshift object
