@@ -1,4 +1,5 @@
 <% form_action ||= :create %>
+<p>This is the create form!</p>
 <%= render :partial => "base_form", :locals => {:xhr => xhr ||= nil,
                                                 :form_action => form_action,
                                                 :method => method ||= :post,

@@ -81,6 +81,12 @@ class MembersController < ApplicationController
     end
     params
   end
+
+  def do_update
+#    puts "members do_update, record.id=#{@record.id}, emp=#{@record.personnel_data.employment_id}"
+    super
+#    puts ">> record.id=#{@record.id}, emp=#{@record.personnel_data.employment_id}"
+  end
     
   def do_create
     super

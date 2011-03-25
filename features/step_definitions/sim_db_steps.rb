@@ -4,6 +4,7 @@ include SimTestHelper
 def construct_family
   @family = Factory(:family)
   @head = @family.head
+#puts "Construct family emp= #{EmploymentStatus.all}, head emp=#{@head.personnel_data.employment_status_id}"
 end
 
 def construct_member(params={})
@@ -84,7 +85,6 @@ end
 Given /^a family with a spouse$/ do
   construct_family
   @head.update_attributes(:sex=>'M')
-puts "Education=#{@head.education_id} (#{@head.education}), Emp= #{@head.employment_status_id} (#{@head.employment_status})"
   create_spouse
 end
 
@@ -135,20 +135,24 @@ When /^I view the list of families$/ do
 end
 
 When /^I edit the family head$/ do
-  add_details(@head)   # give @head the various attributes we're going to check on the form
   seed_tables
+  add_details(@head)   # give @head the various attributes we're going to check on the form
+@head.reload
+
   visit edit_member_path @head
 end  
 
 Then /^I should see the editing form for the family head$/ do
   page.should have_content "Update #{@head.to_label}"
-save_and_open_page
+#save_and_open_page
   find_field("Last name").value.should == @head.last_name
   find_field("First name").value.should == @head.first_name
   find_field("Sex").value.should == @head.sex
   find_field("record[spouse]").value.should == @spouse.id.to_s
   page.should have_content @spouse.first_name
-  find_field("Country").value.should == @country.name
+  find_field("Country").value.should == @head.country.name
+#puts "Emp in form=#{find_field("Employment status").value}"
+#puts "c/w #{@head.personnel_data.employment_status_id.to_s}"
   find_field("Employment status").value.should == @head.personnel_data.employment_status_id.to_s
   find_field("Ministry").value.should == @head.ministry_id.to_s
   
@@ -160,7 +164,7 @@ end
 
 Then /^the family includes the head and spouse$/ do
   couple = @family.members
-@family.members.each {|m| puts "#{m.name}, #{m.sex}"}
+#@family.members.each {|m| puts "#{m.name}, #{m.sex}"}
   couple.should have(2).records
   couple[0].name.should == @head.name
   couple[1].name.should == @spouse.name
@@ -301,7 +305,9 @@ Then /^I should see a button for adding a child$/ do
 end
 
 Given /^that I am updating a family$/ do
+#puts "309 before seed_tables, Country.all=#{Country.all}"
   seed_tables
+#puts "311 after seed_tables, Country.all=#{Country.all}"
   construct_family
   add_details(@head)
   @family.update_attributes(:residence_location=>@location, :status=>@status)
