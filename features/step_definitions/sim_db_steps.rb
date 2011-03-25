@@ -13,6 +13,7 @@ end
 def create_spouse(params={})
   @spouse_name = params[:first_name] || "Sally"
   @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
+  @family.reload
 end
 
 def create_children(names=['Child'],params={})
@@ -83,6 +84,7 @@ end
 Given /^a family with a spouse$/ do
   construct_family
   @head.update_attributes(:sex=>'M')
+puts "Education=#{@head.education_id} (#{@head.education}), Emp= #{@head.employment_status_id} (#{@head.employment_status})"
   create_spouse
 end
 
@@ -140,7 +142,7 @@ end
 
 Then /^I should see the editing form for the family head$/ do
   page.should have_content "Update #{@head.to_label}"
-#save_and_open_page
+save_and_open_page
   find_field("Last name").value.should == @head.last_name
   find_field("First name").value.should == @head.first_name
   find_field("Sex").value.should == @head.sex
@@ -158,6 +160,7 @@ end
 
 Then /^the family includes the head and spouse$/ do
   couple = @family.members
+@family.members.each {|m| puts "#{m.name}, #{m.sex}"}
   couple.should have(2).records
   couple[0].name.should == @head.name
   couple[1].name.should == @spouse.name

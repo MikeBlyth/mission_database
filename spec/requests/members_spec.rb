@@ -30,7 +30,7 @@ include SimTestHelper
     it "should create a new member with minimal values" do
       lambda do
         visit new_member_path
-        select_second_option('record_family')  # Family 
+        select_second_option('record_family_')  # Family 
         fill_in "Last name", :with => "#{@head.last_name}"
 #        select("* #{@family.name}", :from=> 'record_family_')
         fill_in "First name", :with => "Sally"
@@ -44,7 +44,7 @@ include SimTestHelper
         visit new_member_path
 #save_and_open_page( )
         fill_in "Last name", :with => "#{@head.last_name}"
-        select("#{@family.name}", :from=> 'record_family')
+        select("* #{@family.name}", :from=> 'record_family_')
         fill_in "First name", :with => "Samuel"
         fill_in "Middle name", :with => "Jonah"
         fill_in "Short name", :with => "Sam"
@@ -53,10 +53,10 @@ include SimTestHelper
         fill_in "Birth date", :with => "2000-01-01"
         fill_in "Country name", :with => "Afghanistan"
         select 'On field'
-        select 'Evangelism'
+        select 'Ministry'
         fill_in 'Ministry comment', :with=> "ministry comment"
-        select 'JETS', :from=>'record_residence_location'
-        select 'JETS', :from=>'record_work_location'
+        select 'Site', :from=>'record_residence_location'
+        select 'Site', :from=>'record_work_location'
         fill_in 'Temporary location', :with=> "out of town"
         fill_in "Temporary location from date", :with => "2011-01-01"
         fill_in "Temporary location until date", :with => "2011-01-10"
@@ -64,7 +64,7 @@ include SimTestHelper
         fill_in "Issues", :with => "headaches"
         fill_in "Allergies", :with => "NKA"
         select 'AB+'
-        select 'Educated!'
+        select 'Educ'
         fill_in "Qualifications", :with=> "Very qualified"
         select 'Career'
         fill_in "Date active", :with => "2000-02-01"
@@ -80,10 +80,10 @@ include SimTestHelper
       m.birth_date.should == Date.new(2000,1,1)
       m.country.name.should == 'Afghanistan'
       m.status.description.should =~ /On field/
-      m.ministry.description.should == 'Evangelism'
+      m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    
-      m.residence_location.description.should == 'JETS'
-      m.work_location.description.should == 'JETS'
+      m.residence_location.description.should =~ /Site/
+      m.work_location.description.should  =~ /Site/
       m.temporary_location.should == 'out of town'
       m.temporary_location_from_date.should == Date.new(2011,1,1)
       m.temporary_location_until_date.should == Date.new(2011,1,10)
@@ -91,8 +91,8 @@ include SimTestHelper
       m.health_data.issues.should == 'headaches'
       m.health_data.allergies.should == 'NKA'
       m.health_data.bloodtype.full.should == 'AB+'
-      m.personnel_data.education.description.should == 'Educated!'
-      m.personnel_data.employment_status.description.should == 'Career'
+      m.personnel_data.education.description.should =~ /Educ/
+      m.personnel_data.employment_status.description.should =~ /Career/
       m.personnel_data.date_active.should == Date.new(2000,2,1)
       m.personnel_data.comments.should == 'What a lot of info to fill in.'
     end # it should
