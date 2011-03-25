@@ -12,10 +12,10 @@
 #
 
 class EmploymentStatus < ActiveRecord::Base
-has_many :members, :foreign_key => "employment_status_id"
-has_many :field_terms
-
-include ModelHelper
+  include ModelHelper
+  before_destroy :check_for_linked_records
+  has_many :personnel_data
+  has_many :field_terms
 
   validates_presence_of :description, :code
   validates_uniqueness_of :code, :description

@@ -13,14 +13,20 @@
 #
 
 class Bloodtype < ActiveRecord::Base
-
-  has_many :members
+  include ModelHelper
   has_many :health_data
+  validates_presence_of :full
   validates_uniqueness_of :full
+  before_destroy :check_for_linked_records
+
   def to_label
     "#{full}"
   end
+  
   def to_s
     "#{full}"
   end
+
 end
+
+

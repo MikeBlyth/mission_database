@@ -1,6 +1,6 @@
 describe Location do
-include SimTestHelper
-include LocationHelper
+  include SimTestHelper
+  include LocationHelper
 
   it "makes a nice selection list from locations" do
     setup_cities
@@ -12,5 +12,29 @@ include LocationHelper
     choices.should =~ /<optgroup label="Unspecified"><option value="999999">Unspecified<\/option><\/optgroup>$/
     choices.should =~ /<optgroup label="Jos"><option value="2" selected="selected">ECWA<\/option><option value="1">Evangel<\/option>/
   end
+
+  describe "check before destroy:" do
+
+    before(:each) do
+      @location = Factory(:location)
+      @family = Factory(:family)
+    end
+    
+    it "does not destroy if there is existing family" do
+      @family.update_attribute(:residence_location, @location)
+      lambda do
+        @location.destroy
+      end.should_not change(Location, :count)
+    end
+      
+    it "does not destroy if there is existing member w residence" do
+      @family.head.update_attribute(:residence_location, @location)
+      lambda do
+        @location.destroy
+      end.should_not change(Location, :count)
+    end
+      
+  end # check before destroy
+      
 end
 

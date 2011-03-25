@@ -12,10 +12,13 @@
 
 class Education < ActiveRecord::Base
 include ModelHelper
+  include ModelHelper
+  before_destroy :check_for_linked_records
+  has_many :personnel_data
   validates_presence_of :description, :code
   validates_numericality_of :code, :only_integer => true
   validates_uniqueness_of :code, :description
-
+ 
   def to_label
     self.to_s
   end

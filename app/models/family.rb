@@ -29,7 +29,7 @@ class Family < ActiveRecord::Base
   belongs_to :status
   belongs_to :residence_location, :class_name => "Location", :foreign_key => "residence_location_id"
   before_validation :set_indexed_name_if_empty
-  validates_presence_of :last_name, :first_name, :name
+  validates_presence_of :last_name, :first_name, :name, :status
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
   validate :name_not_exists
 
@@ -112,8 +112,13 @@ class Family < ActiveRecord::Base
  # debugger
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
-            :status=>status, :residence_location=>residence_location, :family =>self, :sex=>'M')
+            :status_id=>status_id, :residence_location_id=>residence_location_id, :family =>self, :sex=>'M')
+    if ! head.valid?
+      errors.add(:head, "Unable to create head of family")
+      raise ActiveRecord::Rollback
+    end   
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
+
   end
 
   # When validating a family, verify on the head-of-family NAME that either

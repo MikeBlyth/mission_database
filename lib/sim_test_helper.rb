@@ -76,6 +76,10 @@ module SimTestHelper
   end
 
   def setup_locations
+    if City.find_by_name('Miango').nil?
+      City.delete_all
+      setup_cities
+    end  
     locations_hash.each do |location| 
       Factory.create(:location, :id=>location[:id], :city_id=>location[:city_id],
               :description=>location[:description])

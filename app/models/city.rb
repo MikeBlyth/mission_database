@@ -14,6 +14,9 @@
 #
 
 class City < ActiveRecord::Base
+  include ModelHelper
+  before_destroy :check_for_linked_records
+
   has_many :locations
  # belongs_to :states
   validates_presence_of :name, :country

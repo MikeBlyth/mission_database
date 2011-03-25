@@ -12,10 +12,12 @@
 #
 
 class Location < ActiveRecord::Base
-include ModelHelper
+  include ModelHelper
+  before_destroy :check_for_linked_records
 
   belongs_to :city
-  has_many :members, :foreign_key => "residence_location_id"
+  has_many :residence_members, :class_name=>'Member', :foreign_key => "residence_location_id"
+  has_many :work_members, :class_name=>'Member', :foreign_key => "work_location_id"
   has_many :families, :foreign_key => "residence_location_id"
   has_many :field_terms, :foreign_key => "primary_work_location_id"
   validates_presence_of :description, :code, :city

@@ -13,6 +13,8 @@
 #
 
 class Country < ActiveRecord::Base
+  include ModelHelper
+  before_destroy :check_for_linked_records
   validates_presence_of :name, :nationality
   validates_uniqueness_of :code, :name
   has_many :members

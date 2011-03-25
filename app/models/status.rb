@@ -13,9 +13,10 @@
 #
 
 class Status < ActiveRecord::Base
+  include ModelHelper
+  before_destroy :check_for_linked_records
   has_many :members
   has_many :families
-  has_many :field_terms
   validates_uniqueness_of :code, :description
   validates_presence_of :code, :description
 
