@@ -19,6 +19,7 @@ gem 'prawn', ">=0.10.0", :git => "git://github.com/sandal/prawn" , :submodules =
 gem 'haml' 
 gem 'jrails'
 gem 'cancan'
+#gem "meta_where"  # Last officially released gem
 gem 'chronic'
 gem "active_scaffold_vho"
 gem 'rack-ssl-enforcer'

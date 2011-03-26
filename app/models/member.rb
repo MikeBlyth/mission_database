@@ -316,8 +316,14 @@ class Member < ActiveRecord::Base
   end  
 
   def travel_location
-    current_travel = travels.where("date < ? and (return_date is ? or return_date > ?)", 
-         Date.today, nil, Date.today).order("date desc").limit(1)[0]
+    if spouse
+      current_travel = Travel.where("member_id = ? or (member_id = ? and with_spouse)", self.id, spouse_id).
+           where("date < ? and (return_date is ? or return_date > ?)", 
+           Date.today, nil, Date.today).order("date desc").limit(1)[0]
+    else
+      current_travel = travels.where("date < ? and (return_date is ? or return_date > ?)", 
+           Date.today, nil, Date.today).order("date desc").limit(1)[0]
+    end      
     if current_travel
       if visiting_field?  # Someone visiting the field
         answer = "Travel: arrived on field #{current_travel.date.to_s(:short)}"
