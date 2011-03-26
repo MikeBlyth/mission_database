@@ -24,7 +24,7 @@ include ReportsHelper
       text_data << "#{m[:name]}: <i>#{m[:location]}</i>\n\n"
     end
     
-    page_header(:title=>'Where Is Everyone', :left=>'SIM Nigeria Reports')
+    page_header(:title=>'Where Is Everyone?', :left=>'SIM Nigeria Reports')
     move_down 8
     flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
       :size=>10,  :gutter=>5 , :inline_format => true
