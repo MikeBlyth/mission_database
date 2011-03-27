@@ -26,9 +26,10 @@ module SimTestHelper
   end  
     
   def factory_member_create(params={})
-    params[:last_name] ||= "Johnson"
+    number = rand(1000000)
+    params[:last_name] ||= "Johnson #{number}"
     params[:first_name] ||= 'Gerald'
-    params[:name] ||= 'Johnson, Gerald'
+    params[:name] ||= 'Johnson #{number}, Gerald'
     params[:sex] ||= 'M'
     params[:status_id] ||= UNSPECIFIED
     params[:residence_location_id] ||= UNSPECIFIED
@@ -45,6 +46,7 @@ module SimTestHelper
     if params[:family]
       return Member.create(params)
     else
+#puts "Family created, #{family.attributes}, errors=#{family.errors}, head=#{family.head_id}"
       family.head.update_attributes(params)
       puts "Error updating family head" unless family.head.valid?
       return family.head

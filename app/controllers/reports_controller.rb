@@ -10,11 +10,12 @@ class ReportsController < ApplicationController
   end
 
   def whereis
-    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
+#    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
     selected = Member.where(:child=> false).
              select("id, status_id, spouse_id, last_name, first_name, middle_name, short_name, residence_location_id, work_location_id," +
                      " temporary_location, temporary_location_from_date, temporary_location_until_date")
-    
+#puts "Whereis selected="
+#selected.each  {|x| puts "\t#{x.attributes}"    }
 #    member_locations = selected.collect{ |m| {:name=>m.last_name_first(:initial=>true, :short=>true),
 #                                             :location=>m.current_location}
 #                                       }

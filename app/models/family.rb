@@ -113,7 +113,7 @@ class Family < ActiveRecord::Base
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
             :status=>status, :residence_location=>residence_location, :family =>self, :sex=>'M')
-puts "created head #{head.attributes}"
+#puts "created head #{head.attributes}"
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
   end
 

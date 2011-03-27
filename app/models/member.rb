@@ -316,7 +316,8 @@ class Member < ActiveRecord::Base
   end  
 
   def travel_location
-puts "travel_location, member=#{self.attributes}, status=#{status_id}, on_field=#{status.on_field if status}"
+#puts "travel_location, member=#{self.attributes}, status=#{status_id}, on_field=#{status.on_field if status}"
+
     if spouse
       current_travel = Travel.where("member_id = ? or (member_id = ? and with_spouse)", self.id, spouse_id).
            where("date < ? and (return_date is ? or return_date > ?)", 
