@@ -2,13 +2,8 @@ require 'sim_test_helper'
 include SimTestHelper
   
 def construct_family
-#  @location_unspecified ||= create_one_unspecified_code(Location)  # Creates location w id = UNSPECIFIED, if it's not already present
-#  @status_unspecified ||= create_one_unspecified_code(Status)
   @family = Factory(:family)
-#  @family = Factory(:family, :residence_location=>@location || @location_unspecified,
-#                :status => @status_on_field || @status_unspecified)
   @head = @family.head
-#  @head.update_attribute(:status_id, @family.status_id)
 #puts "**** Constructed family, head=#{@head.attributes}, errors=#{@head.errors}"
 end
 
@@ -19,6 +14,8 @@ end
 def create_spouse(params={})
   @spouse_name = params[:first_name] || "Sally"
   @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
+#puts "spouse created, #{@spouse.attributes}, #{@spouse.errors}"
+  @family.reload
 end
 
 def create_children(names=['Child'],params={})
@@ -154,6 +151,7 @@ end
 
 When /^I edit the family head$/ do
   add_details(@head)   # give @head the various attributes we're going to check on the form
+#puts ">>> after add_details pd = #{@head.personnel_data.attributes}" if @head.personnel_data 
   seed_tables
   visit edit_member_path @head
 end  
@@ -333,11 +331,7 @@ When /^I click on "([^"]*)"$/ do |button_to_click|
 end
 
 Then /^I should see a form titled "([^"]*)"$/ do |title|
- save_and_open_page( )
   page.should have_content title
-#  x=find(:xpath, '//form').innerhtml
-#  puts "find result=#{x}"
-# save_and_open_page( )
 end
 
 Then /^the form should be pre\-set to add a spouse$/ do
@@ -430,7 +424,6 @@ Then /^the report should include the "([^"]*)" information$/ do |report_type|
     page.should have_content @detail.date.to_s
     page.should have_content @detail.origin
   when 'Where Is'
-puts "**** #{@head.residence_location_id}"
     page.should have_content @head.last_name
     page.should have_content @head.residence_location.description
   end  

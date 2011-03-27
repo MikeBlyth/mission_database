@@ -66,16 +66,16 @@ module SimTestHelper
             :short_name => 'Shorty',
             :sex => 'M',
             :birth_date => '1980-01-01',
-            :country_id => 1,
+            :country => Country.first,
             :status => Status.first,
             :residence_location => Location.first,
-            :ministry_id => 1,
+            :ministry => Ministry.first,
             :ministry_comment => 'Working with orphans'
             )
     member.personnel_data.update_attributes(
             :date_active => '2005-01-01',
-            :employment_status_id => 1,
-            :education_id => 1,
+            :employment_status => EmploymentStatus.first,
+            :education => Education.first,
             :qualifications => 'TESOL, qualified midwife')
   end
 
