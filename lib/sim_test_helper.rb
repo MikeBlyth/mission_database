@@ -4,6 +4,7 @@ require Rails.root.join('spec/factories')
 module SimTestHelper
 #  include ApplicationHelper
   def create_one_unspecified_code(type, params={})
+    type = type.to_s.camelcase.constantize if type.class == Symbol
     unless type.find_by_id(UNSPECIFIED)
       s = type.new(params)
       s.description ||= "?" if s.respond_to? :description
@@ -11,6 +12,7 @@ module SimTestHelper
       s.id = UNSPECIFIED
       s.save
     end
+  return s
   end    
     
   def create_unspecified_codes

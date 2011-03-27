@@ -2,9 +2,14 @@ require 'sim_test_helper'
 include SimTestHelper
   
 def construct_family
+#  @location_unspecified ||= create_one_unspecified_code(Location)  # Creates location w id = UNSPECIFIED, if it's not already present
+#  @status_unspecified ||= create_one_unspecified_code(Status)
   @family = Factory(:family)
+#  @family = Factory(:family, :residence_location=>@location || @location_unspecified,
+#                :status => @status_on_field || @status_unspecified)
   @head = @family.head
-puts "**** Constructed family, head=#{@head.attributes}"
+#  @head.update_attribute(:status_id, @family.status_id)
+#puts "**** Constructed family, head=#{@head.attributes}, errors=#{@head.errors}"
 end
 
 def construct_member(params={})
@@ -27,7 +32,7 @@ def create_children(names=['Child'],params={})
 end  
 
 def set_up_statuses
-  Factory(:status_unspecified)
+  @status_unspecified = Factory(:status_unspecified)
   @status = Factory(:status)
 end
 
@@ -62,20 +67,28 @@ Given /^a one-person family$/ do
   construct_family
 end
 
+Given /^a one-person family with a location and status$/ do
+  @location = Factory(:location)
+  @status = Factory(:status)
+  @family = Factory(:family, :location=>@location, :status=>@status)
+  @head = @family.head
+puts ">>>> one-person family head=#{@head.attributes}"
+end
+
 Given /^a family without a spouse$/ do
   construct_family
 end
 
 Given /^basic statuses$/ do
   @status_on_field = Factory(:status, :description=>'On field')
-  @status_unspecified = Factory(:status_unspecified)
+  @status_unspecified ||= create_one_unspecified_code(Status)
   @status_inactive = Factory(:status_inactive)
   @status_home_assignment = Factory(:status_home_assignment)
 end  
 
 Given /^locations defined$/ do
   @location = Factory(:location)
-  @location_unspecified = Factory(:location_unspecified)
+  @location_unspecified ||= create_one_unspecified_code(Location)
 end  
 
 Given /^a blood type "([^"]*)"$/ do |bloodtype|

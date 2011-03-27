@@ -91,8 +91,9 @@ Feature: report generation
   @whereis
   Scenario: Generate where_is report
     Given that I am signed in
-    And locations defined 
-    And a one-person family
+    And locations defined
+    And basic statuses 
+    And a one-person family with a location and status
     And I click on "Reports"
     When I click on "Where is" 
     Then I should get a "Where Is" PDF report
