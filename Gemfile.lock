@@ -115,6 +115,10 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    meta_where (1.0.4)
+      activerecord (~> 3.0.0)
+      activesupport (~> 3.0.0)
+      arel (~> 2.0.7)
     mime-types (1.16)
     mysql2 (0.2.6)
     nokogiri (1.4.4)
@@ -208,6 +212,7 @@ DEPENDENCIES
   haml
   jrails
   launchy
+  meta_where
   mysql2
   prawn (>= 0.10.0)!
   rack-ssl-enforcer

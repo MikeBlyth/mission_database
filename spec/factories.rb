@@ -10,8 +10,6 @@ load 'config/initializers/constants.rb'
 #    n
 #  end
 
-
-
 FactoryGirl.define do
   factory :bloodtype do
     id 1
@@ -129,9 +127,10 @@ FactoryGirl.define do
   
   factory :member do 
     family { |a| a.association :family }
+    status { |a| a.association :status }
     sequence(:first_name) {|n| "Person_#{n}" }
     sex ['M','F'].shuffle[0]    # randomly pick M or F
-    after_build { |user| user.inherit_from_family}
+    after_build { |m| m.inherit_from_family}
   end
 
     factory :member_with_details, :parent=> :member do
@@ -142,7 +141,7 @@ FactoryGirl.define do
       ministry_id 1
       ministry_comment 'Working with orphans'
     end
-
+    
     factory :child, :parent=> :member do
       birth_date "1 Jan 2000"
       sequence(:first_name) {|n| "Child_#{n}" }

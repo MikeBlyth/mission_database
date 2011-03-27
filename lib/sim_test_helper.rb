@@ -3,6 +3,54 @@ require Rails.root.join('spec/factories')
 
 module SimTestHelper
 #  include ApplicationHelper
+  def create_one_unspecified_code(type, params={})
+    unless type.find_by_id(UNSPECIFIED)
+      s = type.new(params)
+      s.description ||= "?" if s.respond_to? :description
+      s.code ||= "999999" if s.respond_to? :code
+      s.id = UNSPECIFIED
+      s.save
+    end
+  end    
+    
+  def create_unspecified_codes
+    create_one_unspecified_code(Status)
+    create_one_unspecified_code(Ministry)
+    create_one_unspecified_code(Location)
+    create_one_unspecified_code(Education)
+    create_one_unspecified_code(EmploymentStatus)
+    create_one_unspecified_code(Bloodtype)
+    create_one_unspecified_code(ContactType)
+    create_one_unspecified_code(City)
+    create_one_unspecified_code(Country)
+  end  
+    
+  def factory_member_create(params={})
+    params[:last_name] ||= "Johnson"
+    params[:first_name] ||= 'Gerald'
+    params[:name] ||= 'Johnson, Gerald'
+    params[:sex] ||= 'M'
+    params[:status_id] ||= UNSPECIFIED
+    params[:residence_location_id] ||= UNSPECIFIED
+    params[:work_location_id] ||= UNSPECIFIED
+    params[:ministry_id] ||= UNSPECIFIED
+    family = params[:family] ||
+      Family.create(:last_name=>params[:last_name],
+                        :first_name=>params[:first_name],
+                        :name=>params[:name],
+                        :status_id=>params[:status_id],
+                        :residence_location_id=>params[:residence_location_id],
+                        :sim_id => rand(100000)
+                        )
+    if params[:family]
+      return Member.create(params)
+    else
+      family.head.update_attributes(params)
+      puts "Error updating family head" unless family.head.valid?
+      return family.head
+    end
+  end    
+
   def add_details(member)
     location = Location.last
     member.update_attributes(:middle_name => 'Midname',
