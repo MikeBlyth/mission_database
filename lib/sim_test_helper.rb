@@ -7,24 +7,29 @@ module SimTestHelper
     type = type.to_s.camelcase.constantize if type.class == Symbol
     unless type.find_by_id(UNSPECIFIED)
       s = type.new(params)
-      s.description ||= "?" if s.respond_to? :description
+      s.description ||= "Unspecified" if s.respond_to? :description
+      s.full ||= "Unspecified" if s.respond_to? :full
       s.code ||= "999999" if s.respond_to? :code
+      s.country = "Unspecified" if s.respond_to? :country and !params[:country]
+      s.name ||= "Unspecified" if s.respond_to? :name
       s.id = UNSPECIFIED
       s.save
+      puts "Errors saving #{type} unspecified: #{s.errors}" if s.errors.length > 0
     end
+#puts "create_one_unspec... #{type} #{s}"
   return s
   end    
     
   def create_unspecified_codes
     create_one_unspecified_code(Status)
     create_one_unspecified_code(Ministry)
+    create_one_unspecified_code(Country)
+    create_one_unspecified_code(City)
     create_one_unspecified_code(Location)
     create_one_unspecified_code(Education)
     create_one_unspecified_code(EmploymentStatus)
     create_one_unspecified_code(Bloodtype)
     create_one_unspecified_code(ContactType)
-    create_one_unspecified_code(City)
-    create_one_unspecified_code(Country)
   end  
     
   def factory_member_create(params={})

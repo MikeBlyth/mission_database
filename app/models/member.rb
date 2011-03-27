@@ -297,6 +297,7 @@ class Member < ActiveRecord::Base
     r = Location.find_by_id(residence_location_id || UNSPECIFIED)
     residence = (r.id==UNSPECIFIED ? '?' : r.description.dup)
     r = Location.find_by_id(work_location_id || UNSPECIFIED)
+puts "current_location r=#{r}, Location.last=#{Location.last.attributes}"
     work = (r.id==UNSPECIFIED ? nil : r.description.dup ) # If unspecified, don't use work location
     answer = residence.clone
     # Now we have the location but subject to travel and temporary moves.

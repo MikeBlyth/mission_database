@@ -2,14 +2,6 @@
 require 'factory_girl_rails'
 load 'config/initializers/constants.rb'
 
-#DatabaseCleaner.strategy = :truncation
-#def clean
-# DatabaseCleaner.clean
-#end
-#  FactoryGirl.sequence :loc do |n|
-#    n
-#  end
-
 FactoryGirl.define do
   factory :bloodtype do
     id 1
@@ -36,12 +28,24 @@ FactoryGirl.define do
   
   factory :contact do
     member { |a| a.association :member }
-    contact_type_id 1 
+    contact_type_id 1
     email_1 'my_email@example.com'
     phone_1 '0808-888-8888'
     skype 'MySkypeName'
   end
 
+  factory :contact_type do
+    id 1
+    code 1
+    description 'on field'
+  end  
+
+  factory :contact_type_unspecified, :parent => :contact_type do
+    id 999999
+    code 999999
+    description "?"
+  end 
+  
   factory :country do
     id 1
     code 'AF'
@@ -57,9 +61,9 @@ FactoryGirl.define do
   end
   
   factory :education do
-    id 1
-    code 1
-    description 'Educated!'
+    sequence(:id) {|n| n}
+    sequence(:code) {|n| n}
+    sequence(:description) {|n| "Educ #{n}"}
   end
 
   factory :education_unspecified, :parent => :education do
@@ -69,9 +73,9 @@ FactoryGirl.define do
   end
 
   factory :employment_status do
-    id 1
-    code 1
-    description 'Career'
+    sequence(:id) {|n| n}
+    sequence(:code) {|n| n}
+    sequence(:description) {|n| "Career #{n}"}
   end
   
   factory :employment_status_unspecified, :parent => :employment_status do
@@ -87,14 +91,16 @@ FactoryGirl.define do
     short_name "Shorty"
     sequence(:sim_id) {|n|  500 + n }
     name {"#{last_name}, #{first_name}"}
+    status { |a| a.association :status }
+    residence_location { |a| a.association :location }
   end
 
   factory :field_term do
 #    member_id 1
     member { |a| a.association :member }
-    employment_status_id 5
-    primary_work_location_id 26
-    ministry_id 6
+    employment_status { |a| a.association :employment_status }
+    primary_work_location { |a| a.association :location }
+    ministry { |a| a.association :ministry }
     start_date '1 Jan 2008'
     end_date '31 Dec 2010'  
   end
@@ -113,7 +119,7 @@ FactoryGirl.define do
   factory :location do
     sequence(:id) {|n| n}
     sequence(:code) {|n| 20+n}
-    description 'JETS' 
+    sequence(:description) {|n| "Site #{n}"}
     city { |a| a.association :city }
 #    city_id 1
   end
@@ -126,9 +132,10 @@ FactoryGirl.define do
   end
   
   factory :member do 
+    sequence(:first_name) {|n| "Person_#{n}" }
     family { |a| a.association :family }
     status { |a| a.association :status }
-    sequence(:first_name) {|n| "Person_#{n}" }
+    residence_location { |a| a.association :location }
     sex ['M','F'].shuffle[0]    # randomly pick M or F
     after_build { |m| m.inherit_from_family}
   end
@@ -137,11 +144,11 @@ FactoryGirl.define do
       middle_name 'Midname'
       short_name 'Shorty'
       birth_date '1980-01-01'
-      country_id 1
-      ministry_id 1
+      country { |a| a.association :country }
+      ministry { |a| a.association :ministry } 
       ministry_comment 'Working with orphans'
     end
-    
+
     factory :child, :parent=> :member do
       birth_date "1 Jan 2000"
       sequence(:first_name) {|n| "Child_#{n}" }
@@ -149,9 +156,9 @@ FactoryGirl.define do
     end
   
   factory :ministry do
-    id 1
-    code 1
-    description 'Evangelism'
+    sequence(:id) {|n| n}
+    sequence(:code) {|n| 20+n}
+    sequence(:description) {|n| "Ministry #{n}"}
   end
 
   factory :ministry_unspecified, :parent => :ministry do
@@ -162,8 +169,8 @@ FactoryGirl.define do
 
   factory :personnel_data do
     member { |a| a.association :member }
-    employment_status_id 1
-    education_id 1
+    employment_status { |a| a.association :employment_status }
+    education { |a| a.association :education }
     qualifications 'TESOL, qualified midwife'
     date_active '2005-01-01'
   end    
