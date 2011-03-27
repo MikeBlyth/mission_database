@@ -5,25 +5,27 @@ require 'spec_helper'
 #  config.mode = :rails
 #end
 
+
 describe ReportsController do
-include ApplicationHelper
+    render_views
+  include ApplicationHelper
 
-  reports = %w(bloodtypes birthdays birthday_calendar phone_email travel_schedule)
-  describe "authentication before controller access" do
+#  reports = %w(bloodtypes birthdays birthday_calendar phone_email travel_schedule)
+#  describe "authentication before controller access" do
 
-    describe "for non-signed-in users" do
-    
-      it 'does not allow access to reports' do
-        reports.each do |report|
-          puts "\tChecking #{report}"
-          get report
-          response.should redirect_to(signin_path) 
-        end  
-      end
+#    describe "for non-signed-in users" do
+#    
+#      it 'does not allow access to reports' do
+#        reports.each do |report|
+#          puts "\tChecking #{report}"
+#          get report
+#          response.should redirect_to(signin_path) 
+#        end  
+#      end
 
-    end #  "for non-signed-in users" 
-  end # "authentication before controller access"
-  
+#    end #  "for non-signed-in users" 
+#  end # "authentication before controller access"
+#  
   describe "calendar reports" do
   
     it "merges data hashes correctly" do

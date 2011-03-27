@@ -3,6 +3,63 @@ require Rails.root.join('spec/factories')
 
 module SimTestHelper
 #  include ApplicationHelper
+  def create_one_unspecified_code(type, params={})
+    type = type.to_s.camelcase.constantize if type.class == Symbol
+    unless type.find_by_id(UNSPECIFIED)
+      s = type.new(params)
+      s.description ||= "Unspecified" if s.respond_to? :description
+      s.full ||= "Unspecified" if s.respond_to? :full
+      s.code ||= "999999" if s.respond_to? :code
+      s.country = "Unspecified" if s.respond_to? :country and !params[:country]
+      s.name ||= "Unspecified" if s.respond_to? :name
+      s.id = UNSPECIFIED
+      s.save
+      puts "Errors saving #{type} unspecified: #{s.errors}" if s.errors.length > 0
+    end
+#puts "create_one_unspec... #{type} #{s}"
+  return s
+  end    
+    
+  def create_unspecified_codes
+    create_one_unspecified_code(Status)
+    create_one_unspecified_code(Ministry)
+    create_one_unspecified_code(Country)
+    create_one_unspecified_code(City)
+    create_one_unspecified_code(Location)
+    create_one_unspecified_code(Education)
+    create_one_unspecified_code(EmploymentStatus)
+    create_one_unspecified_code(Bloodtype)
+    create_one_unspecified_code(ContactType)
+  end  
+    
+  def factory_member_create(params={})
+    number = rand(1000000)
+    params[:last_name] ||= "Johnson #{number}"
+    params[:first_name] ||= 'Gerald'
+    params[:name] ||= 'Johnson #{number}, Gerald'
+    params[:sex] ||= 'M'
+    params[:status_id] ||= UNSPECIFIED
+    params[:residence_location_id] ||= UNSPECIFIED
+    params[:work_location_id] ||= UNSPECIFIED
+    params[:ministry_id] ||= UNSPECIFIED
+    family = params[:family] ||
+      Family.create(:last_name=>params[:last_name],
+                        :first_name=>params[:first_name],
+                        :name=>params[:name],
+                        :status_id=>params[:status_id],
+                        :residence_location_id=>params[:residence_location_id],
+                        :sim_id => rand(100000)
+                        )
+    if params[:family]
+      return Member.create(params)
+    else
+#puts "Family created, #{family.attributes}, errors=#{family.errors}, head=#{family.head_id}"
+      family.head.update_attributes(params)
+      puts "Error updating family head" unless family.head.valid?
+      return family.head
+    end
+  end    
+
   def add_details(member)
     location = Location.last
 #puts "\nadd details, Country.all=#{Country.all}, first=#{Country.first}\n"

@@ -4,7 +4,7 @@ include SimTestHelper
 def construct_family
   @family = Factory(:family)
   @head = @family.head
-#puts "Construct family emp= #{EmploymentStatus.all}, head emp=#{@head.personnel_data.employment_status_id}"
+#puts "**** Constructed family, head=#{@head.attributes}, errors=#{@head.errors}"
 end
 
 def construct_member(params={})
@@ -14,6 +14,7 @@ end
 def create_spouse(params={})
   @spouse_name = params[:first_name] || "Sally"
   @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
+#puts "spouse created, #{@spouse.attributes}, #{@spouse.errors}"
   @family.reload
 end
 
@@ -28,7 +29,7 @@ def create_children(names=['Child'],params={})
 end  
 
 def set_up_statuses
-  Factory(:status_unspecified)
+  @status_unspecified = Factory(:status_unspecified)
   @status = Factory(:status)
 end
 
@@ -59,19 +60,18 @@ Given /^that I am signed in as an administrator$/ do
     sign_in(:admin=>true)
 end
 
-Given /^a one-person family$/ do
-  construct_family
-end
-
-Given /^a family without a spouse$/ do
-  construct_family
-end
-
 Given /^basic statuses$/ do
   @status_on_field = Factory(:status, :description=>'On field')
-  @status_unspecified = Factory(:status_unspecified)
+  @status = @status_on_field
+  @status_unspecified ||= create_one_unspecified_code(Status)
   @status_inactive = Factory(:status_inactive)
   @status_home_assignment = Factory(:status_home_assignment)
+end  
+
+Given /^locations defined$/ do
+  @city_unspecified ||= create_one_unspecified_code(City)
+  @location = Factory(:location)
+  @location_unspecified ||= create_one_unspecified_code(Location, :city_id => 999999)
 end  
 
 Given /^a blood type "([^"]*)"$/ do |bloodtype|
@@ -81,6 +81,21 @@ Given /^a blood type "([^"]*)"$/ do |bloodtype|
     @bloodtype = Factory(:bloodtype, :full=>bloodtype)
   end  
 end  
+
+Given /^a one-person family$/ do
+  construct_family
+end
+
+Given /^a one-person family with a location and status$/ do
+# Requires @location and @status to be defined already!
+  @family = Factory(:family, :residence_location=>@location, :status=>@status)
+  @head = @family.head
+#puts ">>>> one-person family head=#{@head.attributes}"
+end
+
+Given /^a family without a spouse$/ do
+  construct_family
+end
 
 Given /^a family with a spouse$/ do
   construct_family
@@ -164,7 +179,6 @@ end
 
 Then /^the family includes the head and spouse$/ do
   couple = @family.members
-#@family.members.each {|m| puts "#{m.name}, #{m.sex}"}
   couple.should have(2).records
   couple[0].name.should == @head.name
   couple[1].name.should == @spouse.name
@@ -305,9 +319,7 @@ Then /^I should see a button for adding a child$/ do
 end
 
 Given /^that I am updating a family$/ do
-#puts "309 before seed_tables, Country.all=#{Country.all}"
   seed_tables
-#puts "311 after seed_tables, Country.all=#{Country.all}"
   construct_family
   add_details(@head)
   @family.update_attributes(:residence_location=>@location, :status=>@status)
@@ -323,9 +335,6 @@ end
 
 Then /^I should see a form titled "([^"]*)"$/ do |title|
   page.should have_content title
-#  x=find(:xpath, '//form').innerhtml
-#  puts "find result=#{x}"
-# save_and_open_page( )
 end
 
 Then /^the form should be pre\-set to add a spouse$/ do
@@ -417,7 +426,11 @@ Then /^the report should include the "([^"]*)" information$/ do |report_type|
     page.should have_content @head.last_name
     page.should have_content @detail.date.to_s
     page.should have_content @detail.origin
-  end      
+  when 'Where Is'
+    page.should have_content @head.last_name
+    page.should have_content @head.residence_location.description
+  end  
+    
 end
 
 Given /^that I have a form to add a spouse$/ do

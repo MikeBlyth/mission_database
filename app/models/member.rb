@@ -291,12 +291,75 @@ class Member < ActiveRecord::Base
      return nil if self.birth_date.nil? 
      return time_human((Date.today - self.birth_date) * SECONDS_PER_DAY)
   end
+  
+  # Return string with person's current location (& work location) based on member.residence_location,
+  # member.work_location, member.temporary_location, and travel records
+  def current_location
+    r = Location.find_by_id(residence_location_id || UNSPECIFIED)
+    residence = (r.id==UNSPECIFIED ? '?' : r.description.dup)
+    r = Location.find_by_id(work_location_id || UNSPECIFIED)
+    work = (r.id==UNSPECIFIED ? nil : r.description.dup ) # If unspecified, don't use work location
+    answer = residence.clone
+    # Now we have the location but subject to travel and temporary moves.
+    
+    answer += " (#{work})" if work && (work != residence)
+    answer += ". "
+    answer += travel_location || ''
+    answer += temp_location || ''
+    return answer
+  end
 
-   # return a string in days, weeks, months, or years, whatever makes sense for the age, from
-   # time (t) in seconds. Sensible rounding is applied as we would normally describe someone's age.
-   # Thus time_human(187000) = "2 days," time_human(34000000) = "12 months", time_human(120000000) = "3.8 years"
-   # d, w, m, and y are day, week, month and year in seconds. Not efficient to calculate it each call, but 
-   # helps make clear what we're doing, and we can't define constants in a function
+  def visiting_field?
+    return false if status.on_field  # This only applies to visitors, not those those w "on_field" status
+    current_travel = travels.where("date < ? and arrival is true and (return_date is ? or return_date > ?)", 
+         Date.today, nil, Date.today).order("date desc").limit(1)[0]
+    return ! current_travel.nil?
+  end  
+
+  def travel_location
+#puts "travel_location, member=#{self.attributes}, status=#{status_id}, on_field=#{status.on_field if status}"
+
+    if spouse
+      current_travel = Travel.where("member_id = ? or (member_id = ? and with_spouse)", self.id, spouse_id).
+           where("date < ? and (return_date is ? or return_date > ?)", 
+           Date.today, nil, Date.today).order("date desc").limit(1)[0]
+    else
+      current_travel = travels.where("date < ? and (return_date is ? or return_date > ?)", 
+           Date.today, nil, Date.today).order("date desc").limit(1)[0]
+    end      
+    if current_travel
+      if visiting_field?  # Someone visiting the field
+        answer = "Travel: arrived on field #{current_travel.date.to_s(:short)}"
+        if current_travel.return_date
+          answer << ", leaves #{current_travel.return_date.to_s(:short)}"
+        end
+        return answer << '.'
+      elsif !current_travel.arrival  # if person has traveled (according to travel schedule)
+        answer = "Travel: left field #{current_travel.date.to_s(:short)}"
+        if current_travel.return_date
+          answer << ", returns #{current_travel.return_date.to_s(:short)}"
+        end
+        return answer << '.'
+      end  
+    end     
+    return nil
+  end
+  
+  def temp_location
+    if !temporary_location.blank? && temporary_location_from_date <= Date.today &&
+                                     temporary_location_until_date >= Date.today
+      return "Temporary location: #{temporary_location}, #{temporary_location_from_date.to_s(:short)} to " +
+             " #{temporary_location_until_date.to_s(:short)}."
+    else
+      return nil
+    end         
+  end
+  
+  # return a string in days, weeks, months, or years, whatever makes sense for the age, from
+  # time (t) in seconds. Sensible rounding is applied as we would normally describe someone's age.
+  # Thus time_human(187000) = "2 days," time_human(34000000) = "12 months", time_human(120000000) = "3.8 years"
+  # d, w, m, and y are day, week, month and year in seconds. Not efficient to calculate it each call, but 
+  # helps make clear what we're doing, and we can't define constants in a function
   def time_human(t, expand=true)    # where t is time in seconds
     return nil if t.nil?
    
