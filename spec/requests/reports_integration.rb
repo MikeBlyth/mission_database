@@ -9,13 +9,13 @@ def pdf_to_text
   page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
 end
 
-describe "Reports" do
+describe "Report" do
   
   before(:each) do
     integration_test_sign_in(:admin=>true)
   end   
 
-  describe "'Where Is' report" do
+  describe "'Where Is' " do
     before(:each) do
       # Defaults are set so that temporary_location and a travel record both exist but
       # their dates do not include today. In testing, change the :...until_date or :return_date
@@ -73,7 +73,6 @@ describe "Reports" do
       (page.driver.body =~ /Sally.*ravel/m).should_not be_nil
     end
 
-
     it "reports incoming travel of off-field member " do
       @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true)
       status = Factory(:status, :on_field=>false, :active=>false)
@@ -82,6 +81,27 @@ describe "Reports" do
       click_link "Where is everyone?"
       pdf_to_text
       page.should have_content(@member.last_name)
+      page.should have_content('ravel')
+    end
+
+    it "reports location of person with 'on-field' visitor status" do
+      visitor_status = Factory(:status, :on_field=>true, :active=>false)
+      @member.update_attribute(:status, visitor_status)   # Make member on field but not active
+      visit reports_path # whereis_report_path
+      click_link "Where is everyone?"
+      pdf_to_text
+      page.should have_content(@member.last_name)
+      page.should_not have_content('ravel')
+    end
+    
+    it "reports location of someone not in database but in travel record" do
+      pending
+      @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true, :member=>nil, 
+          :other_travelers=>"Santa_Claus")
+      visit reports_path # whereis_report_path
+      click_link "Where is everyone?"
+      pdf_to_text
+      page.should have_content("Santa_Claus")
       page.should have_content('ravel')
     end
 

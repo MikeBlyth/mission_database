@@ -16,47 +16,50 @@ describe Member do
     puts "****+++ #{tag}: #{m.to_s}, id=#{m.id}, status_id=#{m.status_id}, family_id=#{m.family_id}"
   end  
 
-  it "is valid with valid attributes" do
-    @member.should be_valid
-    @member.child.should be_false
-  end
+  describe 'does basic validation' do
+    
+    it "is valid with valid attributes" do
+      @member.should be_valid
+      @member.child.should be_false
+    end
 
-  it "is not valid without a first name" do
-    @member.first_name = ''
-    @member.should_not be_valid
-  end
+    it "is not valid without a first name" do
+      @member.first_name = ''
+      @member.should_not be_valid
+    end
 
-  it "is not valid without a last name" do
-    @member.last_name = ''
-    @member.should_not be_valid
-  end
+    it "is not valid without a last name" do
+      @member.last_name = ''
+      @member.should_not be_valid
+    end
 
-  it "has the right 'unspecified' defaults when created" do
-    m = Member.new
-    m.country_id.should == 999999
-    m.status_id.should == 999999
-    m.ministry_id.should == 999999
-    m.residence_location_id.should == 999999
-  end    
+    it "has the right 'unspecified' defaults when created" do
+      m = Member.new
+      m.country_id.should == 999999
+      m.status_id.should == 999999
+      m.ministry_id.should == 999999
+      m.residence_location_id.should == 999999
+    end    
 
-  it "makes a 'name' (full name) by default" do
-    @member.name = ''
-    @member.should be_valid   # because set_indexed_name_if_empty is called before validation
-  end
+    it "makes a 'name' (full name) by default" do
+      @member.name = ''
+      @member.should be_valid   # because set_indexed_name_if_empty is called before validation
+    end
 
-  it "is valid when creating its own 'name' (full name)" do
-    @member.name = @member.indexed_name
-    @member.should be_valid
-  end
+    it "is valid when creating its own 'name' (full name)" do
+      @member.name = @member.indexed_name
+      @member.should be_valid
+    end
 
-  it "is invalid without a family_id" do
-    @member.family_id = nil
-    @member.should_not be_valid
-  end
+    it "is invalid without a family_id" do
+      @member.family_id = nil
+      @member.should_not be_valid
+    end
 
-  it "is invalid without a matching family" do
-    @member.family_id = 999
-    @member.should_not be_valid
+    it "is invalid without a matching family" do
+      @member.family_id = 999
+      @member.should_not be_valid
+    end
   end
 
   it "cannot be deleted if it is the family head" do
@@ -78,51 +81,65 @@ describe Member do
     @member.should_not be_valid
   end
 
-  it "copies inherited fields from family when new" do
-    Factory(:city)
-    @location = Factory(:location)
-    @family = Factory(:family, :status=>@status, :residence_location=>@location)
-    @member = new_family_member
-    @member.last_name.should == @family.last_name
-    @member.status.should == @family.status
-    @member.residence_location.should == @family.residence_location
+  describe 'creates associated records' do
+    it '--health data' do
+      @member.save
+      HealthData.find_by_member_id(@member.id).should_not be_nil
+    end
+    it '--personnel data' do
+      @member.save
+      PersonnelData.find_by_member_id(@member.id).should_not be_nil
+    end
+  end
+
+  describe 'inheritance: ' do
+    it "copies inherited fields from family when new" do
+      Factory(:city)
+      @location = Factory(:location)
+      @family = Factory(:family, :status=>@status, :residence_location=>@location)
+      @member = new_family_member
+      @member.last_name.should == @family.last_name
+      @member.status.should == @family.status
+      @member.residence_location.should == @family.residence_location
+    end
     
+    it "does not copy inherited fields from family when NOT new" do
+      new_last_name = "something else"
+      new_status = Factory(:status)
+      city=Factory(:city)
+      new_location = Factory(:location)
+      @member.update_attributes(:status=>new_status, :residence_location=>new_location, :last_name=>new_last_name)
+      retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
+      retrieved.last_name.should == new_last_name
+      retrieved.status.should == new_status
+      retrieved.residence_location.should == new_location
+    end
   end
-  
-  it "does not copy inherited fields from family when NOT new" do
-    new_last_name = "something else"
-    new_status = Factory(:status)
-    city=Factory(:city)
-    new_location = Factory(:location)
-    @member.update_attributes(:status=>new_status, :residence_location=>new_location, :last_name=>new_last_name)
-    retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
-    retrieved.last_name.should == new_last_name
-    retrieved.status.should == new_status
-    retrieved.residence_location.should == new_location
-  end
 
-  it 'male_female reports sex as :male if male' do
-    @head.update_attribute(:sex,'M')
-    @head.male_female.should == :male
-  end  
+  describe 'handles sex field' do
+    it 'male_female reports sex as :male if male' do
+      @head.update_attribute(:sex,'M')
+      @head.male_female.should == :male
+    end  
 
-  it 'male_female reports sex as :female if female' do
-    @head.update_attribute(:sex,'F')
-    @head.male_female.should == :female
-  end  
-  
-  it 'male_female reports sex as nil if neither male nor female' do
-    @head.update_attribute(:sex,'')
-    @head.male_female.should be_nil
-  end  
+    it 'male_female reports sex as :female if female' do
+      @head.update_attribute(:sex,'F')
+      @head.male_female.should == :female
+    end  
+    
+    it 'male_female reports sex as nil if neither male nor female' do
+      @head.update_attribute(:sex,'')
+      @head.male_female.should be_nil
+    end  
 
-  it 'returns "other sex"' do
-    @head.update_attribute(:sex,'M')
-    @head.other_sex.should == 'F'    
-    @head.update_attribute(:sex,'F')
-    @head.other_sex.should == 'M'    
-    @head.update_attribute(:sex,nil)
-    @head.other_sex.should be_nil    
+    it 'returns "other sex"' do
+      @head.update_attribute(:sex,'M')
+      @head.other_sex.should == 'F'    
+      @head.update_attribute(:sex,'F')
+      @head.other_sex.should == 'M'    
+      @head.update_attribute(:sex,nil)
+      @head.other_sex.should be_nil    
+    end
   end
 
   describe "names: " do
@@ -305,5 +322,14 @@ describe Member do
       @man.reload.spouse.should == nil
     end
   end # describe marrying  
+
+  describe "Handles scopes like 'active'" do
+    pending 'rewrite the filtering mechanism'
+  end
+
+  describe "Reports current location" do
+    pending 'write some tests for current location etc.'
+  end
+
 end
 
