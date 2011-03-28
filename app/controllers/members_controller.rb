@@ -201,8 +201,8 @@ puts "@json_resp = #{@json_resp}"
 # determine them based on the codes such as 'field' or "home_assignment".
 # 
   def conditions_for_collection
-    status_groups = {'active' => %w( field home_assignment mkfield umbrella visitor),
-                'field' => %w( field mkfield visitor),
+    status_groups = {'active' => %w( field home_assignment mkfield ),
+                'field' => %w( field mkfield umbrella visitor),
                 'home_assignment' => %w( home_assignment ),
                 'home_assignment_or_leave' => %w( home_assignment leave),
                 'pipeline' => %w( pipeline ),
