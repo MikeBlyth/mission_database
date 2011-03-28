@@ -47,12 +47,14 @@ class Family < ActiveRecord::Base
     self.destroy
   end
 
-  # Copy family residence locations to all family members, but only when changed.
+  # Copy family residence locations to spouse, head & children, but only when changed.
   # This means that one can individualize locations of members, but individualized values will
   # be overwritten when the family residence location is changed again.
   def update_member_locations
     if self.residence_location != @previous_residence_location
-      self.members.each {|m| m.update_attribute(:residence_location, self.residence_location)}
+ #     self.members.where("spouse_id > 0 OR child").each {|m| m.update_attribute(:residence_location, self.residence_location)}
+      self.members.joins(:family).where('spouse_id > 0 OR child OR members.id = families.head_id').
+        update_all("members.residence_location_id = #{self.residence_location_id}")
     end  
   end
 
@@ -61,7 +63,9 @@ class Family < ActiveRecord::Base
   # be overwritten when the family status is changed again.
   def update_member_statuses
     if self.status != @previous_status
-      self.members.each {|m| m.update_attribute(:status, self.status)}
+#      self.members.where("spouse_id > 0 OR child").each {|m| m.update_attribute(:status, self.status)}
+      self.members.joins(:family).where('spouse_id > 0 OR child OR members.id = families.head_id').
+        update_all("members.status_id = #{self.status_id}")
     end  
   end
 

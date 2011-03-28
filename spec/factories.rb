@@ -117,7 +117,7 @@ FactoryGirl.define do
   end    
 
   factory :location do
-    sequence(:id) {|n| n}
+    sequence(:id) {|n| 100+n}
     sequence(:code) {|n| 20+n}
     sequence(:description) {|n| "Site #{n}"}
     city { |a| a.association :city }
