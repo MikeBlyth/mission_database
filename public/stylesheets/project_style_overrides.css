@@ -1,3 +1,9 @@
+div#content {
+  min-width: 1000px;
+  min-height: 800px;
+  padding: 5px;
+  background: lightblue; }
+
 div.bloodtypes-view,
 div.countries-view,
 div.education-view,
@@ -41,7 +47,8 @@ div.states-view {
   width: 250px; }
 
 #menu {
-  background: #eeeeee;
+  background: #cceeff;
+  min-height: 800px;
   width: 140px;
   position: absolute;
   top: 0px;
@@ -66,11 +73,11 @@ div.states-view {
 #notice {
   padding: 0.5em;
   margin: 10px;
-  border: 1px solid #44ee44;
-  background: #116644;
+  border: 1px solid grey;
+  background: navy;
   color: #eeeeee;
   font-style: bold;
-  font-size: 1.5em; }
+  font-size: 1.2em; }
 
 .family_info p {
   padding-top: 0.3em; }

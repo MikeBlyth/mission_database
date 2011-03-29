@@ -1,5 +1,13 @@
 
 $background_1: #DAFFCD
+$background_menu: #CCEEFF
+$background_content: lightblue
+
+div#content
+  min-width: 1000px
+  min-height: 800px
+  padding: 5px
+  background: $background_content
 
 div.bloodtypes-view,
 div.countries-view,
@@ -45,7 +53,8 @@ div.states-view
   width: 250px
 
 #menu 
-  background: #EEE
+  background: $background_menu
+  min-height: 800px
   width: 140px
   position: absolute
   top: 0px
@@ -70,11 +79,11 @@ div.states-view
 #notice 
   padding: 0.5em
   margin: 10px
-  border: 1px solid #4e4
-  background: #164 
+  border: 1px solid grey
+  background: navy
   color: #eee
   font-style: bold
-  font-size: 1.5em
+  font-size: 1.2em
 
 .family_info 
   p
