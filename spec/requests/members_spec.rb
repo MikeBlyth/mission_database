@@ -30,7 +30,8 @@ include SimTestHelper
     it "should create a new member with minimal values" do
       lambda do
         visit new_member_path
-        select_second_option('record_family_')  # Family 
+#        select_second_option('record_family_')  # Family 
+#        select(@family.last_name)
         fill_in "Last name", :with => "#{@head.last_name}"
 #        select("* #{@family.name}", :from=> 'record_family_')
         fill_in "First name", :with => "Sally"
@@ -44,7 +45,7 @@ include SimTestHelper
         visit new_member_path
 #save_and_open_page( )
         fill_in "Last name", :with => "#{@head.last_name}"
-        select("* #{@family.name}", :from=> 'record_family_')
+        select("#{@family.name}", :from=> 'record[family]')
         fill_in "First name", :with => "Samuel"
         fill_in "Middle name", :with => "Jonah"
         fill_in "Short name", :with => "Sam"
@@ -58,8 +59,8 @@ include SimTestHelper
         select 'Site', :from=>'record_residence_location'
         select 'Site', :from=>'record_work_location'
         fill_in 'Temporary location', :with=> "out of town"
-        fill_in "Temporary location from date", :with => "2011-01-01"
-        fill_in "Temporary location until date", :with => "2011-01-10"
+        fill_in "record[temporary_location_from_date]", :with => "2011-01-01"
+        fill_in "record[temporary_location_until_date]", :with => "2011-01-10"
         fill_in "Current meds", :with => "aspirin"
         fill_in "Issues", :with => "headaches"
         fill_in "Allergies", :with => "NKA"

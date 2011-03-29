@@ -15,8 +15,7 @@ class MembersController < ApplicationController
           :child, :residence_location, :work_location, :travels, :field_terms, :status, :contacts]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
-    show.columns = create.columns = update.columns = 
-        [ :name, :name_override,
+    show.columns = create.columns = update.columns = [:name, :name_override,
           :family,
           :last_name, :first_name, :middle_name, :short_name, :sex,
           :child,
@@ -26,9 +25,9 @@ class MembersController < ApplicationController
           :status, 
           :ministry, :ministry_comment, 
           :residence_location, :work_location, :temporary_location, :temporary_location_from_date, :temporary_location_until_date,
+          :personnel_data, :field_terms, 
           :contacts, :travels,
           :health_data,
-          :personnel_data, :field_terms, 
           ]
     show.columns.exclude    :last_name, :first_name, :middle_name, :short_name, :name_override
     update.columns.exclude :family_name
@@ -49,6 +48,7 @@ class MembersController < ApplicationController
     config.columns[:work_location].inplace_edit = true
     config.columns[:field_terms].collapsed = true
     config.columns[:field_terms].associated_limit = 2
+    config.columns[:health_data].collapsed = true
     config.columns[:travels].collapsed = true
     config.columns[:travels].associated_limit = 2
     config.columns[:contacts].collapsed = true
@@ -89,9 +89,10 @@ class MembersController < ApplicationController
   end
     
   def do_create
+#puts "\n**** do_new, record=#{params[:record]}"
+#debugger
     super
-#puts "\n****** After super record=#{@record.attributes}"
-#puts "\n****** After super params[:record]=#{params[:record]}"
+#puts "\n**** do_new after super, record=#{params[:record]}"
     health_data = convert_keys_to_id(params[:record][:health_data], :bloodtype)
     personnel_data = convert_keys_to_id(params[:record][:personnel_data], 
         :education, :employment_status)
@@ -103,6 +104,7 @@ class MembersController < ApplicationController
   
   def do_new
 #puts "**** do_new, params=#{params}"
+    @contacts = Contact.new(:contact_type => ContactType.first)
     super
     if params[:family]
       family = Family.find_by_id(params[:family])

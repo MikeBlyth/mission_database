@@ -1,3 +1,6 @@
+
+$background_1: #DAFFCD
+
 div.bloodtypes-view,
 div.countries-view,
 div.education-view,
@@ -108,11 +111,11 @@ table.new_family
 a.big-link
   font: bold 14px arial, sans-serif
   
-div.new_travel, div.new_member
+div.new_travel, div.member_form
   position: relative
   $height: 470px
   height: $height
-  background-color: #DAFFCD
+  background-color: $background_1
   padding: 20px
   div.col_1
     background-color: #C2EFC2
@@ -148,6 +151,20 @@ div.new_travel, div.new_member
     border-bottom: 0px solid red
     border-left: 0px solid red
 
+div.member_form
+  $height2: 340px
+  padding: 5px
+  height: $height2
+  div.col_1
+    height: $height2
+  div.col_2
+    height: $height2
+  div.col_3
+    height: $height2
+    
+div.bottom
+  background-color: #C2E0C2
+  
 .active-scaffold .active-scaffold td 
   border-bottom: 0px 
   border-left: 0px 
