@@ -1,5 +1,6 @@
+/ This is the ActiveScaffold _form.html.erb converted to HAML. 
 - subsection_id ||= nil 
-<h4>My HAML Form</h4>
+%h4 My HAML Form
 .ol{:class=>"form", :id=>subsection_id, :style=>"display: none;" if columns.collapsed}
   - columns.each :for => @record do |column| 
     - renders_as = column_renders_as(column) 

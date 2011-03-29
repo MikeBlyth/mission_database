@@ -1,4 +1,6 @@
+/ This is the form actually used for members; partly customized and partly ActiveScaffold
 = subsection_id ||= nil 
+/ This partial is already rendered within a form, so do not add a form around it.
 %ol.form
   .member_form
     .col_1
@@ -57,12 +59,12 @@
       .status
         = label :record, :status
         %br
-        = collection_select(:record, :status_id, Status.order("description asc"), :id, :description, {},
+        = collection_select(:record, :status, Status.order("description asc"), :id, :description, {},
           :class=> 'status-input')
       .ministry
         = label :record, :ministry
         %br
-        = collection_select(:record, :ministry_id, Ministry.order("description asc"), :id, :description, {},
+        = collection_select(:record, :ministry, Ministry.order("description asc"), :id, :description, {},
           :class=> 'ministry-input')
       .ministry_comment
         = label :record, :ministry_comment
@@ -92,9 +94,14 @@
       - renders_as = column_renders_as(column) 
       %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
         = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
-      - columns.exclude([:personnel_data])
+      / We only want ActiveScaffold to display the fields that we have not included above, so we will 
+      / remove the already-done ones from the list of ones to display. Can't remove directly from 'columns'
+      / since this variable is used later in constructing the record -- excluded columns will not be updated!
+      - display_columns = columns.dup
+      - display_columns.exclude([:name, :name_override, :family, :last_name, :first_name, :middle_name, :short_name, :sex, :child, :birth_date, :spouse, :family_name, :country_name, :status,  :ministry, :ministry_comment, :residence_location, :work_location, :temporary_location, :temporary_location_from_date, :temporary_location_until_date, :personnel_data ])
+      
   .bottom
-    - columns.each :for => @record do |column| 
+    - display_columns.each :for => @record do |column| 
       - renders_as = column_renders_as(column) 
       - if renders_as == :subform and !override_form_field?(column)
         %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
