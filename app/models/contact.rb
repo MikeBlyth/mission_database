@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110329162620
 #
 # Table name: contacts
 #
@@ -15,7 +15,7 @@
 #  other_website   :string(100)
 #  skype           :string(20)
 #  facebook        :string(60)
-#  photos          :string(50)      default("")
+#  photos          :string(50)
 #  email_public    :boolean(1)
 #  phone_public    :boolean(1)
 #  skype_public    :boolean(1)

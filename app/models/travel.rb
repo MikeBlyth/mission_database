@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110307141121
+# Schema version: 20110329162620
 #
 # Table name: travels
 #
@@ -21,6 +21,14 @@
 #  with_spouse      :boolean(1)
 #  with_children    :boolean(1)
 #  arrival          :boolean(1)
+#  time             :time
+#  return_time      :time
+#  driver_accom     :string(255)
+#  comments         :string(255)
+#  term_passage     :boolean(1)
+#  personal         :boolean(1)
+#  ministry_related :boolean(1)
+#  own_arrangements :boolean(1)
 #
 
 class Travel < ActiveRecord::Base

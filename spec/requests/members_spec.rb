@@ -98,7 +98,50 @@ include SimTestHelper
       m.personnel_data.comments.should == 'What a lot of info to fill in.'
     end # it should
 
-    
+    it "adding member should add a corresponding health_data record" do
+      lambda do
+        visit new_member_path
+        fill_in "Last name", :with => "#{@head.last_name}"
+        fill_in "First name", :with => "Sally"
+        click_button "Create"
+      end.should change(HealthData, :count).by(1)
+    end  
+
+    it "adding member should add a corresponding personnel_data record" do
+      lambda do
+        visit new_member_path
+        fill_in "Last name", :with => "#{@head.last_name}"
+        fill_in "First name", :with => "Sally"
+        click_button "Create"
+      end.should change(PersonnelData, :count).by(1)
+    end  
+
+    it "adding member should not add a new field_term" do
+      lambda do
+        visit new_member_path
+        fill_in "Last name", :with => "#{@head.last_name}"
+        fill_in "First name", :with => "Sally"
+        click_button "Create"
+      end.should_not change(FieldTerm, :count)
+    end  
+
+    it "adding member should not add a new contact" do
+      lambda do
+        visit new_member_path
+        fill_in "Last name", :with => "#{@head.last_name}"
+        fill_in "First name", :with => "Sally"
+        click_button "Create"
+      end.should_not change(Contact, :count)
+    end  
+
+    it "adding member should not add a new travel" do
+      lambda do
+        visit new_member_path
+        fill_in "Last name", :with => "#{@head.last_name}"
+        fill_in "First name", :with => "Sally"
+        click_button "Create"
+      end.should_not change(Travel, :count)
+    end  
 
   end # Describe Members
 

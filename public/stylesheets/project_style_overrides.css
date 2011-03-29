@@ -195,3 +195,6 @@ div.travel_date {
 
 div.temporary_location_dates {
   padding-left: 1em; }
+
+#as_calendar_events-tbody .date-column {
+  width: 20%; }

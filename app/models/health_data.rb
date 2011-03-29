@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110312214702
+# Schema version: 20110329162620
 #
 # Table name: health_data
 #
@@ -8,9 +8,9 @@
 #  bloodtype_id :integer(4)
 #  current_meds :string(255)
 #  issues       :string(255)
+#  allergies    :string(255)
 #  created_at   :datetime
 #  updated_at   :datetime
-#  allergies    :string(255)
 #
 
 class HealthData < ActiveRecord::Base

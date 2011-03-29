@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110319143535) do
+ActiveRecord::Schema.define(:version => 20110329162620) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -22,6 +22,13 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
   end
 
   add_index "bloodtypes", ["full"], :name => "index_bloodtypes_on_full", :unique => true
+
+  create_table "calendar_events", :force => true do |t|
+    t.datetime "date"
+    t.string   "event"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cities", :force => true do |t|
     t.string   "name"
@@ -55,7 +62,7 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
     t.string   "other_website",   :limit => 100
     t.string   "skype",           :limit => 20
     t.string   "facebook",        :limit => 60
-    t.string   "photos",          :limit => 50,  :default => ""
+    t.string   "photos",          :limit => 50
     t.boolean  "email_public",                   :default => false
     t.boolean  "phone_public",                   :default => false
     t.boolean  "skype_public",                   :default => false
@@ -111,15 +118,15 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
     t.string   "middle_name"
     t.string   "short_name"
     t.string   "name"
-    t.boolean  "name_override", :default => false
+    t.boolean  "name_override",         :default => false
     t.string   "sim_id"
   end
 
   create_table "field_terms", :force => true do |t|
     t.integer  "member_id"
-    t.integer  "employment_status_id",     :default => 999999
-    t.integer  "primary_work_location_id", :default => 999999
-    t.integer  "ministry_id",              :default => 999999
+    t.integer  "employment_status_id"
+    t.integer  "primary_work_location_id"
+    t.integer  "ministry_id"
     t.date     "start_date"
     t.date     "end_date"
     t.date     "est_start_date"
@@ -159,16 +166,16 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
     t.integer  "family_id"
     t.date     "birth_date"
     t.integer  "spouse_id"
-    t.integer  "country_id",        :default => 999999
+    t.integer  "country_id",                    :default => 999999
     t.string   "first_name"
-    t.integer  "status_id",         :default => 999999
+    t.integer  "status_id",                     :default => 999999
     t.string   "ministry_comment"
-    t.integer  "ministry_id",       :default => 999999
-    t.integer  "residence_location_id",  :default => 999999
+    t.integer  "ministry_id",                   :default => 999999
+    t.integer  "residence_location_id",         :default => 999999
     t.string   "name"
     t.boolean  "name_override"
-    t.boolean  "child", :default => false
-    t.integer  "work_location_id",  :default => 999999
+    t.boolean  "child",                         :default => false
+    t.integer  "work_location_id",              :default => 999999
     t.string   "temporary_location"
     t.date     "temporary_location_from_date"
     t.date     "temporary_location_until_date"
@@ -177,7 +184,6 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
   add_index "members", ["country_id"], :name => "fk_countries"
   add_index "members", ["family_id"], :name => "index_members_on_family_id"
   add_index "members", ["name"], :name => "index_members_on_name", :unique => true
-  add_index "members", ["status_id"], :name => "index_members_on_status_id"
 
   create_table "ministries", :force => true do |t|
     t.string   "description"
@@ -198,6 +204,7 @@ ActiveRecord::Schema.define(:version => 20110319143535) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "date_active"
+    t.date     "est_end_of_service"
   end
 
   create_table "roles", :force => true do |t|
