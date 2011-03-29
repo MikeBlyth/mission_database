@@ -25,7 +25,7 @@ describe CalendarEventsController do
           post :create, :record => @attrs
         end.should change(CalendarEvent, :count).by(1)
         e = CalendarEvent.last
-        e.date.strftime("%D %T %z").should == @attrs[:date].strftime("%D %T %z")
+        e.date.utc.strftime("%D %T %z").should == @attrs[:date].utc.strftime("%D %T %z")
         e.event.should == @attrs[:event]
       end
         

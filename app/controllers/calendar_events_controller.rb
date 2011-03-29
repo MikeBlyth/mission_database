@@ -14,7 +14,7 @@ class CalendarEventsController < ApplicationController
   end
 
   def do_create
-  #  params[:date] = Chronic.parse(params[:date])
+  params[:date] = Chronic.parse(params[:date])
     super
   end
   

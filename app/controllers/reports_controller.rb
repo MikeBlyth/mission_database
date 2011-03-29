@@ -154,7 +154,7 @@ class ReportsController < ApplicationController
     page_layout = params[:page_layout] || :landscape
     box = params[:box] || false
     title = params[:title] || "#{Date::MONTHNAMES[date.month]} #{date.year.to_s}"
-    title << " [filter = #{session[:filter]}]"
+#    title << " [filter = #{session[:filter]}]"
     return CalendarMonthPdf.new(:title=>title, :date=>date, :page_size=>page_size, :page_layout=>page_layout, :box=>box)
   end
 
@@ -165,9 +165,10 @@ class ReportsController < ApplicationController
        
     birthday_data = params[:birthdays] ? birthday_calendar_data({:month=>date_for_calendar.month}) : []
     travel_data = params[:travel] ? travel_calendar_data({:date=>date_for_calendar}) : []
-
+    events_data = params[:events] ? calendar_events_data({:date=>date_for_calendar}) : []
+y events_data
     # Merge the different arrays of data--birthdays, travel, anything else
-    merged = merge_calendar_data([travel_data, birthday_data])
+    merged = merge_calendar_data([travel_data, birthday_data, events_data])
 
     # Actually print the strings
     calendar.put_data_into_days(merged)
@@ -295,6 +296,22 @@ private
     selected.each do |trip|
       data[trip.date.day] ||= {:text=>''}
       data[trip.date.day][:text] << prefixes[trip.arrival?] + trip.member.full_name_short + "\n" 
+    end
+    return data
+  end # travel_calendar_data
+
+  # Generate data structure for travel to insert into calendar
+  def calendar_events_data(params={})
+    starting_date = params[:date]
+    selected = CalendarEvent.where("date > ? and date < ?", starting_date, starting_date.next_month).order("date ASC")
+    # Make a hash like { 1 => {:text=>"AR: John Doe\nDP: Mary Smith"}, 8 => {:text=>"AR: Adam Smith\n"}}
+    data = {} 
+    selected.each do |e|
+      data[e.date.day] ||= {:text=>''}
+      event_time = e.date.strftime("%l:%M %p").strip
+      data[e.date.day][:text] << e.event
+      data[e.date.day][:text] << " " << event_time if event_time != "12:00 AM"
+      data[e.date.day][:text] << "\n"
     end
     return data
   end # travel_calendar_data
