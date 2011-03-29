@@ -24,6 +24,8 @@ gem 'chronic'
 gem "active_scaffold_vho"
 gem 'rack-ssl-enforcer'
 gem 'settingslogic'
+gem "factory_girl", "2.0.0.beta1"
+gem "factory_girl_rails", "1.1.beta1"
 # gem 'RedCloth'
 
 # Bundle gems for the local environment. Make sure to
@@ -37,8 +39,6 @@ group :development, :test do
   gem "capybara"
 #  gem "rcov"
   gem "launchy"
-  gem "factory_girl", "2.0.0.beta1"
-  gem "factory_girl_rails", "1.1.beta1"
   # To use debugger
   gem 'ruby-debug19'
   gem "selenium-client", ">= 1.2.18"
