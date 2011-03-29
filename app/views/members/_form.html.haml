@@ -1,106 +1,105 @@
 = subsection_id ||= nil 
 %ol.form
   .member_form
-    = form_for :record, :url => { :action => "create" } do |form| 
-      .col_1
-        .name_info
-          .last_name
-            = form.label :last_name, :class => 'required'
-            %br
-            = form.text_field :last_name, :class => 'last_name-input required'
-          .first_name
-            = form.label :first_name, :class => 'required'
-            %br
-            = form.text_field :first_name, :class => 'first_name-input required'
-          .middle_name
-            = form.label :middle_name
-            %br
-            = form.text_field :middle_name, :class => 'middle_name-input'
-          .short_name
-            = form.label :short_name
-            %br
-            = form.text_field :short_name, :class => 'short_name-input'
-          .full_name
-            = form.label :name, "Full name", :class => 'required'
-            %br
-            = form.text_field :name, :class => 'name-input required'
-          .family
-            = form.label :family,"", :class=>'required'
-            %br
-            = form.collection_select(:family, 
-              Family.select(" name, id").order("name"), 
-              :id, :name, {})
-          %table
-            %tr
-              %td
-                .sex
-                  = form.label :sex
-                  %br
-                  = form.select(:sex, [['Male','M'], ['Female','F']])
-              %td
-                .birth_date        
-                  = form.label :birth_date, :class => 'birth_date-input'
-                  %br
-                  = form.text_field :birth_date, :class => 'birth_date-input date_picker '
-              %td
-                .child      
-                  = form.check_box :child
-                  = form.label :child, :class => 'child-input'
-          .spouse
-            = form.label :spouse, :class => 'spouse-input'
-            %br
-            = spouse_form_column(@record,params)
-      .col_2
-        .country
-          = form.label :country_name
+    .col_1
+      .name_info
+        .last_name
+          = label :record, :last_name, :class => 'required'
           %br
-          = form.text_field :country_name, :class=> 'country_name-input text-input'
-        .status
-          = form.label :status
+          = text_field :record, :last_name, :class => 'last_name-input required'
+        .first_name
+          = label :record, :first_name, :class => 'required'
           %br
-          = form.collection_select(:status_id, Status.order("description asc"), :id, :description, {},
-            :class=> 'status-input')
-        .ministry
-          = form.label :ministry
+          = text_field :record, :first_name, :class => 'first_name-input required'
+        .middle_name
+          = label :record, :middle_name
           %br
-          = form.collection_select(:ministry_id, Ministry.order("description asc"), :id, :description, {},
-            :class=> 'ministry-input')
-        .ministry_comment
-          = form.label :ministry_comment
+          = text_field :record, :middle_name, :class => 'middle_name-input'
+        .short_name
+          = label :record, :short_name
           %br
-          = form.text_field :ministry_comment, :class=> 'ministry_comment-input text-input'
-        .residence_location
-          = form.label :residence_location
+          = text_field :record, :short_name, :class => 'short_name-input'
+        .full_name
+          = label :record, :name, "Full name", :class => 'required'
           %br
-          = residence_location_form_column(@record, params)
-        .work_location
-          = form.label :work_location
+          = text_field :record, :name, :class => 'name-input required'
+        .family
+          = label :record, :family,"", :class=>'required'
           %br
-          = work_location_form_column(@record, params)
-        .temporary_location
-          = form.label :temporary_location
+          = collection_select(:record, :family, 
+            Family.select(" name, id").order("name"), 
+            :id, :name, {})
+        %table
+          %tr
+            %td
+              .sex
+                = label :record, :sex
+                %br
+                = select(:record, :sex, [['Male','M'], ['Female','F']])
+            %td
+              .birth_date        
+                = label :record, :birth_date, :class => 'birth_date-input'
+                %br
+                = text_field :record, :birth_date, :class => 'birth_date-input date_picker '
+            %td
+              .child      
+                = check_box :record, :child
+                = label :record, :child, :class => 'child-input'
+        .spouse
+          = label :record, :spouse, :class => 'spouse-input'
           %br
-          = form.text_field :temporary_location, :class=> 'temporary_location-input text-input'
-        .temporary_location_dates
-          = form.label :temporary_location_from_date, raw("at this location<br>from")
-          = form.text_field :temporary_location_from_date, 
-                            :class=> 'temporary_location_from_date-input date_picker'
-          = form.label :temporary_location_until_date, " until "
-          = form.text_field :temporary_location_until_date, 
-                            :class=> 'temporary_location_until_date-input date_picker'
-      .col_3
-        - column = columns.find {|c| c.label == 'Personnel data'}
-        - renders_as = column_renders_as(column) 
+          = spouse_form_column(@record,params)
+    .col_2
+      .country
+        = label :record, :country_name
+        %br
+        = text_field :record, :country_name, :class=> 'country_name-input text-input'
+      .status
+        = label :record, :status
+        %br
+        = collection_select(:record, :status_id, Status.order("description asc"), :id, :description, {},
+          :class=> 'status-input')
+      .ministry
+        = label :record, :ministry
+        %br
+        = collection_select(:record, :ministry_id, Ministry.order("description asc"), :id, :description, {},
+          :class=> 'ministry-input')
+      .ministry_comment
+        = label :record, :ministry_comment
+        %br
+        = text_field :record, :ministry_comment, :class=> 'ministry_comment-input text-input'
+      .residence_location
+        = label :record, :residence_location
+        %br
+        = residence_location_form_column(@record, params)
+      .work_location
+        = label :record, :work_location
+        %br
+        = work_location_form_column(@record, params)
+      .temporary_location
+        = label :record, :temporary_location
+        %br
+        = text_field :record, :temporary_location, :class=> 'temporary_location-input text-input'
+      .temporary_location_dates
+        = label :record, :temporary_location_from_date, raw("at this location<br>from")
+        = text_field :record, :temporary_location_from_date, 
+                          :class=> 'temporary_location_from_date-input date_picker'
+        = label :record, :temporary_location_until_date, " until "
+        = text_field :record, :temporary_location_until_date, 
+                          :class=> 'temporary_location_until_date-input date_picker'
+    .col_3
+      - column = columns.find {|c| c.label == 'Personnel data'}
+      - renders_as = column_renders_as(column) 
+      %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
+        = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
+      - columns.exclude([:personnel_data])
+  .bottom
+    - columns.each :for => @record do |column| 
+      - renders_as = column_renders_as(column) 
+      - if renders_as == :subform and !override_form_field?(column)
         %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
           = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
-        - columns.exclude([:personnel_data])
-    .bottom
-      - columns.each :for => @record do |column| 
-        - renders_as = column_renders_as(column) 
-        - if renders_as == :subform and !override_form_field?(column)
-          %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
-            = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
-        - else
-          %li{:class=>"form-element #{'required' if column.required?}  #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)}"}
-            = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
+      - else
+        %li{:class=>"form-element #{'required' if column.required?}  #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)}"}
+          = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
 
