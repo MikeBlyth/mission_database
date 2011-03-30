@@ -15,6 +15,11 @@ describe "Report" do
     integration_test_sign_in(:admin=>true)
   end   
 
+  describe "Calendar"
+  
+
+  end
+
   describe "'Where Is' " do
     before(:each) do
       # Defaults are set so that temporary_location and a travel record both exist but

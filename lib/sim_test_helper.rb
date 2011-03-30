@@ -32,34 +32,72 @@ module SimTestHelper
     create_one_unspecified_code(ContactType)
   end  
     
+  def create_spouse(member)
+    s = Factory(:member, :spouse=>member, :last_name=> member.last_name, 
+          :first_name=> "Honey", :family=>member.family, :sex=>member.other_sex, :child=>false)
+    member.update_attribute(:spouse, s)
+    puts "Error creating/saving spouse (sim_test_helper ~38)" unless s.valid? && member.valid?
+    return s
+  end
+
+  # Given a record with an attribute (like status_id) that might not reflect an existing attribute record
+  # since we haven't created it yet, 
+  # * Do nothing if it's already created
+  # * Create the record if it doesn't already exist, if the create option is true
+  # * Return a valid id to insert into the record being created 
+  # * Raise an exception if (record doesn't exist and is not to be created) or (unable to create the record)
+  def create_associated_details(attribute, attribute_id, create=false)
+    attribute_model = attribute.to_s.camelize.constantize  # e.g. Status or PersonnelData
+puts "id=#{attribute_id}, found=#{attribute_model.find_by_id(attribute_id)}"
+    return attribute_id if attribute_model.find_by_id(attribute_id)   # Corresponding detail record found, return id
+   # raise error if there is no corresponding detail record and one is not to be created
+    raise "Unable to create needed #{attribute}=#{attribute_id},   \n" +
+      "\t(specify true for create option if you want to create automatically). (create_associated_details)." unless create
+    # if the attribute id is nil, e.g. :status=>nil, use first existing record if there is one 
+    if attribute_id.nil?   
+      return attribute_model.first.id if attribute_model.first    # Return id of existing record
+    end    
+    # Create new detail record if attribute value is specified or it's nil and there are no existing records
+    f = Factory(attribute, :id => attribute_id || UNSPECIFIED)
+    if attribute_id == UNSPECIFIED
+      f.update_attribute(:description, 'Unspecified') if f.respond_to? :description
+      f.update_attribute(:name, 'Unspecified') if f.respond_to? :name
+    end
+    raise unless f.valid? 
+    return f.id
+  end
+
   def factory_member_create(params={})
     number = rand(1000000)
     params[:last_name] ||= "Johnson #{number}"
     params[:first_name] ||= 'Gerald'
-    params[:name] ||= 'Johnson #{number}, Gerald'
+    params[:name] ||= "Johnson #{number}, Gerald"
     params[:sex] ||= 'M'
-    params[:status_id] ||= UNSPECIFIED
-    params[:residence_location_id] ||= UNSPECIFIED
-    params[:work_location_id] ||= UNSPECIFIED
-    params[:ministry_id] ||= UNSPECIFIED
-    family = params[:family] ||
-      Family.create(:last_name=>params[:last_name],
+    params[:status_id] = create_associated_details(:status, params[:status_id], true)
+    params[:residence_location_id] = create_associated_details(:location, params[:residence_location_id], true)
+    params[:work_location_id] = create_associated_details(:location, params[:work_location_id], true)
+    params[:ministry_id] = create_associated_details(:ministry, params[:ministry_id], true)
+    if params[:family] 
+      member = Member.create(params)
+      family.head.update_attributes(params) if family.head == member
+    else
+      f = Family.create(:last_name=>params[:last_name],
                         :first_name=>params[:first_name],
                         :name=>params[:name],
                         :status_id=>params[:status_id],
                         :residence_location_id=>params[:residence_location_id],
                         :sim_id => rand(100000)
                         )
-    if params[:family]
-      return Member.create(params)
-    else
-#puts "Family created, #{family.attributes}, errors=#{family.errors}, head=#{family.head_id}"
-      family.head.update_attributes(params)
-      puts "Error updating family head" unless family.head.valid?
-      return family.head
+      member = f.head 
+      puts f.errors 
     end
-  end    
+puts member.errors 
 
+    puts "Error updating family or family head" unless member.valid? && member.family.valid?
+    create_spouse(member) if params[:spouse]
+    return member
+  end
+  
   def add_details(member)
     location = Location.last
 #puts "\nadd details, Country.all=#{Country.all}, first=#{Country.first}\n"
