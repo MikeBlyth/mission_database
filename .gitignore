@@ -6,3 +6,5 @@ webrat.log
 coverage/*
 coverage.data
 heroku.log
+heroku.logs
+

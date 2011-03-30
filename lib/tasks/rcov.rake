@@ -1,5 +1,4 @@
 require 'rake'
-require 'rspec/core/rake_task'
 
 #namespace :spec do
 #  desc "Run specs with RCov"
@@ -11,6 +10,7 @@ require 'rspec/core/rake_task'
 #end
 
 RSpec::Core::RakeTask.new(:rspec_aggregate) do |task|
+  require 'rspec/core/rake_task'
   task.pattern = 'spec/**/*_spec.rb'
   task.rspec_opts = "--format progress"
   task.rcov = true

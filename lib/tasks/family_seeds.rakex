@@ -1,8 +1,8 @@
-require 'family_seeds'
 
 desc 'Deletes all existing family and member records and sets up test data'
 namespace :seed do
   task :families => :environment do
+    require 'family_seeds'
     FamilySeed.seed
   end
 end

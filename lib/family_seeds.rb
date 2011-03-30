@@ -1,10 +1,10 @@
 # Initialize development database with some families and members
-require './spec/factories'
  
 class FamilySeed
 #include ApplicationHelper
 
   def self.seed
+   require './spec/factories'
     raise "Don't run this in production!" if Rails.env.production?
     Family.delete_all
     Member.delete_all
