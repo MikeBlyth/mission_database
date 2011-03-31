@@ -73,6 +73,7 @@ class MembersController < ApplicationController
     end
   end
 
+  # Given params hash, change :something_id to :something
   def convert_keys_to_id(params, *keys_to_change)
     return params if keys_to_change.nil? || params.nil?
     keys_to_change.each do |k|
@@ -82,24 +83,21 @@ class MembersController < ApplicationController
     params
   end
 
-  def do_update
-#    puts "members do_update, record.id=#{@record.id}, emp=#{@record.personnel_data.employment_id}"
-    super
-#    puts ">> record.id=#{@record.id}, emp=#{@record.personnel_data.employment_id}"
-  end
-    
   def do_create
-#puts "\n**** do_new, record=#{params[:record]}"
-#debugger
+    params[:record][:ministry] = params[:record][:ministry_id]
+    params[:record][:status] = params[:record][:status_id]
+#puts "\n**** do_create before super, record=#{params[:record]}"
     super
-#puts "\n**** do_new after super, record=#{params[:record]}"
+#puts "\n**** do_create after super, record=#{params[:record]}"
+    # Update the health_data and personnel_data. Unfortunately, I don't remember why this has to
+    # be done manually rather than being handled by ActiveScaffold ...
     health_data = convert_keys_to_id(params[:record][:health_data], :bloodtype)
     personnel_data = convert_keys_to_id(params[:record][:personnel_data], 
         :education, :employment_status)
     @record.create_health_data unless @record.health_data
     @record.create_personnel_data unless @record.personnel_data
-    @record.health_data.update_attributes(health_data) if health_data
-    @record.personnel_data.update_attributes(personnel_data) if personnel_data
+    @record.health_data.update_attributes(health_data) unless health_data.empty?
+    @record.personnel_data.update_attributes(personnel_data) unless personnel_data.empty?
   end  
   
   def do_new

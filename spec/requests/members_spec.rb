@@ -40,15 +40,10 @@ include SimTestHelper
       Member.last.first_name.should == 'Sally'
     end # it should
 
-    it "should have new user form with right defaults" do
-      visit new_member_path
-      
-    end
-
     it "should create a new user with all values filled in" do
       lambda do
         visit new_member_path
-save_and_open_page( )
+# save_and_open_page
         fill_in "Last name", :with => "#{@head.last_name}"
         select("#{@family.name}", :from=> 'record[family]')
         fill_in "First name", :with => "Samuel"
@@ -58,8 +53,12 @@ save_and_open_page( )
         check 'Child'  
         fill_in "Birth date", :with => "2000-01-01"
         fill_in "Country name", :with => "Afghanistan"
-        select 'On field'
-        select 'Ministry'
+        f = find_field('record[status_id]')
+        select 'On field', :from=>'record[status_id]'
+        select 'Ministry', :from=>'record[ministry_id]'
+#        puts "f=#{f.native}"
+#        select_second_option(:record_status_id)
+#        select_second_option(:ministry_id)
         fill_in 'Ministry comment', :with=> "ministry comment"
         select 'Site', :from=>'record_residence_location'
         select 'Site', :from=>'record_work_location'
@@ -78,6 +77,7 @@ save_and_open_page( )
         click_button "Create"
       end.should change(Member, :count).by(1)
       m = Member.last
+#puts "After filled in, member=#{m.attributes}"
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
       m.short_name.should == 'Sam'
