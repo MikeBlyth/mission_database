@@ -91,8 +91,6 @@ FactoryGirl.define do
     short_name "Shorty"
     sequence(:sim_id) {|n|  500 + n }
     name {"#{last_name}, #{first_name}"}
-    status { |a| a.association :status }
-    residence_location { |a| a.association :location }
   end
 
   factory :field_term do
@@ -134,8 +132,6 @@ FactoryGirl.define do
   factory :member do 
     sequence(:first_name) {|n| "Person_#{n}" }
     family { |a| a.association :family }
-    status { |a| a.association :status }
-    residence_location { |a| a.association :location }
     sex ['M','F'].shuffle[0]    # randomly pick M or F
     after_build { |m| m.inherit_from_family}
   end
@@ -144,6 +140,8 @@ FactoryGirl.define do
       middle_name 'Midname'
       short_name 'Shorty'
       birth_date '1980-01-01'
+      status { |a| a.association :status }
+      residence_location { |a| a.association :location }
       country { |a| a.association :country }
       ministry { |a| a.association :ministry } 
       ministry_comment 'Working with orphans'
@@ -169,8 +167,8 @@ FactoryGirl.define do
 
   factory :personnel_data do
     member { |a| a.association :member }
-    employment_status { |a| a.association :employment_status }
-    education { |a| a.association :education }
+#    employment_status { |a| a.association :employment_status }
+#    education { |a| a.association :education }
     qualifications 'TESOL, qualified midwife'
     date_active '2005-01-01'
   end    
@@ -188,7 +186,7 @@ FactoryGirl.define do
   factory :status do 
     sequence(:id) {|n| n}
     sequence(:code) {|n| 100+n}
-    sequence(:description) {|n|  "On field_#{n}" }
+    sequence(:description) {|n|  "On field #{n}" }
     on_field true
     active true
   end

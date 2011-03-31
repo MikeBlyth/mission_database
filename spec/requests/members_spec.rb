@@ -40,10 +40,15 @@ include SimTestHelper
       Member.last.first_name.should == 'Sally'
     end # it should
 
+    it "should have new user form with right defaults" do
+      visit new_member_path
+      
+    end
+
     it "should create a new user with all values filled in" do
       lambda do
         visit new_member_path
-#save_and_open_page( )
+save_and_open_page( )
         fill_in "Last name", :with => "#{@head.last_name}"
         select("#{@family.name}", :from=> 'record[family]')
         fill_in "First name", :with => "Samuel"

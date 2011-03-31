@@ -57,14 +57,14 @@
         %br
         = text_field :record, :country_name, :class=> 'country_name-input text-input'
       .status
-        = label :record, :status
+        = label :record, :status_id, "Status"
         %br
-        = collection_select(:record, :status, Status.order("description asc"), :id, :description, {},
+        = collection_select(:record, :status_id, Status.order("description asc"), :id, :description, {:include_blank => true},
           :class=> 'status-input')
       .ministry
-        = label :record, :ministry
+        = label :record, :ministry_id, "Ministry"
         %br
-        = collection_select(:record, :ministry, Ministry.order("description asc"), :id, :description, {},
+        = collection_select(:record, :ministry_id, Ministry.order("description asc"), :id, :description, {:include_blank => true},
           :class=> 'ministry-input')
       .ministry_comment
         = label :record, :ministry_comment

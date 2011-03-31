@@ -150,16 +150,18 @@ When /^I view the list of families$/ do
 end
 
 When /^I edit the family head$/ do
-  seed_tables
-  add_details(@head)   # give @head the various attributes we're going to check on the form
-@head.reload
-
   visit edit_member_path @head
 end  
 
+When /^details added to the family head$/ do
+  seed_tables
+  add_details(@head)   # give @head the various attributes we're going to check on the form
+  @head.reload
+end
+
 Then /^I should see the editing form for the family head$/ do
   page.should have_content "Update #{@head.to_label}"
-#save_and_open_page
+save_and_open_page
   find_field("Last name").value.should == @head.last_name
   find_field("First name").value.should == @head.first_name
   find_field("Sex").value.should == @head.sex
@@ -170,8 +172,18 @@ Then /^I should see the editing form for the family head$/ do
 #puts "c/w #{@head.personnel_data.employment_status_id.to_s}"
   find_field("Employment status").value.should == @head.personnel_data.employment_status_id.to_s
   find_field("Ministry").value.should == @head.ministry_id.to_s
-  
 end  
+
+Then /^I should see a form for editing the new family head$/ do
+#save_and_open_page( )
+  href = "http://example.org/members/#{@head_id}/edit"
+  page.should have_selector('a', :href=>href)
+  find_field("First name").value.should == @family.first_name
+  find_field("record_status_id").value.should == ''
+  find_field("record_residence_location").value.should == ''
+  find_field("record_ministry_id").value.should == ''
+  find_field("record_work_location").value.should == ''
+end
 
 Then /^I see a link to add a spouse$/ do
   page.should have_content "Add spouse"
@@ -258,7 +270,7 @@ Then /^I should see a valid form for updating a family$/ do
   find_field("Location").value.should == @family.residence_location_id.to_s
 end
 
-Given /^a form filled in for a new family$/ do
+When /^I fill in a form for a new family$/ do
   seed_tables
   @family = Factory.build(:family)   # Not yet saved to database
   visit new_family_path
@@ -266,7 +278,7 @@ Given /^a form filled in for a new family$/ do
   fill_in("record[name]", :with=> @family.name)
   fill_in("First name", :with=> @family.first_name)
   fill_in("SIM", :with=> @family.sim_id)
-
+  click_link_or_button 'Create'
 end
 
 Then /^the database should contain the new family$/ do
@@ -276,13 +288,8 @@ Then /^the database should contain the new family$/ do
 #puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
   f = Family.find_by_sim_id(@family.sim_id)
   f.should_not be nil
-end
-
-Then /^I should see a form for editing the family head$/ do
-#save_and_open_page( )
-  href = "http://example.org/members/#{@head_id}/edit"
-  page.should have_selector('a', :href=>href)
-  find_field("First name").value.should == @family.first_name
+  @head = f.head
+  @head.should_not be_nil
 end
 
 Then /^I should see a valid form for a new family$/ do
@@ -292,8 +299,8 @@ Then /^I should see a valid form for a new family$/ do
   find_field("First name").value.blank?.should be true
   find_field("SIM").value.blank?.should be true
 #  find_field("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
-  find_field("record_status").value.should == "999999"
-  find_field("record_residence_location").value.should == "999999"
+  find_field("record_status").value.should == ''
+  find_field("record_residence_location").value.should == ''
   page.should have_content "Create a New Individual or Family"
   page.should have_selector "input", :id=> 'record_name' 
 end
@@ -343,8 +350,8 @@ Then /^the form should be pre\-set to add a spouse$/ do
   find_field("Sex").value.should == @head.other_sex
   find_field("record[spouse]").value.should == @head.id.to_s
   find_field("Country name").value.should == @head.country.name
-  find_field("Status").value.to_s.should == @family.status_id.to_s
   find_field("record[residence_location]").value.to_s.should == @family.residence_location_id.to_s
+  find_field("record[status_id]").value.to_s.should == @family.status_id.to_s
 end
 
 Then /^the form should be pre\-set to add a child$/ do
@@ -352,8 +359,8 @@ Then /^the form should be pre\-set to add a child$/ do
   find_field("First name").value.blank?.should be true
   find_field("record[spouse]").value.should == ''
   find_field("Country name").value.should == @head.country.name
-  find_field("Status").value.to_s.should == @family.status_id.to_s
   find_field("record[residence_location]").value.to_s.should == @family.residence_location_id.to_s
+  find_field("record[status_id]").value.to_s.should == @family.status_id.to_s
 end
 
 Given /^I am viewing the family list$/ do

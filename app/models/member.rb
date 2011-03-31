@@ -48,8 +48,7 @@ class Member < ActiveRecord::Base
   belongs_to :work_location, :class_name => "Location"#, :foreign_key => "work_location_id"
   belongs_to :employment_status
   belongs_to :status
-  validates_presence_of :last_name, :first_name, :name, :family_id, :residence_location_id, :work_location_id
-  validates_presence_of :status_id, :ministry_id
+  validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :spouse_id, :allow_blank=>true
   validate :family_record_exists
   validate :valid_spouse

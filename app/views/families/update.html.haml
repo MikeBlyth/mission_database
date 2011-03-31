@@ -25,11 +25,11 @@
             = form.label :status, "Status"
             %br
             - status_choices =   options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
-            = form.select(:status, status_choices)    
+            = form.select(:status, status_choices, {:include_blank => true })    
           %td
             = form.label :residence_location, "Location"
             %br
-            = form.select(:residence_location, location_choices(@record[:residence_location_id]))    
+            = form.select(:residence_location, location_choices(@record[:residence_location_id]), {:include_blank => true })    
       .form-footer
         %br
         = form.submit "Update"

@@ -29,7 +29,7 @@ class Family < ActiveRecord::Base
   belongs_to :status
   belongs_to :residence_location, :class_name => "Location", :foreign_key => "residence_location_id"
   before_validation :set_indexed_name_if_empty
-  validates_presence_of :last_name, :first_name, :name, :status
+  validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
   validate :name_not_exists
 

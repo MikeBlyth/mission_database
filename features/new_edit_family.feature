@@ -9,7 +9,6 @@ Feature: Forms for creating and updating families
     When I select "new family"
     Then I should see a valid form for a new family
 
-
   Scenario: Getting an update family form with expected values
     Given that detail tables (like Countries) exist
     And a family with a "Wife" and "Big Kid" and "Baby"
@@ -20,10 +19,9 @@ Feature: Forms for creating and updating families
 
   Scenario: After creating new family, I should see form to update family head
     Given that I am signed in as an administrator
-    And a form filled in for a new family
-    When I press "Create"
+    When I fill in a form for a new family
     Then the database should contain the new family
-    And I should see a form for editing the family head
+    And I should see a form for editing the new family head
 
   Scenario: I should see links to add spouse and kids from family edit form
     Given that I am signed in as an administrator

@@ -6,13 +6,6 @@ describe Family do
     @head = @family.head
   end    
 
-  it "has the right 'unspecified' defaults when created" do
-    m = Family.new
-    m.status_id.should == 999999
-    m.residence_location_id.should == 999999
-    m.sim_id.should == nil
-  end    
-
   it "is valid with valid attributes" do
     @family.should be_valid
   end

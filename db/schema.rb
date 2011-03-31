@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110329162620) do
+ActiveRecord::Schema.define(:version => 20110330191512) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -109,8 +109,8 @@ ActiveRecord::Schema.define(:version => 20110329162620) do
 
   create_table "families", :force => true do |t|
     t.integer  "head_id"
-    t.integer  "status_id",             :default => 999999
-    t.integer  "residence_location_id", :default => 999999
+    t.integer  "status_id"
+    t.integer  "residence_location_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "last_name"
@@ -166,16 +166,16 @@ ActiveRecord::Schema.define(:version => 20110329162620) do
     t.integer  "family_id"
     t.date     "birth_date"
     t.integer  "spouse_id"
-    t.integer  "country_id",                    :default => 999999
+    t.integer  "country_id"
     t.string   "first_name"
-    t.integer  "status_id",                     :default => 999999
+    t.integer  "status_id"
     t.string   "ministry_comment"
-    t.integer  "ministry_id",                   :default => 999999
-    t.integer  "residence_location_id",         :default => 999999
+    t.integer  "ministry_id"
+    t.integer  "residence_location_id"
     t.string   "name"
     t.boolean  "name_override"
     t.boolean  "child",                         :default => false
-    t.integer  "work_location_id",              :default => 999999
+    t.integer  "work_location_id"
     t.string   "temporary_location"
     t.date     "temporary_location_from_date"
     t.date     "temporary_location_until_date"

@@ -33,14 +33,6 @@ describe Member do
       @member.should_not be_valid
     end
 
-    it "has the right 'unspecified' defaults when created" do
-      m = Member.new
-      m.country_id.should == 999999
-      m.status_id.should == 999999
-      m.ministry_id.should == 999999
-      m.residence_location_id.should == 999999
-    end    
-
     it "makes a 'name' (full name) by default" do
       @member.name = ''
       @member.should be_valid   # because set_indexed_name_if_empty is called before validation
