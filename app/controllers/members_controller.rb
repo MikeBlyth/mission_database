@@ -90,7 +90,7 @@ class MembersController < ApplicationController
     super
 #puts "\n**** do_create after super, record=#{params[:record]}"
     # Update the health_data and personnel_data. Unfortunately, I don't remember why this has to
-    # be done manually rather than being handled by ActiveScaffold ...
+    # be done manually rather than being handled by ActiveScaffold ... if I ever figured out why.
     health_data = convert_keys_to_id(params[:record][:health_data], :bloodtype)
     personnel_data = convert_keys_to_id(params[:record][:personnel_data], 
         :education, :employment_status)
@@ -133,6 +133,12 @@ class MembersController < ApplicationController
     super
   end    
   
+  def do_update
+    params[:record][:ministry] = params[:record][:ministry_id]
+    params[:record][:status] = params[:record][:status_id]
+    super
+  end
+
   def update_save(params={})
     @record.previous_spouse = @record.spouse if @record
     super(params)
