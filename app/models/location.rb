@@ -20,7 +20,7 @@ class Location < ActiveRecord::Base
   has_many :work_members, :class_name=>'Member', :foreign_key => "work_location_id"
   has_many :families, :foreign_key => "residence_location_id"
   has_many :field_terms, :foreign_key => "primary_work_location_id"
-  validates_presence_of :description, :code, :city
+  validates_presence_of :description, :code
   validates_uniqueness_of :code, :description
   validates_numericality_of :code, :only_integer => true
 

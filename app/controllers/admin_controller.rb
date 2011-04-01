@@ -8,20 +8,35 @@ class AdminController < ActionController::Base
   
   # Do various things to clean the database
   def clean_database
-params ||= {}
     fix = params[:fix]=='true'  # This boolean determines whether we actually make changes to the database
-    @report = ""
-    clean_members(fix)
-    clean_families(fix)
-    clean_locations(fix)
-    clean_field_terms(fix)
-    clean_contacts(fix)
-#    flash[:notice] = 'Database cleaned'
+    cum_report = ""
+    cum_report << clean_members(fix)
+    cum_report << clean_families(fix)
+    cum_report << clean_locations(fix)
+    cum_report << clean_field_terms(fix)
+    cum_report << clean_contacts(fix)
+    flash[:notice] = fix ? 'Database cleaned' : 'Report only; database not yet cleaned'
+    @report = cum_report
   end
 
+  def before_report(title)
+    @report = "\n<strong>*** Checking #{title} ***</strong>"
+    @orig_report_length = @report.length
+  end
+  
+  def after_report(title, fix)
+    final_report_length = @report.length
+    @report << "\nEnd of #{title}: "
+    if final_report_length == @orig_report_length  # No additions to report means no errors
+      @report << " no errors found"
+    else  
+      @report << (fix ? "fixes made as shown.\n" : " no changes made because 'fix' not specified.\n")
+    end
+  end  
+  
   # Describe in detail what things to check and fix in Members table
   def clean_members(fix=false)
-    @report << "<strong>*** Checking Members ***</strong>\n"
+    before_report 'Members'
     Member.all.each do |m|
       check_and_fix_link(m, :residence_location, m.name)
       check_and_fix_link(m, :work_location, m.name)
@@ -31,41 +46,41 @@ params ||= {}
       check_and_fix_link(m, :country, m.name)
       check_and_fix_link(m, :ministry, m.name)
       p = m.personnel_data
-      @report << "\n<em>Checking members' Personnel Data</em>\n"
       if p
         check_and_fix_link(p, :employment_status, m.name)
         check_and_fix_link(p, :education, m.name)
       end
       m.save if (m.changed_attributes.count > 0) & fix
     end # each member
-    @report << "\nEnd of Members:"
-    @report << (fix ? " fixes made as shown.\n" : " no changes made because 'fix' not specified.\n")
+    after_report 'Members', fix
   end # clean members
 
   def clean_families(fix=false)
-    @report << "\n<strong>*** Checking Families ***</strong>\n"
+    before_report 'Families'
     Family.all.each do |m|
       check_and_fix_link(m, :residence_location, m.name)
       check_and_fix_link(m, :head, m.name)
       check_and_fix_link(m, :status, m.name)
       m.save if (m.changed_attributes.count > 0) & fix
     end # each member
-    @report << "\nEnd of Families:"
-    @report << (fix ? " fixes made as shown" : " no changes made because 'fix' not specified.")
+    after_report 'Families', fix
   end # clean families
 
   def clean_locations(fix=false)
-    @report << "\n<strong>*** Checking Locations table ***</strong>\n"
-    Location.all.each do |m|
-      check_and_fix_link(m, :city, :description)
-      m.save if (m.changed_attributes.count > 0) & fix
-    end # each location
-    @report << "\nEnd of Locations:"
-    @report << (fix ? " fixes made as shown" : " no changes made because 'fix' not specified.")
+    before_report 'Locations'
+    orphans = find_orphans(:location, :city)  # Any locations that do not belong to a valid city
+    orphans.all.each do |loc|
+      @report << "Location #{loc} has city_id= #{loc.city_id} which is not a valid city; fix manually."
+    end
+#    Location.all.each do |m|
+#      check_and_fix_link(m, :city, :description)
+#      m.save if (m.changed_attributes.count > 0) & fix
+#    end # each location
+    after_report 'Locations', fix
   end # clean locations
 
   def clean_field_terms(fix=false)
-    @report << "\n<strong>*** Checking Field Terms ***</strong>\n"
+    before_report 'Field Terms'
     empty_terms = FieldTerm.where(:start_date=>nil, :end_date=>nil, :est_start_date=>nil, :est_end_date=>nil)
     @report << "There are #{empty_terms.count} 'empty' field term records (no dates) to be deleted.\n\n" unless
       empty_terms.empty?
@@ -80,27 +95,29 @@ params ||= {}
       check_and_fix_link(m, :ministry, name)
       m.save if (m.changed_attributes.count > 0) & fix
     end # each field term
-    
-    @report << "\nEnd of Field Terms:"
-    @report << (fix ? " fixes made as shown" : " no changes made because 'fix' not specified.")
+    after_report 'Field Terms', fix
   end # clean field terms
 
   def clean_contacts(fix=false)
-    @report << "\n<strong>*** Checking Contacts ***</strong>\n"
+    before_report 'Contacts'
     report_destroy_orphans(:contact, :member, fix)
     Contact.all.each do |m|
       check_and_fix_link(m, :contact_type, (m.member ? m.member.name : "Unkown member"))
       m.save if (m.changed_attributes.count > 0) & fix
     end # each location
-    @report << "\nEnd of Locations:"
-    @report << (fix ? " fixes made as shown" : " no changes made because 'fix' not specified.")
+    after_report 'Contacts', fix
   end # clean contacts
 
   def clean_travel
    # Nothing to do? These do not even need a member_id since they may belong to guests
   end 
 
-private
+#private
+
+  # Remember not to use update_attribute since it will change the record regardless of the
+  # value of 'fix' and will also result in more database accesses. Instead, just set the 
+  # link_id using =, and the main cleaner method will save the record after all the changes
+  # are made, if 'fix' is true.
 
   # Check for the presence of associated record 'link'
   # * record = source record we're checking, e.g. member
@@ -109,6 +126,7 @@ private
   #   (for reporting purposes)
   # Returns empty string if valid, error message otherwise
   def check_linked_value(record, link, record_identifier)
+#puts "***Check_linked_value(#{record.class}, #{link}, #{link_value(record, link)}"
     # Make sure record includes (responds to) this association
     raise "check_linked called with invalid attribute #{link} for #{record.class}\n" unless record.respond_to? link
     # Return empty string (no error) if _id is nil or _id points to an existing record
