@@ -20,8 +20,25 @@ module ApplicationHelper
     def smart_join(a, delim=', ')
       a.collect{|x| (x || '').to_s.strip}.delete_if{|x| x.blank?}.join(delim)
     end
+  
+    # Just add '_id' to a string or symbol
+    def link_id(s)
+      return s if s =~ /_id\z/  # no change if it already ends in _id
+      val = s.to_s + "_id"
+      val = val.to_sym if s.is_a? Symbol
+      return val
+    end  
+    
+    # Return the value of an association id, 
+    # For example link_value(record, :status) is the same as record.status_id
+    # Link can be either the name (:status) or id (:status_id)
+    def link_value(record, link)
+      return record.send(link_id(link))  # where link_id adds '_id' if not there
+    end  
 
-end
+end  # ApplicationHelper module
+
+#******* Anything below this point is not in the module itself *********
 
 require "#{Rails.root}/config/initializers/date_formats.rb"
 
