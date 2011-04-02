@@ -103,6 +103,14 @@ FactoryGirl.define do
     end_date '31 Dec 2010'  
   end
 
+  factory :field_term_empty, :parent => :field_term do
+    employment_status nil
+    primary_work_location nil
+    ministry nil
+    start_date nil
+    end_date nil
+  end
+
   factory :field_term_future, :parent => :field_term do
     start_date ''
     end_date ''

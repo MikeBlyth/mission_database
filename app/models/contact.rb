@@ -1,10 +1,10 @@
 # == Schema Information
-# Schema version: 20110329162620
+# Schema version: 20110402104657
 #
 # Table name: contacts
 #
 #  id              :integer(4)      not null, primary key
-#  contact_type_id :integer(4)      default(0), not null
+#  contact_type_id :integer(4)
 #  contact_name    :string(255)
 #  address         :string(255)
 #  email_1         :string(40)

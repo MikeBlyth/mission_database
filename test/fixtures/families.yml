@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20110329162620
+# Schema version: 20110402104657
 #
 # Table name: families
 #
 #  id                    :integer(4)      not null, primary key
 #  head_id               :integer(4)
-#  status_id             :integer(4)      default(999999)
-#  residence_location_id :integer(4)      default(999999)
+#  status_id             :integer(4)
+#  residence_location_id :integer(4)
 #  created_at            :datetime
 #  updated_at            :datetime
 #  last_name             :string(255)

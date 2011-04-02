@@ -86,7 +86,7 @@ class AdminController < ActionController::Base
       empty_terms.empty?
     orphans = find_orphans(:field_term, :member)
     @report << "There are #{orphans.count} orphaned Field Term records (not belonging to an existing member).\n" + 
-        "\tThese will be deleted if 'fix' is specified.\n\n"
+        "\tThese will be deleted if 'fix' is specified.\n\n" unless orphans.empty?
     orphans.destroy_all if fix
     FieldTerm.all.each do |m|
       name = m.member ? m.member.name : 'Unknown member'
@@ -102,6 +102,7 @@ class AdminController < ActionController::Base
     before_report 'Contacts'
     report_destroy_orphans(:contact, :member, fix)
     Contact.all.each do |m|
+puts "\nIn clean contacts, record=#{m.attributes}"
       check_and_fix_link(m, :contact_type, (m.member ? m.member.name : "Unkown member"))
       m.save if (m.changed_attributes.count > 0) & fix
     end # each location
@@ -162,7 +163,7 @@ class AdminController < ActionController::Base
   def report_destroy_orphans(child, parent, fix)
     orphans = find_orphans(child, parent)
     @report << "There are #{orphans.count} orphaned #{child.to_s} records (not belonging to an #{parent.to_s}).\n" + 
-        "\tThese will be deleted if 'fix' is specified.\n\n"
+        "\tThese will be deleted if 'fix' is specified.\n\n"  unless orphans.empty?
     orphans.destroy_all if fix
   end
 

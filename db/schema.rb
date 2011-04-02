@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110330191512) do
+ActiveRecord::Schema.define(:version => 20110402104657) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(:version => 20110330191512) do
   add_index "contact_types", ["description"], :name => "index_contact_types_on_description", :unique => true
 
   create_table "contacts", :force => true do |t|
-    t.integer  "contact_type_id",                :default => 0,     :null => false
+    t.integer  "contact_type_id"
     t.string   "contact_name"
     t.string   "address"
     t.string   "email_1",         :limit => 40
