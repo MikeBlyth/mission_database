@@ -102,7 +102,6 @@ class AdminController < ActionController::Base
     before_report 'Contacts'
     report_destroy_orphans(:contact, :member, fix)
     Contact.all.each do |m|
-puts "\nIn clean contacts, record=#{m.attributes}"
       check_and_fix_link(m, :contact_type, (m.member ? m.member.name : "Unkown member"))
       m.save if (m.changed_attributes.count > 0) & fix
     end # each location

@@ -1,5 +1,14 @@
 require 'spec_helper'
 
+# Make record an orphan by deleting its parent member.
+# Since we use delete rather than destroy, member's child records should not
+# be deleted.
+def make_orphan(record)
+  m =  Member.find_by_id(record.member_id)
+  m.delete if m
+  record.reload
+end  
+
 describe AdminController do
   
   describe 'for signed in admin' do
@@ -149,16 +158,14 @@ describe AdminController do
         end        
         
         it "reports orphan records (no member) and does not delete them when fix is false" do
-          @object.member_id = 999
-          @object.save
+          make_orphan(@object)
           lambda do
             controller.clean_field_terms(false).should_not =~ /no errors/
           end.should_not change(FieldTerm, :count)
         end      
 
         it "reports orphan records and deletes them when fix is true" do
-          @object.member_id = 999
-          @object.save
+          make_orphan(@object)
           lambda do
             controller.clean_field_terms(true).should_not =~ /no errors/
           end.should change(FieldTerm, :count).by -1
@@ -174,7 +181,6 @@ describe AdminController do
 
         it "does not complain about object with nil optional associations" do
           @object.update_attribute(:contact_type_id, nil)
-puts "#After update/reload, ct = #{@object.contact_type_id}, reloaded=#{@object.reload.contact_type_id}"
           @object.reload.contact_type_id.should == nil
           controller.clean_contacts.should =~ /no errors/
         end  
@@ -203,16 +209,17 @@ puts "#After update/reload, ct = #{@object.contact_type_id}, reloaded=#{@object.
         end        
         
         it "reports orphan records (no member) and does not delete them when fix is false" do
-          @object.update_attribute(:member_id, 999)
+          make_orphan(@object)
+          @object.member.should be_nil
           lambda do
-            controller.clean_field_terms(false).should_not =~ /no errors/
+            controller.clean_contacts(false).should_not =~ /no errors/
           end.should_not change(Contact, :count)
         end      
 
         it "reports orphan records and deletes them when fix is true" do
-          @object.update_attribute(:member_id, 999)
+          make_orphan(@object)
           lambda do
-            controller.clean_field_terms(true).should_not =~ /no errors/
+            controller.clean_contacts(true).should_not =~ /no errors/
           end.should change(Contact, :count).by -1
         end      
 
