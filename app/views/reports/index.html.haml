@@ -1,14 +1,17 @@
-%h1 Reports
+%h1 Reports and Calendars
+%h4 Reports
 %p Choose a report from those listed below
 %ul
-  %li= link_to "Phone and email list", "/reports/phone_email.pdf"
-  %li= link_to "Travel schedule", "/reports/travel_schedule.pdf"
-  %li= link_to "Birthday list", "/reports/birthdays.pdf"
-  %li= link_to "Blood types", "/reports/bloodtypes.pdf"
-  %li= link_to "Where is everyone?", "/reports/whereis.pdf"
+  %li= link_to "Phone and email list (PDF)", "/reports/phone_email.pdf"
+  %li= link_to "Travel schedule (PDF)", "/reports/travel_schedule.pdf"
+  %li= link_to "Birthday list (PDF)", "/reports/birthdays.pdf"
+  %li= link_to "Blood types (PDF)", "/reports/bloodtypes.pdf"
+  %li= raw "Where is everyone? #{link_to 'HTML', '/reports/whereis.html'} #{link_to 'PDF', '/reports/whereis.pdf'}"
 %hr
 %h4 Calendars
+%p Calendars are all in PDF format.
 = form_tag('/reports/calendar.pdf', :method => "get")
+%p Select which types of data should appear on the calendar.
 = check_box_tag(:birthdays)
 = label_tag(:birthdays, "Birthdays")
 = check_box_tag(:travel)
@@ -16,8 +19,9 @@
 = check_box_tag(:events)
 = label_tag(:events, "Other events")
 %br
-%p For which month?
+%p Select the month for this calendar:
 = select_month(Time.now.next_month)
 = select_year(Time.now.next_month)
 %br
+%p Click below to generate and download the calendar.
 = submit_tag "Generate"
