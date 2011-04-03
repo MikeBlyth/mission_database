@@ -20,23 +20,26 @@ class ReportsController < ApplicationController
 #    member_locations = selected.collect{ |m| {:name=>m.last_name_first(:initial=>true, :short=>true),
 #                                             :location=>m.current_location}
 #                                       }
-    member_locations = []
+    @member_locations = []
+    @title = "Where Is Everyone?"
     selected.each do |m|
       current = m.current_location
       if m.on_field || m.visiting_field?
-        member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), 
+        @member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), 
                               :current_location=>m.current_location,
                               :residence_location=>description_or_blank(m.residence_location),
                               :work_location=>description_or_blank(m.work_location)
                               }
       end  
     end
+    @count = @member_locations.count
 
-    output = WhereisReport.new.to_pdf(member_locations)
 
     respond_to do |format|
+      format.html
       format.pdf do
-       send_data output, :filename => "where_is.pdf", 
+        output = WhereisReport.new.to_pdf(@member_locations)
+        send_data output, :filename => "where_is.pdf", 
                          :type => "application/pdf"
       end
     end
@@ -54,11 +57,11 @@ class ReportsController < ApplicationController
                                     x.health_data.bloodtype.nil? || 
                                     x.health_data.bloodtype_id == UNSPECIFIED
                                     } 
-     output = BloodtypeReport.new.to_pdf(selected,"Includes only those currently on the field")
 
      respond_to do |format|
        format.pdf do
-        send_data output, :filename => "bloodtypes.pdf", 
+         output = BloodtypeReport.new.to_pdf(selected,"Includes only those currently on the field")
+         send_data output, :filename => "bloodtypes.pdf", 
                           :type => "application/pdf"
        end
      end
@@ -70,10 +73,10 @@ class ReportsController < ApplicationController
  #   selected = selected.delete_if{|x| !x.active }   # delete members not on the field
     filter = (session[:filter] || "").gsub('_', ' ')
     left_head = filter.blank? ? '' : "with status = #{filter}" 
-    output = BirthdayReport.new.to_pdf(selected,:left_head=>left_head)
 
     respond_to do |format|
       format.pdf do
+        output = BirthdayReport.new.to_pdf(selected,:left_head=>left_head)
         send_data output, :filename => "birthdays.pdf", 
                           :type => "application/pdf"
       end
@@ -87,10 +90,10 @@ class ReportsController < ApplicationController
             select("family_id, child, last_name, first_name, middle_name, short_name, id")
     filter = (session[:filter] || "").gsub('_', ' ')
     left_head = filter.blank? ? '' : "with status = #{filter}" 
-    output = PhoneEmailReport.new.to_pdf(selected,:left_head=>left_head)
 
     respond_to do |format|
       format.pdf do
+        output = PhoneEmailReport.new.to_pdf(selected,:left_head=>left_head)
         send_data output, :filename => "phonelist.pdf", 
                           :type => "application/pdf"
       end
@@ -104,10 +107,10 @@ class ReportsController < ApplicationController
     # We will assume for now that we do not need to filter for different member statuses, since if there is a travel
     # record for someone, it means that we wanted it on the travel schedule.
     left_head = "#{starting_date}"
-    output = TravelScheduleReport.new.to_pdf(selected, :title=>'Travel Schedule', :left_head=>left_head)
 
     respond_to do |format|
       format.pdf do
+        output = TravelScheduleReport.new.to_pdf(selected, :title=>'Travel Schedule', :left_head=>left_head)
         send_data output, :filename => "travel_schedule.pdf", 
                           :type => "application/pdf"
       end
@@ -175,10 +178,10 @@ class ReportsController < ApplicationController
     merged = merge_calendar_data([travel_data, birthday_data, events_data])
 
     # Actually print the strings
-    calendar.put_data_into_days(merged)
 
     respond_to do |format|
       format.pdf do
+        calendar.put_data_into_days(merged)
         send_data calendar.render, :filename => "calendar.pdf", 
                           :type => "application/pdf"
       end
@@ -197,10 +200,10 @@ class ReportsController < ApplicationController
 
     # Actually print the strings
     merged = merge_calendar_data([travel_data, birthday_data])
-    calendar.put_data_into_days(merged)
 
     respond_to do |format|
       format.pdf do
+        calendar.put_data_into_days(merged)
         send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
                           :type => "application/pdf"
       end
@@ -215,10 +218,10 @@ class ReportsController < ApplicationController
     travel_data = travel_calendar_data({:date=>date_for_calendar})
 
     # Actually print the strings
-    calendar.put_data_into_days(travel_data)
 
     respond_to do |format|
       format.pdf do
+        calendar.put_data_into_days(travel_data)
         send_data calendar.render, :filename => "travel_calendar.pdf", 
                           :type => "application/pdf"
       end
@@ -233,10 +236,10 @@ class ReportsController < ApplicationController
     birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
 
     # Actually print the strings
-    calendar.put_data_into_days(birthday_data)
 
     respond_to do |format|
       format.pdf do
+        calendar.put_data_into_days(birthday_data)
         send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
                           :type => "application/pdf"
       end
