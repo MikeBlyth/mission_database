@@ -14,10 +14,9 @@ include ReportsHelper
     end  
   end
 
-  def to_pdf(selected,comments="")
-     # selected is an array of Members (with only some columns defined)
-     # first, sort the array by name
-    selected.sort! {|x,y| x[:name] <=> y[:name]}
+  def to_pdf(selected, by_location, comments="")
+     # selected is an array of Members info (with only some columns defined)
+     #   and is already sorted by name
     text_data = ''
     selected.each do |m|
 #puts "Member #{m.last_name_first}, residence=#{m.residence_location} (#{m.residence_location_id})"
@@ -29,14 +28,14 @@ include ReportsHelper
     flow_in_columns text_data, :top_margin=>50, :bottom_margin=>50, :columns=>3, 
       :size=>10,  :gutter=>5 , :inline_format => true
 
-    # Now sort by location 
-    selected.sort! {|x,y| (x[:residence_location] + x[:name]) <=> (y[:residence_location]+y[:name])}
+    # Now by location 
     text_data = ''
     location = ''
-    selected.each do |m|
+    by_location.each do |m|
       if location != m[:residence_location]
         location = m[:residence_location]
-        text_data << "\n <b>#{location}</b>\n\n"
+        text_data << "\n" unless text_data.blank?
+        text_data << "<b>#{location}</b>\n\n"
       end
       text_data << m[:name] << "\n"
     end

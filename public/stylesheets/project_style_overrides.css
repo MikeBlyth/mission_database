@@ -198,3 +198,20 @@ div.temporary_location_dates {
 
 #as_calendar_events-tbody .date-column {
   width: 20%; }
+
+.whereis th {
+  text-align: left; }
+
+.whereis tr.new_location {
+  background: #0080fc; }
+
+.whereis .new_location td {
+  color: white;
+  font-style: italic;
+  padding-top: 0.5em; }
+
+.whereis .list_line_odd {
+  background: #dcecec; }
+
+.whereis .list_line_even {
+  background: #cce4fc; }

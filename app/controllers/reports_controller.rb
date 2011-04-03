@@ -24,21 +24,24 @@ class ReportsController < ApplicationController
     @title = "Where Is Everyone?"
     selected.each do |m|
       current = m.current_location
+      work_location = description_or_blank(m.work_location)
+      work_location = '' if work_location.downcase == 'unspecified'
       if m.on_field || m.visiting_field?
         @member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), 
                               :current_location=>m.current_location,
                               :residence_location=>description_or_blank(m.residence_location),
-                              :work_location=>description_or_blank(m.work_location)
+                              :work_location=> work_location,
+                              :travel_location=>m.travel_location,
+                              :temporary_location=>m.temporary_location,
                               }
       end  
     end
-    @count = @member_locations.count
-
-
+    @member_locations.sort! {|x,y| x[:name] <=> y[:name]}
+    @members_by_location = @member_locations.sort {|x,y| (x[:residence_location] + x[:name]) <=> (y[:residence_location]+y[:name])}
     respond_to do |format|
       format.html
       format.pdf do
-        output = WhereisReport.new.to_pdf(@member_locations)
+        output = WhereisReport.new.to_pdf(@member_locations, @members_by_location)
         send_data output, :filename => "where_is.pdf", 
                          :type => "application/pdf"
       end
