@@ -294,16 +294,17 @@ class Member < ActiveRecord::Base
   
   # Return string with person's current location (& work location) based on member.residence_location,
   # member.work_location, member.temporary_location, and travel records
-  def current_location
-    residence = description_or_blank(residence_location, '?')
-    work = description_or_blank(work_location)
+  # Options
+  #   :missing = what to supply if residence or work location is missing or is 'unspecified'
+  def current_location(options={})
+    residence = description_or_blank(residence_location, options[:missing] || '?')
+    work = description_or_blank(work_location, options[:missing] || nil)
     answer = residence
     # Now we have the location but subject to travel and temporary moves.
-    
     answer += " (#{work})" if work && (work != residence)
-    answer += ". "
-    answer += travel_location || ''
-    answer += temp_location || ''
+  #  answer += ". "
+    answer += " (#{travel_location})" if travel_location
+    answer += " (#{temp_location})" if temp_location
     return answer
   end
 
@@ -327,17 +328,17 @@ class Member < ActiveRecord::Base
     end      
     if current_travel
       if visiting_field?  # Someone visiting the field
-        answer = "Travel: arrived on field #{current_travel.date.to_s(:short)}"
+        answer = "travel: arrived on field #{current_travel.date.to_s(:short)}"
         if current_travel.return_date
           answer << ", leaves #{current_travel.return_date.to_s(:short)}"
         end
-        return answer << '.'
+        return answer
       elsif !current_travel.arrival  # if person has traveled (according to travel schedule)
-        answer = "Travel: left field #{current_travel.date.to_s(:short)}"
+        answer = "travel: left field #{current_travel.date.to_s(:short)}"
         if current_travel.return_date
           answer << ", returns #{current_travel.return_date.to_s(:short)}"
         end
-        return answer << '.'
+        return answer
       end  
     end     
     return nil
@@ -346,8 +347,8 @@ class Member < ActiveRecord::Base
   def temp_location
     if !temporary_location.blank? && temporary_location_from_date <= Date.today &&
                                      temporary_location_until_date >= Date.today
-      return "Temporary location: #{temporary_location}, #{temporary_location_from_date.to_s(:short)} to " +
-             " #{temporary_location_until_date.to_s(:short)}."
+      return "temporary location: #{temporary_location}, #{temporary_location_from_date.to_s(:short)} to " +
+             " #{temporary_location_until_date.to_s(:short)}"
     else
       return nil
     end         

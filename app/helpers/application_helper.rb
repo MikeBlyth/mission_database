@@ -5,9 +5,19 @@ module ApplicationHelper
       return s
     end
 
+    # Given an object (or nil) described by method description_method, return 
+    # * nil_value if object is nil or its description is missing or is "unspecified"
+    # * description_method otherwise
+    # Example:
+    #   given m = Member with status=>on_field_status, residence_location=>nil, country=>nil
+    #     description_or_blank(m.residence_location) returns nil
+    #     description_or_blank(m.residence_location, "Unknown") returns "Unknown"
+    #     description_or_blank(m.status) returns "On field"
+    #     description_or_blank(m.country, '?', :name) returns '?'
     def description_or_blank(object, nil_value='', description_method=:description)
       return nil_value unless object
-      return object.send description_method
+      value = object.send description_method || 'unspecified'
+      return value.downcase == 'unspecified' ? nil_value : value
     end
 
     def opposite_sex(s)
