@@ -2,6 +2,7 @@
 # Perhaps should be refactored so that each report is inside its own main model's controller?
 class ReportsController < ApplicationController
   include AuthenticationHelper
+  include ApplicationHelper
 
   before_filter :authenticate 
 
@@ -9,15 +10,9 @@ class ReportsController < ApplicationController
     # this just displays a view that lets the user select from reports
   end
 
-  def description_with_nil(column)
-    column ? column.description : ''
-  end
-    
-  
-
   def whereis
 #    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
-    selected = Member.where(:child=> false).
+    selected = Member.includes(:residence_location, :work_location).where(:child=> false).
              select("id, status_id, spouse_id, last_name, first_name, middle_name, short_name, residence_location_id, work_location_id," +
                      " temporary_location, temporary_location_from_date, temporary_location_until_date")
 #puts "Whereis selected="
@@ -31,8 +26,8 @@ class ReportsController < ApplicationController
       if m.on_field || m.visiting_field?
         member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), 
                               :current_location=>m.current_location,
-                              :residence_location=>description_with_nil(m.residence_location),
-                              :work_location=>description_with_nil(m.work_location)
+                              :residence_location=>description_or_blank(m.residence_location),
+                              :work_location=>description_or_blank(m.work_location)
                               }
       end  
     end

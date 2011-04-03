@@ -5,6 +5,11 @@ module ApplicationHelper
       return s
     end
 
+    def description_or_blank(object, nil_value='', description_method=:description)
+      return nil_value unless object
+      return object.send description_method
+    end
+
     def opposite_sex(s)
       return :male if s == :female
       return :female if s == :male

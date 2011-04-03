@@ -161,7 +161,7 @@ end
 
 Then /^I should see the editing form for the family head$/ do
   page.should have_content "Update #{@head.to_label}"
-save_and_open_page
+#save_and_open_page
   find_field("Last name").value.should == @head.last_name
   find_field("First name").value.should == @head.first_name
   find_field("Sex").value.should == @head.sex

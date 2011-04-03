@@ -30,6 +30,7 @@
 
 class Member < ActiveRecord::Base
   include NameHelper
+  include ApplicationHelper
   
   attr_accessor :previous_spouse  # to help with cross-linking when changing/deleting spouse
   
@@ -294,11 +295,9 @@ class Member < ActiveRecord::Base
   # Return string with person's current location (& work location) based on member.residence_location,
   # member.work_location, member.temporary_location, and travel records
   def current_location
-    r = Location.find_by_id(residence_location_id || UNSPECIFIED)
-    residence = (r.id==UNSPECIFIED ? '?' : r.description.dup)
-    r = Location.find_by_id(work_location_id || UNSPECIFIED)
-    work = (r.id==UNSPECIFIED ? nil : r.description.dup ) # If unspecified, don't use work location
-    answer = residence.clone
+    residence = description_or_blank(residence_location, '?')
+    work = description_or_blank(work_location)
+    answer = residence
     # Now we have the location but subject to travel and temporary moves.
     
     answer += " (#{work})" if work && (work != residence)
