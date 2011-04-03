@@ -9,6 +9,12 @@ class ReportsController < ApplicationController
     # this just displays a view that lets the user select from reports
   end
 
+  def description_with_nil(column)
+    column ? column.description : ''
+  end
+    
+  
+
   def whereis
 #    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
     selected = Member.where(:child=> false).
@@ -23,7 +29,11 @@ class ReportsController < ApplicationController
     selected.each do |m|
       current = m.current_location
       if m.on_field || m.visiting_field?
-        member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), :location=>m.current_location}
+        member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), 
+                              :current_location=>m.current_location,
+                              :residence_location=>description_with_nil(m.residence_location),
+                              :work_location=>description_with_nil(m.work_location)
+                              }
       end  
     end
 

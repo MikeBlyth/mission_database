@@ -21,7 +21,7 @@ include ReportsHelper
     text_data = ''
     selected.each do |m|
 #puts "Member #{m.last_name_first}, residence=#{m.residence_location} (#{m.residence_location_id})"
-      text_data << "#{m[:name]}: <i>#{m[:location]}</i>\n\n"
+      text_data << "#{m[:name]}: <i>#{m[:current_location]}</i>\n\n"
     end
     
     page_header(:title=>'Where Is Everyone?', :left=>'SIM Nigeria Reports')
@@ -30,13 +30,13 @@ include ReportsHelper
       :size=>10,  :gutter=>5 , :inline_format => true
 
     # Now sort by location 
-    selected.sort! {|x,y| (x[:location]) <=> (y[:location])}
+    selected.sort! {|x,y| (x[:residence_location] + x[:name]) <=> (y[:residence_location]+y[:name])}
     text_data = ''
     location = ''
     selected.each do |m|
-      if location != m[:location]
-        location = m[:location]
-        text_data << "\n #{location}\n\n"
+      if location != m[:residence_location]
+        location = m[:residence_location]
+        text_data << "\n <b>#{location}</b>\n\n"
       end
       text_data << m[:name] << "\n"
     end
