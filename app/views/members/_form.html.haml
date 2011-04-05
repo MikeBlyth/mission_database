@@ -28,7 +28,7 @@
         .family
           = label :record, :family,"", :class=>'required'
           %br
-          = collection_select(:record, :family, 
+          = collection_select(:record, :family_id, 
             Family.select(" name, id").order("name"), 
             :id, :name, {})
         %table

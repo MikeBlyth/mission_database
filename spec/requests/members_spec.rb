@@ -78,6 +78,7 @@ include SimTestHelper
       end.should change(Member, :count).by(1)
       m = Member.last
 #puts "After filled in, member=#{m.attributes}"
+      m.family_id.should == @family.id
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
       m.short_name.should == 'Sam'
@@ -104,7 +105,9 @@ include SimTestHelper
     end # it should
 
     it "editing user should change all values correctly" do
+      @new_family = Factory(:family, :name=>'New Family')
       visit edit_member_path(@head)
+      select("#{@new_family.name}", :from=> 'record[family]')
       fill_in "First name", :with => "Samuel"
       fill_in "Middle name", :with => "Jonah"
       fill_in "Short name", :with => "Sam"
@@ -129,11 +132,12 @@ include SimTestHelper
       select 'Career'
       fill_in "Date active", :with => "2000-02-01"
       fill_in "record[personnel_data][comments]", :with => "What a lot of info to fill in."
-save_and_open_page
+#save_and_open_page
       click_button "Update"
 
       m = @head.reload
 #puts "After filled in, member=#{m.attributes}"
+      m.family_id.should == @new_family.id
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
       m.short_name.should == 'Sam'

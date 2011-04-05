@@ -164,6 +164,8 @@ Then /^I should see the editing form for the family head$/ do
 #save_and_open_page
   find_field("Last name").value.should == @head.last_name
   find_field("First name").value.should == @head.first_name
+  # This is one way to check to see if the right value in a dropdown-box is selected.
+  page.should have_xpath "//select[@id='record_family_id']/option[@selected='selected'][@value = #{@head.family_id}]"
   find_field("Sex").value.should == @head.sex
   find_field("record[spouse]").value.should == @spouse.id.to_s
   page.should have_content @spouse.first_name
