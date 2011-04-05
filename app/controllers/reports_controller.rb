@@ -27,7 +27,7 @@ class ReportsController < ApplicationController
       work_location = '' if work_location.downcase == 'unspecified'
       if m.on_field || m.visiting_field?
         @member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), 
-                              :current_location=>m.current_location(:missing=>''),
+                              :current_location=>m.current_location,
                               :residence_location=>description_or_blank(m.residence_location),
                               :work_location=> work_location,
                               :travel_location=>m.travel_location,

@@ -319,8 +319,193 @@ describe Member do
     pending 'rewrite the filtering mechanism'
   end
 
-  describe "Reports current location" do
-    pending 'write some tests for current location etc.'
+  describe "current location" do
+    
+    it "reports location of member with no status" do
+      @residence = Factory(:location)
+      @head.update_attributes(:status=>nil, :residence_location=> @residence)
+      @head.reload.current_location.should =~ Regexp.new(@residence.description)
+      @head.status.should be_nil
+    end
+
+    describe "visiting_field?" do
+    
+      before(:each) do
+        @head.travels.create :date=>Date.yesterday, :arrival=>true
+      end
+        
+      it "is true for someone with no status coming to field" do
+        @head.update_attributes(:status=>nil)
+        @head.visiting_field?.should == true
+      end
+      
+      it "is true for someone with off-field status coming to field" do
+        @head.status.update_attributes(:on_field=>false)
+        @head.visiting_field?.should == true
+      end
+      
+      it "is false for someone with off-field status with no travel" do
+        @head.status.update_attributes(:on_field=>false)
+        @head.travels.delete_all
+        @head.visiting_field?.should == false
+      end
+      
+      it "is false for someone with on-field status coming to field" do
+        @head.status.update_attributes(:on_field=>true)
+        @head.visiting_field?.should == false
+      end
+      
+    end # visiting_field?
+
+    describe 'residence_location' do
+
+      it 'is shown as "?" if empty' do
+        @head.residence_location = nil
+        @head.current_location.should == '?'
+      end
+      
+      it 'is shown as description if not empty' do
+        @head.residence_location = Factory.build(:location)
+        @head.current_location.should == @head.residence_location.description
+      end
+      
+    end # 'residence_location'
+    
+    describe 'work_location' do
+
+      it 'is not shown at all if empty' do
+        @head.work_location = nil
+        @head.current_location.should == '?'  # '?' for the residence_location
+      end
+      
+      it 'is not shown if empty and :missing=>'' is used' do
+        @head.residence_location = Factory.build(:location)
+        @head.work_location = nil
+        @head.current_location(:missing=>'').should == @head.residence_location.description  # '?' for the residence_location
+      end
+      
+      it 'is not shown at all if same as residence_location' do
+        @head.work_location = Factory.build(:location)
+        @head.residence_location = @head.work_location
+        @head.current_location.should == @head.residence_location.description
+      end
+      
+      it 'is shown as description if not empty' do
+        @head.work_location = Factory.build(:location)
+        @head.current_location.should =~ Regexp.new("\\?.*#{@head.work_location.description}")
+      end
+      
+    end # 'work_location'
+    
+    describe "temporary location" do
+      before(:each) do
+        @head.temporary_location = 'My Resort'
+        @head.temporary_location_from_date = Date.yesterday
+        @head.temporary_location_until_date = Date.yesterday
+      end
+
+      it 'is not shown at all if empty' do
+        @head.temporary_location = nil
+        @head.current_location.should_not =~ /My Resort/
+      end
+
+      it 'is not shown if past dates do not include today' do
+        @head.current_location.should_not =~ /My Resort/
+      end      
+
+      it 'is not shown if future dates do not include today' do
+        @head.temporary_location_from_date = Date.today + 2.days
+        @head.temporary_location_until_date = Date.today + 2.days
+        @head.current_location.should_not =~ /My Resort/
+      end      
+
+      it 'is shown if defined and dates include today' do
+        @head.temporary_location_until_date = Date.today + 2.days
+        @head.current_location.should =~ /My Resort/
+      end
+
+    end # Temporary Location
+
+    describe 'travel location' do
+
+      describe 'for on-field people departing' do
+
+        before(:each) do
+          @head.travels.create(:date=>Date.yesterday - 2.day, :return_date=>Date.yesterday - 2.days, :arrival=>false)
+          @travel = @head.travels.first
+        end
+      
+        it 'is shown for dates including today' do
+          @travel.update_attributes(:return_date => Date.today + 2.days)
+          @head.travel_location.should =~ /left|traveled|depart/i
+          @head.travel_location.should =~ Regexp.new(@travel.date.to_s(:short))
+        end
+        
+        it 'is nil for dates in past' do
+          @head.travel_location.should be_nil
+        end
+        
+        it 'is nil for dates in the future' do
+          @travel.update_attributes(:date=>Date.tomorrow + 1.day, :return_date => Date.tomorrow + 2.days)
+          @head.travel_location.should be_nil
+        end
+      end # 'for on-field people departing'      
+      
+      describe 'for off-field people arriving' do
+
+        before(:each) do
+          @head.travels.create(:date=>Date.yesterday - 2.day, :return_date=>Date.yesterday - 2.days, :arrival=>true)
+          @travel = @head.travels.first
+          @head.status.update_attributes(:on_field=>false)
+        end
+      
+        it 'is shown for dates including today' do
+          @travel.update_attributes(:return_date => Date.today + 2.days)
+          @head.travel_location.should =~ /arriv/i
+          @head.travel_location.should =~ Regexp.new(@travel.date.to_s(:short))
+        end
+        
+        it 'is nil for dates in past' do
+          @head.travel_location.should be_nil
+        end
+        
+        it 'is nil for dates in the future' do
+          @travel.update_attributes(:date=>Date.tomorrow + 1.day, :return_date => Date.tomorrow + 2.days)
+          @head.travel_location.should be_nil
+        end
+      end # 'for off-field people departing'      
+      
+      describe 'for off-field people departing' do
+
+        before(:each) do
+          @head.travels.create(:date=>Date.yesterday - 2.day, :return_date=>Date.yesterday - 2.days, :arrival=>false)
+          @travel = @head.travels.first
+          @head.status.update_attributes(:on_field=>false)
+        end
+      
+        it 'is not shown even for dates including today' do
+          @travel.update_attributes(:return_date => Date.today + 2.days)
+          @head.travel_location.should be_nil
+        end
+        
+      end # 'for off-field people departing'      
+
+      describe 'for on-field people arriving' do
+
+        before(:each) do
+          @head.travels.create(:date=>Date.yesterday - 2.day, :return_date=>Date.yesterday - 2.days, :arrival=>true)
+          @travel = @head.travels.first
+        end
+      
+        it 'is not shown even for dates including today' do
+          @travel.update_attributes(:return_date => Date.today + 2.days)
+          @head.travel_location.should be_nil
+        end
+        
+      end # 'for on-field people arriving'      
+      
+    end # travel location
+    
   end
 
 end

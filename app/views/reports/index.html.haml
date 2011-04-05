@@ -2,11 +2,14 @@
 %h4 Reports
 %p Choose a report from those listed below
 %ul
-  %li= link_to "Phone and email list (PDF)", "/reports/phone_email.pdf"
-  %li= link_to "Travel schedule (PDF)", "/reports/travel_schedule.pdf"
-  %li= link_to "Birthday list (PDF)", "/reports/birthdays.pdf"
-  %li= link_to "Blood types (PDF)", "/reports/bloodtypes.pdf"
-  %li= raw "Where is everyone? #{link_to 'HTML', '/reports/whereis.html'} #{link_to 'PDF', '/reports/whereis.pdf'}"
+  %li#phone_list= link_to "Phone and email list (PDF)", "/reports/phone_email.pdf"
+  %li#travel_schedule= link_to "Travel schedule (PDF)", "/reports/travel_schedule.pdf"
+  %li#birthday_list= link_to "Birthday list (PDF)", "/reports/birthdays.pdf"
+  %li#bloodtypes= link_to "Blood types (PDF)", "/reports/bloodtypes.pdf"
+  %li#whereis
+    "Where is everyone? 
+    = link_to 'HTML', '/reports/whereis.html', :id=>'whereis-html'
+    = link_to 'PDF', '/reports/whereis.pdf', :id=>'whereis-pdf'
 %hr
 %h4 Calendars
 %p Calendars are all in PDF format.

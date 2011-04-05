@@ -301,15 +301,16 @@ class Member < ActiveRecord::Base
     work = description_or_blank(work_location, options[:missing] || nil)
     answer = residence
     # Now we have the location but subject to travel and temporary moves.
-    answer += " (#{work})" if work && (work != residence)
+    answer += " (#{work})" if !work.blank? && (work != residence)
   #  answer += ". "
     answer += " (#{travel_location})" if travel_location
     answer += " (#{temp_location})" if temp_location
     return answer
   end
 
+  # Returns true for people with off-field status (alumni, retired...) who are on a current trip to the field.
   def visiting_field?
-    return false if status.on_field  # This only applies to visitors, not those those w "on_field" status
+    return false if status && status.on_field  # This only applies to visitors, not those those w "on_field" status
     current_travel = travels.where("date < ? and arrival is true and (return_date is ? or return_date > ?)", 
          Date.today, nil, Date.today).order("date desc").limit(1)[0]
     return ! current_travel.nil?
@@ -318,6 +319,9 @@ class Member < ActiveRecord::Base
   def travel_location
 #puts "travel_location, member=#{self.attributes}, status=#{status_id}, on_field=#{status.on_field if status}"
 
+    # We look at the most recent travel, if any, with dates including today. When no return date is specified,
+    # a trip beginning in past is considered to be still in progress. This means it's important to terminate
+    # trips whether by using a return date or adding a more recent flight (return or otherwise)
     if spouse
       current_travel = Travel.where("member_id = ? or (member_id = ? and with_spouse)", self.id, spouse_id).
            where("date < ? and (return_date is ? or return_date > ?)", 
@@ -333,7 +337,7 @@ class Member < ActiveRecord::Base
           answer << ", leaves #{current_travel.return_date.to_s(:short)}"
         end
         return answer
-      elsif !current_travel.arrival  # if person has traveled (according to travel schedule)
+      elsif status && status.on_field && !current_travel.arrival  # if on-field person has traveled (according to travel schedule)
         answer = "travel: left field #{current_travel.date.to_s(:short)}"
         if current_travel.return_date
           answer << ", returns #{current_travel.return_date.to_s(:short)}"

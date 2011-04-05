@@ -29,16 +29,16 @@ include ReportsHelper
       text_data << ": "
 #      if !Settings.travel.airports_local.include?(travel.origin)
       if travel.arrival?
-        text_data << "Arr #{travel.destination} from #{travel.origin}"
+        text_data << "Arr #{travel.destination || '?'} from #{travel.origin || '?'}"
       else
-        text_data << "Dep #{travel.origin} to #{travel.destination}"
+        text_data << "Dep #{travel.origin || '?'} to #{travel.destination || '?'}"
       end 
       text_data << " on #{travel.flight}" if travel.flight
       text_data << " with #{travel.other_travelers}" if travel.other_travelers
       text_data << ", #{travel.total_passengers} total" if travel.total_passengers > 1
       text_data << ", #{travel.baggage} pcs" if travel.baggage
       text_data << "; #{travel.guesthouse} GH" if travel.guesthouse && travel.guesthouse != 'Unspecified'
-      text_data << (travel.confirmed.nil? ? "; **unconfirmed**" : "; confirmed")
+ #     text_data << (travel.confirmed.nil? ? "; **unconfirmed**" : "; confirmed")
       text_data << ".\n\n"
     end # each travel record
     

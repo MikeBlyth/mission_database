@@ -401,6 +401,10 @@ Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
   page.should have_content target_text
 end
 
+Then /^I should get a "([^"]*)" HTML report$/ do |target_text|
+  page.should have_content target_text
+end
+
 Given /^a member with phone "([^"]*)" and email "([^"]*)"$/ do |arg1, arg2|
   member = Fac
 end
