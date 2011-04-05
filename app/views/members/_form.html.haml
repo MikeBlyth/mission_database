@@ -29,8 +29,7 @@
           = label :record, :family,"", :class=>'required'
           %br
           = collection_select(:record, :family_id, 
-            Family.select(" name, id").order("name"), 
-            :id, :name, {})
+            Family.select(" name, id").order("name"), :id, :name, {}, :name=>'record[family]')
         %table
           %tr
             %td
@@ -60,12 +59,12 @@
         = label :record, :status_id, "Status"
         %br
         = collection_select(:record, :status_id, Status.order("description asc"), :id, :description, {:include_blank => true},
-          :class=> 'status-input')
+          :class=> 'status-input', :name=>'record[status]')
       .ministry
         = label :record, :ministry_id, "Ministry"
         %br
         = collection_select(:record, :ministry_id, Ministry.order("description asc"), :id, :description, {:include_blank => true},
-          :class=> 'ministry-input')
+          :class=> 'ministry-input', :name=>'record[ministry]')
       .ministry_comment
         = label :record, :ministry_comment
         %br

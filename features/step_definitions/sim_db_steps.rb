@@ -353,7 +353,7 @@ Then /^the form should be pre\-set to add a spouse$/ do
   find_field("record[spouse]").value.should == @head.id.to_s
   find_field("Country name").value.should == @head.country.name
   find_field("record[residence_location]").value.to_s.should == @family.residence_location_id.to_s
-  find_field("record[status_id]").value.to_s.should == @family.status_id.to_s
+  find_field("record[status]").value.to_s.should == @family.status_id.to_s
 end
 
 Then /^the form should be pre\-set to add a child$/ do
@@ -362,7 +362,7 @@ Then /^the form should be pre\-set to add a child$/ do
   find_field("record[spouse]").value.should == ''
   find_field("Country name").value.should == @head.country.name
   find_field("record[residence_location]").value.to_s.should == @family.residence_location_id.to_s
-  find_field("record[status_id]").value.to_s.should == @family.status_id.to_s
+  find_field("record[status]").value.to_s.should == @family.status_id.to_s
 end
 
 Given /^I am viewing the family list$/ do
@@ -455,6 +455,7 @@ When /^I input values for spouse$/ do
   fill_in "First name", :with => "Sally"
   select("Unspecified")
   click_link_or_button "Create"
+#save_and_open_page
   page.should have_content "Created #{@family.last_name}, Sally" 
 end
 

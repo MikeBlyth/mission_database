@@ -30,7 +30,7 @@ include SimTestHelper
     it "should create a new member with minimal values" do
       lambda do
         visit new_member_path
- save_and_open_page
+# save_and_open_page
 #        select_second_option('record_family_')  # Family 
 #        select(@family.last_name)
         fill_in "Last name", :with => "#{@head.last_name}"
@@ -46,7 +46,7 @@ include SimTestHelper
         visit new_member_path
 # save_and_open_page
         fill_in "Last name", :with => "#{@head.last_name}"
-        select("#{@family.name}", :from=> 'record[family_id]')
+        select("#{@family.name}", :from=> 'record[family]')
         fill_in "First name", :with => "Samuel"
         fill_in "Middle name", :with => "Jonah"
         fill_in "Short name", :with => "Sam"
@@ -54,9 +54,9 @@ include SimTestHelper
         check 'Child'  
         fill_in "Birth date", :with => "2000-01-01"
         fill_in "Country name", :with => "Afghanistan"
-        f = find_field('record[status_id]')
-        select 'On field', :from=>'record[status_id]'
-        select 'Ministry', :from=>'record[ministry_id]'
+        f = find_field('record[status]')
+        select 'On field', :from=>'record[status]'
+        select 'Ministry', :from=>'record[ministry]'
 #        puts "f=#{f.native}"
 #        select_second_option(:record_status_id)
 #        select_second_option(:ministry_id)
@@ -108,7 +108,7 @@ include SimTestHelper
     it "editing user should change all values correctly" do
       @new_family = Factory(:family, :name=>'New Family')
       visit edit_member_path(@head)
-      select("#{@new_family.name}", :from=> 'record[family_id]')
+      select("#{@new_family.name}", :from=> 'record[family]')
       fill_in "First name", :with => "Samuel"
       fill_in "Middle name", :with => "Jonah"
       fill_in "Short name", :with => "Sam"
@@ -116,8 +116,8 @@ include SimTestHelper
       check 'Child'  
       fill_in "Birth date", :with => "2000-01-01"
       fill_in "Country name", :with => "Afghanistan"
-      select 'On field', :from=>'record[status_id]'
-      select 'Ministry', :from=>'record[ministry_id]'
+      select 'On field', :from=>'record[status]'
+      select 'Ministry', :from=>'record[ministry]'
       fill_in 'Ministry comment', :with=> "ministry comment"
       select 'Site', :from=>'record_residence_location'
       select 'Site', :from=>'record_work_location'

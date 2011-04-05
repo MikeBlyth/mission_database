@@ -84,9 +84,6 @@ class MembersController < ApplicationController
   end
 
   def do_create
-    params[:record][:ministry] = params[:record][:ministry_id] if params[:record][:ministry_id]
-    params[:record][:status] = params[:record][:status_id] if params[:record][:status_id]
-    params[:record][:family] = params[:record][:family_id] if params[:record][:family_id]
 #puts "**** do_create, params=#{params}"
 #puts "\n**** do_create before super, record=#{params[:record]}"
     super
@@ -135,13 +132,6 @@ class MembersController < ApplicationController
     super
   end    
   
-  def do_update
-    params[:record][:ministry] = params[:record][:ministry_id] if params[:record][:ministry_id]
-    params[:record][:status] = params[:record][:status_id] if params[:record][:status_id]
-    params[:record][:family] = params[:record][:family_id] if params[:record][:family_id]
-    super
-  end
-
   def update_save(params={})
     @record.previous_spouse = @record.spouse if @record
     super(params)
