@@ -57,6 +57,7 @@ Feature: Forms for creating and updating families
     And the form should be pre-set to add a child
     
 
+  @now
   Scenario: I should be able to add spouse 
     Given that I am signed in as an administrator
     And that I have a form to add a spouse

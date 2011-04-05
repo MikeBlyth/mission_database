@@ -30,6 +30,7 @@ include SimTestHelper
     it "should create a new member with minimal values" do
       lambda do
         visit new_member_path
+ save_and_open_page
 #        select_second_option('record_family_')  # Family 
 #        select(@family.last_name)
         fill_in "Last name", :with => "#{@head.last_name}"
@@ -45,7 +46,7 @@ include SimTestHelper
         visit new_member_path
 # save_and_open_page
         fill_in "Last name", :with => "#{@head.last_name}"
-        select("#{@family.name}", :from=> 'record[family]')
+        select("#{@family.name}", :from=> 'record[family_id]')
         fill_in "First name", :with => "Samuel"
         fill_in "Middle name", :with => "Jonah"
         fill_in "Short name", :with => "Sam"
@@ -107,7 +108,7 @@ include SimTestHelper
     it "editing user should change all values correctly" do
       @new_family = Factory(:family, :name=>'New Family')
       visit edit_member_path(@head)
-      select("#{@new_family.name}", :from=> 'record[family]')
+      select("#{@new_family.name}", :from=> 'record[family_id]')
       fill_in "First name", :with => "Samuel"
       fill_in "Middle name", :with => "Jonah"
       fill_in "Short name", :with => "Sam"

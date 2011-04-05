@@ -88,7 +88,7 @@ Feature: report generation
     Then I should get a "Travel" PDF report
     And the report should include the "travel" information
 
-  @whereis
+  @wip
   Scenario: Generate where_is report
     Given that I am signed in
     And locations defined
