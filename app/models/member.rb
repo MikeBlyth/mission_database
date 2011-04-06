@@ -176,7 +176,14 @@ class Member < ActiveRecord::Base
 
   # Update spouse's record if a spouse is defined. 
   def cross_link_spouses
-#    puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}"
+#    puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}, status=#{status.code if status}: "
+    # Unlink spouses if member is deceased
+    if spouse_id && status_id && status.code=='deceased'
+       # Unlink
+       spouse.spouse_id = nil if spouse && (spouse.spouse_id == self.id) # unlink if spouse exists and is linked to me
+       self.spouse_id = nil
+       return nil
+    end       
     # If we've just removed spouse, we need to unlink the spouse, too
     if spouse_id.nil? && @previous_spouse
       @previous_spouse.update_attribute(:spouse, nil)

@@ -313,6 +313,16 @@ describe Member do
       @man.update_attribute(:spouse_id, 99999) # Note that this bypasses validation
       @man.reload.spouse.should == nil
     end
+
+    it "unlinks spouse when a member is deceased" do
+      deceased_status = Factory(:status, :code=>'deceased')
+      @man.marry(@woman)
+      @man.status = deceased_status
+      @man.save
+#      @man.spouse.should be_nil
+#      @woman.reload.spouse.should be_nil
+    end
+    
   end # describe marrying  
 
   describe "Handles scopes like 'active'" do
