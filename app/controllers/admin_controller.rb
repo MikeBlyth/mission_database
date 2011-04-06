@@ -49,8 +49,11 @@ class AdminController < ActionController::Base
       if p
         check_and_fix_link(p, :employment_status, m.name)
         check_and_fix_link(p, :education, m.name)
+        p.save if p.changed? & fix
       end
-      m.save if (m.changed_attributes.count > 0) & fix
+#      @report << "Changed? for #{m.name} = #{m.changed?}\n"
+      m.save if m.changed? & fix
+
     end # each member
     after_report 'Members', fix
   end # clean members
@@ -84,6 +87,7 @@ class AdminController < ActionController::Base
     empty_terms = FieldTerm.where(:start_date=>nil, :end_date=>nil, :est_start_date=>nil, :est_end_date=>nil)
     @report << "There are #{empty_terms.count} 'empty' field term records (no dates) to be deleted.\n\n" unless
       empty_terms.empty?
+    empty_terms.delete_all if fix
     orphans = find_orphans(:field_term, :member)
     @report << "There are #{orphans.count} orphaned Field Term records (not belonging to an existing member).\n" + 
         "\tThese will be deleted if 'fix' is specified.\n\n" unless orphans.empty?
@@ -140,6 +144,7 @@ class AdminController < ActionController::Base
   # would change all nil and 0 values in :status_id to UNSPECIFIED.
   def delete_bad_link(record, link)
     record.send(link.to_s+"_id=", nil)
+#@report << "Delete bad link: #{link.to_s+'_id='}nil, changed? = #{record.changed?}\n"
   end  
 
   # Find all records in child table that do not have valid to parent.
