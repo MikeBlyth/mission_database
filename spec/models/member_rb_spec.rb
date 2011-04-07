@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe Member do
   before(:each) do
     @status = Factory(:status)
@@ -319,8 +321,8 @@ describe Member do
       @man.marry(@woman)
       @man.status = deceased_status
       @man.save
-#      @man.spouse.should be_nil
-#      @woman.reload.spouse.should be_nil
+      @man.reload.spouse.should be_nil
+      @woman.reload.spouse.should be_nil
     end
     
   end # describe marrying  

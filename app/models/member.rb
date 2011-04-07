@@ -59,6 +59,7 @@ class Member < ActiveRecord::Base
   before_validation :set_indexed_name_if_empty
   before_create :build_personnel_data
   before_create :build_health_data
+  before_save   :unlink_spouses_if_indicated
 #  after_create :create_personnel_data
 #  after_create :create_health_data
   after_save  :cross_link_spouses
@@ -174,87 +175,7 @@ class Member < ActiveRecord::Base
     return self.sex == "M" ? self : new_spouse   # for what it's worth, return the husband's object
   end
 
-  # Update spouse's record if a spouse is defined. 
-  def cross_link_spouses
-#    puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}, status=#{status.code if status}: "
-    # Unlink spouses if member is deceased
-    if spouse_id && status_id && status.code=='deceased'
-       # Unlink
-       spouse.spouse_id = nil if spouse && (spouse.spouse_id == self.id) # unlink if spouse exists and is linked to me
-       self.spouse_id = nil
-       return nil
-    end       
-    # If we've just removed spouse, we need to unlink the spouse, too
-    if spouse_id.nil? && @previous_spouse
-      @previous_spouse.update_attribute(:spouse, nil)
-      return nil
-    end
-    # Make sure the spouse links back to self...
-    if spouse_id # 
-      if !spouse  # i.e. if spouse not found in db, db is corrupted
-        spouse_id = nil
-        return nil
-      end 
-      if spouse.spouse_id != self.id # spouse is not linked back to member
-        #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
-        # Register error if same sex
-        if spouse.sex == self.sex
-          self.update_attribute(:spouse_id, nil)
-          self.errors.add[:spouse, "Spouse can't be same sex"]    
-          return nil
-        end  
-        spouse.spouse_id = self.id  # my spouse is married to me
-        if self.male?
-          husband = self
-          wife = spouse
-        else
-          wife = self
-          husband = spouse
-        end
-        wife.family_id = husband.family_id
-        begin
-          spouse.save!
-          self.save!
-          rescue 
-     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
-           logger.error "***Unable to find or update spouse (record id #{spouse_id})"
-           puts "***Unable to find or update spouse (record id #{spouse_id}), error #{spouse.errors}"
-           nil
-        end # rescue block    
-        return husband
-      end # if spouse.spouse_id != self.id
-    end # if spouse_id  
-  end # cross_link_spouses
 
-  def check_if_family_head
-    if family_head
-      self.errors.add(:delete, "Can't delete head of family.")
-      return false
-    else
-      true  
-    end
-  end
-  
-  def check_if_spouse
-    # if someone is married to me, don't delete me from the database
-    orphan_spouse = Member.find_by_spouse_id(self.id)
-    if orphan_spouse
-      self.errors.add(:delete, "can't delete while still spouse of #{orphan_spouse.to_label}")
-      return false
-    else
-      return true
-    end  
-  end
-  
-  # def spouse_name
-  #   if self.spouse.nil?
-  #     return ''
-  #   else
-  #     return Member.find(self.spouse).firstname
-  #   end
-  # end
-  # 
-  
   # Possible Spouses: Return from members table a list of all the
   # ones that could be spouses of this one: e.g. same last name,
   # opposite sex, age over 18, whatever. This is for the selection
@@ -363,6 +284,90 @@ class Member < ActiveRecord::Base
     else
       return nil
     end         
+  end
+
+private
+
+  # Return true if I have existing spouse whose spouse_id points back to me (as it ordinarily should)
+  def my_spouse_links_to_me
+    return spouse && spouse.spouse_id == self.id
+  end  
+
+  # If self is deceased, changed spouse, etc. then need to unlink spouse
+  # Call-back on before_save, so changed attributes will be saved
+  def unlink_spouses_if_indicated
+    # Unlink spouses if member is deceased
+    if spouse_id && status_id && status.code=='deceased'
+      spouse.update_attribute(:spouse_id, nil) if my_spouse_links_to_me
+      self.spouse_id = nil  # This method unlink_spouse is a before_save callback, so new nil value will be saved
+      return
+    end       
+    # If we've just removed spouse, we need to unlink the spouse, too
+    if spouse_id.nil? && @previous_spouse
+      @previous_spouse.update_attribute(:spouse, nil)
+      return 
+    end
+  end
+ 
+  # Update spouse's record if a spouse is defined. 
+  def cross_link_spouses
+#    puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}, status=#{status.code if status}: "
+    # Make sure the spouse links back to self...
+    if spouse_id # 
+      if !spouse  # i.e. if spouse not found in db, db is corrupted
+        spouse_id = nil
+        return nil
+      end 
+      if spouse.spouse_id != self.id # spouse is not linked back to member
+        #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
+        # Register error if same sex
+        if spouse.sex == self.sex
+          self.update_attribute(:spouse_id, nil)
+          self.errors.add[:spouse, "Spouse can't be same sex"]    
+          return nil
+        end  
+        spouse.spouse_id = self.id  # my spouse is married to me
+        if self.male?
+          husband = self
+          wife = spouse
+        else
+          wife = self
+          husband = spouse
+        end
+        wife.family_id = husband.family_id
+        begin
+          spouse.save!
+          self.save!
+          rescue 
+     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
+           logger.error "***Unable to find or update spouse (record id #{spouse_id})"
+           puts "***Unable to find or update spouse (record id #{spouse_id}), error #{spouse.errors}"
+           nil
+        end # rescue block    
+        return husband
+      end # if spouse.spouse_id != self.id
+    end # if spouse_id  
+  end # cross_link_spouses
+
+  
+  def check_if_family_head
+    if family_head
+      self.errors.add(:delete, "Can't delete head of family.")
+      return false
+    else
+      true  
+    end
+  end
+  
+  def check_if_spouse
+    # if someone is married to me, don't delete me from the database
+    orphan_spouse = Member.find_by_spouse_id(self.id)
+    if orphan_spouse
+      self.errors.add(:delete, "can't delete while still spouse of #{orphan_spouse.to_label}")
+      return false
+    else
+      return true
+    end  
   end
   
   # return a string in days, weeks, months, or years, whatever makes sense for the age, from
