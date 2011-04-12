@@ -15,6 +15,7 @@ puts "SPORK PREFORK ..."
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   require 'capybara/rspec'
+# require 'spork/ext/ruby-debug'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -42,8 +43,7 @@ puts "SPORK PREFORK ..."
     # Emulate initializer set_clear_dependencies_hook in 
     # railties/lib/rails/application/bootstrap.rb
     ActiveSupport::Dependencies.clear
-    
-  end
+  end   # Rspec.configure
 
   # Define a helper to directly sign in a test user
   def test_sign_in(user)
