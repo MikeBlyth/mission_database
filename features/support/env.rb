@@ -73,7 +73,7 @@ end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
-#load "#{Rails.root}/app/reports/phone_email_report.rb"
+#load "#{Rails.root}/app/helpers/families_helper.rb"
 #load "#{Rails.root}/app/controllers/members_controller.rb"
 
   

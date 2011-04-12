@@ -48,7 +48,7 @@ end
 
 group :test do
   gem "spork"	
-  gem 'cover_me'
+#  gem 'cover_me'
   gem "autotest"
   gem "redgreen"
   gem "test-unit", "1.2.3"

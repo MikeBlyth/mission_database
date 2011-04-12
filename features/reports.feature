@@ -61,7 +61,7 @@ Feature: report generation
     And a blood type "unspecified"
     And a member "John" with bloodtype "AB+" and status "On field"
     And a member "Homebody" with bloodtype "AB+" and status "Home assignment"
-    And a member "UnknownType" with bloodtype "unspecified" and status "On field"
+    And a member "UnknownType" with bloodtype "Unspecified" and status "On field"
     And I click on "Reports"
     When I click on "Blood types" 
     Then I should get a "Blood" PDF report

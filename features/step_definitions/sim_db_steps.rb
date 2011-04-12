@@ -109,10 +109,10 @@ Given /^a family with a "([^"]*)" and "([^"]*)" and "([^"]*)"$/ do |spouse, chil
     create_spouse({:first_name => spouse})
   end
   if child_1 != '--nil--'
-    @child_1 = create_children([child_1])
+    @child_1 = create_children([child_1], :birth_date=>Date.today - 10.years)
   end
   if child_2 != '--nil--'
-    @child_1 = create_children([child_2])
+    @child_1 = create_children([child_2], :birth_date=>Date.today - 5.years)
   end
 #puts "****+++ Family constructed "
 #@family.members.each {|m| puts "****+++ Member #{m.name}" }
@@ -192,10 +192,9 @@ Then /^I see a link to add a spouse$/ do
 end
 
 Then /^the family includes the head and spouse$/ do
-  couple = @family.members
-  couple.should have(2).records
-  couple[0].name.should == @head.name
-  couple[1].name.should == @spouse.name
+  @family.members.should have(2).records
+  @family.couple[0].name.should == @head.name
+  @family.couple[1].name.should == @spouse.name
 end
 
 Then /^I do not see a link to add a spouse$/ do
@@ -208,6 +207,7 @@ end
 
 Then /^I see the "([^"]*)"$/ do |thing_to_see|
   if thing_to_see != '--nil--'
+save_and_open_page if thing_to_see == "Wife, Big Kid, Baby"
     page.should have_content thing_to_see
   else  
     page.should_not have_content '--nil--'
@@ -288,7 +288,7 @@ Then /^the database should contain the new family$/ do
   f = Family.first
   @head_id = f.head_id
 #puts "f.id = #{f.id}, name=#{f.name}, sim_id=#{f.sim_id}"
-  f = Family.find_by_sim_id(@family.sim_id)
+  f = Family.find_by_sim_id(@family.sim_id.to_s)
   f.should_not be nil
   @head = f.head
   @head.should_not be_nil
