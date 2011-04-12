@@ -6,12 +6,12 @@
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 development:
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
   reconnect: false
-  database: SIM_development
+  database: simdb_development
   pool: 5
-  username: root
+  username: simdb
   password: neelix53
   host: localhost
 #development:
@@ -37,12 +37,12 @@ development:
 #  password: byprayer
 #  host: localhost
 test:
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
   reconnect: false
-  database: SIM_test
+  database: simdb_test
   pool: 5
-  username: root
+  username: simdb
   password: neelix53
   host: localhost
 
