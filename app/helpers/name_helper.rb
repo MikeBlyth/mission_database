@@ -82,7 +82,7 @@ module NameHelper
     if options[:short] && !short_name.blank?   # use the short form of first name if it's defined
       first = short_name
     else
-      first = first_name
+      first = first_name || '*Missing First Name*'
     end
     if options[:initial] && !middle_name.blank?   # use middle initial rather than whole middle name?
       middle = middle_initial
@@ -92,7 +92,7 @@ module NameHelper
     if (options[:paren_short]) && !short_name.blank? && short_name != first
       first = first + " (#{short_name})"
     end
-    s = last_name + ', ' + first 
+    s = (last_name || '*Missing Last Name*') + ', ' + first 
     s << (' ' + middle) unless options[:middle] == false || middle.empty?
     return s    
   end

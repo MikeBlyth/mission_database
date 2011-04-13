@@ -81,6 +81,12 @@ class Member < ActiveRecord::Base
     family.members.where("birth_date > ?", birthdate_cutoff)
   end
 
+  # Dependent is true for family head, spouse, and children. False for others
+  # (which would be grown children with child=false)
+  def dependent
+    return (self == family.head) || self.spouse || self.child
+  end  
+
   # Copy last name & other family-level attributes to new member as defaults
   def inherit_from_family
     return unless new_record? &&             # Inheritance only applies to new, unsaved records

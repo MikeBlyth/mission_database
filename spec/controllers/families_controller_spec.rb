@@ -190,4 +190,33 @@ describe FamiliesController do
 
   end    
   
+  describe "member list" do
+    include FamiliesHelper
+    
+    it "exists" do
+      members_column(@family).should_not be_nil
+    end
+    
+    it "includes names in right order" do
+      @wife = Member.create(:first_name=>'Wife', :sex=>'F', :family=>@family)
+      @family.head = @wife
+      @member.destroy
+      @baby = Member.create(:first_name=>'Baby', :sex=>'F', :family=>@family,
+                            :child=>true, :birth_date=>Date.today)
+      @child = Member.create(:first_name=>'Kid', :sex=>'F', :family=>@family,
+                            :child=>true, :birth_date=>Date.today-10.years)
+      @husband =  Member.create(:first_name=>'Husband', :sex=>'M', :family=>@family)
+      @husband.marry(@wife)                     
+      names = members_column(@family).split(Settings.family.member_names_delimiter)
+      names.should == ["Husband", "Wife", "Kid", "Baby"] 
+    end 
+
+    it "does not include non-dependent kids" do
+      big_kid = Member.create(:family=>@family, :first_name=>'Big', :child=>false)
+      @family.members.include?(big_kid).should be_true
+      members_column(@family).should_not =~ /Big/ if Settings.family.member_names_dependent_only
+    end
+    
+  end    
+  
 end
