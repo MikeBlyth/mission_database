@@ -207,7 +207,7 @@ end
 
 Then /^I see the "([^"]*)"$/ do |thing_to_see|
   if thing_to_see != '--nil--'
-save_and_open_page if thing_to_see == "Wife, Big Kid, Baby"
+#save_and_open_page if thing_to_see == "Wife, Big Kid, Baby"
     page.should have_content thing_to_see
   else  
     page.should_not have_content '--nil--'
