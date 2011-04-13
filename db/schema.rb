@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110402104657) do
+ActiveRecord::Schema.define(:version => 20110413013605) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"

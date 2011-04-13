@@ -1,9 +1,9 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110413013605
 #
 # Table name: states
 #
-#  id         :integer(4)      not null, primary key
+#  id         :integer         not null, primary key
 #  name       :string(255)
 #  zone       :string(255)
 #  created_at :datetime

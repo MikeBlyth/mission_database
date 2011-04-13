@@ -1,13 +1,13 @@
 # == Schema Information
-# Schema version: 20110329162620
+# Schema version: 20110413013605
 #
 # Table name: field_terms
 #
-#  id                       :integer(4)      not null, primary key
-#  member_id                :integer(4)
-#  employment_status_id     :integer(4)
-#  primary_work_location_id :integer(4)
-#  ministry_id              :integer(4)
+#  id                       :integer         not null, primary key
+#  member_id                :integer
+#  employment_status_id     :integer
+#  primary_work_location_id :integer
+#  ministry_id              :integer
 #  start_date               :date
 #  end_date                 :date
 #  est_start_date           :date

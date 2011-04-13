@@ -1,23 +1,23 @@
 # == Schema Information
-# Schema version: 20110310144121
+# Schema version: 20110413013605
 #
 # Table name: users
 #
-#  id                    :integer(4)      not null, primary key
+#  id                    :integer         not null, primary key
 #  name                  :string(255)
 #  email                 :string(255)
 #  created_at            :datetime
 #  updated_at            :datetime
 #  encrypted_password    :string(255)
 #  salt                  :string(255)
-#  admin                 :boolean(1)
+#  admin                 :boolean
 #  encrypted_db_password :string(255)
-#  medical               :boolean(1)
-#  personnel             :boolean(1)
-#  travel                :boolean(1)
-#  member                :boolean(1)
-#  immigration           :boolean(1)
-#  asst_personnel        :boolean(1)
+#  medical               :boolean
+#  personnel             :boolean
+#  travel                :boolean
+#  member                :boolean
+#  immigration           :boolean
+#  asst_personnel        :boolean
 #
 
 class User < ActiveRecord::Base

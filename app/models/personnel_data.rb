@@ -1,14 +1,14 @@
 # == Schema Information
-# Schema version: 20110329162620
+# Schema version: 20110413013605
 #
 # Table name: personnel_data
 #
-#  id                   :integer(4)      not null, primary key
-#  member_id            :integer(4)
+#  id                   :integer         not null, primary key
+#  member_id            :integer
 #  qualifications       :string(255)
 #  comments             :string(255)
-#  employment_status_id :integer(4)
-#  education_id         :integer(4)
+#  employment_status_id :integer
+#  education_id         :integer
 #  created_at           :datetime
 #  updated_at           :datetime
 #  date_active          :date

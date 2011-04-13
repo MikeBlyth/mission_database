@@ -1,9 +1,9 @@
 # == Schema Information
-# Schema version: 20110329162620
+# Schema version: 20110413013605
 #
 # Table name: calendar_events
 #
-#  id         :integer(4)      not null, primary key
+#  id         :integer         not null, primary key
 #  date       :datetime
 #  event      :string(255)
 #  created_at :datetime

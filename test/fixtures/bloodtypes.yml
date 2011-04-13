@@ -1,9 +1,9 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110413013605
 #
 # Table name: bloodtypes
 #
-#  id         :integer(4)      not null, primary key
+#  id         :integer         not null, primary key
 #  abo        :string(255)
 #  rh         :string(255)
 #  comment    :string(255)

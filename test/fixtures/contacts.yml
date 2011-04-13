@@ -1,10 +1,10 @@
 # == Schema Information
-# Schema version: 20110402104657
+# Schema version: 20110413013605
 #
 # Table name: contacts
 #
-#  id              :integer(4)      not null, primary key
-#  contact_type_id :integer(4)
+#  id              :integer         not null, primary key
+#  contact_type_id :integer
 #  contact_name    :string(255)
 #  address         :string(255)
 #  email_1         :string(40)
@@ -16,12 +16,12 @@
 #  skype           :string(20)
 #  facebook        :string(60)
 #  photos          :string(50)
-#  email_public    :boolean(1)
-#  phone_public    :boolean(1)
-#  skype_public    :boolean(1)
+#  email_public    :boolean
+#  phone_public    :boolean
+#  skype_public    :boolean
 #  created_at      :datetime
 #  updated_at      :datetime
-#  member_id       :integer(4)      not null
+#  member_id       :integer         not null
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

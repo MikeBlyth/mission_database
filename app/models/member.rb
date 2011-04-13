@@ -1,28 +1,28 @@
 # == Schema Information
-# Schema version: 20110402104657
+# Schema version: 20110413013605
 #
 # Table name: members
 #
-#  id                            :integer(4)      not null, primary key
+#  id                            :integer         not null, primary key
 #  last_name                     :string(255)
 #  short_name                    :string(255)
 #  sex                           :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  middle_name                   :string(255)
-#  family_id                     :integer(4)
+#  family_id                     :integer
 #  birth_date                    :date
-#  spouse_id                     :integer(4)
-#  country_id                    :integer(4)
+#  spouse_id                     :integer
+#  country_id                    :integer
 #  first_name                    :string(255)
-#  status_id                     :integer(4)
+#  status_id                     :integer
 #  ministry_comment              :string(255)
-#  ministry_id                   :integer(4)
-#  residence_location_id         :integer(4)
+#  ministry_id                   :integer
+#  residence_location_id         :integer
 #  name                          :string(255)
-#  name_override                 :boolean(1)
-#  child                         :boolean(1)
-#  work_location_id              :integer(4)
+#  name_override                 :boolean
+#  child                         :boolean
+#  work_location_id              :integer
 #  temporary_location            :string(255)
 #  temporary_location_from_date  :date
 #  temporary_location_until_date :date

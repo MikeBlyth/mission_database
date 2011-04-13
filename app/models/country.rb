@@ -1,15 +1,15 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110413013605
 #
 # Table name: countries
 #
-#  id                   :integer(4)      not null, primary key
+#  id                   :integer         not null, primary key
 #  code                 :string(255)
 #  name                 :string(255)
 #  nationality          :string(255)
 #  created_at           :datetime
 #  updated_at           :datetime
-#  include_in_selection :boolean(1)
+#  include_in_selection :boolean
 #
 
 class Country < ActiveRecord::Base

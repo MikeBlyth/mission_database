@@ -1,9 +1,9 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110413013605
 #
 # Table name: cities
 #
-#  id         :integer(4)      not null, primary key
+#  id         :integer         not null, primary key
 #  name       :string(255)
 #  state      :string(255)
 #  country    :string(255)     default("NG"), not null

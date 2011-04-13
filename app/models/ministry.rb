@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20101221093216
+# Schema version: 20110413013605
 #
 # Table name: ministries
 #
-#  id          :integer(4)      not null, primary key
+#  id          :integer         not null, primary key
 #  description :string(255)
-#  code        :integer(4)
+#  code        :integer
 #  created_at  :datetime
 #  updated_at  :datetime
 #

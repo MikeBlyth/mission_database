@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20110402104657
+# Schema version: 20110413013605
 #
 # Table name: families
 #
-#  id                    :integer(4)      not null, primary key
-#  head_id               :integer(4)
-#  status_id             :integer(4)
-#  residence_location_id :integer(4)
+#  id                    :integer         not null, primary key
+#  head_id               :integer
+#  status_id             :integer
+#  residence_location_id :integer
 #  created_at            :datetime
 #  updated_at            :datetime
 #  last_name             :string(255)
@@ -14,7 +14,7 @@
 #  middle_name           :string(255)
 #  short_name            :string(255)
 #  name                  :string(255)
-#  name_override         :boolean(1)
+#  name_override         :boolean
 #  sim_id                :string(255)
 #
 

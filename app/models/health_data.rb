@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20110329162620
+# Schema version: 20110413013605
 #
 # Table name: health_data
 #
-#  id           :integer(4)      not null, primary key
-#  member_id    :integer(4)
-#  bloodtype_id :integer(4)
+#  id           :integer         not null, primary key
+#  member_id    :integer
+#  bloodtype_id :integer
 #  current_meds :string(255)
 #  issues       :string(255)
 #  allergies    :string(255)
