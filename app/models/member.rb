@@ -84,7 +84,8 @@ class Member < ActiveRecord::Base
   # Dependent is true for family head, spouse, and children. False for others
   # (which would be grown children with child=false)
   def dependent
-    return (self == family.head) || self.spouse || self.child
+      return (self.status.nil? || self.status.code != 'deceased') && 
+           ( (self == family.head) || self.spouse || self.child)
   end  
 
   # Copy last name & other family-level attributes to new member as defaults

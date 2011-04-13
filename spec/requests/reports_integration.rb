@@ -15,7 +15,7 @@ describe "Report" do
     integration_test_sign_in(:admin=>true)
   end   
 
-  describe "Calendar"
+  describe "Calendar" do
   
 
   end
@@ -52,7 +52,7 @@ describe "Report" do
 
     it "reports residence location if no overrides" do
       visit reports_path # whereis_report_path
-      click_link "Where is everyone?"
+      click_link "whereis-pdf"
       pdf_to_text
       page.should have_content(@member.last_name)
       page.should have_content(@member.residence_location.description)
@@ -62,7 +62,7 @@ describe "Report" do
     it "reports outgoing travel of on-field member" do
       @travel.update_attribute(:return_date, Date.tomorrow)
       visit reports_path # whereis_report_path
-      click_link "Where is everyone?"
+      click_link "whereis-pdf"
       pdf_to_text
       page.should have_content(@member.last_name)
       page.should have_content('ravel')
@@ -73,7 +73,7 @@ describe "Report" do
       spouse = Member.create(@member.attributes.merge({:spouse=>@member, :first_name=>'Sally',
            :sex=>@member.other_sex, :name=>"#{@member.last_name}, Sally"}))
       visit reports_path # whereis_report_path
-      click_link "Where is everyone?"
+      click_link "whereis-pdf"
       pdf_to_text
       (page.driver.body =~ /Sally.*ravel/m).should_not be_nil
     end
@@ -83,7 +83,7 @@ describe "Report" do
       status = Factory(:status, :on_field=>false, :active=>false)
       @member.update_attribute(:status, status)   # Make member not active and not on field
       visit reports_path # whereis_report_path
-      click_link "Where is everyone?"
+      click_link "whereis-pdf"
       pdf_to_text
       page.should have_content(@member.last_name)
       page.should have_content('ravel')
@@ -93,7 +93,7 @@ describe "Report" do
       visitor_status = Factory(:status, :on_field=>true, :active=>false)
       @member.update_attribute(:status, visitor_status)   # Make member on field but not active
       visit reports_path # whereis_report_path
-      click_link "Where is everyone?"
+      click_link "whereis-pdf"
       pdf_to_text
       page.should have_content(@member.last_name)
       page.should_not have_content('ravel')
@@ -104,7 +104,7 @@ describe "Report" do
       @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true, :member=>nil, 
           :other_travelers=>"Santa_Claus")
       visit reports_path # whereis_report_path
-      click_link "Where is everyone?"
+      click_link "whereis-pdf"
       pdf_to_text
       page.should have_content("Santa_Claus")
       page.should have_content('ravel')

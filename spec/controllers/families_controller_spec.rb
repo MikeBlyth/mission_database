@@ -216,7 +216,7 @@ describe FamiliesController do
       @family.members.include?(big_kid).should be_true
       members_column(@family).should_not =~ /Big/ if Settings.family.member_names_dependent_only
     end
-    
+
   end    
   
 end

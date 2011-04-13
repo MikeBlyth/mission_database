@@ -48,7 +48,6 @@ module SimTestHelper
   # * Raise an exception if (record doesn't exist and is not to be created) or (unable to create the record)
   def create_associated_details(attribute, attribute_id, create=false)
     attribute_model = attribute.to_s.camelize.constantize  # e.g. Status or PersonnelData
-puts "id=#{attribute_id}, found=#{attribute_model.find_by_id(attribute_id)}"
     return attribute_id if attribute_model.find_by_id(attribute_id)   # Corresponding detail record found, return id
    # raise error if there is no corresponding detail record and one is not to be created
     raise "Unable to create needed #{attribute}=#{attribute_id},   \n" +
@@ -89,9 +88,7 @@ puts "id=#{attribute_id}, found=#{attribute_model.find_by_id(attribute_id)}"
                         :sim_id => rand(100000)
                         )
       member = f.head 
-      puts f.errors 
     end
-puts member.errors 
 
     puts "Error updating family or family head" unless member.valid? && member.family.valid?
     create_spouse(member) if params[:spouse]

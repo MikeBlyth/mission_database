@@ -1,12 +1,6 @@
 require 'spec_helper'
 require 'sim_test_helper'
 
-#require "webrat"
-
-#Webrat.configure do |config|
-#  config.mode = :rails
-#end
-
 def select_second_option(id)
 # from Jason Neylon's Blog http://bit.ly/gIPq1R
 # original  second_option_xpath = "//*[@id='#{id}']/option[2]"
@@ -26,20 +20,6 @@ include SimTestHelper
       @head = @family.head
       seed_tables
     end  
-
-    it "should create a new member with minimal values" do
-      lambda do
-        visit new_member_path
-# save_and_open_page
-#        select_second_option('record_family_')  # Family 
-#        select(@family.last_name)
-        fill_in "Last name", :with => "#{@head.last_name}"
-#        select("* #{@family.name}", :from=> 'record_family_')
-        fill_in "First name", :with => "Sally"
-        click_button "Create"
-      end.should change(Member, :count).by(1)
-      Member.last.first_name.should == 'Sally'
-    end # it should
 
     it "should create a new user with all values filled in" do
       lambda do
@@ -103,6 +83,16 @@ include SimTestHelper
       m.personnel_data.employment_status.description.should =~ /Career/
       m.personnel_data.date_active.should == Date.new(2000,2,1)
       m.personnel_data.comments.should == 'What a lot of info to fill in.'
+    end # it should
+
+    it "should create a new member with minimal values" do
+      lambda do
+        visit new_member_path
+        fill_in "Last name", :with => "#{@head.last_name}"
+        fill_in "First name", :with => "Sally"
+        click_button "Create"
+      end.should change(Member, :count).by(1)
+      Member.last.first_name.should == 'Sally'
     end # it should
 
     it "editing user should change all values correctly" do

@@ -1,13 +1,6 @@
 require 'spec_helper'
 
 describe Member do
-  before(:each) do
-    @status = Factory(:status)
-    @family = Factory(:family, :status=> @status)
-    @head = @family.head
-    @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
-                            #   This second family member @member is *not* saved yet
-  end    
 
   def new_family_member
     Factory.build(:member, :family=>@family)
@@ -19,6 +12,18 @@ describe Member do
   end  
 
   describe 'does basic validation' do
+    before(:each) do
+#      @status = Factory.stub(:status)
+#      @head = Factory.build(:member)
+#      @family = Factory.create(:family, :status=> @status, :head=>@head)
+##      @head = @family.head
+#      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
+#                              #   This second family member @member is *not* saved yet
+      @family = Factory(:family)
+      @head = @family.head
+      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
+                              #   This second family member @member is *not* saved yet
+    end    
     
     it "is valid with valid attributes" do
       @member.should be_valid
@@ -54,41 +59,62 @@ describe Member do
       @member.family_id = 999
       @member.should_not be_valid
     end
-  end
 
-  it "cannot be deleted if it is the family head" do
-    Member.should have(1).record
-    @family.head.destroy
-    @family.head.errors[:delete].should include "Can't delete head of family."
-    Member.should have(1).record
-  end
- 
-  it "can be deleted if it is not the family head" do
-    @member.save    # member is not the head
-    Member.should have(2).records
-    @member.destroy
-    Member.should have(1).record
-  end
+    it "is invalid if full name already exists in database" do
+      @member.name  = @family.head.name
+      @member.should_not be_valid
+    end
 
-  it "is invalid if full name already exists in database" do
-    @member.name  = @family.head.name
-    @member.should_not be_valid
-  end
+  end # basic validation
+
+  describe "deletion protect:" do
+    before(:each) do
+      @family = Factory(:family) 
+      @head = @family.head
+      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
+                              #   This second family member @member is *not* saved yet
+    end    
+
+    it "cannot be deleted if it is the family head" do
+      Member.should have(1).record
+      @family.head.destroy
+      @family.head.errors[:delete].should include "Can't delete head of family."
+      Member.should have(1).record
+    end
+   
+    it "can be deleted if it is not the family head" do
+      @member.save    # member is not the head
+      Member.should have(2).records
+      @member.destroy
+      Member.should have(1).record
+    end
+  
+  end # deletion protect
 
   describe 'creates associated records' do
+    before(:each) do
+      @family = Factory(:family)
+      @head = @family.head
+    end    
+
     it '--health data' do
-      @member.save
-      HealthData.find_by_member_id(@member.id).should_not be_nil
+      HealthData.find_by_member_id(@head.id).should_not be_nil
     end
     it '--personnel data' do
-      @member.save
-      PersonnelData.find_by_member_id(@member.id).should_not be_nil
+      PersonnelData.find_by_member_id(@head.id).should_not be_nil
     end
   end
 
   describe 'inheritance: ' do
+    before(:each) do
+      @status = Factory(:status)
+      @family = Factory(:family, :status=> @status)
+      @head = @family.head
+      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
+                              #   This second family member @member is *not* saved yet
+    end    
+
     it "copies inherited fields from family when new" do
-      Factory(:city)
       @location = Factory(:location)
       @family = Factory(:family, :status=>@status, :residence_location=>@location)
       @member = new_family_member
@@ -108,42 +134,55 @@ describe Member do
       retrieved.status.should == new_status
       retrieved.residence_location.should == new_location
     end
-  end
+  end # inheritance
 
   describe 'handles sex field' do
+    before(:each) do
+      @head = Member.new
+    end    
+
     it 'male_female reports sex as :male if male' do
-      @head.update_attribute(:sex,'M')
+      @head.sex = 'M'
       @head.male_female.should == :male
     end  
 
     it 'male_female reports sex as :female if female' do
-      @head.update_attribute(:sex,'F')
+      @head.sex = 'F'
       @head.male_female.should == :female
     end  
     
     it 'male_female reports sex as nil if neither male nor female' do
-      @head.update_attribute(:sex,'')
+      @head.sex = ''
       @head.male_female.should be_nil
     end  
 
     it 'returns "other sex"' do
-      @head.update_attribute(:sex,'M')
+      @head.sex = 'M'
       @head.other_sex.should == 'F'    
-      @head.update_attribute(:sex,'F')
+      @head.sex = 'F'
       @head.other_sex.should == 'M'    
-      @head.update_attribute(:sex,nil)
+      @head.sex = nil
       @head.other_sex.should be_nil    
     end
   end
 
   describe "names: " do
+#    before(:each) do
+#      @status = Factory(:status)
+#      @family = Factory(:family, :status=> @status)
+#      @head = @family.head
+#      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
+#                              #   This second family member @member is *not* saved yet
+#    end    
+
 
     before(:each) do
+      @member = Member.new
       @member.first_name = 'Katarina'
       @member.middle_name = 'Saunders'
       @member.last_name = 'Patterson'
       @member.short_name = 'Kate'
-      @family.update_attribute(:last_name,'Patterson')
+ #     @family.update_attribute(:last_name,'Patterson')
     end  
     
     it "handles various name forms when middle and short names present" do
@@ -197,10 +236,14 @@ describe Member do
     end
 
     it "name_optional_last suppresses last name when equal to family last name" do
+      @family=Factory.stub(:family, :last_name=>@member.last_name)
+      @member.family = @family
       @member.name_optional_last.should == 'Kate S.'
     end
     
     it "name_optional_last includes last name when not equal to family last name" do
+      @family=Factory.stub(:family, :last_name=>@member.last_name)
+      @member.family = @family
       @member.last_name = 'Smith'
       @member.name_optional_last.should == 'Kate S. Smith'
     end
@@ -208,10 +251,10 @@ describe Member do
   end
 
   describe "marrying: " do
-
     before(:each) do
-      @head.update_attributes(:sex=>'M', :birth_date=>Date.new(1980,1,1))
-      @man = @head
+      @family = Factory(:family)
+      @man = @family.head
+      @man.update_attributes(:sex=>'M', :birth_date=>Date.new(1980,1,1))
       @woman = Factory(:member, :sex=>"F", :birth_date=>Date.new(1980,1,1))
     end
 
@@ -332,6 +375,11 @@ describe Member do
   end
 
   describe "current location" do
+    before(:each) do
+      @status = Factory(:status)
+      @family = Factory(:family, :status=> @status)
+      @head = @family.head
+    end    
     
     it "reports location of member with no status" do
       @residence = Factory(:location)
@@ -518,7 +566,52 @@ describe Member do
       
     end # travel location
     
-  end
+  end # current_location
+  
+  describe "dependent method" do
+
+    before(:each) do
+      @family = Factory.stub(:family)
+      @husband = Factory.stub(:member, :last_name=>'Last', :first_name=>'Head', :family=>@family, :sex=>'M')
+      @family.head = @husband
+      @wife = Factory.stub(:member, :last_name=>'Last', :first_name=>'Wife', :family=>@family, :sex=>'F')
+      @husband.spouse = @wife
+      @wife.spouse = @husband
+      @member = Factory.stub(:member, :first_name=>'Member', :last_name=>'Last', :family => @family)
+    end
+    
+    it "is true for head of family" do
+      @husband.dependent.should be_true
+    end
+    
+    it "is true for spouse" do
+      
+      @husband.spouse.dependent.should be_true
+    end
+    
+    it "is true for child" do
+      @member.child = true
+      @member.dependent.should be_true
+    end
+    
+    it "is false for non-child non-spouse" do
+      @member.child = false
+      @member.dependent.should be_false
+    end
+    
+    it "is true for unmarried head of family" do
+      @husband.spouse = nil
+      @husband.dependent.should be_true
+    end
+    
+    it "is false for deceased child" do
+      @member.child = true
+      @deceased = Factory.stub(:status, :code=>'deceased')
+      @member.status = @deceased
+      @member.dependent.should be_false
+    end      
+    
+  end  #dependent method
 
 end
 
