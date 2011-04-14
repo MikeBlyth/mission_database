@@ -1,10 +1,10 @@
 class ReorgStatusesB < ActiveRecord::Migration
   def self.up
-    alumni = Status.find_by_code('alumni')
-    retired = Status.find_by_code('retired')
-    umbrella = Status.find_by_code('umbrella')
-    inactive = Status.find_by_code('inactive')
-    field = Status.find_by_code('field')
+    alumni = Status.find_by_code('alumni').id
+    retired = Status.find_by_code('retired').id
+    umbrella = Status.find_by_code('umbrella').id
+    inactive = Status.find_by_code('inactive').id
+    field = Status.find_by_code('field').id
     unless alumni && retired && umbrella && inactive && field
       puts "Not all codes found"
       return
