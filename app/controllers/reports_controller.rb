@@ -12,7 +12,24 @@ class ReportsController < ApplicationController
 
   def whereis
 #    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
-    selected = Member.includes(:residence_location, :work_location).where(:child=> false).limit(20).
+    families = Family.includes(:members, :residence_location).limit(20).order("name ASC")
+    field_contact_id = ContactType.find_by_code(1).id  # Use this to select the right contact for field
+    family_locations = []
+    @title = "Where Is Everyone?"
+    respond_to do |format|
+      format.html
+      format.pdf do
+#        output = WhereisReport.new.to_pdf(family_locations, @members_by_location)
+        output = WhereIsTable_2.new.to_pdf(families, '')
+        send_data output, :filename => "where_is.pdf", 
+                         :type => "application/pdf"
+      end
+    end
+  end
+
+  def whereis_original
+#    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
+    selected = Member.includes(:residence_location, :work_location, :contacts, :spouse).where(:child=> false).limit(20).
              select("id, status_id, spouse_id, last_name, first_name, middle_name, short_name, residence_location_id, work_location_id," +
                      " temporary_location, temporary_location_from_date, temporary_location_until_date")
 #puts "Whereis selected="
@@ -20,18 +37,29 @@ class ReportsController < ApplicationController
 #    member_locations = selected.collect{ |m| {:name=>m.last_name_first(:initial=>true, :short=>true),
 #                                             :location=>m.current_location}
 #                                       }
+    field_contact_id = ContactType.find_by_code(1).id  # Use this to select the right contact for field
     @member_locations = []
     @title = "Where Is Everyone?"
     selected.each do |m|
       work_location = description_or_blank(m.work_location)
       work_location = '' if work_location.downcase == 'unspecified'
       if m.on_field || m.visiting_field?
+        field_contact = m.contacts.where(:contact_type_id=>field_contact_id).first
+        if field_contact
+          email = field_contact.email_1
+          phone = field_contact.phone_1
+      else
+        puts "No field contact for #{m.full_name}, field_contact_id = #{field_contact_id}, contacts=#{m.contacts.count}"
+        end  
         @member_locations << {:name=>m.last_name_first(:initial=>true, :short=>true), 
                               :current_location=>m.current_location,
                               :residence_location=>description_or_blank(m.residence_location),
                               :work_location=> work_location,
                               :travel_location=>m.travel_location,
                               :temporary_location=>m.temporary_location,
+                              :email => email,
+                              :phone => phone,
+                              :spouse => m.spouse
                               }
       end  
     end

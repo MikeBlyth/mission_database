@@ -16,7 +16,7 @@ gem 'pg'
 # gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 #gem 'prawn', ">=0.10.0", :git => "git://github.com/sandal/prawn"
 gem "ttfunk", "~>1.0.0", :git => "https://github.com/sandal/ttfunk.git"
-gem 'prawn', "0.11.1.pre"# , :git => "git://github.com/sandal/prawn" #, :submodules => true
+gem 'prawn', "0.11.1"# , :git => "git://github.com/sandal/prawn" #, :submodules => true
 gem 'haml' 
 gem 'jrails'
 gem 'cancan'
