@@ -17,6 +17,7 @@
 #
 
 class FieldTerm < ActiveRecord::Base
+  include Comperable
   belongs_to :member
   belongs_to :primary_work_location, :class_name => "Location", :foreign_key => "primary_work_location_id"
   belongs_to :employment_status

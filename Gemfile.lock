@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/sandal/prawn
-  revision: b42fce2f4eb615bd49826aa311cae47222887216
-  submodules: true
-  specs:
-    prawn (0.11.1.pre)
-      pdf-reader (>= 0.9.0)
-      ttfunk (~> 1.0.0)
-
-GIT
   remote: https://github.com/sandal/ttfunk.git
   revision: c467d86c74eeffecb1f0887d11e5aacf08202507
   specs:
@@ -115,6 +106,8 @@ GEM
       Ascii85 (>= 0.9)
     pg (0.10.1)
     polyglot (0.3.1)
+    prawn (0.11.1.pre)
+      pdf-reader (>= 0.8.1)
     rack (1.2.1)
     rack-mount (0.6.13)
       rack (>= 1.0.0)
@@ -201,7 +194,7 @@ DEPENDENCIES
   jrails
   launchy
   pg
-  prawn (>= 0.10.0)!
+  prawn (= 0.11.1.pre)
   rack-ssl-enforcer
   rails (>= 3.0.0)
   redgreen

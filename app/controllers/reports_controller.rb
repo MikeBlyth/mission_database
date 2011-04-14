@@ -12,7 +12,7 @@ class ReportsController < ApplicationController
 
   def whereis
 #    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
-    selected = Member.includes(:residence_location, :work_location).where(:child=> false).
+    selected = Member.includes(:residence_location, :work_location).where(:child=> false).limit(20).
              select("id, status_id, spouse_id, last_name, first_name, middle_name, short_name, residence_location_id, work_location_id," +
                      " temporary_location, temporary_location_from_date, temporary_location_until_date")
 #puts "Whereis selected="
@@ -40,7 +40,8 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html
       format.pdf do
-        output = WhereisReport.new.to_pdf(@member_locations, @members_by_location)
+#        output = WhereisReport.new.to_pdf(@member_locations, @members_by_location)
+        output = WhereIsTable.new.to_pdf(@member_locations, @members_by_location, '')
         send_data output, :filename => "where_is.pdf", 
                          :type => "application/pdf"
       end
@@ -249,19 +250,18 @@ class ReportsController < ApplicationController
   end
  
  
-#  # Test showing how to generate tables with Prawn
-#   def tabletest
-#    selected = Member.select("family_id, last_name, first_name, bloodtype_id, status_id")
-#    selected = selected.delete_if{|x| !x.on_field || x.bloodtype_id.nil? }   # delete members not on the field
-#    output = TableTest.new.to_pdf(selected,"Includes only those currently on the field")
+  # Test showing how to generate tables with Prawn
+   def tabletest
+    selected = Member.select("family_id, last_name, first_name, status_id")
+    output = TableTest.new.to_pdf(selected,"Includes only those currently on the field")
 
-#    respond_to do |format|
-#      format.pdf do
-#        send_data output, :filename => "tabletest.pdf", 
-#                          :type => "application/pdf"
-#      end
-#    end
-#  end
+    respond_to do |format|
+      format.pdf do
+        send_data output, :filename => "tabletest.pdf", 
+                          :type => "application/pdf"
+      end
+    end
+  end
 
 #  # Test showing how to use multi-column layout with Prawn and our own (temporary?) flow_in_columns method
 #   def multi_col_test
