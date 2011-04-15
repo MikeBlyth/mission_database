@@ -613,5 +613,33 @@ describe Member do
     
   end  #dependent method
 
+  describe "scopes or relations" do
+    before(:each) do
+      @field_status = Factory.build(:status, :on_field=>true, :active=>false)
+      @active_status = Factory.build(:status, :on_field=>false, :active=>true)
+      @active_field_status = Factory.build(:status, :on_field=>true, :active=>false)
+      @neither_status = Factory.build(:status, :on_field=>true, :active=>false)
+      @family = Factory(:family, :status=>nil) # need a place to put the members
+    end  
+
+    it "selects on_field members" do
+      @field_status.save
+      @active_status.save
+      2.times do
+        Factory(:member, :family=> @family, :status=>@field_status)
+        Factory(:member, :family=> @family, :status=>@active_status)
+      end
+      Member.those_on_field.count.should == 2 
+      Member.those_active.count.should == 2 
+      Member.those_on_field.each do |m|
+        m.on_field.should be_true
+        m.active.should_not be_true
+      end
+      Member.those_active.each do |m|
+        m.on_field.should_not be_true
+        m.active.should be_true
+      end
+    end # selects on_field members
+  end  
 end
 

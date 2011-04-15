@@ -65,7 +65,18 @@ class Member < ActiveRecord::Base
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
-  
+ 
+  def self.those_on_field
+    # Method 1
+    # self.where("status_id in (?)", Status.field_statuses)
+    # Method 2 looks nicer, whether or not it's faster
+    self.joins(:status).where("on_field")
+  end 
+
+  def self.those_active
+    self.joins(:status).where("active")
+  end 
+
   def family_head
     return Family.find_by_id(family_id) && (family.head_id == self.id)
   end 
@@ -92,9 +103,9 @@ class Member < ActiveRecord::Base
   def inherit_from_family
     return unless new_record? &&             # Inheritance only applies to new, unsaved records
                   family_id && Family.find_by_id(family_id) # must belong to existing family
-    self.last_name = family.last_name
-    self.status = family.status
-    self.residence_location = family.residence_location
+    self.last_name ||= family.last_name
+    self.status ||= family.status
+    self.residence_location ||= family.residence_location
   end
 
   # Valid record must be linked to an existing family

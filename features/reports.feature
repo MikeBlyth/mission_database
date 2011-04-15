@@ -88,6 +88,7 @@ Feature: report generation
     Then I should get a "Travel" PDF report
     And the report should include the "travel" information
 
+  @wip
   Scenario: Generate where_is pdf report
     Given that I am signed in
     And locations defined
@@ -98,7 +99,7 @@ Feature: report generation
     Then I should get a "Where Is" PDF report
     And the report should include the "Where Is" information
     
-  @now
+  @wip
   Scenario: Generate where_is html report
     Given that I am signed in
     And locations defined

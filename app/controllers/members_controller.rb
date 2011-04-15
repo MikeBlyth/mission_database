@@ -199,6 +199,8 @@ puts "@json_resp = #{@json_resp}"
 # filtering. So we either have to be sure to have the record ids pre-coded (brittle) or dynamically
 # determine them based on the codes such as 'field' or "home_assignment".
 # 
+  # ToDo: Should Active and OnField be determined by those flags in the status objects themselves rather
+  #    than by using these pre-determined status codes?
   def conditions_for_collection
     status_groups = {'active' => %w( field home_assignment mkfield ),
                 'field' => %w( field mkfield umbrella visitor),

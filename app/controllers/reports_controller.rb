@@ -13,7 +13,6 @@ class ReportsController < ApplicationController
   def whereis
 #    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
     families = Family.includes(:members, :residence_location).limit(20).order("name ASC")
-    field_contact_id = ContactType.find_by_code(1).id  # Use this to select the right contact for field
     family_locations = []
     @title = "Where Is Everyone?"
     respond_to do |format|

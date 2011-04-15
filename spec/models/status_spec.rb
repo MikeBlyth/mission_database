@@ -12,6 +12,17 @@ describe Status do
     end
 
   end # check before destroy
+
+  it "returns array of status id's for on-field status" do
+    field_1 = Factory(:status, :on_field=>true).id
+    Factory(:status, :on_field=>false)
+    field_2 = Factory(:status, :on_field=>true).id
+    Factory(:status, :on_field=>false)
+    field_3 = Factory(:status, :on_field=>true).id
+    Factory(:status, :on_field=>false)
+    Status.field_statuses.should == [field_1, field_2, field_3]
+  end  
+
       
 end
 
