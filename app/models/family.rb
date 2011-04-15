@@ -20,6 +20,7 @@
 
 class Family < ActiveRecord::Base
   include NameHelper
+  include FilterByStatusHelper
 
   attr_accessor :previous_residence_location, :previous_status
   

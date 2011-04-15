@@ -31,7 +31,9 @@
 class Member < ActiveRecord::Base
   include NameHelper
   include ApplicationHelper
+  include FilterByStatusHelper
   
+  # ToDo: This can probably be refactored to use the built-in changed_attributes of the model
   attr_accessor :previous_spouse  # to help with cross-linking when changing/deleting spouse
   
   has_many :contacts, :dependent => :destroy 
@@ -66,17 +68,6 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
-  def self.those_on_field
-    # Method 1
-    # self.where("status_id in (?)", Status.field_statuses)
-    # Method 2 looks nicer, whether or not it's faster
-    self.joins(:status).where("on_field")
-  end 
-
-  def self.those_active
-    self.joins(:status).where("active")
-  end 
-
   def family_head
     return Family.find_by_id(family_id) && (family.head_id == self.id)
   end 

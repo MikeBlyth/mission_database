@@ -20,14 +20,22 @@ class Status < ActiveRecord::Base
   validates_uniqueness_of :code, :description
   validates_presence_of :code, :description
 
-  # Class method Status.field_statuses
+  # Class method Status.field_statuses and Status.active_statuses
+  # Likely won't need these but just use joins instead.
   # Return array of status_ids for statuses marked as "on_field"
   #   (i.e. if a member or family has this status, the member or family is considered 
   #   to be on the field)
   def self.field_statuses
     selected = self.where(:on_field=>true)
     ids = selected.map {|x| x.id}
-    return ids.sort
+    return ids
+  end
+  
+  # Like field_statuses above
+  def self.active_statuses
+    selected = self.where(:active=>true)
+    ids = selected.map {|x| x.id}
+    return ids
   end
   
 

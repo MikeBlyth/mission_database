@@ -10,9 +10,11 @@ class ReportsController < ApplicationController
     # this just displays a view that lets the user select from reports
   end
 
-  def whereis
-#    active_statuses = Status.where(:active=>true).select('id').collect {|m| m.id}
-    families = Family.includes(:members, :residence_location).limit(20).order("name ASC")
+  def whereis(params={})
+    # Who to include in the report ... options not implemented yet
+    # include_home_assignment = params[:include_home_assignment]
+    # include_active = params[:include_active]
+    families = Family.those_on_field_or_active.includes(:members, :residence_location).limit(10).order("name ASC")
     family_locations = []
     @title = "Where Is Everyone?"
     respond_to do |format|

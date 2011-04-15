@@ -370,10 +370,6 @@ describe Member do
     
   end # describe marrying  
 
-  describe "Handles scopes like 'active'" do
-    pending 'rewrite the filtering mechanism'
-  end
-
   describe "current location" do
     before(:each) do
       @status = Factory(:status)

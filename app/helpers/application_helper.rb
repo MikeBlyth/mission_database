@@ -51,6 +51,21 @@ module ApplicationHelper
       return record.send(link_id(link))  # where link_id adds '_id' if not there
     end  
 
+    # This is just for Nigerian phone numbers for now, to keep it really simple
+    # It's highly localized -- probably best to make it optional!
+    # ToDo: make this optional
+    def format_phone(s,options={})
+      if Settings.formatting.format_phone_numbers && !s.blank? 
+        delim_1 = options[:delim_1] || " "
+        delim_2 = options[:delim_2] || " "
+        squished = s.ljust(7).gsub(' ','').gsub('-','').gsub('.','').gsub('+234','0')
+        if squished.length == 11 && squished[0]=='0'
+          return squished.insert(7,delim_2).insert(4,delim_1)
+        end
+      end
+      return s
+    end
+
 end  # ApplicationHelper module
 
 #******* Anything below this point is not in the module itself *********
@@ -78,5 +93,4 @@ class Fixnum
   def empty?
     return false
   end
-
 end # class Fixnum 

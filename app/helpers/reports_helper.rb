@@ -2,6 +2,7 @@ require 'formatted_columns'
 
 module ReportsHelper
   # Page Header for use by Prawn
+  NBSP = Prawn::Text::NBSP
 
   def page_header(options={})
 font_families.update(

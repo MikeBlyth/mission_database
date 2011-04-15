@@ -23,6 +23,16 @@ describe Status do
     Status.field_statuses.should == [field_1, field_2, field_3]
   end  
 
+  it "returns array of status id's for active status" do
+    field_1 = Factory(:status, :active=>true).id
+    Factory(:status, :active=>false)
+    field_2 = Factory(:status, :active=>true).id
+    Factory(:status, :active=>false)
+    field_3 = Factory(:status, :active=>true).id
+    Factory(:status, :active=>false)
+    Status.active_statuses.should == [field_1, field_2, field_3]
+  end  
+
       
 end
 

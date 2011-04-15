@@ -20,6 +20,8 @@ defaults: &defaults
   family:
     member_names_delimiter: ', '
     member_names_dependent_only: true
+  formatting:
+    format_phone_numbers: true  # by method ApplicationHelper::format_phone; false means bypass formatting
 development:
   <<: *defaults
   screen:
