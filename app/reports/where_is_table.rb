@@ -11,7 +11,7 @@ class WhereIsTable < Prawn::Document
     name_column = formatted[:couple] + 
                   (f.status.code == 'field' ? '' : " (#{f.status.description})") +
                   (formatted[:children].blank? ? '' : "\n<i>#{formatted[:children]}</i>" ) 
-    return [ name_column, formatted[:email], formatted[:phone] ]
+    return [ name_column, smart_join(formatted[:emails], "\n"), smart_join(formatted[:phones], "\n") ]
   end
 
   def to_pdf(families,options = {})

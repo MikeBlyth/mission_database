@@ -11,14 +11,20 @@ class ReportsController < ApplicationController
     # this just displays a view that lets the user select from reports
   end
 
-  def whereis(params={})
+  def whereis
     # Who to include in the report ... options not implemented yet
     # include_home_assignment = params[:include_home_assignment]
     # include_active = params[:include_active]
     @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
     @title = "Where Is Everyone?"
     respond_to do |format|
-      format.html
+      format.html do 
+        if params[:by] == 'location'
+          render :template=>'reports/whereis_by_location' 
+        else
+          render :template=>'reports/whereis' 
+        end
+      end
       format.pdf do
 #        output = WhereisReport.new.to_pdf(family_locations, @members_by_location)
         output = WhereIsTable.new.to_pdf(@families)

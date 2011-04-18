@@ -2,24 +2,15 @@
 %h2 #{@title}
 %table.whereis
   %th Name
-  %th Location (with work location if different)
+  %th Location
+  %th Email
+  %th Phone
   %tbody
-  - @member_locations.each do |m|
+  - @families.each do |f|
+    - formatted = family_data_formatted(f)
     %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
-      %td= "#{m[:name]}"
-      %td= "#{m[:current_location]}"
-%h4 By Residence Location
-%table.whereis
-  %th Name 
-  %th Work Location
-  %th Travel
-  - location=''
-  - @members_by_location.each do |m|
-    - if location != m[:residence_location]
-      -  location = m[:residence_location]
-      %tr.new_location
-        %td{:colspan=>'3'}= "#{location}"
-    %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
-      %td= "#{m[:name]}"
-      %td= "#{m[:work_location]}"
-      %td= "#{smart_join([m[:travel_location], m[:temporary_location]], ' ')}"
+      %td= "#{formatted[:couple]}" + (f.status.code == 'field' ? '' : " (#{f.status.description})")
+      %td= "#{f.residence_location}"
+      %td= smart_join(formatted[:emails], "; ")
+      %td= smart_join(formatted[:phones], "; ")
+

@@ -8,8 +8,9 @@
   %li#bloodtypes= link_to "Blood types (PDF)", "/reports/bloodtypes.pdf"
   %li#whereis
     "Where is everyone? 
-    = link_to 'HTML', '/reports/whereis.html', :id=>'whereis-html'
-    = link_to 'PDF', '/reports/whereis.pdf', :id=>'whereis-pdf'
+    = link_to 'HTML by family', '/reports/whereis.html?by=family', :id=>'whereis-html'
+    = link_to 'HTML by location', '/reports/whereis.html?by=location', :id=>'whereis-html'
+    = link_to 'PDF by family and location', '/reports/whereis.pdf', :id=>'whereis-pdf'
 %hr
 %h4 Calendars
 %p Calendars are all in PDF format.
