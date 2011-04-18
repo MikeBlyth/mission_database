@@ -27,6 +27,12 @@ module ApplicationHelper
       return 'F' if s.downcase[0] == 'm'
       return 'M' if s.downcase[0] == 'f'
     end	
+    
+    # Returns true unless x = false.
+    # Same as x || x.nil?
+    def default_true(x)
+      return x != false
+    end
 
     # Join the elements in array a with delimiter (default ", ")
     #   but first trim whitespace from elements and delete blank elements

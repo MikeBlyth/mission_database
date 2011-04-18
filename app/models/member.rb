@@ -269,13 +269,13 @@ class Member < ActiveRecord::Base
     end      
     if current_travel
       if visiting_field?  # Someone visiting the field
-        answer = "travel: arrived on field #{current_travel.date.to_s(:short)}"
+        answer = "arrived on field #{current_travel.date.to_s(:short)}"
         if current_travel.return_date
           answer << ", leaves #{current_travel.return_date.to_s(:short)}"
         end
         return answer
       elsif status && status.on_field && !current_travel.arrival  # if on-field person has traveled (according to travel schedule)
-        answer = "travel: left field #{current_travel.date.to_s(:short)}"
+        answer = "left field #{current_travel.date.to_s(:short)}"
         if current_travel.return_date
           answer << ", returns #{current_travel.return_date.to_s(:short)}"
         end
