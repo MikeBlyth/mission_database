@@ -4,6 +4,7 @@ class ReportsController < ApplicationController
   include AuthenticationHelper
   include ApplicationHelper
 
+
   before_filter :authenticate 
 
   def index
@@ -20,7 +21,7 @@ class ReportsController < ApplicationController
       format.html
       format.pdf do
 #        output = WhereisReport.new.to_pdf(family_locations, @members_by_location)
-        output = WhereIsTable_2.new.to_pdf(@families)
+        output = WhereIsTable.new.to_pdf(@families)
         send_data output, :filename => "where_is_everyone.pdf", 
                          :type => "application/pdf"
       end

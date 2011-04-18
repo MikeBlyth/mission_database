@@ -294,6 +294,11 @@ class Member < ActiveRecord::Base
       return nil
     end         
   end
+  
+  def primary_contact
+    primary_contact_type_code = Settings.contacts.primary_contact_type_code
+    self.contacts.joins(:contact_type).where("contact_types.code = ?", primary_contact_type_code).first
+  end
 
 private
 
@@ -359,26 +364,6 @@ private
   end # cross_link_spouses
 
   
-  def check_if_family_head
-    if family_head
-      self.errors.add(:delete, "Can't delete head of family.")
-      return false
-    else
-      true  
-    end
-  end
-  
-  def check_if_spouse
-    # if someone is married to me, don't delete me from the database
-    orphan_spouse = Member.find_by_spouse_id(self.id)
-    if orphan_spouse
-      self.errors.add(:delete, "can't delete while still spouse of #{orphan_spouse.to_label}")
-      return false
-    else
-      return true
-    end  
-  end
-  
   # return a string in days, weeks, months, or years, whatever makes sense for the age, from
   # time (t) in seconds. Sensible rounding is applied as we would normally describe someone's age.
   # Thus time_human(187000) = "2 days," time_human(34000000) = "12 months", time_human(120000000) = "3.8 years"
@@ -401,4 +386,25 @@ private
     return sprintf("%1.1f years", t/y) if t < (y * 7)
     return "#{(t/y).to_i} years"
   end
+
+  def check_if_family_head
+    if family_head
+      self.errors.add(:delete, "Can't delete head of family.")
+      return false
+    else
+      true  
+    end
+  end
+  
+  def check_if_spouse
+    # if someone is married to me, don't delete me from the database
+    orphan_spouse = Member.find_by_spouse_id(self.id)
+    if orphan_spouse
+      self.errors.add(:delete, "can't delete while still spouse of #{orphan_spouse.to_label}")
+      return false
+    else
+      return true
+    end  
+  end
+  
 end
