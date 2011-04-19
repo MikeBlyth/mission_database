@@ -16,7 +16,7 @@ font_families.update(
       header_left_margin = bounds.left
       header_right_margin = bounds.right
 
-      font "Aller"
+#      font "Aller"
       draw_text Time.now.strftime("Printed on %d %b %Y"), :at => [0,0], :size => 8
       font_size(10) do     
         text_box(options[:left] || "SIM Nigeria Reports", :height=>20+font.descender, :valign=>:bottom)
@@ -30,8 +30,8 @@ font_families.update(
       horizontal_rule()
       stroke
       # rule at bottom of header; if not in its own bounding box, seems not to print in a repeat
-    end
-    # separate repeat for page number since it's dynamic (not that it matters for the amount of work we're doing)
+    end #repeat :all do
+#    # separate repeat for page number since it's dynamic (not that it matters for the amount of work we're doing)
     repeat(:all, :dynamic=> true) do 
       text_box(" Page #{page_number}", :size=>10, :align=>:right, :valign=>:bottom, :height=>20)
     end

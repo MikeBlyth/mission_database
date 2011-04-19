@@ -15,7 +15,7 @@ class ReportsController < ApplicationController
     # Who to include in the report ... options not implemented yet
     # include_home_assignment = params[:include_home_assignment]
     # include_active = params[:include_active]
-    @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
+    @families = Family.those_on_field_or_active.includes(:members, :residence_location).limit(10).order("name ASC")
     @title = "Where Is Everyone?"
     respond_to do |format|
       format.html do 
@@ -28,6 +28,7 @@ class ReportsController < ApplicationController
       format.pdf do
 #        output = WhereisReport.new.to_pdf(family_locations, @members_by_location)
         output = WhereIsTable.new.to_pdf(@families)
+#        output = IndentTest.new.to_pdf()
         send_data output, :filename => "where_is_everyone.pdf", 
                          :type => "application/pdf"
       end

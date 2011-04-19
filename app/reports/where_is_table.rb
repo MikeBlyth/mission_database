@@ -10,11 +10,12 @@ class WhereIsTable < Prawn::Document
     formatted = family_data_formatted(f)
     name_column = formatted[:couple] + 
                   (f.status.code == 'field' ? '' : " (#{f.status.description})") +
-                  (formatted[:children].blank? ? '' : "\n<i>#{formatted[:children]}</i>" ) 
+                  (formatted[:children].blank? ? '' : "\n\u00a0\u00a0<i>#{formatted[:children]}</i>" ) 
     return [ name_column, smart_join(formatted[:emails], "\n"), smart_join(formatted[:phones], "\n") ]
   end
 
   def to_pdf(families,options = {})
+
     location_col = default_true(options[:location_column]) # make separate column for locations? Default=true
 
     # Part 1 -- Sorted by location
@@ -39,7 +40,7 @@ class WhereIsTable < Prawn::Document
         unless location_col  # Give new location its own row if it does not have its own column
           table_data << ["<b>#{location}</b>", '', ''] # Need enough columns to fill the row, or borders won't be right
         end  
-      else
+    else
         displayed_location = ''  # not a new location, so don't show it in the location column (but what about top of page!?)
       end
       if location_col
@@ -50,6 +51,7 @@ class WhereIsTable < Prawn::Document
     end
 
     bounding_box [0, cursor-20], :width => bounds.right-bounds.left, :height=> (cursor-20)-bounds.bottom-20 do
+
       table(table_data, :header => true, 
                       :row_colors => ["F0F0F0", "FFFFCC"],
                       :cell_style => { :size => 10, :inline_format => true}) do 

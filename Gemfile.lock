@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/sandal/ttfunk.git
-  revision: c467d86c74eeffecb1f0887d11e5aacf08202507
-  specs:
-    ttfunk (1.0.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -170,6 +164,7 @@ GEM
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
+    ttfunk (1.0.1)
     tzinfo (0.3.24)
     verification (1.0.1)
       actionpack (~> 3.0.0)
@@ -205,4 +200,3 @@ DEPENDENCIES
   settingslogic
   spork
   test-unit (= 1.2.3)
-  ttfunk (~> 1.0.0)!
