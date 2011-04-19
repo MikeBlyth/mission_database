@@ -39,6 +39,13 @@ module SimTestHelper
     puts "Error creating/saving spouse (sim_test_helper ~38)" unless s.valid? && member.valid?
     return s
   end
+  
+  def create_couple
+    f = Factory(:family)
+    husband = f.head
+    wife = create_spouse(husband)
+    return husband
+  end
 
   # Given a record with an attribute (like status_id) that might not reflect an existing attribute record
   # since we haven't created it yet, 

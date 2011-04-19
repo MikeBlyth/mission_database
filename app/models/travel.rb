@@ -80,6 +80,21 @@ class Travel < ActiveRecord::Base
     end
   end    
 
+  # For reports, gives names of all specified travelers, both members & non-members
+  def travelers
+    if member
+      names = "#{member.short}"
+      spouse_name = member.spouse ? member.spouse.short : "spouse" # Use name if spouse is listed in the database, else "spouse"
+      names << " & #{spouse_name}"  if with_spouse
+      names << " #{member.last_name}" 
+      names << " w kids" if with_children 
+      names << ", with #{other_travelers}" unless other_travelers.blank?
+      return names
+    end
+    return other_travelers
+  end
+
+
   # "Virtual column" for use in listing travels
   def traveler_name
     result = traveler.full_name_short

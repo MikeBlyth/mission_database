@@ -16,7 +16,7 @@ font_families.update(
       header_left_margin = bounds.left
       header_right_margin = bounds.right
 
-#      font "Aller"
+#      font "Aller"  # -- Aller is OK but does not have a non-breaking space, apparently
       draw_text Time.now.strftime("Printed on %d %b %Y"), :at => [0,0], :size => 8
       font_size(10) do     
         text_box(options[:left] || "SIM Nigeria Reports", :height=>20+font.descender, :valign=>:bottom)

@@ -140,8 +140,14 @@ FactoryGirl.define do
   factory :member do 
     sequence(:first_name) {|n| "Person_#{n}" }
     family { |a| a.association :family }
-    sex ['M','F'].shuffle[0]    # randomly pick M or F
+    sex 'M'
     after_build { |m| m.inherit_from_family}
+    after_stub do |m| 
+      m.last_name ||= m.family.last_name
+      m.status ||= m.family.status
+      m.residence_location ||= m.family.residence_location
+      m.family.head = m if m.family.head.nil?
+    end
   end
 
     factory :member_with_details, :parent=> :member do
@@ -153,6 +159,10 @@ FactoryGirl.define do
       country { |a| a.association :country }
       ministry { |a| a.association :ministry } 
       ministry_comment 'Working with orphans'
+    end
+
+    factory :female, :parent=> :member do
+      sex 'F'
     end
 
     factory :child, :parent=> :member do

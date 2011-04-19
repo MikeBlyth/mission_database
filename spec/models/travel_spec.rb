@@ -51,4 +51,73 @@ describe Travel do
     end
 
   end # with guest travelers
+
+  describe "travelers method gives names" do
+    before(:each) do 
+      @member = Factory.stub(:member)
+    end
+    
+    it "lists individual's name" do
+      @object.member = @member
+      @object.travelers.should == "#{@member.short} #{@member.last_name}"
+    end
+
+    it "lists individual & spouse's names" do
+      @object.member = @member
+      wife = Factory.stub(:female, :spouse=>@member, :family=>@member.family)
+      @member.spouse = wife      
+      @object.with_spouse = true
+      @object.travelers.should == "#{@member.short} & #{wife.short} #{@member.last_name}"
+    end
+    
+    it "lists individual & 'spouse' if spouse not in database" do
+      @object.member = @member
+      @object.with_spouse = true
+      @object.travelers.should == "#{@member.short} & spouse #{@member.last_name}"
+    end
+    
+    it "ignores 'with_spouse' if there is no member as traveler" do
+      @object.member = nil
+      @object.with_spouse = true
+      @object.other_travelers = "New Mexico team: Bob & Larry"
+      @object.travelers.should == @object.other_travelers
+    end
+    
+    it "ignores 'with_children' if there is no member as traveler" do
+      @object.member = nil
+      @object.with_children = true
+      @object.other_travelers = "New Mexico team: Bob & Larry"
+      @object.travelers.should == @object.other_travelers
+    end
+    
+    it "lists individual & 'kids'" do
+      @object.member = @member
+      @object.with_children = true
+      @object.travelers.should == "#{@member.short} #{@member.last_name} w kids"
+    end
+    
+    it "lists individual & spouse's names & 'kids'" do
+      @object.member = @member
+      wife = Factory.stub(:female, :spouse=>@member, :family=>@member.family)
+      @member.spouse = wife      
+      @object.with_spouse = true
+      @object.with_children = true
+      @object.travelers.should == "#{@member.short} & #{wife.short} #{@member.last_name} w kids"
+    end
+
+    it "lists individual and other travelers" do
+      @object.member = @member
+      @object.other_travelers = "New Mexico team: Bob & Larry"
+      @object.travelers.should == 
+        "#{@member.short} #{@member.last_name}, with #{@object.other_travelers}"
+    end
+
+    it "other travelers when no member" do
+      @object.member = nil
+      @object.other_travelers = "New Mexico team: Bob & Larry"
+      @object.travelers.should == @object.other_travelers
+    end
+
+  end # describe "travelers method gives names"
+  
 end
