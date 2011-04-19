@@ -26,7 +26,8 @@ class ReportsController < ApplicationController
         end
       end
       format.pdf do
-        output = WhereIsTable.new.to_pdf(@families)
+        output = WhereIsTable.new(:page_size=>Settings.reports.page_size).
+             to_pdf(@families)
         send_data output, :filename => "where_is_everyone.pdf", 
                          :type => "application/pdf"
       end
@@ -97,7 +98,8 @@ class ReportsController < ApplicationController
 
      respond_to do |format|
        format.pdf do
-         output = BloodtypeReport.new.to_pdf(selected,"Includes only those currently on the field")
+         output = BloodtypeReport.new(:page_size=>Settings.reports.page_size).
+              to_pdf(selected,"Includes only those currently on the field")
          send_data output, :filename => "bloodtypes.pdf", 
                           :type => "application/pdf"
        end
@@ -113,7 +115,8 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        output = BirthdayReport.new.to_pdf(selected,:left_head=>left_head)
+        output = BirthdayReport.new(:page_size=>Settings.reports.page_size).
+              to_pdf(selected,:left_head=>left_head)
         send_data output, :filename => "birthdays.pdf", 
                           :type => "application/pdf"
       end
@@ -130,7 +133,8 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        output = PhoneEmailReport.new.to_pdf(selected,:left_head=>left_head)
+        output = PhoneEmailReport.new(:page_size=>Settings.reports.page_size).
+              to_pdf(selected,:left_head=>left_head)
         send_data output, :filename => "phonelist.pdf", 
                           :type => "application/pdf"
       end
@@ -148,7 +152,8 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.pdf do
 #        output = TravelScheduleReport.new.to_pdf(selected, :title=>'Travel Schedule', :left_head=>left_head)
-        output = TravelScheduleTable.new.to_pdf(selected, params)
+        output = TravelScheduleTable.new(:page_size=>Settings.reports.page_size).
+              to_pdf(selected, params)
         send_data output, :filename => "travel_schedule.pdf", 
                           :type => "application/pdf"
       end

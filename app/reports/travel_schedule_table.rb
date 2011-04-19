@@ -8,8 +8,7 @@ class TravelScheduleTable < Prawn::Document
 
   def to_pdf(selected,params={})
 
-puts "#{params}"  
-    font_size = params[:font_size] || 10
+    font_size = params[:font_size] || 11
     font_size += -1 if params[:detail_columns] && params[:residence_column]
 
     # Generate the data for the table
@@ -25,9 +24,15 @@ puts "#{params}"
     bounding_box [0, cursor-20], :width => bounds.right-bounds.left, 
        :height=> (cursor-20)-bounds.bottom-20 do
       table(table_data, :header => true, 
-                      :row_colors => ["F0F0F0", "FFFFCC"],
+                      :row_colors => Settings.reports.row_shading,
                       :cell_style => { :size => font_size, :inline_format => true}) do 
-        row(0).style :background_color => 'CCCC00', :font => 'Times-Roman'
+        row(0).style :background_color => 'DDDD77', :valign => :center
+        column(0).style :width=>45
+        column(6).style :width=>60 if params[:residence_column] && params[:detail_columns]
+#        row(0).columns(1).style :rotate => 90, :rotate_around => :center
+#        row(0).columns(5).style :rotate => 90, :rotate_around => :center
+#        row(0).columns(7).style :rotate => 90, :rotate_around => :center
+              
       end # table ... do
     end # bounding_box
     render
@@ -57,9 +62,9 @@ private
   end # data_row
 
   def header_row(params)
-    row = ['Date','Arr', 'Flt', 'Name(s)']
+    row = ['Date',"A\nr\nr", 'Flt', 'Name(s)']
     row << 'Residence' if params[:residence_column]
-    row << 'Box' << 'Accom/ Driver Accom' << 'SIM/ Pers' if params[:detail_columns]
+    row << "B\no\nx" << "Accom/ Driver\nAccom" << "T\ny\np\ne" if params[:detail_columns]
     row << 'Comments'
     return row
   end # header_row

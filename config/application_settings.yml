@@ -11,6 +11,7 @@ defaults: &defaults
     travel_calendar:
       arrival_prefix: 'AR: '
       departure_prefix: 'DP: '  
+    row_shading: ['F0F0F0', 'FFFFCC']
   screen:
     rows_per_screen_page: 20
   contacts:
