@@ -1,6 +1,8 @@
 #require 'spec_helper'
 require 'factory_girl_rails'
+require 'active_support/core_ext'
 load 'config/initializers/constants.rb'
+
 
 FactoryGirl.define do
   factory :bloodtype do
@@ -192,7 +194,7 @@ FactoryGirl.define do
   end    
 
   factory :scheduled_update do
-    action_date Date.tomorrow
+    action_date Date::tomorrow
     new_value 'new value'
   end
 
@@ -214,7 +216,7 @@ FactoryGirl.define do
   
   factory :status do 
     sequence(:id) {|n| n}
-    sequence(:code) {|n| 100+n}
+    sequence(:code) {|n| "status_#{100+n}"}
     sequence(:description) {|n|  "On field #{n}" }
     on_field true
     active true

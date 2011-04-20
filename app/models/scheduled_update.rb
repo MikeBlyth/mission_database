@@ -22,6 +22,7 @@ class ScheduledUpdate < ActiveRecord::Base
   validate :future_date
   validate :member_exists
   validate :family_exists
+  before_save :setup
 
 private
     
@@ -38,16 +39,27 @@ private
   def family_exists
     errors.add(:family, 'does not exist in database') if self.family_id && !self.family
   end
+  
+  def status_code_exists
+    errors.add(:new_value, 'not an existing status code') unless
+      Status.find_by_code(new_value)
+  end    
+  
+  def setup
+    self.status = 'pending'
+  end
     
 end
 
 class ScheduledUpdateMemberStatus < ScheduledUpdate
   validates_presence_of :member_id
-
-  after_initialize :setup
+  validate :status_code_exists  # Validate the new_value to be assigned is valid status code
+  
+  before_save :setup
   
   def setup
-    self.old_value =  nil
+    super
+    self.old_value =  self.member.status ? self.member.status.code : 'nil'
   end
   
 end 
