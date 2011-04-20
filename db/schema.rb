@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110420075727) do
+ActiveRecord::Schema.define(:version => 20110414074343) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -210,18 +210,6 @@ ActiveRecord::Schema.define(:version => 20110420075727) do
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.string   "encrypted_key"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "scheduled_updates", :force => true do |t|
-    t.date     "action_date"
-    t.integer  "member_id"
-    t.integer  "family_id"
-    t.string   "change_type"
-    t.string   "old_value"
-    t.string   "new_value"
-    t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
