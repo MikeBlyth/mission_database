@@ -72,6 +72,14 @@ module ApplicationHelper
       return s
     end
 
+    def errors_list(record)
+      s = ''
+      record.errors.each do |attrib, err|
+          s << "#{attrib} #{err}; "
+      end
+      return s
+    end
+    
 end  # ApplicationHelper module
 
 #******* Anything below this point is not in the module itself *********

@@ -90,6 +90,44 @@ describe ScheduledUpdateMemberStatus do
       s.old_value.should == 'nil'
     end
 
+  end # describe setup
+  
+  describe 'execute' do
+    before(:each) do
+      @status = Factory(:status)
+      @member = Factory(:member, :status=>@status)
+      @new_status = Factory(:status)
+      @s = Factory(:scheduled_update_member_status, :member=>@member, 
+          :new_value=>@new_status.code, :status=>'pending')
+    end  
+    
+    it 'updates member status if everything is valid' do
+      @s.execute
+      @s.reload.status.should == 'finished'
+      @member.reload.status.should == @new_status
+    end
+    
+    it 'ignores update unless status is "pending"' do
+      @s.status = 'other'
+      @s.execute
+      @s.status.should == 'other'
+    end
+    
+    it 'aborts with error if member is not found' do
+      @member.delete
+      @s.reload
+      @s.member.should be_nil
+      @s.execute
+      @s.reload.status.should =~ /error/
+    end
+    
+    it 'aborts with error if status code is not found' do
+      @s.status.should == 'pending'
+      @s.new_value = 'bad code'
+      @s.execute
+      @s.reload.status.should =~ /error/
+    end
+    
   end
 
 end
