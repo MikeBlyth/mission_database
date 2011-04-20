@@ -191,6 +191,17 @@ FactoryGirl.define do
     date_active '2005-01-01'
   end    
 
+  factory :scheduled_update do
+    action_date Date.tomorrow
+    new_value 'new value'
+  end
+
+  factory :scheduled_update_member_status do
+    action_date Date.tomorrow
+    new_value 'field'
+    member { |a| a.association :member }
+  end        
+
   factory :state do
     id 1
     name 'Plateau'

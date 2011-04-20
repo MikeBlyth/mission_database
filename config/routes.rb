@@ -47,13 +47,14 @@ SIM::Application.routes.draw do
   resources :educations do as_routes end
   resources :employment_statuses do as_routes end
   resources :families do as_routes end
+  resources :field_terms do as_routes end
   resources :health_data do as_routes end
   resources :locations do as_routes end
   resources :members do as_routes end
   resources :ministries do as_routes end
   resources :states do as_routes end
   resources :statuses do as_routes end
-  resources :field_terms do as_routes end
+  resources :scheduled_updates do as_routes end
   resources :travels do as_routes end
   resources :users do
     member do

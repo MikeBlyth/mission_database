@@ -29,6 +29,7 @@ class Family < ActiveRecord::Base
       # :delete_all is used so the members will be destroyed without any error checking
   belongs_to :status
   belongs_to :residence_location, :class_name => "Location", :foreign_key => "residence_location_id"
+  has_many :scheduled_updates,  :dependent => :destroy 
   before_validation :set_indexed_name_if_empty
   validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
