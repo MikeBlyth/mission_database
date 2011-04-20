@@ -44,7 +44,7 @@ describe ScheduledUpdate do
 
     it 'sets status of new record to "pending"' do
       s = Factory(:scheduled_update)
-      s.reload.status.should == 'pending'
+      s.status.should == 'pending'
     end
 
   end
@@ -72,6 +72,25 @@ describe ScheduledUpdateMemberStatus do
     end
   
   end # validation
+
+  describe 'setup' do
+    before(:each) do
+      @status = Factory(:status)
+    end
+
+    it 'sets old_value of new record to member status' do
+      member = Factory.stub(:member, :status=>@status)
+      s = Factory(:scheduled_update_member_status, :member=>member, :new_value=>@status.code)
+      s.old_value.should == member.status.code
+    end
+
+    it 'sets old_value of new record to "nil" if no member status' do
+      member = Factory.stub(:member, :status=>nil)
+      s = Factory(:scheduled_update_member_status, :member=>member, :new_value=>@status.code)
+      s.old_value.should == 'nil'
+    end
+
+  end
 
 end
 
