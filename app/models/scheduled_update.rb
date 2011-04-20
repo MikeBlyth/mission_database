@@ -21,7 +21,7 @@ class ScheduledUpdate < ActiveRecord::Base
   belongs_to :member
   belongs_to :family
   validates_presence_of :action_date, :new_value
-  validate :future_date
+#  validate :future_date
   validate :member_exists
   validate :family_exists
   before_create :setup

@@ -69,22 +69,22 @@ Feature: report generation
     And the report should not include "Homebody" 
     And the report should not include "UnknownType" 
 
-  Scenario: Generate phone list reports
-    Given that I am signed in
-    And a family with a "Wifey" and "ChildA" and "ChildB"
-    And a contact record
-    And I click on "Reports"
-    When I click on "Phone and email" 
-    Then I should get a "Phone" PDF report
-    And the report should include the name, phone and email
-    And the report should not include "ChildA"
+#  Scenario: Generate phone list reports
+#    Given that I am signed in
+#    And a family with a "Wifey" and "ChildA" and "ChildB"
+#    And a contact record
+#    And I click on "Reports"
+#    When I click on "Phone and email" 
+#    Then I should get a "Phone" PDF report
+#    And the report should include the name, phone and email
+#    And the report should not include "ChildA"
 
   Scenario: Generate travel reports
     Given that I am signed in
     And a one-person family
     And a "travel" record
     And I click on "Reports"
-    When I click on "Travel schedule" 
+    When I click on "Basic" 
     Then I should get a "Travel" PDF report
     And the report should include the "travel" information
 

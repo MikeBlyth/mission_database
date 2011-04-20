@@ -17,11 +17,11 @@ describe ScheduledUpdate do
       @s.should_not be_valid
     end 
   
-    it 'is not valid with a past date' do
-      @s.action_date = Date.yesterday
-      @s.should_not be_valid
-    end 
-  
+#    it 'is not valid with a past date' do
+#      @s.action_date = Date.yesterday
+#      @s.should_not be_valid
+#    end 
+#  
     it 'is valid with no member or family id' do
       @s.member_id = nil
       @s.family_id = nil
