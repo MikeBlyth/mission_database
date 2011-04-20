@@ -1,5 +1,7 @@
-describe Travel do
+require 'sim_test_helper'
 
+describe Travel do
+include SimTestHelper
   before(:each) do
     @object = Factory.build(:travel)
     @attr = @object.attributes
@@ -119,5 +121,63 @@ describe Travel do
     end
 
   end # describe "travelers method gives names"
-  
+
+  describe "whole family traveling?" do
+    before(:each) do
+      @member = create_couple
+#      @member = Factory.build :member
+      @travel = Factory.stub :travel, :member => @member, :with_spouse=>false, :with_children=>false
+    end
+    
+    it 'is true for single person traveling' do
+      @member.spouse = nil
+      @travel.whole_family_traveling?.should be_true
+    end              
+        
+    it 'is false for single person with kids traveling without kids' do
+      @member.spouse = nil
+      child = Factory(:child, :family=>@member.family)
+      @travel.whole_family_traveling?.should be_false
+    end              
+        
+    it 'is true for couple without kids if spouse is traveling' do
+      @travel.with_spouse = true
+      @travel.whole_family_traveling?.should be_true
+    end     
+
+    it 'is false for couple without kids if spouse is not traveling' do
+      @travel.with_spouse = false
+      @travel.whole_family_traveling?.should be_false
+    end     
+
+    it 'is true for couple with kids if spouse and kids are traveling' do
+      child = Factory(:child, :family=>@member.family)
+      @travel.with_spouse = true
+      @travel.with_children = true
+      @travel.whole_family_traveling?.should be_true
+    end     
+
+    it 'is false for couple with kids if spouse is not traveling' do
+      child = Factory(:child, :family=>@member.family)
+      @travel.with_spouse = false
+      @travel.with_children = true
+      @travel.whole_family_traveling?.should be_false
+    end     
+
+    it 'is false for couple with kids if kids are not traveling' do
+      child = Factory(:child, :family=>@member.family)
+      @travel.with_spouse = true
+      @travel.with_children = false
+      @travel.whole_family_traveling?.should be_false
+    end     
+
+    it 'is false for couple with kids if kids and spouse are not traveling' do
+      child = Factory(:child, :family=>@member.family)
+      @travel.with_spouse = false
+      @travel.with_children = false
+      @travel.whole_family_traveling?.should be_false
+    end     
+
+
+  end # describe whole family traveling
 end

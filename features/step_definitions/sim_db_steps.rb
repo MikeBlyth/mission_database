@@ -427,7 +427,7 @@ end
 
 Given /^a "([^"]*)" record$/ do |record_type|
   @detail = case record_type
-  when 'travel' then Factory(:travel, :member_id => @head.id, :date=> Date::today + 1.day, :confirmed => Date::yesterday)
+when 'travel' then Factory(:travel, :member_id => @head.id, :date=> Date::today + 1.day, :confirmed => Date::yesterday)
   end
 # puts "Detail record created = #{@detail.attributes}"
 end
@@ -437,8 +437,7 @@ Then /^the report should include the "([^"]*)" information$/ do |report_type|
   when 'travel'
     page.should have_content 'Travel Schedule'
     page.should have_content @head.last_name
-    page.should have_content @detail.date.to_s
-    page.should have_content @detail.origin
+    page.should have_content @detail.date.strftime('%e %b')
   when 'Where Is'
     page.should have_content @head.last_name
     page.should have_content @head.residence_location.description

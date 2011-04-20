@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110420164059
 #
 # Table name: travels
 #
@@ -29,6 +29,7 @@
 #  personal         :boolean
 #  ministry_related :boolean
 #  own_arrangements :boolean
+#  effected         :string(255)
 #
 
 class Travel < ActiveRecord::Base
@@ -61,8 +62,21 @@ class Travel < ActiveRecord::Base
 
     return [nil, nil, name.strip]
   end      
+  
+  def whole_family_traveling?
+    return nil unless member   # Skip records that don't specify a member
+    # Who is traveling?
+    case
+    when member.is_single? && (member.family.children.empty? || with_children) 
+      return true
+    when with_spouse && (member.family.children.empty? || with_children)
+      return true
+    else
+      return false
+    end
+  end
       
- 
+
   # Normally, member is an actual person in the database. However, a travel record can
   # be free-floating, not associated with a member. In this case, corresponding to the "else"
   # clause below, we generate a temporary Member object just so that we have the name
