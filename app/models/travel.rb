@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110420164059
+# Schema version: 20110414074343
 #
 # Table name: travels
 #
@@ -29,7 +29,6 @@
 #  personal         :boolean
 #  ministry_related :boolean
 #  own_arrangements :boolean
-#  effected         :string(255)
 #
 
 class Travel < ActiveRecord::Base

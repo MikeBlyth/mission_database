@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110420164059) do
+ActiveRecord::Schema.define(:version => 20110414074343) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -261,7 +261,6 @@ ActiveRecord::Schema.define(:version => 20110420164059) do
     t.boolean  "personal"
     t.boolean  "ministry_related"
     t.boolean  "own_arrangements"
-    t.string   "effected"
   end
 
   create_table "users", :force => true do |t|
