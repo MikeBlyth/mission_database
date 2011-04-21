@@ -63,6 +63,7 @@ class Travel < ActiveRecord::Base
     return [nil, nil, name.strip]
   end      
   
+  # Tested
   def whole_family_traveling?
     return nil unless member   # Skip records that don't specify a member
     # Who is traveling?
@@ -75,7 +76,32 @@ class Travel < ActiveRecord::Base
       return false
     end
   end
-      
+  
+  # Not Tested
+  def status_from_travel
+    if term_passage
+      new_status_code = arrival ? 'field' : 'home_assignment'
+    else
+      return nil
+    end
+    return Status.find_by_code new_status_code
+  end
+    
+  # Not Tested
+  def update_member_family_status_based_on_travel
+    whole_family = whole_family_traveling?
+    existing_status = whole_family ? self.member.family.status : self.member.status
+    new_status = status_from_travel
+    if new_status && (new_status != existing_status)
+      if whole_family
+        self.member.family.update_attribute(:status, new_status)
+      else
+        self.member.update_attribute(:status, new_status)
+        self.member.spouse.update_attribute(:status, new_status) if with_spouse
+        # Ignore children status for now ... unlikely to travel without parents
+      end  
+    end
+  end
 
   # Normally, member is an actual person in the database. However, a travel record can
   # be free-floating, not associated with a member. In this case, corresponding to the "else"
@@ -107,7 +133,6 @@ class Travel < ActiveRecord::Base
     end
     return other_travelers
   end
-
 
   # "Virtual column" for use in listing travels
   def traveler_name
