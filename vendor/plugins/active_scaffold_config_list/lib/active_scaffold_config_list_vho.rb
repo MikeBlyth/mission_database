@@ -1,0 +1,2 @@
+ACTIVE_SCAFFOLD_CONFIG_LIST_GEM = true
+require 'active_scaffold_config_list'

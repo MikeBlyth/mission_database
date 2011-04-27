@@ -1,0 +1,17 @@
+This works with Rails 3 and rails 3 fork of ActiveScaffold:
+http://github.com/vhochstein/active_scaffold
+
+Usage:
+active_scaffold :model do |conf|
+  conf.actions.add :config_list
+end
+
+
+Overview
+
+A plugin for Active Scaffold that provides the ability to choose the column to show in the scaffold list at run-time
+
+The configuration data will be saved on the session.
+
+
+

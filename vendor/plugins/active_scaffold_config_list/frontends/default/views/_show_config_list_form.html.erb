@@ -1,0 +1,17 @@
+<% url_options = params_for(:action => :index, :escape => false, :config_list => nil) -%>
+<%=
+options = {:id => element_form_id(:action => :config_list),
+           :class => "as_form config_list",
+           :remote => true,
+           :method => :get,
+           'data-loading' => true}
+form_tag url_options, options %>
+  <h4><%= active_scaffold_config.config_list.label -%></h4>
+  <%= render :partial => 'show_config_list_form_body', :locals => { :columns => active_scaffold_config.config_list } %>
+  <p class="form-footer">
+    <%= submit_tag as_(:config_list), :class => "submit" %>
+    <%= link_to as_(:reset), url_for(url_options.merge(:config_list => '')), :class => 'as_cancel', :remote => true %>
+    <%= loading_indicator_tag(:action => :config_list) %>
+  </p>
+</form>
+<%= javascript_tag("ActiveScaffold.focus_first_element_of_form('#{element_form_id(:action => :config_list)}');") %>

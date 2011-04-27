@@ -10,9 +10,11 @@ class MembersController < ApplicationController
 
   active_scaffold :member do |config|
 
+  #  config.actions << :config_list
+
     config.label = "Members"
     list.columns = [:name, :spouse, 
-          :child, :residence_location, :work_location, :travels, :field_terms, :status, :contacts]
+          :child, :residence_location, :work_location, :ministry, :health_data, :travels, :field_terms, :status, :contacts]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = create.columns = update.columns = [:name, :name_override,
@@ -41,6 +43,7 @@ class MembersController < ApplicationController
     config.columns[:sex].options[:options] = [['Female', 'F'], ['Male', 'M']]
     config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
+    config.columns[:ministry].inplace_edit = true
     config.columns[:status].form_ui = :select 
     config.columns[:status].inplace_edit = true
     config.columns[:child].inplace_edit = true
