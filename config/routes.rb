@@ -51,6 +51,7 @@ SIM::Application.routes.draw do
   resources :locations do as_routes end
   resources :members do as_routes end
   resources :ministries do as_routes end
+  resources :personnel_data do as_routes end
   resources :states do as_routes end
   resources :statuses do as_routes end
   resources :field_terms do as_routes end
