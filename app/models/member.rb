@@ -49,7 +49,7 @@ class Member < ActiveRecord::Base
   belongs_to :ministry
   belongs_to :residence_location, :class_name => "Location"#, :foreign_key => "residence_location_id"
   belongs_to :work_location, :class_name => "Location"#, :foreign_key => "work_location_id"
-  belongs_to :employment_status
+#  belongs_to :employment_status
   belongs_to :status
   validates_presence_of :last_name, :first_name, :name
   validates_uniqueness_of :spouse_id, :allow_blank=>true
@@ -68,6 +68,12 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
+  def self.those_active_sim
+    self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.active_sim_statuses)
+  end 
+
+  
+
   def family_head
     return Family.find_by_id(family_id) && (family.head_id == self.id)
   end 

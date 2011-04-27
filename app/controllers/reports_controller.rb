@@ -11,6 +11,10 @@ class ReportsController < ApplicationController
     # this just displays a view that lets the user select from reports
   end
 
+  def statistics_1
+    @members = Member.those_active_sim.includes(:personnel_data, :country, :residence_location, :work_location, :status)
+  end
+
   def whereis
     # Who to include in the report ... options not implemented yet
     # include_home_assignment = params[:include_home_assignment]

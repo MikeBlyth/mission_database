@@ -20,6 +20,11 @@ class EmploymentStatus < ActiveRecord::Base
   validates_presence_of :description, :code
   validates_uniqueness_of :code, :description
 
+  def self.active_sim_statuses
+    statuses = self.where("code in (?)",['career', 'sta', 'associate'])
+    return statuses.map {|s| s.id}
+  end
+
   def to_label
     self.to_s
   end
