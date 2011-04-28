@@ -89,6 +89,16 @@ describe StatisticsHelper do
       table['dog']['Total'].should == 4
       table['Totals']['Total'].should == 7
     end
+    
+    it 'returns sorted output' do
+      xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :rows_label=>'Pet', :columns_label=>'Sex'})
+      xtab.make_sorted_rows.should == [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
+    end
+
+    it 'returns sorted output to text' do
+      xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :rows_label=>'Pet', :columns_label=>'Sex'})
+      xtab.to_s.should == "Title\n\t\tSex\n\tf\tm\tTotal\ndog\t3\t1\t4\ncat\t1\t2\t3\nTotals\t4\t3\t7\n"
+    end
 
     it 'returns nil for empty data' do
       CrossTab.new([], {:rows=>'a', :columns=>'b'}).table_rows.should be_nil
