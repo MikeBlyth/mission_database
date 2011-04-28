@@ -143,6 +143,7 @@ module StatisticsHelper
 
     def make_sorted_rows
       rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}.rotate    # => [["dog", 4], ["cat", 3], ["Total", 7]]
+      rows.map! {|r| [initcap(r[0]), r[1]]}  # capitalize first letter of each label: [["Dog", 4], ["Cat", 3], ["Total", 7]]
       @sorted_rows = [[@rows_label,'Count']] + rows
       # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
       return @sorted_rows                                                    

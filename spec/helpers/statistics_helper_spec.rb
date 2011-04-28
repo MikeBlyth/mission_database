@@ -75,14 +75,14 @@ describe StatisticsHelper do
       data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
                 {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
       freq = Freq.new(data, {:rows=>:a})
-      freq.make_sorted_rows.should == [["a", "Count"], ["dog", 4], ["cat", 3], ["(none)", 2], ["rat", 1], ["Total", 10]]
+      freq.make_sorted_rows.should == [["a", "Count"], ["Dog", 4], ["Cat", 3], ["(none)", 2], ["Rat", 1], ["Total", 10]]
     end            
     
     it 'outputs to text' do
       data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
                 {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
       freq = Freq.new(data, {:rows=>:a})
-      freq.to_s.should == "a\tCount\ndog\t4\ncat\t3\n(none)\t2\nrat\t1\nTotal\t10\n"
+      freq.to_s.should == "a\tCount\nDog\t4\nCat\t3\n(none)\t2\nRat\t1\nTotal\t10\n"
     end            
     
   end # frequency table
