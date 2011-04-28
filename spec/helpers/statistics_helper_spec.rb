@@ -55,16 +55,35 @@ describe StatisticsHelper do
     it 'works with nil values' do
       data = [ {a: nil}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
       table = Freq.new(data,{:rows=>:a}).table_rows
-      table[''].should == 2
+      table['(none)'].should == 2
       table['cat'].should == 3
       table['dog'].should == 4
       table['Total'].should == 9
     end
 
+    it 'can set row name of nil values' do
+      data = [ {a: nil}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
+      table = Freq.new(data,{:rows=>:a, :nil_label=>'?'}).table_rows
+      table['?'].should == 2
+    end
+
     it 'returns nil for empty data' do
       Freq.new([], 'a').table_rows.should be_nil
     end      
-      
+
+    it 'sorts rows by frequency' do
+      data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
+                {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
+      freq = Freq.new(data, {:rows=>:a})
+      freq.make_sorted_rows.should == [["a", "Count"], ["dog", 4], ["cat", 3], ["(none)", 2], ["rat", 1], ["Total", 10]]
+    end            
+    
+    it 'outputs to text' do
+      data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
+                {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
+      freq = Freq.new(data, {:rows=>:a})
+      freq.to_s.should == "a\tCount\ndog\t4\ncat\t3\n(none)\t2\nrat\t1\nTotal\t10\n"
+    end            
     
   end # frequency table
   
@@ -92,12 +111,23 @@ describe StatisticsHelper do
     
     it 'returns sorted output' do
       xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :rows_label=>'Pet', :columns_label=>'Sex'})
-      xtab.make_sorted_rows.should == [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
+      xtab.make_sorted_rows.should == [["", "F", "M", "Total"], ["Dog", 3, 1, 4], ["Cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
     end
 
     it 'returns sorted output to text' do
+      # Naturally this is very "brittle." Any changes to the to_s method will break this test!
       xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :rows_label=>'Pet', :columns_label=>'Sex'})
-      xtab.to_s.should == "Title\n\t\tSex\n\tf\tm\tTotal\ndog\t3\t1\t4\ncat\t1\t2\t3\nTotals\t4\t3\t7\n"
+      xtab.to_s.should == "Title\n\t\tSex\n\tF\tM\tTotal\nDog\t3\t1\t4\nCat\t1\t2\t3\nTotals\t4\t3\t7\n"
+    end
+
+    it 'returns sorted output to html' do
+      # Naturally this is very "brittle." Any changes to the to_s method will break this test!
+      xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :id =>"pets_sex",
+            :rows_label=>'Pet', :columns_label=>'Sex'})
+      xtab.to_html.should == "<div class='crosstab' id='pets_sex'><p class='crosstab_title'>Title</p><table class='crosstab'>" + 
+                            "<tr><th>Pet</th><th>F</th><th>M</th><th>Total</th></tr><tr class='odd'><td>Dog</td><td>3</td>" + 
+                            "<td>1</td><td>4</td></tr><tr class='even'><td>Cat</td><td>1</td><td>2</td><td>3</td></tr>" + 
+                            "<tr class='odd'><td>Totals</td><td>4</td><td>3</td><td>7</td></tr></table></div>"
     end
 
     it 'returns nil for empty data' do

@@ -10,6 +10,10 @@ module StatisticsHelper
     end
   end
 
+  def initcap(s)
+    return s[0].upcase + s[1..-1]
+  end
+
   class CrossTab < Object
     attr_accessor :title, :columns_label, :rows_label, :table_rows
     
@@ -54,12 +58,13 @@ module StatisticsHelper
       col_heads.unshift('')  # Prepend blank column, where row labels will go on subsequent rows ... ['', 'f', 'm', 'Total']
       # Now col_heads is the column names (labels) in descending order of freq, with Total at the end
       # Build the table row by row
-      output = [col_heads]
+      output = [ [''] + col_heads[1..-1].map {|c| initcap(c)} ]
       rows.each do |r|
         cell_values = col_heads[1..-1].map {|c| r[1][c] } # for each column except first, which is blank, return count. For example,
                                             # col_head[1] is 'f', so in 'dogs' row where r[1] is {"Total"=>4, "m"=>1, "f"=>3},
                                             # the value will be 3 ("f"=>3)
-        output << [r[0]] + cell_values  # where r[0] is the row label
+        row_label = r[0].blank? ? @nil_label : initcap(r[0])  # r[0] is label for the row
+        output << [row_label] + cell_values
       end
       @sorted_rows = output
       # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
@@ -68,12 +73,29 @@ module StatisticsHelper
 
     def to_s
       make_sorted_rows unless @sorted_rows
-      output = @title + "\n\t\t#{@columns_label}\n"
-      @sorted_rows.each {|r| output << r.join("\t") + "\n"}
+      output = @title.blank? ? '' : @title + "\n"
+      output += "\t\t#{@columns_label}\n" if @options[:columns]
+      @sorted_rows.each {|r| output  << r.join("\t") + "\n"}
       return output
     end
-      
-      
+
+    def to_html
+      even_odd = ['even', 'odd']
+      make_sorted_rows unless @sorted_rows
+      output = "<div class='crosstab'"
+      output += " id='#{@options[:id]}'" if @options[:id]
+      output += ">"
+      output += "<p class='crosstab_title'>#{@title}</p>" unless @title.blank?
+#      output += "\t\t#{@columns_label}\n" if @options[:columns]
+      output += "<table class='crosstab'><tr><th>#{@rows_label}</th>"
+      @sorted_rows[0][1..-1].each {|c| output += "<th>#{c}</th>"}
+      output += "</tr>"
+      @sorted_rows[1..-1].each {|r| output  << "<tr class='#{even_odd.rotate![0]}'><td>" + 
+                                                r.join("</td><td>") + "</td></tr>"}
+      output += "</table></div>"
+      return output
+    end  
+       
     private
 
     def init_main(data, options)
@@ -82,6 +104,7 @@ module StatisticsHelper
       @options = options
       @title = options[:title] || "#{options[:rows]} x #{options[:columns]}"
       @table_rows = {}   
+      @nil_label = options[:nil_label] || "(none)"   # Row label for rows with blank/nil values
     end
 
     def init_rows
@@ -103,13 +126,28 @@ module StatisticsHelper
     def initialize(data,options)
       return nil if data.empty?
       init_main(data, options)
+      @title = @options[:title] || ''
       init_rows
       @row_values.each {|r| @table_rows[r] = 0}   
       data.each do |x|
         @table_rows[method_or_key(x, @row).to_s] += 1
       end
       @table_rows['Total'] = @table_rows.inject(0) {|sum, cell| sum + cell[1]}
+      unless @nil_label.blank?
+        unnamed = @table_rows.delete(nil)
+        @table_rows[@nil_label] = unnamed if unnamed
+        unnamed = @table_rows.delete('')
+        @table_rows[@nil_label] = unnamed if unnamed
+      end  
     end # initialize
+
+    def make_sorted_rows
+      rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}.rotate    # => [["dog", 4], ["cat", 3], ["Total", 7]]
+      @sorted_rows = [[@rows_label,'Count']] + rows
+      # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
+      return @sorted_rows                                                    
+    end # sorted rows
+      
 
   end  # Class Freq
 
