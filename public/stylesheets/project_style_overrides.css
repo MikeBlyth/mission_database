@@ -217,3 +217,21 @@ div.temporary_location_dates {
 
 .whereis .list_line_even {
   background: #cce4fc; }
+
+div.crosstab p.title {
+  font-weight: bold;
+  font-size: 1.3em; }
+div.crosstab th {
+  text-align: left;
+  padding: 0px 10px 0px 10px; }
+div.crosstab tr.odd {
+  background: #dcecec; }
+div.crosstab tr.even {
+  background: #cce4fc; }
+div.crosstab td {
+  padding: 0px 30px 0px 10px;
+  text-align: right; }
+div.crosstab td.row_label {
+  text-align: left; }
+div.crosstab tr.total {
+  background: white; }

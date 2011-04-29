@@ -14,8 +14,15 @@ class ReportsController < ApplicationController
 
   def statistics_1
     @members = Member.those_active_sim.includes(:personnel_data, :country, :residence_location, :work_location, :status)
-    ministries = Freq.new(@members,{:rows=>'country', :title=>"Active Members by Country"})
-    @tables = [ministries]
+    countries = Freq.new(@members,{:rows=>'country', :title=>"Active SIM Nigeria Members by Country of Origin", :sort=>:alphabetical})
+    ministries = Freq.new(@members,{:rows=>'ministry', :title=>"Active SIM Nigeria Members by Ministry"})
+    locations = Freq.new(@members,{:rows=>'residence_location', :title=>"Active SIM Nigeria Members by Residence"})
+    work_locations = Freq.new(@members,{:rows=>'work_location', :title=>"Active SIM Nigeria Members by Workplace"})
+    cities = Freq.new(@members,{:rows=>'city', :title=>"Active SIM Nigeria Members by City"})
+    employment_statuses = Freq.new(@members,{:rows=>'employment_status', :title=>"Active SIM Nigeria Members by SIM Status"})
+    age_sex = CrossTab.new(@members, {:rows=>'age_range', :columns=>'sex', :sort=>:alphabetical,
+          :title=>"Active SIM Nigeria Members by Age and Sex"})
+    @tables = [age_sex, work_locations, employment_statuses, cities, ministries, countries, locations]
     @title = 'Statistics 1'
     respond_to do |format|
       format.html

@@ -3,7 +3,7 @@ module StatisticsHelper
   class CrossTab < Object
     include ApplicationHelper
     attr_accessor :title, :columns_label, :rows_label, :table_rows
-    
+        
     def initialize(data,options)
       return nil if data.empty?
       init_main(data, options)
@@ -33,9 +33,19 @@ module StatisticsHelper
       @table_rows['Totals'] = column_totals # Do this AFTER calculating column totals, to avoid double counting
     end  # initialize
 
+    def string_clean(s, maxlen=20)
+      s.gsub(" ",'_').downcase.delete("^a-z0-9_")[0..maxlen]
+    end
+      
+
     def make_sorted_rows
       rows = @table_rows.to_a # => [["cat", {"Total"=>3, "m"=>2, "f"=>1}], ["dog", {"Total"=>4, "m"=>1, "f"=>3}], ["Totals", {"Total"=>7, "m"=>3, "f"=>4}]] 
-      rows.sort! {|x,y| y[1]['Total'] <=> x[1]['Total']}  # sort by total frequency, putting highest freq rows first
+      if @options[:sort] == :alphabetical
+        rows.sort! {|x,y| x[0] <=> y[0]}  # sort by total frequency, putting highest freq rows first
+@title << " Alpha"
+      else
+        rows.sort! {|x,y| y[1]['Total'] <=> x[1]['Total']}  # sort by total frequency, putting highest freq rows first
+      end
       totals_row = rows.shift  # removes totals row from front of array ...
       rows.push(totals_row)  # ... and pushes it onto the end 
       # Now figure out the column order based on highest frequencies first
@@ -50,7 +60,7 @@ module StatisticsHelper
         cell_values = col_heads[1..-1].map {|c| r[1][c] } # for each column except first, which is blank, return count. For example,
                                             # col_head[1] is 'f', so in 'dogs' row where r[1] is {"Total"=>4, "m"=>1, "f"=>3},
                                             # the value will be 3 ("f"=>3)
-        row_label = r[0].blank? ? @nil_label : r[0].capitalize  # r[0] is label for the row
+        row_label = r[0].blank? ? @nil_label : r[0].titlecase  # r[0] is label for the row
         output << [row_label] + cell_values
       end
       @sorted_rows = output
@@ -72,14 +82,15 @@ module StatisticsHelper
       output = "<div class='crosstab'"
       output += " id='#{@options[:id]}'" if @options[:id]
       output += ">"
-      output += "<p class='crosstab_title'>#{@title}</p>" unless @title.blank?
+      output += "<p class='title'>#{@title}</p>" unless @title.blank?
       output += "<table class='crosstab'><tr>"
       col_heads = [@rows_label] + @sorted_rows[0][1..-1]
       col_heads.each {|c| output += "<th>#{c}</th>"}
       output += "</tr>"
       @sorted_rows[1..-1].each do |r| 
-        classes = col_heads.map{|c| c.gsub(" ",'_').downcase.delete("^a-z0-9_")[0..12]}  # generate class names from column heads
-        output  += "<tr class='#{even_odd.rotate![0]}'>" # row
+        classes = col_heads.map{|c| string_clean(c)}  # generate class names from column heads
+        classes[0] << ' row_label'
+        output  += "<tr class='#{even_odd.rotate![0]} #{string_clean(r[0])}'>" # row
         r.each {|cell_value| output += "<td class='#{classes.shift}'>#{cell_value}</td>"} # cells
         output  += "</tr>" 
       end  # of each row
@@ -133,8 +144,15 @@ module StatisticsHelper
     end # initialize
 
     def make_sorted_rows
-      rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}.rotate    # => [["dog", 4], ["cat", 3], ["Total", 7]]
-      rows.map! {|r| [r[0].capitalize, r[1]]}  # capitalize first letter of each label: [["Dog", 4], ["Cat", 3], ["Total", 7]]
+
+
+      if @options[:sort] == :alphabetical
+        rows = @table_rows.to_a.sort {|x,y| x[0] <=> y[0]}  # sort by total frequency, putting highest freq rows first
+@title << " Alpha"
+      else
+        rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}.rotate    # => [["dog", 4], ["cat", 3], ["Total", 7]]
+      end
+#      rows.map! {|r| [r[0], r[1]]}  # capitalize first letter of each label: [["Dog", 4], ["Cat", 3], ["Total", 7]]
       @sorted_rows = [[@rows_label,'Count']] + rows
       # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
       return @sorted_rows                                                    
