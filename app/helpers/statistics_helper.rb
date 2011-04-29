@@ -17,20 +17,20 @@ module StatisticsHelper
         @table_rows[method_or_key(x, @row).to_s][method_or_key(x, @col).to_s] += 1
       end
 
-      column_totals = {'Total' => 0}
+      @col_totals_hash = {}
       @col_values.each do |col|
-        column_totals[col] = 0
+        @col_totals_hash[col] = 0
         @table_rows.each do |label, cells|
-          column_totals[col] += cells[col]
+          @col_totals_hash[col] += cells[col]
         end
       end
-      column_totals['Total']= column_totals.inject(0) {|sum, cell| sum + cell[1]}
-
+      @col_totals_hash['Total']= @col_totals_hash.inject(0) {|sum, cell| sum + cell[1]} # like {"Total"=>7, "m"=>3, "f"=>4}
+      @table_rows_totals = ['Totals', @col_totals_hash] # like ["Totals", {"Total"=>7, "m"=>3, "f"=>4}] 
+puts "Title=#{@title}, @col_totals_hash = #{@col_totals_hash}, @table_rows_totals = #{@table_rows_totals}"
       # Get row totals -- it just works
       @table_rows.each do |label, cells|
         cells['Total'] = cells.inject(0) {|sum, cell| sum + cell[1]}
       end
-      @table_rows['Totals'] = column_totals # Do this AFTER calculating column totals, to avoid double counting
     end  # initialize
 
     def string_clean(s, maxlen=20)
@@ -39,24 +39,25 @@ module StatisticsHelper
       
 
     def make_sorted_rows
-      rows = @table_rows.to_a # => [["cat", {"Total"=>3, "m"=>2, "f"=>1}], ["dog", {"Total"=>4, "m"=>1, "f"=>3}], ["Totals", {"Total"=>7, "m"=>3, "f"=>4}]] 
+      rows = @table_rows.to_a # => [["cat", {"Total"=>3, "m"=>2, "f"=>1}], ["dog", {"Total"=>4, "m"=>1, "f"=>3}]] 
       if @options[:sort] == :alphabetical
         rows.sort! {|x,y| x[0] <=> y[0]}  # sort by total frequency, putting highest freq rows first
 @title << " Alpha"
       else
         rows.sort! {|x,y| y[1]['Total'] <=> x[1]['Total']}  # sort by total frequency, putting highest freq rows first
       end
-      totals_row = rows.shift  # removes totals row from front of array ...
-      rows.push(totals_row)  # ... and pushes it onto the end 
       # Now figure out the column order based on highest frequencies first
       # totals_row is like ["Totals", {"Total"=>7, "m"=>3, "f"=>4}]  
-      col_heads = totals_row[1].to_a.sort {|x,y| y[1] <=> x[1]}.map{|x| x[0]}  # => ["Total", "f", "m"] (column labels in desc order)
+      col_heads = @col_totals_hash.to_a.sort {|x,y| y[1] <=> x[1]}.map{|x| x[0]}  # => ["Total", "f", "m"] (column labels in desc order)
       col_heads.rotate!  # Push Total to end of array so now like ['f', 'm', 'Total']
       col_heads.unshift('')  # Prepend blank column, where row labels will go on subsequent rows ... ['', 'f', 'm', 'Total']
       # Now col_heads is the column names (labels) in descending order of freq, with Total at the end
       # Build the table row by row
       output = [ [''] + col_heads[1..-1].map {|c| c.capitalize} ]
-      rows.each do |r|
+puts "Rows=#{rows}"
+puts "@table_rows_totals=#{@table_rows_totals}"
+      (rows + [@table_rows_totals]).each do |r|
+puts "Row=#{r}"
         cell_values = col_heads[1..-1].map {|c| r[1][c] } # for each column except first, which is blank, return count. For example,
                                             # col_head[1] is 'f', so in 'dogs' row where r[1] is {"Total"=>4, "m"=>1, "f"=>3},
                                             # the value will be 3 ("f"=>3)
@@ -65,7 +66,7 @@ module StatisticsHelper
       end
       @sorted_rows = output
       # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
-      return output                                                    
+      return  @sorted_rows                                                   
     end # sorted rows
 
     def to_s
@@ -91,6 +92,7 @@ module StatisticsHelper
         classes = col_heads.map{|c| string_clean(c)}  # generate class names from column heads
         classes[0] << ' row_label'
         output  += "<tr class='#{even_odd.rotate![0]} #{string_clean(r[0])}'>" # row
+puts "r=#{r}"
         r.each {|cell_value| output += "<td class='#{classes.shift}'>#{cell_value}</td>"} # cells
         output  += "</tr>" 
       end  # of each row
@@ -124,17 +126,20 @@ module StatisticsHelper
   end # Class CrossTab
 
   class Freq < CrossTab
+  # Note that in Freq, since there is only one label and one value per row, we don't need the
+  # same data structure and have simplified.
 
     def initialize(data,options)
       return nil if data.empty?
       init_main(data, options)
       @title = @options[:title] || ''
       init_rows
-      @row_values.each {|r| @table_rows[r] = 0}   
+      @row_values.each {|r| @table_rows[r] = 0}   # {'cat'=>0, 'dog'=>0}
       data.each do |x|
         @table_rows[method_or_key(x, @row).to_s] += 1
       end
-      @table_rows['Total'] = @table_rows.inject(0) {|sum, cell| sum + cell[1]}
+      @table_rows_totals = ['Total', @table_rows.inject(0) {|sum, cell| sum + cell[1]}] # Array, not hash: ['Total', 7]
+      # Add some label when row labels are nil or blank
       unless @nil_label.blank?
         unnamed = @table_rows.delete(nil)
         @table_rows[@nil_label] = unnamed if unnamed
@@ -144,16 +149,14 @@ module StatisticsHelper
     end # initialize
 
     def make_sorted_rows
-
-
       if @options[:sort] == :alphabetical
-        rows = @table_rows.to_a.sort {|x,y| x[0] <=> y[0]}  # sort by total frequency, putting highest freq rows first
+        rows = @table_rows.to_a.sort {|x,y| x[0] <=> y[0]}  # sort by row label: [["cat", 3], ["dog", 4]]
 @title << " Alpha"
       else
-        rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}.rotate    # => [["dog", 4], ["cat", 3], ["Total", 7]]
+        rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}    # sort by freq:  [["dog", 4], ["cat", 3]]
       end
 #      rows.map! {|r| [r[0], r[1]]}  # capitalize first letter of each label: [["Dog", 4], ["Cat", 3], ["Total", 7]]
-      @sorted_rows = [[@rows_label,'Count']] + rows
+      @sorted_rows = [[@rows_label,'Count']] + rows + [@table_rows_totals]
       # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
       return @sorted_rows                                                    
     end # sorted rows
