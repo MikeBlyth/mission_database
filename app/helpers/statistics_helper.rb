@@ -1,20 +1,7 @@
 module StatisticsHelper
 
-  def method_or_key(object, key)
-    if object.respond_to? key 
-      return object.send(key)
-    elsif object.is_a? Hash
-      return object[key] || object[key.to_s] || object[key.to_sym]
-    else
-      return nil
-    end
-  end
-
-  def initcap(s)
-    return s[0].upcase + s[1..-1]
-  end
-
   class CrossTab < Object
+    include ApplicationHelper
     attr_accessor :title, :columns_label, :rows_label, :table_rows
     
     def initialize(data,options)
@@ -58,12 +45,12 @@ module StatisticsHelper
       col_heads.unshift('')  # Prepend blank column, where row labels will go on subsequent rows ... ['', 'f', 'm', 'Total']
       # Now col_heads is the column names (labels) in descending order of freq, with Total at the end
       # Build the table row by row
-      output = [ [''] + col_heads[1..-1].map {|c| initcap(c)} ]
+      output = [ [''] + col_heads[1..-1].map {|c| c.capitalize} ]
       rows.each do |r|
         cell_values = col_heads[1..-1].map {|c| r[1][c] } # for each column except first, which is blank, return count. For example,
                                             # col_head[1] is 'f', so in 'dogs' row where r[1] is {"Total"=>4, "m"=>1, "f"=>3},
                                             # the value will be 3 ("f"=>3)
-        row_label = r[0].blank? ? @nil_label : initcap(r[0])  # r[0] is label for the row
+        row_label = r[0].blank? ? @nil_label : r[0].capitalize  # r[0] is label for the row
         output << [row_label] + cell_values
       end
       @sorted_rows = output
@@ -86,12 +73,16 @@ module StatisticsHelper
       output += " id='#{@options[:id]}'" if @options[:id]
       output += ">"
       output += "<p class='crosstab_title'>#{@title}</p>" unless @title.blank?
-#      output += "\t\t#{@columns_label}\n" if @options[:columns]
-      output += "<table class='crosstab'><tr><th>#{@rows_label}</th>"
-      @sorted_rows[0][1..-1].each {|c| output += "<th>#{c}</th>"}
+      output += "<table class='crosstab'><tr>"
+      col_heads = [@rows_label] + @sorted_rows[0][1..-1]
+      col_heads.each {|c| output += "<th>#{c}</th>"}
       output += "</tr>"
-      @sorted_rows[1..-1].each {|r| output  << "<tr class='#{even_odd.rotate![0]}'><td>" + 
-                                                r.join("</td><td>") + "</td></tr>"}
+      @sorted_rows[1..-1].each do |r| 
+        classes = col_heads.map{|c| c.gsub(" ",'_').downcase.delete("^a-z0-9_")[0..12]}  # generate class names from column heads
+        output  += "<tr class='#{even_odd.rotate![0]}'>" # row
+        r.each {|cell_value| output += "<td class='#{classes.shift}'>#{cell_value}</td>"} # cells
+        output  += "</tr>" 
+      end  # of each row
       output += "</table></div>"
       return output
     end  
@@ -109,13 +100,13 @@ module StatisticsHelper
 
     def init_rows
       @row = @options[:rows]
-      @rows_label = @options[:rows_label] || @row.to_s
+      @rows_label = @options[:rows_label] || @row.to_s.humanize
       @row_values = @data.map {|x| method_or_key(x, @row).to_s}.uniq
     end
     
     def init_columns
       @col = @options[:columns]
-      @columns_label = @options[:columns_label] || @col.to_s
+      @columns_label = @options[:columns_label] || @col.to_s.humanize
       @col_values = @data.map {|x| method_or_key(x, @col).to_s}.uniq
     end
 
@@ -143,7 +134,7 @@ module StatisticsHelper
 
     def make_sorted_rows
       rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}.rotate    # => [["dog", 4], ["cat", 3], ["Total", 7]]
-      rows.map! {|r| [initcap(r[0]), r[1]]}  # capitalize first letter of each label: [["Dog", 4], ["Cat", 3], ["Total", 7]]
+      rows.map! {|r| [r[0].capitalize, r[1]]}  # capitalize first letter of each label: [["Dog", 4], ["Cat", 3], ["Total", 7]]
       @sorted_rows = [[@rows_label,'Count']] + rows
       # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
       return @sorted_rows                                                    

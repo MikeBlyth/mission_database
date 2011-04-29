@@ -20,6 +20,18 @@ module ApplicationHelper
       return value.downcase == 'unspecified' ? nil_value : value
     end
 
+    # Tries sending 'key' to object as method, then as hash key (string and symbol)
+    #   so a model, a hash, or other object can be accessed the same way
+    def method_or_key(object, key)
+      if object.respond_to? key 
+        return object.send(key)
+      elsif object.is_a? Hash
+        return object[key] || object[key.to_s] || object[key.to_sym]
+      else
+        return nil
+      end
+    end
+
     def opposite_sex(s)
       return :male if s == :female
       return :female if s == :male

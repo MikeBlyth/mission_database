@@ -75,14 +75,14 @@ describe StatisticsHelper do
       data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
                 {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
       freq = Freq.new(data, {:rows=>:a})
-      freq.make_sorted_rows.should == [["a", "Count"], ["Dog", 4], ["Cat", 3], ["(none)", 2], ["Rat", 1], ["Total", 10]]
+      freq.make_sorted_rows.should == [["A", "Count"], ["Dog", 4], ["Cat", 3], ["(none)", 2], ["Rat", 1], ["Total", 10]]
     end            
     
     it 'outputs to text' do
       data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
                 {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
       freq = Freq.new(data, {:rows=>:a})
-      freq.to_s.should == "a\tCount\nDog\t4\nCat\t3\n(none)\t2\nRat\t1\nTotal\t10\n"
+      freq.to_s.should == "A\tCount\nDog\t4\nCat\t3\n(none)\t2\nRat\t1\nTotal\t10\n"
     end            
     
   end # frequency table
@@ -124,10 +124,7 @@ describe StatisticsHelper do
       # Naturally this is very "brittle." Any changes to the to_s method will break this test!
       xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :id =>"pets_sex",
             :rows_label=>'Pet', :columns_label=>'Sex'})
-      xtab.to_html.should == "<div class='crosstab' id='pets_sex'><p class='crosstab_title'>Title</p><table class='crosstab'>" + 
-                            "<tr><th>Pet</th><th>F</th><th>M</th><th>Total</th></tr><tr class='odd'><td>Dog</td><td>3</td>" + 
-                            "<td>1</td><td>4</td></tr><tr class='even'><td>Cat</td><td>1</td><td>2</td><td>3</td></tr>" + 
-                            "<tr class='odd'><td>Totals</td><td>4</td><td>3</td><td>7</td></tr></table></div>"
+      xtab.to_html.should == "<div class='crosstab' id='pets_sex'><p class='crosstab_title'>Title</p><table class='crosstab'><tr><th>Pet</th><th>F</th><th>M</th><th>Total</th></tr><tr class='odd'><td class='pet'>Dog</td><td class='f'>3</td><td class='m'>1</td><td class='total'>4</td></tr><tr class='even'><td class='pet'>Cat</td><td class='f'>1</td><td class='m'>2</td><td class='total'>3</td></tr><tr class='odd'><td class='pet'>Totals</td><td class='f'>4</td><td class='m'>3</td><td class='total'>7</td></tr></table></div>"
     end
 
     it 'returns nil for empty data' do

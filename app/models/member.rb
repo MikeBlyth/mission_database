@@ -81,6 +81,10 @@ class Member < ActiveRecord::Base
   def is_single?
     return spouse.nil?
   end
+
+  def employment_status
+    return personnel_data.employment_status
+  end  
   
   # Make array of children. This version uses age rather than child attribute as criterion
   def children

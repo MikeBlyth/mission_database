@@ -3,6 +3,7 @@
 class ReportsController < ApplicationController
   include AuthenticationHelper
   include ApplicationHelper
+  include StatisticsHelper
 
 
   before_filter :authenticate 
@@ -13,6 +14,12 @@ class ReportsController < ApplicationController
 
   def statistics_1
     @members = Member.those_active_sim.includes(:personnel_data, :country, :residence_location, :work_location, :status)
+    ministries = Freq.new(@members,{:rows=>'country', :title=>"Active Members by Country"})
+    @tables = [ministries]
+    @title = 'Statistics 1'
+    respond_to do |format|
+      format.html
+    end
   end
 
   def whereis
