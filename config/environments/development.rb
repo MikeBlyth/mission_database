@@ -17,7 +17,8 @@ SIM::Application.configure do
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-  
+# config.action_mailer.delivery_method = :smtp | :sendmail | :test  
+  config.action_mailer.delivery_method = :smtp
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -25,9 +26,24 @@ SIM::Application.configure do
   config.action_dispatch.best_standards_support = :builtin
   
   #
-  config.colorize_logging = false
+  config.colorize_logging = true
 
   # autoload everything in the /lib path  
   config.autoload_paths += %W(#{Rails.root}/lib)
+
+ENV['SENDGRID_USERNAME'] = 'app435248@heroku.com'
+ENV['SENDGRID_PASSWORD'] = 'ab5dd188456f546fa4'
+ENV['SENDGRID_DOMAIN'] = 'heroku.com'
+
+
+ActionMailer::Base.smtp_settings = {
+  :address        => "smtp.sendgrid.net",
+  :port           => "25",
+  :authentication => :plain,
+  :user_name      => ENV['SENDGRID_USERNAME'],
+  :password       => ENV['SENDGRID_PASSWORD'],
+  :domain         => ENV['SENDGRID_DOMAIN']
+}
+
 end
 
