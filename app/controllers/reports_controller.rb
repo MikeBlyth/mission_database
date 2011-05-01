@@ -24,7 +24,9 @@ class ReportsController < ApplicationController
           :title=>"Active SIM Nigeria Members by Age and Sex", :footnote=>'* Footnote'})
     age_status = CrossTab.new(@members, {:rows=>'age_range', :columns=>'employment_status', :sort=>:alphabetical,
           :title=>"Active SIM Nigeria Members by Age and SIM Status", :footnote=>'* Footnote'})
-    @tables = [age_sex, age_status, work_locations, employment_statuses, cities, ministries, countries, locations]
+    years_of_service_by_status=CrossTab.new(@members, {:rows=>'years_of_service_range', :columns=>'employment_status', :sort=>:alphabetical,
+          :title=>"Active SIM Nigeria Members by Years of Service and SIM Status"})
+    @tables = [years_of_service_by_status, age_sex, age_status, work_locations, employment_statuses, cities, ministries, countries, locations]
     @title = 'Statistics 1'
     respond_to do |format|
       format.html

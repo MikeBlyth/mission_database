@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110501073902
 #
 # Table name: personnel_data
 #
@@ -13,6 +13,7 @@
 #  updated_at           :datetime
 #  date_active          :date
 #  est_end_of_service   :date
+#  end_nigeria_service  :date
 #
 
 class PersonnelData < ActiveRecord::Base

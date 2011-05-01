@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110414074343) do
+ActiveRecord::Schema.define(:version => 20110501073902) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -205,6 +205,7 @@ ActiveRecord::Schema.define(:version => 20110414074343) do
     t.datetime "updated_at"
     t.date     "date_active"
     t.date     "est_end_of_service"
+    t.date     "end_nigeria_service"
   end
 
   create_table "roles", :force => true do |t|

@@ -96,6 +96,27 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def years_of_service
+    start_date = personnel_data.date_active
+    end_date = personnel_data.end_nigeria_service? ? personnel_data.end_nigeria_service? : Date.today
+    if start_date && end_date
+      return (end_date-start_date)/365.25
+    else
+      return nil
+    end
+  end
+
+  def years_of_service_range
+    case years_of_service
+      when nil then    '?'
+      when 0..5 then   '  0-5'
+      when 5..10 then  ' 5-10'
+      when 10..15 then '10-15'
+      when 15..20 then '15-20'
+    when 20..999 then  '> 20'
+    end
+  end
+
  
   def city
     return residence_location.city.name
