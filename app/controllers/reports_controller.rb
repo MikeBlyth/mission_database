@@ -21,8 +21,10 @@ class ReportsController < ApplicationController
     cities = Freq.new(@members,{:rows=>'city', :title=>"Active SIM Nigeria Members by City"})
     employment_statuses = Freq.new(@members,{:rows=>'employment_status', :title=>"Active SIM Nigeria Members by SIM Status"})
     age_sex = CrossTab.new(@members, {:rows=>'age_range', :columns=>'sex', :sort=>:alphabetical,
-          :title=>"Active SIM Nigeria Members by Age and Sex"})
-    @tables = [age_sex, work_locations, employment_statuses, cities, ministries, countries, locations]
+          :title=>"Active SIM Nigeria Members by Age and Sex", :footnote=>'* Footnote'})
+    age_status = CrossTab.new(@members, {:rows=>'age_range', :columns=>'employment_status', :sort=>:alphabetical,
+          :title=>"Active SIM Nigeria Members by Age and SIM Status", :footnote=>'* Footnote'})
+    @tables = [age_sex, age_status, work_locations, employment_statuses, cities, ministries, countries, locations]
     @title = 'Statistics 1'
     respond_to do |format|
       format.html

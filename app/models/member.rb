@@ -88,11 +88,11 @@ class Member < ActiveRecord::Base
   
   def age_range
     case age_years
-      when nil then 'z ?'
-      when 0..30 then  'a  0 to 30'
-      when 30..45 then 'b 30 to 45'
-      when 45..60 then 'c 45 t0 60'
-    when 60..999 then 'd >60'
+      when nil then '?'
+      when 0..30 then  ' 0-30'
+      when 30..45 then '30-45'
+      when 45..60 then '45-60'
+    when 60..999 then  '> 60'
     end
   end
 

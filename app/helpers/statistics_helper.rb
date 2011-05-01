@@ -2,7 +2,7 @@ module StatisticsHelper
 
   class CrossTab < Object
     include ApplicationHelper
-    attr_accessor :title, :columns_label, :rows_label, :table_rows
+    attr_accessor :title, :columns_label, :rows_label, :table_rows, :footnote
         
     def initialize(data,options)
       return nil if data.empty?
@@ -25,8 +25,7 @@ module StatisticsHelper
         end
       end
       @col_totals_hash['Total']= @col_totals_hash.inject(0) {|sum, cell| sum + cell[1]} # like {"Total"=>7, "m"=>3, "f"=>4}
-      @table_rows_totals = ['Totals', @col_totals_hash] # like ["Totals", {"Total"=>7, "m"=>3, "f"=>4}] 
-puts "Title=#{@title}, @col_totals_hash = #{@col_totals_hash}, @table_rows_totals = #{@table_rows_totals}"
+      @table_rows_totals = ['Total', @col_totals_hash] # like ["Totals", {"Total"=>7, "m"=>3, "f"=>4}] 
       # Get row totals -- it just works
       @table_rows.each do |label, cells|
         cells['Total'] = cells.inject(0) {|sum, cell| sum + cell[1]}
@@ -42,7 +41,6 @@ puts "Title=#{@title}, @col_totals_hash = #{@col_totals_hash}, @table_rows_total
       rows = @table_rows.to_a # => [["cat", {"Total"=>3, "m"=>2, "f"=>1}], ["dog", {"Total"=>4, "m"=>1, "f"=>3}]] 
       if @options[:sort] == :alphabetical
         rows.sort! {|x,y| x[0] <=> y[0]}  # sort by total frequency, putting highest freq rows first
-@title << " Alpha"
       else
         rows.sort! {|x,y| y[1]['Total'] <=> x[1]['Total']}  # sort by total frequency, putting highest freq rows first
       end
@@ -54,14 +52,11 @@ puts "Title=#{@title}, @col_totals_hash = #{@col_totals_hash}, @table_rows_total
       # Now col_heads is the column names (labels) in descending order of freq, with Total at the end
       # Build the table row by row
       output = [ [''] + col_heads[1..-1].map {|c| c.capitalize} ]
-puts "Rows=#{rows}"
-puts "@table_rows_totals=#{@table_rows_totals}"
       (rows + [@table_rows_totals]).each do |r|
-puts "Row=#{r}"
         cell_values = col_heads[1..-1].map {|c| r[1][c] } # for each column except first, which is blank, return count. For example,
                                             # col_head[1] is 'f', so in 'dogs' row where r[1] is {"Total"=>4, "m"=>1, "f"=>3},
                                             # the value will be 3 ("f"=>3)
-        row_label = r[0].blank? ? @nil_label : r[0].titlecase  # r[0] is label for the row
+        row_label = r[0].blank? ? @nil_label : r[0]  # r[0] is label for the row
         output << [row_label] + cell_values
       end
       @sorted_rows = output
@@ -84,6 +79,7 @@ puts "Row=#{r}"
       output += " id='#{@options[:id]}'" if @options[:id]
       output += ">"
       output += "<p class='title'>#{@title}</p>" unless @title.blank?
+      output += "<p class='topnote'>#{@topnote}</p>" if @topnote
       output += "<table class='crosstab'><tr>"
       col_heads = [@rows_label] + @sorted_rows[0][1..-1]
       col_heads.each {|c| output += "<th>#{c}</th>"}
@@ -97,6 +93,7 @@ puts "r=#{r}"
         output  += "</tr>" 
       end  # of each row
       output += "</table></div>"
+      output += "<p class='footnote'>#{@footnote}</p>" if @footnote
       return output
     end  
        
@@ -109,6 +106,8 @@ puts "r=#{r}"
       @title = options[:title] || "#{options[:rows]} x #{options[:columns]}"
       @table_rows = {}   
       @nil_label = options[:nil_label] || "(none)"   # Row label for rows with blank/nil values
+      @topnote = options[:topnote] 
+      @footnote = options[:footnote]
     end
 
     def init_rows
@@ -151,11 +150,9 @@ puts "r=#{r}"
     def make_sorted_rows
       if @options[:sort] == :alphabetical
         rows = @table_rows.to_a.sort {|x,y| x[0] <=> y[0]}  # sort by row label: [["cat", 3], ["dog", 4]]
-@title << " Alpha"
       else
         rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}    # sort by freq:  [["dog", 4], ["cat", 3]]
       end
-#      rows.map! {|r| [r[0], r[1]]}  # capitalize first letter of each label: [["Dog", 4], ["Cat", 3], ["Total", 7]]
       @sorted_rows = [[@rows_label,'Count']] + rows + [@table_rows_totals]
       # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
       return @sorted_rows                                                    
