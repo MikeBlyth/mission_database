@@ -1,5 +1,3 @@
-<%= @greeting %>,
-
 Here are the latest changes in the latest travel schedule:
 
 <%- if @mods.empty? %>
@@ -13,10 +11,14 @@ Here are the latest changes in the latest travel schedule:
       <%- accompanied_by << 'child(ren)' if m.with_children %>
       <%= "Traveling with #{accompanied_by.join(' and ')}" %>
     <%- end %>
-      <%= "Other travelers: #{m.other_travelers}" if m.member && !m.other_travelers.blank? %>
-      <%= "Planned return date: #{m.return_date}" if m.return_date %>
+    <%- if  m.member && !m.other_travelers.blank? %>
+      <%= "Other travelers: #{m.other_travelers}" %>
+    <%- end %>
+    <%- if m.return_date %>
+      <%= "Planned return date: #{m.return_date}" %>
+    <%- end %>
+  <%= %>
   <%- end %>
-
 <%- end %>
 
 Do not reply to this email, it is for your information only. For questions, contact jos.travel@sim.org.

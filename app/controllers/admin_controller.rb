@@ -19,6 +19,12 @@ class AdminController < ActionController::Base
     @report = cum_report
   end
 
+  def mail_notices
+    @trav_mod = Notifier.travel_mod
+    @trav_mod.deliver
+    
+  end  
+
   def before_report(title)
     @report = "\n<strong>*** Checking #{title} ***</strong>"
     @orig_report_length = @report.length
