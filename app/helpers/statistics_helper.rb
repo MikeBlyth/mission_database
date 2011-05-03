@@ -88,7 +88,6 @@ module StatisticsHelper
         classes = col_heads.map{|c| string_clean(c)}  # generate class names from column heads
         classes[0] << ' row_label'
         output  += "<tr class='#{even_odd.rotate![0]} #{string_clean(r[0])}'>" # row
-puts "r=#{r}"
         r.each {|cell_value| output += "<td class='#{classes.shift}'>#{cell_value}</td>"} # cells
         output  += "</tr>" 
       end  # of each row

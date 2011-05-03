@@ -102,6 +102,11 @@ class MembersController < ApplicationController
     @record.personnel_data.update_attributes(personnel_data) unless personnel_data.empty?
   end  
   
+  def do_update
+#    puts "Members controller do_update: params=#{params}"
+    super
+  end
+
   def do_new
 #puts "**** do_new, params=#{params}"
     @contacts = Contact.new(:contact_type => ContactType.first)

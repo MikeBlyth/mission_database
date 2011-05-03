@@ -21,7 +21,7 @@ module LocationHelper
   # TODO: May be best to replace this with the Rails method that does the same thing.
   # http://api.rubyonrails.org/classes/ActionView/Helpers/FormOptionsHelper.html#method-i-option_groups_from_collection_for_select
   def options_for_select_with_grouping(option_list, grouping_column, selected, value_column=:id, label_column=:description)
-    options = []
+    options = ["<option value=''></option>"]
     groups = option_list.group_by{|opt| opt[grouping_column]}.sort_by { |k,v| k}
     groups.each do |group|
       group_label = group[0]
@@ -41,7 +41,9 @@ module LocationHelper
 
   def location_choices(selected=999999)
   cities = City.where(true).order('name')
-  return option_groups_from_collection_for_select(cities, :locations_sorted, :name, :id, :description, selected)
+  return "<option value=''></option>" + 
+      option_groups_from_collection_for_select(cities, :locations_sorted, 
+          :name, :id, :description, selected)
   #  selections =  Location.select("id, city_id, description")
   #  hashed_locations = []
   #  selections.each do | selection |
