@@ -154,7 +154,7 @@ puts "r=#{r}"
         rows = @table_rows.to_a.sort {|x,y| y[1] <=> x[1]}    # sort by freq:  [["dog", 4], ["cat", 3]]
       end
       @sorted_rows = [[@rows_label,'Count']] + rows + [@table_rows_totals]
-      # @sorted_rows is now like: [["", "f", "m", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
+      # @sorted_rows is now like: [["Pets", "Count"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
       return @sorted_rows                                                    
     end # sorted rows
       

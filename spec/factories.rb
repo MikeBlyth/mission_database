@@ -229,8 +229,8 @@ FactoryGirl.define do
 
   factory :travel do
     member { |a| a.association :member }
-    date '1 May 2011'
-    return_date '15 Oct 2011'
+    date Date.today + 10
+    return_date Date.today + 180
     flight 'LH 999'
     purpose 'Home assignment'
     origin 'Abuja'
