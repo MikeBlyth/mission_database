@@ -8,6 +8,8 @@ defaults: &defaults
     page_size: 'A4'
     birthday_calendar:
       birthday_prefix: 'BD: '
+    travel:
+      date_format: '%e %b'
     travel_calendar:
       arrival_prefix: 'AR: '
       departure_prefix: 'DP: '  

@@ -65,6 +65,9 @@ describe TravelsController do
       ['arrivals', 'departures', 'current', 'all_dates'].each do | filtr |
         session[:travel_filter] = filtr # Is filter a reserved word?
         filtered = Travel.where(controller.conditions_for_collection).order("arrival ASC")
+#puts "controller.conditions_for_collection= #{controller.conditions_for_collection}"
+#puts "SQL = #{Travel.where(controller.conditions_for_collection).to_sql}"
+#puts "Filtered = #{filtered.all}"
         case filtr
           when 'arrivals'
             filtered.should == [@arrival]

@@ -48,7 +48,8 @@ private
     sim_or_personal = 'P' if travel.personal
     flight = "#{travel.flight} #{travel.time.strftime('%l:%M %P') if travel.time}"
     own_arrangements = travel.own_arrangements ? "Will make own arrangements. " : ''
-    row = [travel.date.strftime('%e %b'), arrdep, flight, names]
+    formatted_date = travel.date.strftime(Settings.reports.travel.date_format)
+    row = [formatted_date, arrdep, flight, names]
     if params[:residence_column]
       row << (travel.member ? "#{travel.member.residence_location}" : '')
     end

@@ -74,21 +74,20 @@ Feature: report generation
     And a family with a "Wifey" and "ChildA" and "ChildB"
     And a contact record
     And I click on "Reports"
-    When I click on "Phone and email" 
-    Then I should get a "Phone" PDF report
+    When I click on "whereis-pdf" 
+    Then I should get a "Where Is Everyone" PDF report
     And the report should include the name, phone and email
-    And the report should not include "ChildA"
+    And the report should include "ChildA"
 
   Scenario: Generate travel reports
     Given that I am signed in
     And a one-person family
     And a "travel" record
     And I click on "Reports"
-    When I click on "Travel schedule" 
+    When I click on "travel-detailed" 
     Then I should get a "Travel" PDF report
     And the report should include the "travel" information
 
-  @wip
   Scenario: Generate where_is pdf report
     Given that I am signed in
     And locations defined
@@ -99,14 +98,23 @@ Feature: report generation
     Then I should get a "Where Is" PDF report
     And the report should include the "Where Is" information
     
-  @wip
-  Scenario: Generate where_is html report
+  Scenario: Generate Where Is (by family) report
     Given that I am signed in
     And locations defined
     And basic statuses 
     And a one-person family with a location and status
     And I click on "Reports"
-    When I click on "whereis-html" 
+    When I click on "whereis-family" 
+    Then I should get a "Where Is" HTML report
+    And the report should include the "Where Is" information
+    
+  Scenario: Generate Where Is (by location) report
+    Given that I am signed in
+    And locations defined
+    And basic statuses 
+    And a one-person family with a location and status
+    And I click on "Reports"
+    When I click on "whereis-location" 
     Then I should get a "Where Is" HTML report
     And the report should include the "Where Is" information
     

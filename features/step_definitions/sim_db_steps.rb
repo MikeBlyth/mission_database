@@ -1,9 +1,11 @@
 require 'sim_test_helper'
 include SimTestHelper
+include ApplicationHelper
   
 def construct_family
   @family = Factory(:family)
   @head = @family.head
+  @family.update_attribute(:status,Factory(:status))
 #puts "**** Constructed family, head=#{@head.attributes}, errors=#{@head.errors}"
 end
 
@@ -405,16 +407,14 @@ Then /^I should get a "([^"]*)" HTML report$/ do |target_text|
   page.should have_content target_text
 end
 
-Given /^a member with phone "([^"]*)" and email "([^"]*)"$/ do |arg1, arg2|
-  member = Fac
-end
 Given /^a contact record$/ do
+  Factory(:contact_type) if ContactType.count == 0
   @contact = Factory(:contact, :member_id => @head.id)
 end
 
 Then /^the report should include the name, phone and email$/ do 
   page.should have_content @head.last_name
-  page.should have_content @contact.phone_1
+  page.should have_content format_phone(@contact.phone_1)
 end
 
 Then /^the report should include "([^"]*)"$/ do |arg1|
@@ -437,8 +437,8 @@ Then /^the report should include the "([^"]*)" information$/ do |report_type|
   when 'travel'
     page.should have_content 'Travel Schedule'
     page.should have_content @head.last_name
-    page.should have_content @detail.date.to_s
-    page.should have_content @detail.origin
+    page.should have_content @detail.date.strftime(Settings.reports.travel.date_format)
+#    page.should have_content @detail.origin # not in current report
   when 'Where Is'
     page.should have_content @head.last_name
     page.should have_content @head.residence_location.description

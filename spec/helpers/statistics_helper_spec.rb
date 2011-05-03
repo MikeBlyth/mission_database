@@ -9,7 +9,6 @@ describe StatisticsHelper do
       table = freq.table_rows
       table['cat'].should == 3
       table['dog'].should == 4
-      table['Total'].should == 7
       freq.title.should == 'Title'
       freq.rows_label.should == 'Pet'
     end
@@ -19,7 +18,6 @@ describe StatisticsHelper do
       table = Freq.new(data,{:rows=>:a}).table_rows
       table['cat'].should == 3
       table['dog'].should == 4
-      table['Total'].should == 7
     end
 
     it 'works with symbol & string keys as arguments for freq' do
@@ -27,7 +25,6 @@ describe StatisticsHelper do
       table = Freq.new(data,{:rows=>:a}).table_rows
       table['cat'].should == 3
       table['dog'].should == 4
-      table['Total'].should == 7
     end
 
     it 'works when there are unneeded keys' do
@@ -35,7 +32,6 @@ describe StatisticsHelper do
       table = Freq.new(data,{:rows=>:a}).table_rows
       table['cat'].should == 3
       table['dog'].should == 4
-      table['Total'].should == 7
     end
     
     it 'works with object methods as well as hashes' do
@@ -49,7 +45,6 @@ describe StatisticsHelper do
       table = Freq.new(data,{:rows=>:a}).table_rows
       table['cat'].should == 3
       table['dog'].should == 4
-      table['Total'].should == 7
     end
     
     it 'works with nil values' do
@@ -58,7 +53,6 @@ describe StatisticsHelper do
       table['(none)'].should == 2
       table['cat'].should == 3
       table['dog'].should == 4
-      table['Total'].should == 9
     end
 
     it 'can set row name of nil values' do
@@ -75,14 +69,14 @@ describe StatisticsHelper do
       data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
                 {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
       freq = Freq.new(data, {:rows=>:a})
-      freq.make_sorted_rows.should == [["A", "Count"], ["Dog", 4], ["Cat", 3], ["(none)", 2], ["Rat", 1], ["Total", 10]]
+      freq.make_sorted_rows.should == [["A", "Count"], ["dog", 4], ["cat", 3], ["(none)", 2], ["rat", 1], ["Total", 10]]
     end            
     
     it 'outputs to text' do
       data = [ {a: nil}, {a: 'rat'}, {a: nil}, {a: 'cat'}, {'a'=> 'dog'}, {a: 'cat'}, 
                 {'a'=> 'dog'}, {a: 'cat'}, {a: 'dog'}, {a: 'dog'}]
       freq = Freq.new(data, {:rows=>:a})
-      freq.to_s.should == "A\tCount\nDog\t4\nCat\t3\n(none)\t2\nRat\t1\nTotal\t10\n"
+      freq.to_s.should == "A\tCount\ndog\t4\ncat\t3\n(none)\t2\nrat\t1\nTotal\t10\n"
     end            
     
   end # frequency table
@@ -106,25 +100,24 @@ describe StatisticsHelper do
       table['dog']['m'].should == 1
       table['dog']['f'].should == 3
       table['dog']['Total'].should == 4
-      table['Totals']['Total'].should == 7
     end
     
     it 'returns sorted output' do
       xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :rows_label=>'Pet', :columns_label=>'Sex'})
-      xtab.make_sorted_rows.should == [["", "F", "M", "Total"], ["Dog", 3, 1, 4], ["Cat", 1, 2, 3], ["Totals", 4, 3, 7]] 
+      xtab.make_sorted_rows.should == [["", "F", "M", "Total"], ["dog", 3, 1, 4], ["cat", 1, 2, 3], ["Total", 4, 3, 7]] 
     end
 
     it 'returns sorted output to text' do
       # Naturally this is very "brittle." Any changes to the to_s method will break this test!
       xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :rows_label=>'Pet', :columns_label=>'Sex'})
-      xtab.to_s.should == "Title\n\t\tSex\n\tF\tM\tTotal\nDog\t3\t1\t4\nCat\t1\t2\t3\nTotals\t4\t3\t7\n"
+      xtab.to_s.should == "Title\n\t\tSex\n\tF\tM\tTotal\ndog\t3\t1\t4\ncat\t1\t2\t3\nTotal\t4\t3\t7\n"
     end
 
     it 'returns sorted output to html' do
       # Naturally this is very "brittle." Any changes to the to_s method will break this test!
       xtab = CrossTab.new(@data, {:rows=>'a', :columns=>'b', :title=>'Title', :id =>"pets_sex",
             :rows_label=>'Pet', :columns_label=>'Sex'})
-      xtab.to_html.should == "<div class='crosstab' id='pets_sex'><p class='crosstab_title'>Title</p><table class='crosstab'><tr><th>Pet</th><th>F</th><th>M</th><th>Total</th></tr><tr class='odd'><td class='pet'>Dog</td><td class='f'>3</td><td class='m'>1</td><td class='total'>4</td></tr><tr class='even'><td class='pet'>Cat</td><td class='f'>1</td><td class='m'>2</td><td class='total'>3</td></tr><tr class='odd'><td class='pet'>Totals</td><td class='f'>4</td><td class='m'>3</td><td class='total'>7</td></tr></table></div>"
+      xtab.to_html.should == "<div class='crosstab' id='pets_sex'><p class='title'>Title</p><table class='crosstab'><tr><th>Pet</th><th>F</th><th>M</th><th>Total</th></tr><tr class='odd dog'><td class='pet row_label'>dog</td><td class='f'>3</td><td class='m'>1</td><td class='total'>4</td></tr><tr class='even cat'><td class='pet row_label'>cat</td><td class='f'>1</td><td class='m'>2</td><td class='total'>3</td></tr><tr class='odd total'><td class='pet row_label'>Total</td><td class='f'>4</td><td class='m'>3</td><td class='total'>7</td></tr></table></div>"
     end
 
     it 'returns nil for empty data' do
@@ -141,7 +134,6 @@ describe StatisticsHelper do
       table['dog']['m'].should == 1
       table['dog']['f'].should == 4
       table['dog']['Total'].should == 5
-      table['Totals']['Total'].should == 8
     end
 
     it 'makes 3x3 table' do
@@ -159,7 +151,6 @@ describe StatisticsHelper do
       table['rat']['m'].should == 0
       table['rat']['f'].should == 0
       table['rat']['?'].should == 1
-      table['Totals']['Total'].should == 8
     end
 
     it 'works with object methods as well as hashes' do
@@ -180,7 +171,6 @@ describe StatisticsHelper do
       table['dog']['m'].should == 1
       table['dog']['f'].should == 3
       table['dog']['Total'].should == 4
-      table['Totals']['Total'].should == 7
     end
   end # ctab  
 

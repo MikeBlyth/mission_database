@@ -26,7 +26,7 @@ module FamiliesHelper
     emails = []
     formatted[:couple]= head.last_name_first(:short=>true, :middle=>false) + (wife ? " & #{wife.short}" : '')
     formatted[:children] = smart_join(f.children_names)
-    primary_contact_type_code = Settings.contacts.primary_contact_type_code
+    primary_contact_type_code = Settings.contacts.primary_contact_type_code  # which is primary contact?
     # Get the contact record for head, using primary contact type e.g. "on field"
     contact_head = head.primary_contact
     if contact_head   # If there is a valid contact for family head
