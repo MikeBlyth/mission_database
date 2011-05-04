@@ -15,7 +15,7 @@ class Incoming < ActionMailer::Base
   def extract_commands(message)
     commands = message.body.to_s.lines.map do |line| 
       line =~ /\s*(\w+)( .*)?/ 
-      [$1.downcase, ($2.lstrip.chomp if $2) || '']
+      [($1 || '').downcase, ($2 || '').strip.chomp]
     end  
   end
   

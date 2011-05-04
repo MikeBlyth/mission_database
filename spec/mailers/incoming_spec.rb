@@ -40,6 +40,20 @@ describe Incoming do
       @mail = Factory.build :mail
     end      
     
+    it 'variety of "command" lines without crashing' do
+      examples = [ "",
+                   "command",
+                   "command and params",
+                   "two\nlines",
+                   "two\n\nwith blank between",
+                   "command\tseparated by tab and not space",
+                   ]
+      examples.each do |e|
+        @mail.body = e
+        Incoming.receive(@mail).should == true
+      end  
+    end    
+
     it 'single command on first line' do
       @mail.body = 'Test with parameters list'
       Incoming.receive(@mail).should == true
