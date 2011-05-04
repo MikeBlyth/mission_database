@@ -40,6 +40,7 @@ SIM::Application.routes.draw do
 #  resources :jqueries do as_routes end
 
   resources :bloodtypes do as_routes end
+  resources :incoming_mails do as_routes end
   resources :calendar_events do as_routes end
   resources :cities do as_routes end
   resources :contact_types do as_routes end

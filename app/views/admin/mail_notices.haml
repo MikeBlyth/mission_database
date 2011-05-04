@@ -1,7 +1,6 @@
 .active-scaffold
   %h4 Notice Mailer Report
   ActionMailer::Base.smtp_settings:
-  = ActionMailer::Base.smtp_settings
   = "To: #{@trav_mod.to}"
   %br
   = "Subject: #{@trav_mod.subject}"

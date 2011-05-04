@@ -137,6 +137,14 @@ FactoryGirl.define do
     city_id 999999
   end
   
+  factory :mail do
+    from 'from@example.com'
+    to   'to@example.com'
+    subject 'Testing'
+    date '24 November 2011'
+    body 'Body of the test message'
+  end
+
   factory :member do 
     sequence(:first_name) {|n| "Person_#{n}" }
     family { |a| a.association :family }
