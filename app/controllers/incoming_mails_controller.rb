@@ -1,6 +1,7 @@
 class IncomingMailsController < ApplicationController
   require 'mail'
   skip_before_filter :verify_authenticity_token
+
    def create
      # create a Mail object from the raw message
 puts "IncomingMailsController create: params=#{params}"
