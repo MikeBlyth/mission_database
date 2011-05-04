@@ -3,9 +3,8 @@ class IncomingMailsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
    def create
-     # create a Mail object from the raw message
-puts "IncomingMailsController create: params=#{params}"
-     incoming_handled = IncomingMailer.receive(Mail.new(params[:message]))
+puts "IncomingController create: params=#{params}"
+     incoming_handled = Incoming.receive(Mail.new(params[:message]))
 x = Mail.new(params[:message])
 puts x.awesome_inspect
      # if the message was handled successfully then send a status of 201,
