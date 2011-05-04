@@ -29,7 +29,7 @@ class Incoming < ActionMailer::Base
     extract_commands(message).each do |command|
       case command[0]
         when 'test'
-          Notifier.send_test('test@example.com', 
+          Notifier.send_test(message.from.first, 
              "You sent 'test' with parameter string (#{command[1]})").deliver
       else
       end

@@ -66,6 +66,7 @@ describe Incoming do
       Incoming.receive(@mail).should == true
       ActionMailer::Base.deliveries.length.should == 2
       ActionMailer::Base.deliveries.last.to_s.should =~ /line 2/
+      ActionMailer::Base.deliveries.last.to_s.should match("To: #{@mail.from.first}")
 #puts ActionMailer::Base.deliveries.last.to_s
     end
 
