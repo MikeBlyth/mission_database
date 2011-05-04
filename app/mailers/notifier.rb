@@ -1,24 +1,21 @@
 class Notifier < ActionMailer::Base
-  default :from => "mike.blyth@sim.org"
+  default :from => "database@sim-nigeria.org"
 
-  # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
-  #
-  #   en.notifier.travel_mod.subject
-  #
-  def travel_mod
-    @mods = Travel.where("travels.updated_at > ?", Date.today-7.days).includes(:member)
-    mail :to => "mike.blyth@sim.org", :subject=>'Travel schedule updates'
+  def send_test(recipients, content)
+    @content = "Test from database@sim-nigeria.org\n\n#{content}"
+    mail(:to => recipients, :subject=>'Test from database') do |format|
+      format.text {render 'generic'}
+    end 
   end
 
-  # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
-  #
-  #   en.notifier.contact_mod.subject
-  #
-  def contact_mod
+  def travel_mod(recipients)
+    @mods = Travel.where("travels.updated_at > ?", Date.today-7.days).includes(:member)
+    mail :to => recipients, :subject=>'Travel schedule updates'
+  end
+
+  def contact_mod(recipients)
     @greeting = "Hi"
-    mail :to => "to@example.org", :subject=>'Contact information updates'
+    mail :to => recipients, :subject=>'Contact information updates'
   end
 
 end

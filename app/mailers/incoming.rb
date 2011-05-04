@@ -13,7 +13,7 @@ class Incoming < ActionMailer::Base
   #   ...
   # make array like [ [command_1, ''], [command_2, 'Parameters for this command']]
   def extract_commands(message)
-    commands = body.lines.map do |line| 
+    commands = message.body.to_s.lines.map do |line| 
       line =~ /\s*(\w+)( .*)?/ 
       [$1.downcase, ($2.lstrip.chomp if $2) || '']
     end  
@@ -27,9 +27,10 @@ class Incoming < ActionMailer::Base
     #   ...
     # make array like [ [command_1, ''], [command_2, 'Parameters for this command']]
     extract_commands(message).each do |command|
-      case command
+      case command[0]
         when 'test'
-          
+          Notifier.send_test('test@example.com', 
+             "You sent 'test' with parameter string (#{command[1]})").deliver
       else
       end
     end

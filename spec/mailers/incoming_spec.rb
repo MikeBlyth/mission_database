@@ -41,10 +41,18 @@ describe Incoming do
     end      
     
     it 'single command on first line' do
-      @mail.body = 'XTest with parameters list'
-      xtest = mock('xtest')
-      xtest.should_receive
+      @mail.body = 'Test with parameters list'
       Incoming.receive(@mail).should == true
+      ActionMailer::Base.deliveries.should_not be_empty
+#puts ActionMailer::Base.deliveries.first.to_s
+    end
+
+    it 'commands on two lines' do
+      @mail.body = "Test for line 1\nTest for line 2"
+      Incoming.receive(@mail).should == true
+      ActionMailer::Base.deliveries.length.should == 2
+      ActionMailer::Base.deliveries.last.to_s.should =~ /line 2/
+#puts ActionMailer::Base.deliveries.last.to_s
     end
 
   end # processes commadns

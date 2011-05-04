@@ -6,7 +6,7 @@ describe IncomingMailsController do
     it 'to invalid email' do
       IncomingMailer = double('IncomingMailer', :receive=>false)
       post :create, :message => "From: test@example.com\r\nSubject: New Poster\r\n\r\nContent"
-      y response
+#      y response
       response.status.should == 422
       response.body.should =~ /Error/
     end    
