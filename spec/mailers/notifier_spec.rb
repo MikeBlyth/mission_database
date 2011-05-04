@@ -8,12 +8,11 @@ describe Notifier do
 
     it "renders the headers" do
       mail.subject.should eq("Travel schedule updates")
-      mail.to.should eq(["to@example.org"])
+      mail.to.should eq(["mike.blyth@sim.org"])
       mail.from.should eq(["mike.blyth@sim.org"])
     end
 
     it "renders the body" do
-      mail.body.encoded.should match("Hi")      
       mail.body.encoded.should match("No changes found during last reporting period.")
     end
 
