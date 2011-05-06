@@ -1,5 +1,5 @@
 require "spec_helper"
-
+puts "\n\n**** INCOMING.RB MAILER IS NOT BEING USED -- REMOVE WHEN CONFIDENT IT'S NOT NEEDED****\n"
 describe Incoming do
   it 'responds somehow' do
     mail = Factory.build :mail

@@ -63,7 +63,7 @@ private
   end # data_row
 
   def header_row(params)
-    row = ['Date',"A\nr\nr", 'Flt', 'Name(s)']
+    row = ['Date',"A\nr\/\nD", 'Flt', 'Name(s)']
     row << 'Residence' if params[:residence_column]
     row << "B\no\nx" << "Accom/ Driver\nAccom" << "T\ny\np\ne" if params[:detail_columns]
     row << 'Comments'
