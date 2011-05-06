@@ -191,6 +191,7 @@ class AdminController < ActionController::Base
   def trim_email_addresses(record)
     stripped_1, stripped_2 = (record.email_1).strip, record.email_2.strip
     if [stripped_1, stripped_2] != [record.email_1, record.email_2]
+      @report << "Fix leading/trailing blanks in email address for #{record.member.name}"
       record.email_1, record.email_2 = stripped_1, stripped_2
     end
   end

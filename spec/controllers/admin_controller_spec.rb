@@ -225,7 +225,7 @@ describe AdminController do
 
         it "removes leading and trailing whitespace from email addresses" do
           @object.update_attribute(:email_1, " test@example.com \t")
-          controller.clean_contacts(true)
+          controller.clean_contacts(true).should =~ /blanks/
           @object.reload.email_1.should == "test@example.com"
         end  
 
