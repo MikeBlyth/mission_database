@@ -175,8 +175,8 @@ describe AdminController do
       
       describe 'contacts' do
         before :each do
-          @contact_type = Factory.create(:contact_type).reload
-          @object = Factory.create(:contact)
+          @contact_type = Factory(:contact_type).reload
+          @object = Factory(:contact)
         end
 
         it "does not complain about object with nil optional associations" do
@@ -222,6 +222,12 @@ describe AdminController do
             controller.clean_contacts(true).should_not =~ /no errors/
           end.should change(Contact, :count).by -1
         end      
+
+        it "removes leading and trailing whitespace from email addresses" do
+          @object.update_attribute(:email_1, " test@example.com \t")
+          controller.clean_contacts(true)
+          @object.reload.email_1.should == "test@example.com"
+        end  
 
       end # describe contacts
       

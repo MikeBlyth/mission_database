@@ -90,6 +90,13 @@ end  # ApplicationHelper module
 
 require "#{Rails.root}/config/initializers/date_formats.rb"
 
+# Add some methods to nil so we don't always have to make it a special case
+class NilClass
+  def strip
+    nil
+  end
+end
+
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on
 class Fixnum
   def to_ordinal

@@ -112,7 +112,8 @@ class AdminController < ActionController::Base
     before_report 'Contacts'
     report_destroy_orphans(:contact, :member, fix)
     Contact.all.each do |m|
-      check_and_fix_link(m, :contact_type, (m.member ? m.member.name : "Unkown member"))
+      trim_email_addresses(m)
+      check_and_fix_link(m, :contact_type, (m.member ? m.member.name : "Unknown member"))
       m.save if (m.changed_attributes.count > 0) & fix
     end # each location
     after_report 'Contacts', fix
@@ -187,5 +188,11 @@ class AdminController < ActionController::Base
     end  
   end   
 
+  def trim_email_addresses(record)
+    stripped_1, stripped_2 = (record.email_1).strip, record.email_2.strip
+    if [stripped_1, stripped_2] != [record.email_1, record.email_2]
+      record.email_1, record.email_2 = stripped_1, stripped_2
+    end
+  end
 end
 
