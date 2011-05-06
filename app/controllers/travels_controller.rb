@@ -64,11 +64,18 @@ class TravelsController < ApplicationController
       # This creates a return trip automatically
       if @record.return_date
         params[:record][:date] = @record.return_date
+        params[:record][:time] = @record.return_time
         params[:record][:destination] = @record.origin
         params[:record][:origin] = @record.destination
-        params[:record][:return_date] = nil
         params[:record][:arrival] = !@record.arrival
+        params[:record][:return_date] = nil
+        params[:record][:return_time] = nil
         params[:record][:confirmed] = nil
+        params[:record][:guesthouse] = nil
+        params[:record][:baggage] = nil
+        params[:record][:driver_accom] = nil
+        params[:record][:own_arrangements] = false
+        params[:record][:comments] = nil
         super # Active scaffold creates the return record
         flash[:notice] = 'Return trip also created'
       end # if @record.return_date, create return trip

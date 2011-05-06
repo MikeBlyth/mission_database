@@ -89,7 +89,10 @@ describe TravelsController do
         @user = Factory(:user, :admin=>true)
         test_sign_in(@user)
         @member = Factory(:family).head
-        @attr = {:member=>"#{@member.id}", :date=>Date.today, :arrival=>false, :confirmed=>Date.today}
+        @attr = {:member=>"#{@member.id}", :date=>Date.today, :arrival=>false, 
+              :time => Time.new(1,1,1,5,15,0,"+01:00"),
+              :return_time => Time.new(1,1,1,6,45,0,"+01:00"),
+              :confirmed=>Date.today}
     end
     
     it "should not be created when new travel has no return date" do
@@ -108,6 +111,7 @@ describe TravelsController do
         return_trip.return_date.should == nil
         return_trip.origin.should == @attr[:destination]
         return_trip.destination.should == @attr[:origin]
+        return_trip.time == @attr[:return_time]
         return_trip.arrival.should be_true
         return_trip.confirmed.should be_nil
     end

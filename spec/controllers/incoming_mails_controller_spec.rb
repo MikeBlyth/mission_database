@@ -14,7 +14,7 @@ describe IncomingMailsController do
     it 'to valid email' do
       Incoming = double('IncomingMailer', :receive=>true)
       post :create, :message => "From: test@example.com\r\nSubject: New Poster\r\n\r\nContent"
-      response.status.should == 201
+      response.status.should == 200
     end    
   end
 
