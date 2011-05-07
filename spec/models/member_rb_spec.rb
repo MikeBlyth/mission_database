@@ -1,4 +1,5 @@
 require 'spec_helper'
+include SimTestHelper
 
 describe Member do
 
@@ -656,22 +657,59 @@ describe Member do
       Member.find_with_name("#{@member.last_name}, #{@member.first_name}").should == [@member]
     end
       
-    it 'finds "last_name, short_name"' do  # when this is different from stored full name (#name)
-      @member.update_attribute(:name,"xxxx")  # since we're not relying on this
+    it 'finds "last_name, short_name"' do  
       Member.find_with_name("#{@member.last_name}, #{@member.short_name}").should == [@member]
     end
       
-    it 'finds "last_name, initial"' do  # when this is different from stored full name (#name)
-      @member.update_attribute(:name,"xxxx")  # since we're not relying on this
+    it 'finds "last_name, initial"' do  
       Member.find_with_name("#{@member.last_name}, #{@member.first_name[0]}").should == [@member]
     end
       
-    it 'finds "first_name last_name"' do  # when this is different from stored full name (#name)
-      @member.update_attribute(:name,"xxxx")  # since we're not relying on this
-      Member.find_with_name("#{@member.first_name}, #{@member.last_name}").should == [@member]
+    it 'finds "first_name last_name"' do  
+      Member.find_with_name("#{@member.first_name} #{@member.last_name}").should == [@member]
     end
       
-  end
+    it 'finds "beginning_of_first_name beginning_of_last_name"' do  
+      Member.find_with_name("#{@member.first_name[0..2]} #{@member.last_name[0..1]}").should == [@member]
+    end
+      
+    it 'finds "beginning_of_first_name"' do  
+      Member.find_with_name("#{@member.first_name[0..2]}").should == [@member]
+    end
+      
+    it 'finds "beginning_of_short_name"' do  
+      Member.find_with_name("#{@member.short_name[0..2]}").should == [@member]
+    end
+      
+    it 'finds "beginning_of_last_name"' do  
+      Member.find_with_name("#{@member.last_name[0..2]}").should == [@member]
+    end
 
+    it 'finds both members with last name' do
+      spouse = create_spouse(@member)
+      Member.find_with_name("#{@member.last_name}").include?(@member).should be_true
+      Member.find_with_name("#{@member.last_name}").should include(spouse)
+    end
+
+    it 'finds both members with first name' do
+      same_first = Factory(:member, :last_name=>'different', :first_name=>@member.first_name)
+      Member.find_with_name("#{@member.first_name}").should include(@member)
+      Member.find_with_name("#{@member.first_name}").should include(same_first)
+    end
+
+    it 'uses optional conditions' do
+      spouse = create_spouse(@member)
+      Member.find_with_name("#{@member.last_name}", ["sex=?", 'M']).should include(@member)
+      Member.find_with_name("#{@member.last_name}", ["sex=?", 'M']).should_not include(spouse)
+    end
+
+    it 'excludes partial match to "last_name, short_name"' do  
+      spouse = create_spouse(@member)
+      Member.find_with_name("#{@member.last_name}, #{@member.short_name}").should == [@member]
+        # == [@member] implies that spouse is not included
+    end
+      
+  end # finds members by name
+    
 end
 

@@ -72,17 +72,24 @@ class Member < ActiveRecord::Base
     self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.active_sim_statuses)
   end 
 
-  # Takes name in some free text formats and returns list of matches
-  def self.find_with_name(name)
-puts "Find_with_name #{name}"
-    result = [self.find_by_first_name(name)] + [self.find_by_last_name(name)] + 
-      [self.find_by_name(name)] + [self.find_by_short_name(name)]
+  # Takes name in some free text formats and returns array of matches
+  # To find Donald (Don) Duck, all of these will match:
+  # D Duck; Duck, D; Duck, Don; D Du; Do Du; Du; Don; Donald; Dona Du;
+  def self.find_with_name(name, conditions="true")
+#puts "Find_with_name #{name}"
+    filtered = self.where(conditions)
+    result = filtered.where("first_name LIKE ?", name+"%") + filtered.where("last_name LIKE ?", name+"%") + 
+      filtered.where("name LIKE ?", name+"%") + filtered.where("short_name LIKE ?", name+"%")
     if name =~ /(.*),\s*(.*)/
-      if $2.length > 1
-        result += self.where("last_name = ? AND (first_name = ?) OR (short_name = ?)", $1, $2, $2)
-      else
-        result += self.where("last_name = ? AND first_name LIKE ?", $1, $2+'%')
-      end
+      last_name, first_name = $1, $2
+    elsif name =~ /(.*)\s(.*)/
+      last_name, first_name = $2, $1
+    else
+      last_name = first_name = nil
+    end
+    if last_name && first_name      
+      result += filtered.where("last_name LIKE ? AND (first_name LIKE ?) OR (short_name LIKE ?)", 
+          last_name+"%", first_name+"%", first_name+"%")
     end
     return result.uniq.compact
   end
