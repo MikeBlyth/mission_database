@@ -15,6 +15,7 @@ module ApplicationHelper
     #     description_or_blank(m.status) returns "On field"
     #     description_or_blank(m.country, '?', :name) returns '?'
     def description_or_blank(object, nil_value='', description_method=:description)
+      nil_value = nil if nil_value == :nil
       return nil_value unless object
       value = object.send description_method || 'unspecified'
       return value.downcase == 'unspecified' ? nil_value : value

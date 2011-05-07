@@ -62,9 +62,8 @@ private
   end # process_commands
 
   def do_info(from, name)
-    
-          Notifier.send_test(from, "Info for #{name}").deliver
-#    Notifier.send_info(from, command[1]).deliver
+    members = Member.find_with_name(name)
+    Notifier.send_info(from, name, members).deliver
   end
 end # Class
 

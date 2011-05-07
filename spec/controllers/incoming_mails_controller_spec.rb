@@ -1,5 +1,6 @@
 require 'spec_helper'
 include SimTestHelper
+include ApplicationHelper
 
 def rebuild_message
     @params[:message] = "From: #{@params['from']}\r\n" + 
@@ -99,14 +100,25 @@ describe IncomingMailsController do
     
     it "info" do
       member = create_couple
+      residence_location = Factory(:location, :description=>'Rayfield')
+      work_location = Factory(:location, :description=>'Spring of Life')
+      member.update_attributes(:birth_date => Date.new(1980,6,15),
+                   :residence_location=>residence_location,
+                   :work_location=>work_location,
+                   :temporary_location => 'Miango Resort Hotel',
+                   :temporary_location_from_date => Date.today - 10.days,
+                   :temporary_location_until_date => Date.today + 2.days,
+                   )
+                   
       contact = Factory :contact, :member => member
       contact_spouse = Factory :contact, :member => member.spouse, :email_1 => 'spouse@example.com'
       other = Factory :family, :last_name => 'Finklestein'
       @params['plain'] = "info #{member.last_name}"
       post :create, @params
+puts ActionMailer::Base.deliveries.last.to_s
       ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(member.last_name)
-  #    ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(member.primary_contact.email_1)
-  #    ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(member.primary_contact.phone_1)
+      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(format_phone(member.primary_contact.email_1))
+      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(format_phone(member.primary_contact.phone_1))
     end    
   end # handles these commands
    
