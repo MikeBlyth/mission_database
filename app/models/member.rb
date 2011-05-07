@@ -72,7 +72,20 @@ class Member < ActiveRecord::Base
     self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.active_sim_statuses)
   end 
 
-  
+  # Takes name in some free text formats and returns list of matches
+  def self.find_with_name(name)
+puts "Find_with_name #{name}"
+    result = [self.find_by_first_name(name)] + [self.find_by_last_name(name)] + 
+      [self.find_by_name(name)] + [self.find_by_short_name(name)]
+    if name =~ /(.*),\s*(.*)/
+      if $2.length > 1
+        result += self.where("last_name = ? AND (first_name = ?) OR (short_name = ?)", $1, $2, $2)
+      else
+        result += self.where("last_name = ? AND first_name LIKE ?", $1, $2+'%')
+      end
+    end
+    return result.uniq.compact
+  end
 
   def family_head
     return Family.find_by_id(family_id) && (family.head_id == self.id)

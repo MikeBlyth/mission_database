@@ -637,5 +637,41 @@ describe Member do
       end
     end # selects on_field members
   end  
+
+  describe 'finds members by name' do
+    before(:each) do
+      @member = Factory(:family).head
+      @member.update_attribute(:short_name, "Shorty")
+    end
+
+    it 'finds simple name' do  # searching for ONE of last name, first name, short name, full name
+      Member.find_with_name(@member.first_name).should == [@member]
+      Member.find_with_name(@member.last_name).should == [@member]
+      Member.find_with_name(@member.name).should == [@member]
+      Member.find_with_name(@member.short_name).should == [@member]
+    end
+
+    it 'finds "last_name, first_name"' do  # when this is different from stored full name (#name)
+      @member.update_attribute(:name,"xxxx")  # since we're not relying on this
+      Member.find_with_name("#{@member.last_name}, #{@member.first_name}").should == [@member]
+    end
+      
+    it 'finds "last_name, short_name"' do  # when this is different from stored full name (#name)
+      @member.update_attribute(:name,"xxxx")  # since we're not relying on this
+      Member.find_with_name("#{@member.last_name}, #{@member.short_name}").should == [@member]
+    end
+      
+    it 'finds "last_name, initial"' do  # when this is different from stored full name (#name)
+      @member.update_attribute(:name,"xxxx")  # since we're not relying on this
+      Member.find_with_name("#{@member.last_name}, #{@member.first_name[0]}").should == [@member]
+    end
+      
+    it 'finds "first_name last_name"' do  # when this is different from stored full name (#name)
+      @member.update_attribute(:name,"xxxx")  # since we're not relying on this
+      Member.find_with_name("#{@member.first_name}, #{@member.last_name}").should == [@member]
+    end
+      
+  end
+
 end
 

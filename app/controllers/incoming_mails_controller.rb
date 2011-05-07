@@ -46,18 +46,25 @@ private
 
   def process_commands(commands)
     successful = true
+    from = params['from']
     commands.each do |command|
 # puts "**********COMMAND: #{command}"
       case command[0]
         when 'test'
-          Notifier.send_test(params['from'], 
+          Notifier.send_test(from, 
              "You sent 'test' with parameter string (#{command[1]})").deliver
-puts             "You sent 'test' with parameter string (#{command[1]})"
+        when 'info'
+          do_info(from, command[1])
       else
       end # case
     end # commands.each
     return successful    
   end # process_commands
 
+  def do_info(from, name)
+    
+          Notifier.send_test(from, "Info for #{name}").deliver
+#    Notifier.send_info(from, command[1]).deliver
+  end
 end # Class
 

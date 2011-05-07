@@ -8,6 +8,13 @@ class Notifier < ActionMailer::Base
     end 
   end
 
+  def send_info(recipients, member)
+    @content = "Test from database@sim-nigeria.org\n\n#{content}"
+    mail(:to => recipients, :subject=>'Test from database') do |format|
+      format.text {render 'generic'}
+    end 
+  end
+
   def travel_mod(recipients)
     @mods = Travel.where("travels.updated_at > ?", Date.today-7.days).includes(:member)
     mail :to => recipients, :subject=>'Travel schedule updates'

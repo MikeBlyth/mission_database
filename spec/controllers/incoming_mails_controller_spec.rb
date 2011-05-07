@@ -1,4 +1,5 @@
 require 'spec_helper'
+include SimTestHelper
 
 def rebuild_message
     @params[:message] = "From: #{@params['from']}\r\n" + 
@@ -89,5 +90,25 @@ describe IncomingMailsController do
     end
 
   end # processes commands
+
+  describe 'handles these commands:' do
+    before(:each) do
+      Contact.stub(:find_by_email_1).and_return(true)  # have a contact record that matches from line
+      contact_type = Factory(:contact_type)
+    end      
+    
+    it "info" do
+      member = create_couple
+      contact = Factory :contact, :member => member
+      contact_spouse = Factory :contact, :member => member.spouse, :email_1 => 'spouse@example.com'
+      other = Factory :family, :last_name => 'Finklestein'
+      @params['plain'] = "info #{member.last_name}"
+      post :create, @params
+      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(member.last_name)
+      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(member.primary_contact.email_1)
+      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(member.primary_contact.phone_1)
+    end    
+  end # handles these commands
+   
 
 end
