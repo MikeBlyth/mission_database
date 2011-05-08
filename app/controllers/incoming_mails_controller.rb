@@ -64,6 +64,7 @@ private
   def do_info(from, name)
     members = Member.find_with_name(name)
     Notifier.send_info(from, name, members).deliver
+puts "****** AFTER DELIVER *********"
   end
 end # Class
 
