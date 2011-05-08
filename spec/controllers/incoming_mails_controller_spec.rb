@@ -111,14 +111,27 @@ describe IncomingMailsController do
                    )
                    
       contact = Factory :contact, :member => member
-      contact_spouse = Factory :contact, :member => member.spouse, :email_1 => 'spouse@example.com'
+      contact_spouse = Factory :contact, :member => member.spouse, 
+                  :email_1 => 'spouse@example.com',
+                  :email_2 => 'josette@gmail.com',
+                  :phone_2 => '0707-777-7777',
+                  :skype => 'Josette', :skype_public => true,
+                  :blog => 'http://josette.blogspot.com',
+                  :photos => 'http://myphotos.photos.com'
       other = Factory :family, :last_name => 'Finklestein'
       @params['plain'] = "info #{member.last_name}"
       post :create, @params
-puts ActionMailer::Base.deliveries.last.to_s
-      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(member.last_name)
-      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(format_phone(member.primary_contact.email_1))
-      ActionMailer::Base.deliveries.last.to_s.should =~ Regexp.new(format_phone(member.primary_contact.phone_1))
+      mail = ActionMailer::Base.deliveries.last.to_s
+      required_contents = [member.residence_location, member.work_location, member.temporary_location,
+           member.last_name, member.first_name, member.primary_contact.email_1, member.birth_date.to_s(:short),
+           contact_spouse.email_1, contact_spouse.email_2, 
+           format_phone(contact_spouse.phone_1), format_phone(contact_spouse.phone_2),
+           contact_spouse.skype,  contact_spouse.blog, contact_spouse.photos,
+           "To: #{@params['from']}"
+           ]
+      required_contents.each do |target|
+        mail.should =~ Regexp.new(target.to_s)
+      end
     end    
   end # handles these commands
    

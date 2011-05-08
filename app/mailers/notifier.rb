@@ -22,10 +22,14 @@ class Notifier < ActionMailer::Base
         else
           phones = emails = ''
         end 
-        @content << "#{m.indexed_name}: " +
-              "phone=#{phones}; email=#{emails}"
-        @content << "; location=#{m.current_location}" if m.current_location(:missing => :nil)
-        @content << "; birthday=#{m.birth_date.to_s(:short)}" if m.birth_date
+        @content << "#{m.indexed_name}:\n" +
+              "  phone:  #{phones}\n" +
+              "  email:  #{emails}\n"
+        @content << "  Skype:  #{contact.skype}\n" if !contact.skype.blank? && contact.skype_public 
+        @content << "  blog:  #{contact.blog}\n" if contact.blog
+        @content << "  photos:  #{contact.photos}\n" if contact.photos
+        @content << "  location:  #{m.current_location}\n" if m.current_location(:missing => :nil)
+        @content << "  birthday:  #{m.birth_date.to_s(:short)}\n" if m.birth_date
         @content << ".\n\n"
       end
     end
