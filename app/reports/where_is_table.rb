@@ -33,14 +33,14 @@ class WhereIsTable < Prawn::Document
     location = ''
     families_by_location.each do |f|
       # Check for new residence location so we can group
-      if location != description_or_blank(f.residence_location)
-        location = description_or_blank(f.residence_location)
+      if location != description_or_blank(f.residence_location)   # same as previous location?
+        location = description_or_blank(f.residence_location)  # no, start new grouping
         location = '??' if location.blank?
         displayed_location = location
         unless location_col  # Give new location its own row if it does not have its own column
           table_data << ["<b>#{location}</b>", '', ''] # Need enough columns to fill the row, or borders won't be right
         end  
-    else
+      else
         displayed_location = ''  # not a new location, so don't show it in the location column (but what about top of page!?)
       end
       if location_col

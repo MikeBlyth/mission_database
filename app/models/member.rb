@@ -315,8 +315,14 @@ class Member < ActiveRecord::Base
   # Returns true for people with off-field status (alumni, retired...) who are on a current trip to the field.
   def visiting_field?
     return false if status && status.on_field  # This only applies to visitors, not those those w "on_field" status
-    current_travel = travels.where("date < ? and arrival is true and (return_date is ? or return_date > ?)", 
+    if spouse
+      current_travel = Travel.where("member_id = ? or (member_id = ? and with_spouse)", self.id, spouse_id).
+         where("date < ? and arrival is true and (return_date is ? or return_date > ?)", Date.today, nil, Date.today).
+         order("date desc").limit(1)[0]    
+    else
+      current_travel = travels.where("date < ? and arrival is true and (return_date is ? or return_date > ?)", 
          Date.today, nil, Date.today).order("date desc").limit(1)[0]
+    end
     return ! current_travel.nil?
   end  
 

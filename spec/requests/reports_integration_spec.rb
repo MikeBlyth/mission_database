@@ -70,11 +70,13 @@ describe "Report" do
 
     it "reports outgoing travel of on-field spouse" do
       @travel.update_attributes(:return_date=>Date.tomorrow, :with_spouse=>true)
+puts Travel.last.attributes.to_s
       spouse = Member.create(@member.attributes.merge({:spouse=>@member, :first_name=>'Sally',
            :sex=>@member.other_sex, :name=>"#{@member.last_name}, Sally"}))
       visit reports_path # whereis_report_path
       click_link "whereis-pdf"
       pdf_to_text
+puts page.driver.body
       (page.driver.body =~ /Sally.*ravel/m).should_not be_nil
     end
 

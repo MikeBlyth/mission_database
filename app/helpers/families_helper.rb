@@ -14,6 +14,9 @@ module FamiliesHelper
     ordered_members.collect{|x| x ? x.short : nil }.join(Settings.family.member_names_delimiter)
   end
 
+  def current_location
+end 
+
   # Returns family data in a formatted hash like
   # :couple => 'Blyth, Mike & Barb', :children=> 'Lisa, Jonathan, Sara', :phone=> '0803-555-5555\n0803-666-6666',
   #   :email => 'mike.blyth@sim.org\nmjblyth@gmail.com'.

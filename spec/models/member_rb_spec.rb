@@ -506,6 +506,19 @@ describe Member do
           @travel.update_attributes(:date=>Date.tomorrow + 1.day, :return_date => Date.tomorrow + 2.days)
           @head.travel_location.should be_nil
         end
+
+        it 'is shown for accompanying spouse' do
+          @travel.update_attributes(:return_date => Date.today + 2.days, :with_spouse=>true)
+          spouse = create_spouse(@head)
+          spouse.travel_location.should =~ Regexp.new(@travel.date.to_s(:short))
+        end
+
+        it 'is not shown for non-accompanying spouse' do
+          @travel.update_attributes(:return_date => Date.today + 2.days, :with_spouse=>false)
+          spouse = create_spouse(@head)
+          spouse.travel_location.should be_nil
+        end
+
       end # 'for on-field people departing'      
       
       describe 'for off-field people arriving' do
@@ -526,6 +539,19 @@ describe Member do
           @head.travel_location.should be_nil
         end
         
+        it 'is shown for accompanying spouse' do
+          @travel.update_attributes(:return_date => Date.today + 2.days, :with_spouse=>true)
+          spouse = create_spouse(@head)
+          spouse.update_attribute(:status, @head.status)
+          spouse.travel_location.should =~ Regexp.new(@travel.date.to_s(:short))
+        end
+
+        it 'is not shown for non-accompanying spouse' do
+          @travel.update_attributes(:return_date => Date.today + 2.days, :with_spouse=>false)
+          spouse = create_spouse(@head)
+          spouse.travel_location.should be_nil
+        end
+
         it 'is nil for dates in the future' do
           @travel.update_attributes(:date=>Date.tomorrow + 1.day, :return_date => Date.tomorrow + 2.days)
           @head.travel_location.should be_nil
@@ -582,7 +608,6 @@ describe Member do
     end
     
     it "is true for spouse" do
-      
       @husband.spouse.dependent.should be_true
     end
     
