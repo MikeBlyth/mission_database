@@ -21,6 +21,7 @@
 class Family < ActiveRecord::Base
   include NameHelper
   include FilterByStatusHelper
+  include ApplicationHelper
 
   attr_accessor :previous_residence_location, :previous_status
   
@@ -111,6 +112,14 @@ class Family < ActiveRecord::Base
   def couple
     [self.husband, self.wife]
   end
+ 
+  def married_couple?
+    ! head.spouse.nil?
+  end 
+
+  def spouse
+    head.spouse
+  end
   
   # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
@@ -126,6 +135,35 @@ class Family < ActiveRecord::Base
 
   end
 
+  # Like member current location, and will be the same if both spouses have same current_location,
+  # Otherwise, give separately for spouses.
+  def current_location_hash(options={})
+    head_current_location_hash = head.current_location_hash
+    return head_current_location_hash unless married_couple?    # If single, just use head's current_location_hash
+    spouse_current_location_hash = spouse.current_location_hash
+    return head_current_location_hash if head_current_location_hash == spouse_current_location_hash  # if identical, use 1
+    return current_locations_merged_hash
+  end 
+
+  def current_location(options={})
+    cur_loc_hash = current_location_hash(options)
+    answer = cur_loc_hash[:residence]
+    answer += " (#{cur_loc_hash[:work]})" if !cur_loc_hash[:work].blank? && (cur_loc_hash[:work] != cur_loc_hash[:residence])
+    answer += " (#{cur_loc_hash[:travel]})" if !cur_loc_hash[:travel].blank?
+    answer += " (#{cur_loc_hash[:temp]})" if !cur_loc_hash[:temp].blank?
+    return answer
+  end
+
+#  def current_location
+#    head_current_location = head.current_location
+#    return head_current_location unless married_couple?    # If single, just use head's current_location
+#    spouse_current_location = spouse.current_location
+#    return head_current_location if head_current_location == spouse_current_location  # if identical, use 1
+#    return spouse_current_location if head_current_location.nil?        
+#    return head_current_location if spouse_current_location.nil?        
+#    return current_locations_merged
+#  end 
+
   # When validating a family, verify on the head-of-family NAME that either
   # * a member with that name exists and is the head-of-family OR
   # * the record is new and the name fields are valid for a new member
@@ -137,9 +175,32 @@ class Family < ActiveRecord::Base
       else
         return true
       end
-    else
-      
     end
   end
-  
+
+private
+
+  def current_locations_merged_hash
+    merged = {}
+    h = husband.current_location_hash
+    w = wife.current_location_hash
+    s = h[:residence]
+    s << "/#{w[:residence]}" if (h[:residence] != w[:residence]) && ! w[:residence].blank?
+    merged[:residence] = s
+    s = h[:work]
+    s << "/#{w[:work]}" if (h[:work] != w[:work]) && ! w[:work].blank?
+    merged[:work] = s
+    s1 = ""
+    s1 << husband.short + ' ' + h[:travel] if h[:travel]
+    s2 = ''
+    s2 = wife.short + ' ' + w[:travel] if w[:travel]
+    merged[:travel] = smart_join([s1, s2], "/")
+    s1 = ""
+    s1 << husband.short + ' ' + h[:temp] if h[:temp]
+    s2 = ''
+    s2 = wife.short + ' ' + w[:temp] if w[:temp]
+    merged[:temp] = smart_join([s1, s2], "/")
+    return merged
+  end
+
 end
