@@ -9,10 +9,19 @@ class Notifier < ActionMailer::Base
     end 
   end
 
+  def send_report(recipients, report_name, report)
+    @content = "The latest #{report_name} from the #{Settings.site.name} is attached."
+    attachments[report_name] = report
+    mail(:to => recipients, :subject=>"#{report_name} you requested") do |format|
+      format.text {render 'generic'}
+    end
+  end    
+
   def send_info(recipients, request, members)
     @content = "Here is the info you requested ('info #{request}'):\n\n"
     if members.empty?
-      @content << "No matching members found. Try with first or last name only. Check spelling."
+      @content << "No matching members found. Try with first or last name only. Check spelling.\n" +
+                  "Names must be properly capitalized like 'Jones' not 'jones' or 'JONES'."
     else
       members.each do |m|
         contact = m.primary_contact

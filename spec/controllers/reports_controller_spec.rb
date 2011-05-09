@@ -1,10 +1,4 @@
 require 'spec_helper'
-#require "webrat"
-
-#Webrat.configure do |config|
-#  config.mode = :rails
-#end
-
 
 describe ReportsController do
     render_views
@@ -55,6 +49,26 @@ describe ReportsController do
     end
   end  
     
+  describe "sends Where Is report by email" do
+    before(:each) do
+      @user = Factory(:user, :admin=>true)  #   Sign in as admin so the controllers will work!
+      test_sign_in(@user)
+      @params = {:mail_to => "test@example.com", :format=>'pdf'}
+      @member = Factory(:family).head
+    end
+    
+    it 'sends the email' do
+      lambda{get :whereis, @params}.should change(ActionMailer::Base.deliveries, :length).by(1)
+    end  
+
+    it 'email contains attachment' do
+      get :whereis, @params
+      mail = ActionMailer::Base.deliveries.last
+      puts mail.attachments.first.class
+#      puts "class=#{mail.class}, attachments=#{mail.attachments}, attachment=#{mail.attachment}, attachment? = #{mail.attachment?}"
+    end  
+
+  end # sends Where Is report by email
 
 end # describe ReportsController
 

@@ -22,7 +22,6 @@ class AdminController < ActionController::Base
   def mail_notices
     @trav_mod = Notifier.travel_mod
     @trav_mod.deliver
-    
   end  
 
   def before_report(title)

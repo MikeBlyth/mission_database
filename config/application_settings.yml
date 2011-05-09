@@ -4,6 +4,8 @@
 # Can set like this if desired:
 #  Settings[:rows_per_screen_page] = 20
 defaults: &defaults
+  site: 
+    name: 'SIM Nigeria Database'
   reports: 
     page_size: 'A4'
     birthday_calendar:

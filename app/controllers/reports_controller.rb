@@ -50,8 +50,15 @@ class ReportsController < ApplicationController
       format.pdf do
         output = WhereIsTable.new(:page_size=>Settings.reports.page_size).
              to_pdf(@families)
-        send_data output, :filename => "where_is_everyone.pdf", 
+
+#        if params[:mail_to] then
+#puts "Mailing report, params=#{params}"
+#          Notifier.send_report(params[:mail_to], @title, output).deliver
+#redirect_to reports_path
+#        else
+          send_data output, :filename => "where_is_everyone.pdf", 
                          :type => "application/pdf"
+#        end
       end
     end
   end
