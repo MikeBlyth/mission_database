@@ -184,22 +184,34 @@ private
     merged = {}
     h = husband.current_location_hash
     w = wife.current_location_hash
-    s = h[:residence]
+    s = '' << h[:residence]
     s << "/#{w[:residence]}" if (h[:residence] != w[:residence]) && ! w[:residence].blank?
     merged[:residence] = s
-    s = h[:work]
-    s << "/#{w[:work]}" if (h[:work] != w[:work]) && ! w[:work].blank?
-    merged[:work] = s
+
+    s1 = ""
+    s1 << husband.short + ' ' + h[:residence] if h[:residence]
+    s2 = ''
+    s2 = wife.short + ' ' + w[:residence] if w[:residence]
+    merged[:residence] = smart_join([s1, s2], "; ")
+
+    s1 = ""
+    s1 << husband.short + ' ' + h[:work] if h[:work]
+    s2 = ''
+    s2 = wife.short + ' ' + w[:work] if w[:work]
+    merged[:work] = smart_join([s1, s2], "; ")
+
     s1 = ""
     s1 << husband.short + ' ' + h[:travel] if h[:travel]
     s2 = ''
     s2 = wife.short + ' ' + w[:travel] if w[:travel]
-    merged[:travel] = smart_join([s1, s2], "/")
+    merged[:travel] = smart_join([s1, s2], "; ")
+
     s1 = ""
     s1 << husband.short + ' ' + h[:temp] if h[:temp]
     s2 = ''
     s2 = wife.short + ' ' + w[:temp] if w[:temp]
-    merged[:temp] = smart_join([s1, s2], "/")
+    merged[:temp] = smart_join([s1, s2], "; ")
+
     return merged
   end
 

@@ -6,20 +6,25 @@ class WhereIsTable < Prawn::Document
   include FamiliesHelper
     
   # Return the data to be inserted into table from family f
-  def family_data_line(f)
+  def family_data_line(f, options = {})
     formatted = family_data_formatted(f)
     name_column = formatted[:couple] + 
                   (f.status.code == 'field' ? '' : " (#{f.status.description})") +
                   (formatted[:children].blank? ? '' : "\n\u00a0\u00a0<i>#{formatted[:children]}</i>" ) 
+    if options[:location] == 'long'
+      name_column << "\n<i>" +  f.current_location + "</i>"
+    elsif options[:location] == 'short'
+      name_column << " (#{f.residence_location})"
+    end
     return [ name_column, smart_join(formatted[:emails], "\n"), smart_join(formatted[:phones], "\n") ]
   end
 
-  def to_pdf(families,options = {})
+  def to_pdf(families, options = {})
 
     location_col = default_true(options[:location_column]) # make separate column for locations? Default=true
 
     # Part 1 -- Sorted by location
-    page_header(:title=>"Where Is Everyone?", :left=>'by location')#, :left => comments)
+    page_header(:title=>"Where Is Everyone?")#, :left => comments)
     families_by_location = families.sort do |x,y| 
       (description_or_blank(x.residence_location,'') + x[:name]) <=> 
       (description_or_blank(y.residence_location,'') +y[:name])
@@ -44,9 +49,9 @@ class WhereIsTable < Prawn::Document
         displayed_location = ''  # not a new location, so don't show it in the location column (but what about top of page!?)
       end
       if location_col
-        table_data << [displayed_location] + family_data_line(f)
+        table_data << [displayed_location] + family_data_line(f, options.merge({:location=>nil}))
       else
-        table_data << family_data_line(f)
+        table_data << family_data_line(f, options.merge({:location=>nil}))
       end
     end
 
@@ -61,7 +66,7 @@ class WhereIsTable < Prawn::Document
       # Part 2 -- Sorted by family
       table_data = [['<i>Name</i>', 'Email', 'Phone']]
       families.each do |f|
-        table_data << family_data_line(f)
+        table_data << family_data_line(f, options.merge(:location=>'long'))
       end      
       start_new_page
       table(table_data, :header => true, 
