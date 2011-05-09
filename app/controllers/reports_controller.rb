@@ -39,6 +39,7 @@ class ReportsController < ApplicationController
     # include_active = params[:include_active]
     @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
     @title = "Where Is Everyone?"
+    @visitors = Travel.current_visitors
     respond_to do |format|
       format.html do 
         if params[:by] == 'location'
@@ -49,7 +50,7 @@ class ReportsController < ApplicationController
       end
       format.pdf do
         output = WhereIsTable.new(:page_size=>Settings.reports.page_size).
-             to_pdf(@families)
+             to_pdf(@families, @visitors, params)
         send_data output, :filename => "where_is_everyone.pdf", 
                          :type => "application/pdf"
       end

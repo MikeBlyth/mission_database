@@ -8,19 +8,20 @@ class WhereIsTable < Prawn::Document
   # Return the data to be inserted into table from family f
   def family_data_line(f, options = {})
     formatted = family_data_formatted(f)
+    location_string = case options[:location]
+      when 'long' then  "\n<i>" +  f.current_location + "</i>"
+      when 'short' then " (#{f.residence_location})"
+      else              ''
+    end
     name_column = formatted[:couple] + 
                   (f.status.code == 'field' ? '' : " (#{f.status.description})") +
-                  (formatted[:children].blank? ? '' : "\n\u00a0\u00a0<i>#{formatted[:children]}</i>" ) 
-    if options[:location] == 'long'
-      name_column << "\n<i>" +  f.current_location + "</i>"
-    elsif options[:location] == 'short'
-      name_column << " (#{f.residence_location})"
-    end
+                  (formatted[:children].blank? ? '' : "\n\u00a0\u00a0<i>#{formatted[:children]}</i>" ) +
+                  location_string
     return [ name_column, smart_join(formatted[:emails], "\n"), smart_join(formatted[:phones], "\n") ]
   end
 
-  def to_pdf(families, options = {})
-
+  def to_pdf(families, visitors, options = {})
+    options[:location] ||= 'short'
     location_col = default_true(options[:location_column]) # make separate column for locations? Default=true
 
     # Part 1 -- Sorted by location
@@ -50,6 +51,7 @@ class WhereIsTable < Prawn::Document
       end
       if location_col
         table_data << [displayed_location] + family_data_line(f, options.merge({:location=>nil}))
+          # (we don't want locations displayed with each family in this part since they're displayed separately)
       else
         table_data << family_data_line(f, options.merge({:location=>nil}))
       end
@@ -62,18 +64,27 @@ class WhereIsTable < Prawn::Document
                       :cell_style => { :size => 10, :inline_format => true}) do 
         row(0).style :background_color => 'CCCC00', :font => 'Times-Roman'
       end
-
+      visitors_string = ''
+      if ! visitors.empty?
+        visitors_string = "\n<b>Visitors:</b>\n\n"
+        a = visitors.map {|v| "#{v[:names]}: arrived #{v[:arrival_date]}, depart #{v[:departure_date] || '--'}."}
+        visitors_string << a.join("\n")
+        group {text visitors_string, :inline_format=>true}
+      end
+      
       # Part 2 -- Sorted by family
       table_data = [['<i>Name</i>', 'Email', 'Phone']]
       families.each do |f|
-        table_data << family_data_line(f, options.merge(:location=>'long'))
+        table_data << family_data_line(f, options)
       end      
       start_new_page
       table(table_data, :header => true, 
                       :row_colors => ["F0F0F0", "FFFFCC"],
                       :cell_style => { :size => 10, :inline_format => true}) do 
         row(0).style :background_color => 'CCCC00', :font => 'Times-Roman'
+        column(1).style :width=>150
       end
+      group {text visitors_string, :inline_format=>true} unless visitors_string.empty?
  
 
     end # bounding_box

@@ -154,16 +154,6 @@ class Family < ActiveRecord::Base
     return answer
   end
 
-#  def current_location
-#    head_current_location = head.current_location
-#    return head_current_location unless married_couple?    # If single, just use head's current_location
-#    spouse_current_location = spouse.current_location
-#    return head_current_location if head_current_location == spouse_current_location  # if identical, use 1
-#    return spouse_current_location if head_current_location.nil?        
-#    return head_current_location if spouse_current_location.nil?        
-#    return current_locations_merged
-#  end 
-
   # When validating a family, verify on the head-of-family NAME that either
   # * a member with that name exists and is the head-of-family OR
   # * the record is new and the name fields are valid for a new member
@@ -180,37 +170,26 @@ class Family < ActiveRecord::Base
 
 private
 
+  def merge_one_location_param(h, w, param)
+    if h[param] == w[param]
+      return h[param]
+    else
+      his = h[param].blank? ? '' : husband.short + '--' + h[param]
+      hers = w[param].blank? ? '' : wife.short + '--' + w[param]
+      return smart_join([his, hers], "; ")
+    end
+  end
+    
+
   def current_locations_merged_hash
     merged = {}
     h = husband.current_location_hash
     w = wife.current_location_hash
-    s = '' << h[:residence]
-    s << "/#{w[:residence]}" if (h[:residence] != w[:residence]) && ! w[:residence].blank?
-    merged[:residence] = s
-
-    s1 = ""
-    s1 << husband.short + ' ' + h[:residence] if h[:residence]
-    s2 = ''
-    s2 = wife.short + ' ' + w[:residence] if w[:residence]
-    merged[:residence] = smart_join([s1, s2], "; ")
-
-    s1 = ""
-    s1 << husband.short + ' ' + h[:work] if h[:work]
-    s2 = ''
-    s2 = wife.short + ' ' + w[:work] if w[:work]
-    merged[:work] = smart_join([s1, s2], "; ")
-
-    s1 = ""
-    s1 << husband.short + ' ' + h[:travel] if h[:travel]
-    s2 = ''
-    s2 = wife.short + ' ' + w[:travel] if w[:travel]
-    merged[:travel] = smart_join([s1, s2], "; ")
-
-    s1 = ""
-    s1 << husband.short + ' ' + h[:temp] if h[:temp]
-    s2 = ''
-    s2 = wife.short + ' ' + w[:temp] if w[:temp]
-    merged[:temp] = smart_join([s1, s2], "; ")
+   
+    merged[:residence] = merge_one_location_param(h, w, :residence)
+    merged[:work] = merge_one_location_param(h, w, :work)
+    merged[:travel] = merge_one_location_param(h, w, :travel)
+    merged[:temp] = merge_one_location_param(h, w, :temp)
 
     return merged
   end

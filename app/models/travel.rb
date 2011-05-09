@@ -37,6 +37,23 @@ class Travel < ActiveRecord::Base
   validates_presence_of :date
   validate :name_info
   
+  def self.current_arrivals
+    self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
+  end
+  
+  def self.current_visitors
+#    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR travels.member_id IS NULL', Status.field_statuses)
+    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR other_travelers IS NOT NULL', Status.field_statuses)
+    visitors = []
+    travels.each do |t|
+      visitors << {:names => t.travelers,
+                   :arrival_date => t.date,
+                   :departure_date => t.return_date,
+                   }
+    end
+    return visitors
+  end 
+
   def to_label
     "#{date.to_s} #{flight}"
   end
@@ -62,7 +79,6 @@ class Travel < ActiveRecord::Base
     return [nil, nil, name.strip]
   end      
       
- 
   # Normally, member is an actual person in the database. However, a travel record can
   # be free-floating, not associated with a member. In this case, corresponding to the "else"
   # clause below, we generate a temporary Member object just so that we have the name
