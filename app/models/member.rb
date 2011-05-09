@@ -75,6 +75,7 @@ class Member < ActiveRecord::Base
   # Takes name in some free text formats and returns array of matches
   # To find Donald (Don) Duck, all of these will match:
   # D Duck; Duck, D; Duck, Don; D Du; Do Du; Du; Don; Donald; Dona Du;
+  # Conditions parameter will pre-filter the output, e.g. can be ["status IN ?", [1,3,5]], "sex='M'", etc.
   def self.find_with_name(name, conditions="true")
 #puts "Find_with_name #{name}"
     filtered = self.where(conditions)
@@ -88,7 +89,7 @@ class Member < ActiveRecord::Base
       last_name = first_name = nil
     end
     if last_name && first_name      
-      result += filtered.where("last_name LIKE ? AND (first_name LIKE ?) OR (short_name LIKE ?)", 
+      result += filtered.where("last_name LIKE ? AND ((first_name LIKE ?) OR (short_name LIKE ?))", 
           last_name+"%", first_name+"%", first_name+"%")
     end
     return result.uniq.compact

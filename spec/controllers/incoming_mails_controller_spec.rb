@@ -49,7 +49,6 @@ describe IncomingMailsController do
 
   end # it filters ...
 
-
   describe 'processes' do
     before(:each) do
       Contact.stub(:find_by_email_1).and_return(true)  # have a contact record that matches from line
@@ -98,41 +97,51 @@ describe IncomingMailsController do
       contact_type = Factory(:contact_type)
     end      
     
-    it "info" do
-      member = create_couple
-      residence_location = Factory(:location, :description=>'Rayfield')
-      work_location = Factory(:location, :description=>'Spring of Life')
-      member.update_attributes(:birth_date => Date.new(1980,6,15),
-                   :residence_location=>residence_location,
-                   :work_location=>work_location,
-                   :temporary_location => 'Miango Resort Hotel',
-                   :temporary_location_from_date => Date.today - 10.days,
-                   :temporary_location_until_date => Date.today + 2.days,
-                   )
-                   
-      contact = Factory :contact, :member => member
-      contact_spouse = Factory :contact, :member => member.spouse, 
-                  :email_1 => 'spouse@example.com',
-                  :email_2 => 'josette@gmail.com',
-                  :phone_2 => '0707-777-7777',
-                  :skype => 'Josette', :skype_public => true,
-                  :blog => 'http://josette.blogspot.com',
-                  :photos => 'http://myphotos.photos.com'
-      other = Factory :family, :last_name => 'Finklestein'
-      @params['plain'] = "info #{member.last_name}"
-      post :create, @params
-      mail = ActionMailer::Base.deliveries.last.to_s
-      required_contents = [member.residence_location, member.work_location, member.temporary_location,
-           member.last_name, member.first_name, member.primary_contact.email_1, member.birth_date.to_s(:short),
-           contact_spouse.email_1, contact_spouse.email_2, 
-           format_phone(contact_spouse.phone_1), format_phone(contact_spouse.phone_2),
-           contact_spouse.skype,  contact_spouse.blog, contact_spouse.photos,
-           "To: #{@params['from']}"
-           ]
-      required_contents.each do |target|
-        mail.should =~ Regexp.new(target.to_s)
+    describe 'info' do
+
+      it "gives error message if name not found" do
+        @params['plain'] = "info stranger"
+        lambda{post :create, @params}.should change(ActionMailer::Base.deliveries, :length).by(1)
+        mail = ActionMailer::Base.deliveries.last.to_s
+        mail.should =~ /no.*found/i      
       end
-    end    
+
+      it "includes all relevant info for couple" do
+        member = create_couple
+        residence_location = Factory(:location, :description=>'Rayfield')
+        work_location = Factory(:location, :description=>'Spring of Life')
+        member.update_attributes(:birth_date => Date.new(1980,6,15),
+                     :residence_location=>residence_location,
+                     :work_location=>work_location,
+                     :temporary_location => 'Miango Resort Hotel',
+                     :temporary_location_from_date => Date.today - 10.days,
+                     :temporary_location_until_date => Date.today + 2.days,
+                     )
+                     
+        contact = Factory :contact, :member => member
+        contact_spouse = Factory :contact, :member => member.spouse, 
+                    :email_1 => 'spouse@example.com',
+                    :email_2 => 'josette@gmail.com',
+                    :phone_2 => '0707-777-7777',
+                    :skype => 'Josette', :skype_public => true,
+                    :blog => 'http://josette.blogspot.com',
+                    :photos => 'http://myphotos.photos.com'
+        other = Factory :family, :last_name => 'Finklestein'
+        @params['plain'] = "info #{member.last_name}"
+        post :create, @params
+        mail = ActionMailer::Base.deliveries.last.to_s
+        required_contents = [member.residence_location, member.work_location, member.temporary_location,
+             member.last_name, member.first_name, member.primary_contact.email_1, member.birth_date.to_s(:short),
+             contact_spouse.email_1, contact_spouse.email_2, 
+             format_phone(contact_spouse.phone_1), format_phone(contact_spouse.phone_2),
+             contact_spouse.skype,  contact_spouse.blog, contact_spouse.photos,
+             "To: #{@params['from']}"
+             ]
+        required_contents.each do |target|
+          mail.should =~ Regexp.new(target.to_s)
+        end
+      end    # example
+    end # info
   end # handles these commands
    
 

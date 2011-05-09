@@ -30,7 +30,7 @@ class Notifier < ActionMailer::Base
         @content << "  photos:  #{contact.photos}\n" if contact.photos
         @content << "  location:  #{m.current_location}\n" if m.current_location(:missing => :nil)
         @content << "  birthday:  #{m.birth_date.to_s(:short)}\n" if m.birth_date
-        @content << ".\n\n"
+        @content << "\n"
       end
     end
 puts "******* Mailing to #{recipients}"

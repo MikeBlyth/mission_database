@@ -645,6 +645,10 @@ describe Member do
       @member.update_attribute(:short_name, "Shorty")
     end
 
+    it 'return empty array if name not found' do
+      Member.find_with_name('stranger').should == []
+    end
+
     it 'finds simple name' do  # searching for ONE of last name, first name, short name, full name
       Member.find_with_name(@member.first_name).should == [@member]
       Member.find_with_name(@member.last_name).should == [@member]
@@ -703,8 +707,15 @@ describe Member do
       Member.find_with_name("#{@member.last_name}", ["sex=?", 'M']).should_not include(spouse)
     end
 
-    it 'excludes partial match to "last_name, short_name"' do  
+    it 'excludes partial match to "last_name, different_short_name"' do  
       spouse = create_spouse(@member)
+      Member.find_with_name("#{@member.last_name}, #{@member.short_name}").should == [@member]
+        # == [@member] implies that spouse is not included
+    end
+      
+    it 'excludes partial match to "same_short_name different_last_name"' do  
+      other = Factory(:family).head
+      other.update_attribute(:short_name, @member.short_name)
       Member.find_with_name("#{@member.last_name}, #{@member.short_name}").should == [@member]
         # == [@member] implies that spouse is not included
     end
