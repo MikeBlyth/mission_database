@@ -492,6 +492,11 @@ describe Member do
           @travel = @head.travels.first
         end
       
+        it 'date format' do
+puts          Date.new(2099,12,25).to_s(:short)
+          Date.new(2099,12,25).to_s(:short).should_not =~ /99/
+        end
+
         it 'is shown for dates including today' do
           @travel.update_attributes(:return_date => Date.today + 2.days)
           @head.travel_location.should =~ /left|traveled|depart/i

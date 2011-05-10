@@ -72,17 +72,11 @@ module ApplicationHelper
 
     # This is just for Nigerian phone numbers for now, to keep it really simple
     # It's highly localized -- probably best to make it optional!
+    # takes an 11-digit phone number starting in 0, or +234 plus 10 digits, and formats it
     # ToDo: make this optional
     def format_phone(s,options={})
-      if Settings.formatting.format_phone_numbers && !s.blank? 
-        delim_1 = options[:delim_1] || " "
-        delim_2 = options[:delim_2] || " "
-        squished = s.ljust(7).gsub(' ','').gsub('-','').gsub('.','').gsub('+234','0')
-        if squished.length == 11 && squished[0]=='0'
-          return squished.insert(7,delim_2).insert(4,delim_1)
-        end
-      end
-      return s
+      return s unless s.respond_to? :phone_format
+      return s.phone_format(options)
     end
 
 end  # ApplicationHelper module
@@ -97,6 +91,21 @@ class NilClass
     nil
   end
 end
+
+class String
+  def phone_format(options={})
+    if Settings.formatting.format_phone_numbers && !self.blank? 
+      delim_1 = options[:delim_1] || " "
+      delim_2 = options[:delim_2] || " "
+      squished = self.ljust(7).gsub(' ','').gsub('-','').gsub('.','').gsub('+234','0')
+      if squished.length == 11 && squished[0]=='0'
+        return squished.insert(7,delim_2).insert(4,delim_1)
+      end
+    end
+    return self  # nothing to do
+  end
+end
+puts "String.format_phone defined"
 
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on
 class Fixnum

@@ -32,7 +32,7 @@ gem 'settingslogic'
 # and rake tasks are available in development mode:
 group :development, :test do
   gem 'annotate-models' #, '1.0.4'
-  gem "rspec-rails", ">= 2.2.0"
+  gem "rspec-rails"#, "2.5.0"
   gem "cucumber-rails", ">= 0.3.2"
 #  gem "webrat", ">= 0.7.2"
   gem "capybara"

@@ -67,9 +67,11 @@ class WhereIsTable < Prawn::Document
       visitors_string = ''
       if ! visitors.empty?
         visitors_string = "\n<b>Visitors:</b>\n\n"
-        a = visitors.map {|v| "#{v[:names]}: arrived #{v[:arrival_date]}, depart #{v[:departure_date] || '--'}."}
+        a = visitors.map {|v| "#{v[:names]}: #{v[:contacts]} arrived #{v[:arrival_date].to_s(:short)}, " + 
+          (v[:departure_date] ? " depart #{v[:departure_date].to_s(:short)}." : '')
+          }
         visitors_string << a.join("\n")
-        group {text visitors_string, :inline_format=>true}
+        group {text visitors_string, :size=>9, :inline_format=>true}
       end
       
       # Part 2 -- Sorted by family
@@ -84,7 +86,7 @@ class WhereIsTable < Prawn::Document
         row(0).style :background_color => 'CCCC00', :font => 'Times-Roman'
         column(1).style :width=>150
       end
-      group {text visitors_string, :inline_format=>true} unless visitors_string.empty?
+      group {text visitors_string, :size=>9, :inline_format=>true} unless visitors_string.empty?
  
 
     end # bounding_box

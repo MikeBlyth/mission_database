@@ -33,7 +33,7 @@ class Notifier < ActionMailer::Base
         @content << "\n"
       end
     end
-puts "******* Mailing to #{recipients}"
+#puts "******* Mailing to #{recipients}"
     mail(:to => recipients, :subject=>'Your request for info') do |format|
       format.text {render 'generic'}
     end 
