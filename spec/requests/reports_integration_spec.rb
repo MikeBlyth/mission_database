@@ -87,7 +87,7 @@ describe "Report" do
       visit reports_path # whereis_report_path
       click_link "whereis-detailed-pdf"
       pdf_to_text
-puts page.driver.body
+#puts page.driver.body
       page.should have_content(@member.last_name)
       page.should have_content(@member.travel_location)
     end
