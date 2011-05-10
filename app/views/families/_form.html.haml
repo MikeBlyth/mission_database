@@ -1,0 +1,69 @@
+%h4 Information for the individual or <em>head</em> of family
+%p 
+  %table.new_family
+    %tr
+      %td
+        = label :record, :last_name,"", :class=>'required'
+        %br
+        = text_field :record, :last_name, :class=> "last_name-input"
+      %td
+        = label :record, :first_name,"", :class=>'required'
+        %br
+        = text_field :record, :first_name, :class=> "first_name-input"
+      %td
+        = label :record, :middle_name
+        %br
+        = text_field :record, :middle_name, :class=> "middle_name-input"
+      %td
+        = label :record, :short_name
+        %br
+        = text_field :record, :short_name, :class=> "short_name-input"
+    %tr
+      %td
+        = label_tag :head_name, "Full name of individual", :class=>'required'
+        %br
+        = text_field_tag :head_name,"", :class=> "name-input"
+        %br
+        %p.description Must be unique
+    %tr
+    %td
+      %hr
+    %tr
+      %td
+        %h4 Information for individual or <em>entire family</em>
+    %tr
+      %td
+        = label :record, :name, 'Name to identify family', :class=>'required'
+        %br
+        = text_field :record, :name, :class=> "name-input"
+        %br
+        %p.description Must be unique. Can be same as name of head of family or a customized family name like "Hill, Jack & Jill"
+      %td
+        = label :record, :sim_id, 'SIM ID', :class=>'required'
+        %br
+        = text_field :record, :sim_id, :class => 'sim_id-input'
+      %td
+        = label :record, :status, "Status"
+        %br
+        - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
+        = select(:record, :status, status_choices, {:include_blank => true })    
+      %td
+        = label :record, :residence_location, "Location"
+        %br
+        = select(:record, :residence_location, location_choices(@record[:residence_location_id]), {:include_blank => true })    
+    - unless @record.new_record?
+      %tr
+        %td
+          = label :record, :head, "Head of family"
+          %br
+          - head_choices = options_from_collection_for_select(Member.where("last_name=(?)", @record.last_name).select('id, name').order('name'), :id, :name, @record[:head_id])
+          = select(:record, :head, head_choices)    
+  - unless @record.new_record?
+    .add_family_members
+      %h5 Add family members
+      %p 
+        = link_to 'Add child', new_member_path(:type=>'child', :family => @record), :class=>'big-link'
+        - if @record.head.is_single?
+          = link_to 'Add spouse', new_member_path(:type=>'spouse', :family => @record.id), :class=>'big-link'
+
+

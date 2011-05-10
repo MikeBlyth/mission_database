@@ -54,8 +54,8 @@ class FamiliesController < ApplicationController
   end
 
   def edit_inline
-    
   end  
+
   def conditions_for_collection
     status_groups = {'active' => %w( field home_assignment mkfield),
                 'field' => %w( field mkfield visitor),

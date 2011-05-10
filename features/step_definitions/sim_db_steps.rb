@@ -298,14 +298,13 @@ end
 
 Then /^I should see a valid form for a new family$/ do
 #save_and_open_page( )
-  page.should have_content "Create a New Individual or Family"
+  page.should have_content "Create Family"
   find_field("record[last_name]").value.blank?.should be true
   find_field("First name").value.blank?.should be true
   find_field("SIM").value.blank?.should be true
 #  find_field("record_status").element.search(".//option[@selected = \"selected\"]").inner_html.should =~ /unspecified/i
   find_field("record_status").value.should == ''
   find_field("record_residence_location").value.should == ''
-  page.should have_content "Create a New Individual or Family"
   page.should have_selector "input", :id=> 'record_name' 
 end
 
