@@ -58,7 +58,7 @@ puts "Mailing report, params=#{params}"
         else
           send_data output, :filename => "where_is_everyone.pdf", 
                          :type => "application/pdf"
-#        end
+        end
       end
     end
   end
