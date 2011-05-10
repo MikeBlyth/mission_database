@@ -296,19 +296,27 @@ class Member < ActiveRecord::Base
      return time_human((Date.today - self.birth_date) * SECONDS_PER_DAY)
   end
   
+
+  def current_location_hash(options={})
+    answer = {
+        :residence => description_or_blank(residence_location, options[:missing] || '?'),
+        :work => description_or_blank(work_location, options[:missing] || nil),
+        :travel => travel_location,
+        :temp => temp_location
+        }
+    return answer
+  end     
+
   # Return string with person's current location (& work location) based on member.residence_location,
   # member.work_location, member.temporary_location, and travel records
   # Options
   #   :missing = what to supply if residence or work location is missing or is 'unspecified'
   def current_location(options={})
-    residence = description_or_blank(residence_location, options[:missing] || '?')
-    work = description_or_blank(work_location, options[:missing] || nil)
-    answer = residence
-    # Now we have the location but subject to travel and temporary moves.
-    answer += " (#{work})" if !work.blank? && (work != residence)
-  #  answer += ". "
-    answer += " (#{travel_location})" if travel_location
-    answer += " (#{temp_location})" if temp_location
+    cur_loc_hash = current_location_hash(options)
+    answer = cur_loc_hash[:residence]
+    answer += " (#{cur_loc_hash[:work]})" if !cur_loc_hash[:work].blank? && (cur_loc_hash[:work] != cur_loc_hash[:residence])
+    answer += " (#{cur_loc_hash[:travel]})" if cur_loc_hash[:travel]
+    answer += " (#{cur_loc_hash[:temp]})" if cur_loc_hash[:temp]
     return answer
   end
 
@@ -342,15 +350,15 @@ class Member < ActiveRecord::Base
     end      
     if current_travel
       if visiting_field?  # Someone visiting the field
-        answer = "arrived on field #{current_travel.date.to_s(:short)}"
+        answer = "arrived on field #{current_travel.date.to_s(:short).strip}"
         if current_travel.return_date
-          answer << ", leaves #{current_travel.return_date.to_s(:short)}"
+          answer << ", leaves #{current_travel.return_date.to_s(:short).strip}"
         end
         return answer
       elsif status && status.on_field && !current_travel.arrival  # if on-field person has traveled (according to travel schedule)
-        answer = "left field #{current_travel.date.to_s(:short)}"
+        answer = "left field #{current_travel.date.to_s(:short).strip}"
         if current_travel.return_date
-          answer << ", returns #{current_travel.return_date.to_s(:short)}"
+          answer << ", returns #{current_travel.return_date.to_s(:short).strip}"
         end
         return answer
       end  

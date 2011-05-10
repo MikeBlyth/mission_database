@@ -2,7 +2,7 @@
 
 module AuthenticationHelper
 
-  private
+ # private
 
     def authenticate
       deny_access unless signed_in?

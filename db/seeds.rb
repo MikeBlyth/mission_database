@@ -11,7 +11,7 @@
 #
 # coding: utf-8
 
-puts "**** Seeding tables ****"
+#puts "**** Seeding tables ****"
 Bloodtype.delete_all
 x = Bloodtype.new(:abo => 'A', :rh => 'neg', :comment => '', :full => 'A neg')
 x.id = 1

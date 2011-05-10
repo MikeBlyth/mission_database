@@ -130,7 +130,7 @@ GEM
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
       rspec-mocks (~> 2.5.0)
-    rspec-core (2.5.1)
+    rspec-core (2.5.2)
     rspec-expectations (2.5.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.5.0)
@@ -194,7 +194,7 @@ DEPENDENCIES
   rack-ssl-enforcer
   rails (>= 3.0.0)
   redgreen
-  rspec-rails (>= 2.2.0)
+  rspec-rails
   ruby-debug19
   selenium-client (>= 1.2.18)
   settingslogic

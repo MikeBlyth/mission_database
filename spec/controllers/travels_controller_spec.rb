@@ -7,10 +7,10 @@ require 'spec_helper'
 
 describe TravelsController do
   
-  describe "role based authorization" do
+  context "role based authorization" do
 
     before(:each) do
-        @user = Factory(:user, :travel=>true)
+        @user = Factory.build(:user, :travel=>true)
         test_sign_in(@user)
         @object = Factory.build(:travel)
     end
@@ -33,7 +33,7 @@ describe TravelsController do
 
     describe "for unauthorized users" do
     
-      before(:each) {@user.update_attribute(:travel, false)}
+      before(:each) {@user[:travel] = false}
       
       it "should have not access to new object form" do
 #        Travel.should_not_receive(:new)
@@ -42,7 +42,7 @@ describe TravelsController do
       
       it "cannot create new object" do
         lambda do
-          post :create, :record => {:date=>Date.today, :member_id => @object.member_id}
+          post :create, :record => {:date=>Date.today, :member => @object.member_id}
         end.should change(Travel, :count).by(0)      
       end
 
@@ -51,7 +51,7 @@ describe TravelsController do
   end # role based authorization
   
 
-  describe 'filtering' do
+  context 'filtering' do
 
     before(:each) do
       @arrival = Factory(:travel, :arrival=>true)
@@ -86,7 +86,7 @@ describe TravelsController do
   describe "automatic return trip" do
     
     before(:each) do
-        @user = Factory(:user, :admin=>true)
+        @user = Factory.build(:user, :admin=>true)
         test_sign_in(@user)
         @member = Factory(:family).head
         @attr = {:member=>"#{@member.id}", :date=>Date.today, :arrival=>false, 

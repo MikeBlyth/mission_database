@@ -20,7 +20,7 @@ module ModelHelper
                                          # If not nil, there is at least one existing linked record
           errors.add(:base, 
             "#{self.send(assoc_name).count} #{assoc_name.to_s} record(s) with this #{myclass} still exist.")
-puts "**** #{self.send(assoc_name).count} #{assoc_name.to_s} record(s) with this #{myclass} still exist."
+#puts "**** #{self.send(assoc_name).count} #{assoc_name.to_s} record(s) with this #{myclass} still exist."
           valid = false
         end
       end

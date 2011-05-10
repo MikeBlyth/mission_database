@@ -21,6 +21,7 @@
 class Family < ActiveRecord::Base
   include NameHelper
   include FilterByStatusHelper
+  include ApplicationHelper
 
   attr_accessor :previous_residence_location, :previous_status
   
@@ -111,6 +112,14 @@ class Family < ActiveRecord::Base
   def couple
     [self.husband, self.wife]
   end
+ 
+  def married_couple?
+    ! head.spouse.nil?
+  end 
+
+  def spouse
+    head.spouse
+  end
   
   # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
@@ -126,6 +135,25 @@ class Family < ActiveRecord::Base
 
   end
 
+  # Like member current location, and will be the same if both spouses have same current_location,
+  # Otherwise, give separately for spouses.
+  def current_location_hash(options={})
+    head_current_location_hash = head.current_location_hash
+    return head_current_location_hash unless married_couple?    # If single, just use head's current_location_hash
+    spouse_current_location_hash = spouse.current_location_hash
+    return head_current_location_hash if head_current_location_hash == spouse_current_location_hash  # if identical, use 1
+    return current_locations_merged_hash
+  end 
+
+  def current_location(options={})
+    cur_loc_hash = current_location_hash(options)
+    answer = cur_loc_hash[:residence]
+    answer += " (#{cur_loc_hash[:work]})" if !cur_loc_hash[:work].blank? && (cur_loc_hash[:work] != cur_loc_hash[:residence])
+    answer += " (#{cur_loc_hash[:travel]})" if !cur_loc_hash[:travel].blank?
+    answer += " (#{cur_loc_hash[:temp]})" if !cur_loc_hash[:temp].blank?
+    return answer
+  end
+
   # When validating a family, verify on the head-of-family NAME that either
   # * a member with that name exists and is the head-of-family OR
   # * the record is new and the name fields are valid for a new member
@@ -137,9 +165,33 @@ class Family < ActiveRecord::Base
       else
         return true
       end
-    else
-      
     end
   end
-  
+
+private
+
+  def merge_one_location_param(h, w, param)
+    if h[param] == w[param]
+      return h[param]
+    else
+      his = h[param].blank? ? '' : husband.short + '--' + h[param]
+      hers = w[param].blank? ? '' : wife.short + '--' + w[param]
+      return smart_join([his, hers], "; ")
+    end
+  end
+    
+
+  def current_locations_merged_hash
+    merged = {}
+    h = husband.current_location_hash
+    w = wife.current_location_hash
+   
+    merged[:residence] = merge_one_location_param(h, w, :residence)
+    merged[:work] = merge_one_location_param(h, w, :work)
+    merged[:travel] = merge_one_location_param(h, w, :travel)
+    merged[:temp] = merge_one_location_param(h, w, :temp)
+
+    return merged
+  end
+
 end

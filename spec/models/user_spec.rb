@@ -1,3 +1,6 @@
+require 'spec_helper'
+include SimTestHelper
+
 def set_password(user, password, confirmation=nil)
   user.password = password
   user.password_confirmation = confirmation || password

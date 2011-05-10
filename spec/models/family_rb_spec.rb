@@ -1,5 +1,6 @@
 require 'spec_helper'
- 
+include SimTestHelper
+
 describe Family do
   before(:each) do
     @family= Factory.build(:family)
@@ -149,5 +150,7 @@ describe Family do
     end
 
   end # helpers  
+
+
 end
 

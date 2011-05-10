@@ -30,13 +30,44 @@
 #  ministry_related :boolean
 #  own_arrangements :boolean
 #
+require 'application_helper'
 
 class Travel < ActiveRecord::Base
- 
+  extend ApplicationHelper
+   
   belongs_to :member
   validates_presence_of :date
   validate :name_info
+
   
+  def self.current_arrivals
+    self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
+  end
+  
+  def self.current_visitors
+#    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR travels.member_id IS NULL', Status.field_statuses)
+    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR other_travelers IS NOT NULL', Status.field_statuses)
+    visitors = []
+    travels.each do |t|
+      # Add contact info if there is a (database) member as a visitor
+      if t.member && t.member.primary_contact
+        # Include the name only if there are other travelers to be distinguished
+        contacts_name = t.other_travelers ? "#{t.member.full_name_short}: " : ''
+        contacts = contacts_name + smart_join(
+                                         [t.member.primary_contact.phone_1.phone_format,
+                                          t.member.primary_contact.email_1 ])
+      else
+        contacts = ''
+      end
+      visitors << {:names => t.travelers,
+                   :arrival_date => t.date,
+                   :departure_date => t.return_date,
+                   :contacts => contacts
+                   }
+    end
+    return visitors
+  end 
+
   def to_label
     "#{date.to_s} #{flight}"
   end
@@ -62,7 +93,6 @@ class Travel < ActiveRecord::Base
     return [nil, nil, name.strip]
   end      
       
- 
   # Normally, member is an actual person in the database. However, a travel record can
   # be free-floating, not associated with a member. In this case, corresponding to the "else"
   # clause below, we generate a temporary Member object just so that we have the name
