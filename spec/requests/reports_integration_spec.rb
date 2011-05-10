@@ -75,7 +75,7 @@ describe "Report" do
       visit reports_path # whereis_report_path
       click_link "whereis-detailed-pdf"
       pdf_to_text
-puts page.driver.body
+#puts page.driver.body
 #      (page.driver.body =~ /Sally.*ravel/m).should_not be_nil
       page.should have_content('return')
     end
