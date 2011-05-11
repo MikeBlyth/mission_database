@@ -59,9 +59,16 @@ private
           @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
           @visitors = Travel.current_visitors
           output = WhereIsTable.new(:page_size=>Settings.reports.page_size).to_pdf(@families, @visitors, params)
-puts "IncomingMailsController mailing report, params=#{params}"
+#puts "IncomingMailsController mailing report, params=#{params}"
           Notifier.send_report(from, 
                               Settings.reports.filename_prefix + 'directory.pdf', 
+                              output).deliver
+        when 'travel'
+          selected = Travel.where("date >= ?", Date.today).order("date ASC")
+          output = TravelScheduleTable.new(:page_size=>Settings.reports.page_size).to_pdf(selected)
+#puts "IncomingMailsController mailing report, params=#{params}"
+          Notifier.send_report(from, 
+                              Settings.reports.filename_prefix + 'travel_schedule.pdf', 
                               output).deliver
       else
       end # case

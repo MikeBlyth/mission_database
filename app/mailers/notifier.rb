@@ -10,6 +10,7 @@ class Notifier < ActionMailer::Base
   end
 
   def send_report(recipients, report_name, report)
+#puts "Send Report: recipients=#{recipients}, report_name=#{report_name}"
     @content = "The latest #{report_name} from the #{Settings.site.name} is attached."
     attachments[report_name] = report
     mail(:to => recipients, :subject=>"#{report_name} you requested") do |format|

@@ -18,6 +18,7 @@ describe IncomingMailsController do
              'plain' => '--content--',
              }
     rebuild_message
+    ActionMailer::Base.deliveries.clear  # clear incoming mail queue
   end
 
   describe 'filters based on member status' do
@@ -149,19 +150,36 @@ describe IncomingMailsController do
     end # info
     
     describe 'directory' do
+      before(:each) {@params['plain'] = "directory"}
       
       it 'sends the email' do
-        @params['plain'] = "directory"
         lambda{post :create, @params}.should change(ActionMailer::Base.deliveries, :length).by(1)
         ActionMailer::Base.deliveries.last.to.should == [@params['from']]
       end  
 
       it 'sends Where Is report as attachment' do
-        @params['plain'] = "directory"
         post :create, @params
         mail = ActionMailer::Base.deliveries.last
         attachment = ActionMailer::Base.deliveries.last.attachments.first
         attachment.filename.should == Settings.reports.filename_prefix + 'directory.pdf'
+      end
+    end #directory
+    
+    describe 'travel' do
+      before(:each) {@params['plain'] = "travel"}
+      
+      it 'sends the email' do
+        post :create, @params
+        ActionMailer::Base.deliveries.length.should == 1
+        ActionMailer::Base.deliveries.last.to.should == [@params['from']]
+      end  
+
+      it 'sends travel schedule as attachment' do
+        post :create, @params
+        ActionMailer::Base.deliveries.length.should == 1
+        mail = ActionMailer::Base.deliveries.last
+        attachment = ActionMailer::Base.deliveries.last.attachments.first
+        attachment.filename.should == Settings.reports.filename_prefix + 'travel_schedule.pdf'
       end
     end #directory
     
