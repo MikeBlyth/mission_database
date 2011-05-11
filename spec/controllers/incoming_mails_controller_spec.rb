@@ -204,6 +204,8 @@ describe IncomingMailsController do
         ActionMailer::Base.deliveries.length.should == 1
         ActionMailer::Base.deliveries.last.to.should == [@params['from']]
         mail = ActionMailer::Base.deliveries.last.to_s.gsub("\r", "")
+m = ActionMailer::Base.deliveries.last
+puts "m=#{m}"
         mail.should match 'SIM Database Requests'
       end
     end #help

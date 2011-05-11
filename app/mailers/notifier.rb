@@ -4,9 +4,17 @@ class Notifier < ActionMailer::Base
   include IncomingMailsHelper  
   
   def send_help(recipients)
-      @content = help_content
-      mail(:to => recipients, :subject=>'SIM Nigeria Database Help') do |format|
+#    m = Mail.new do
+#      to recipients
+#      subject 'SIM Nigeria Database Help'
+#      body help_content
+#    end
+#    puts "Notifier.send_help with Mail #{m.body}"
+    @content = help_content
+
+    mail(:to => recipients, :subject=>'SIM Nigeria Database Help') do |format|
       format.text {render 'generic'}
+      format.html {render 'generic'}
     end 
   end
 
