@@ -6,8 +6,10 @@
 defaults: &defaults
   site: 
     name: 'SIM Nigeria Database'
+    org:  'SIM Nigeria'
   reports: 
     page_size: 'A4'
+    filename_prefix: 'sim_nigeria_'
     birthday_calendar:
       birthday_prefix: 'BD: '
     travel:

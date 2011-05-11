@@ -7,4 +7,5 @@ coverage/*
 coverage.data
 heroku.log
 heroku.logs
+test.pdf
 

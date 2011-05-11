@@ -97,11 +97,17 @@ describe IncomingMailsController do
       contact_type = Factory(:contact_type)
     end      
     
-    describe 'info' do
+    describe 'info sends contact info' do
+
+      it 'sends the email' do
+        @params['plain'] = "info stranger"
+        lambda{post :create, @params}.should change(ActionMailer::Base.deliveries, :length).by(1)
+        ActionMailer::Base.deliveries.last.to.should == [@params['from']]
+      end  
 
       it "gives error message if name not found" do
         @params['plain'] = "info stranger"
-        lambda{post :create, @params}.should change(ActionMailer::Base.deliveries, :length).by(1)
+        post :create, @params
         mail = ActionMailer::Base.deliveries.last.to_s
         mail.should =~ /no.*found/i      
       end
@@ -135,13 +141,31 @@ describe IncomingMailsController do
              contact_spouse.email_1, contact_spouse.email_2, 
              format_phone(contact_spouse.phone_1), format_phone(contact_spouse.phone_2),
              contact_spouse.skype,  contact_spouse.blog, contact_spouse.photos,
-             "To: #{@params['from']}"
              ]
         required_contents.each do |target|
           mail.should =~ Regexp.new(target.to_s)
         end
       end    # example
     end # info
+    
+    describe 'directory' do
+      
+      it 'sends the email' do
+        @params['plain'] = "directory"
+        lambda{post :create, @params}.should change(ActionMailer::Base.deliveries, :length).by(1)
+        ActionMailer::Base.deliveries.last.to.should == [@params['from']]
+      end  
+
+      it 'sends Where Is report as attachment' do
+        @params['plain'] = "directory"
+        post :create, @params
+        mail = ActionMailer::Base.deliveries.last
+        attachment = ActionMailer::Base.deliveries.last.attachments.first
+        attachment.filename.should == Settings.reports.filename_prefix + 'directory.pdf'
+      end
+    end #directory
+    
+    
   end # handles these commands
    
 

@@ -105,7 +105,6 @@ class String
     return self  # nothing to do
   end
 end
-puts "String.format_phone defined"
 
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on
 class Fixnum

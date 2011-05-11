@@ -33,7 +33,7 @@ private
       line =~ /\s*(\w+)( .*)?/ 
       [($1 || '').downcase, ($2 || '').strip.chomp]
     end  
-# puts "*** Commands = #{commands}"
+ #puts "*** Commands = #{commands}"
     return commands
   end
   
@@ -55,6 +55,14 @@ private
              "You sent 'test' with parameter string (#{command[1]})").deliver
         when 'info'
           do_info(from, command[1])
+        when 'directory'
+          @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
+          @visitors = Travel.current_visitors
+          output = WhereIsTable.new(:page_size=>Settings.reports.page_size).to_pdf(@families, @visitors, params)
+puts "IncomingMailsController mailing report, params=#{params}"
+          Notifier.send_report(from, 
+                              Settings.reports.filename_prefix + 'directory.pdf', 
+                              output).deliver
       else
       end # case
     end # commands.each

@@ -64,7 +64,7 @@ describe ReportsController do
     it 'email contains attachment' do
       get :whereis, @params
       mail = ActionMailer::Base.deliveries.last
-      puts mail.attachments.first.class
+#      puts mail.attachments.first.awesome_inspect
 #      puts "class=#{mail.class}, attachments=#{mail.attachments}, attachment=#{mail.attachment}, attachment? = #{mail.attachment?}"
     end  
 
