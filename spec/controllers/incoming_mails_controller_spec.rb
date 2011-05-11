@@ -114,6 +114,15 @@ describe IncomingMailsController do
         mail.should =~ /no.*found/i      
       end
 
+      it "sends basic info if contact record not found" do
+        member = Factory(:family, :last_name=>'Jehu').head
+        @params['plain'] = "info Jehu"
+        post :create, @params
+        mail = ActionMailer::Base.deliveries.last.to_s
+        mail.should =~ /Jehu/
+        mail.should =~ /no contact/i
+      end
+
       it "includes all relevant info for couple" do
         member = create_couple
         residence_location = Factory(:location, :description=>'Rayfield')

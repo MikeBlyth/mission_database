@@ -4,12 +4,6 @@ class Notifier < ActionMailer::Base
   include IncomingMailsHelper  
   
   def send_help(recipients)
-#    m = Mail.new do
-#      to recipients
-#      subject 'SIM Nigeria Database Help'
-#      body help_content
-#    end
-#    puts "Notifier.send_help with Mail #{m.body}"
     @content = help_content
 
     mail(:to => recipients, :subject=>'SIM Nigeria Database Help') do |format|
@@ -42,20 +36,19 @@ class Notifier < ActionMailer::Base
     else
       members.each do |m|
         contact = m.primary_contact
+        @content << "#{m.indexed_name}:\n" 
+        @content << "  location:  #{m.current_location}\n" if m.current_location(:missing => :nil)
+        @content << "  birthday:  #{m.birth_date.to_s(:short)}\n" if m.birth_date
         if contact
           phones = smart_join([format_phone(contact.phone_1), format_phone(contact.phone_2)])
           emails = smart_join([format_phone(contact.email_1), format_phone(contact.email_2)])
+          @content << "  phone:  #{phones}\n" + "  email:  #{emails}\n"
+          @content << "  Skype:  #{contact.skype}\n" if !contact.skype.blank? && contact.skype_public 
+          @content << "  blog:  #{contact.blog}\n" if contact.blog
+          @content << "  photos:  #{contact.photos}\n" if contact.photos
         else
-          phones = emails = ''
+          @content << "  ** No contact information available **"
         end 
-        @content << "#{m.indexed_name}:\n" +
-              "  phone:  #{phones}\n" +
-              "  email:  #{emails}\n"
-        @content << "  Skype:  #{contact.skype}\n" if !contact.skype.blank? && contact.skype_public 
-        @content << "  blog:  #{contact.blog}\n" if contact.blog
-        @content << "  photos:  #{contact.photos}\n" if contact.photos
-        @content << "  location:  #{m.current_location}\n" if m.current_location(:missing => :nil)
-        @content << "  birthday:  #{m.birth_date.to_s(:short)}\n" if m.birth_date
         @content << "\n"
       end
     end
