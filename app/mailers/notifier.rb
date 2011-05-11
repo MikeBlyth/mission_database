@@ -16,6 +16,7 @@ class Notifier < ActionMailer::Base
     @content = "Test from database@sim-nigeria.org\n\n#{content}"
     mail(:to => recipients, :subject=>'Test from database') do |format|
       format.text {render 'generic'}
+      format.html {render 'generic'}
     end 
   end
 
@@ -25,6 +26,7 @@ class Notifier < ActionMailer::Base
     attachments[report_name] = report
     mail(:to => recipients, :subject=>"#{report_name} you requested") do |format|
       format.text {render 'generic'}
+      format.html {render 'generic'}
     end
   end    
 
@@ -55,6 +57,7 @@ class Notifier < ActionMailer::Base
 #puts "******* Mailing to #{recipients}"
     mail(:to => recipients, :subject=>'Your request for info') do |format|
       format.text {render 'generic'}
+      format.html {render 'generic'}
     end 
   end
 

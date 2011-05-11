@@ -2,9 +2,9 @@ module IncomingMailsHelper
   
   def help_content
 s = <<"HELPTEXT"
-SIM Database Requests
+Accessing the SIM Nigeria Database by Email
 
-The SIM members database can be accessed online (from your web browser) but
+The SIM Nigeria member database can be accessed online (from your web browser) but
 only if you have obtained a user name and password from the SIM office.
 However, you can request information by email, as long as your email address
 matches one of your addresses registered in the database.
