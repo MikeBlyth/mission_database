@@ -30,20 +30,6 @@ describe Notifier do
     end
   end
 
-  describe "contact_mod" do
-    let(:mail) { Notifier.contact_mod('test@example.com') }
-
-    it "renders the headers" do
-      mail.subject.should eq("Contact information updates")
-      mail.to.should eq(["test@example.com"])
-      mail.from.should eq(["database@sim-nigeria.org"])
-    end
-
-    it "renders the body" do
-      mail.body.encoded.should match("Hi")
-    end
-  end
-
   describe "send_test" do
     let(:mail) { Notifier.send_test('test@example.com', 'message') }
 

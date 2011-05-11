@@ -1,7 +1,8 @@
 require 'spec_helper'
 include SimTestHelper
 include ApplicationHelper
-
+include IncomingMailsHelper
+  
 def rebuild_message
     @params[:message] = "From: #{@params['from']}\r\n" + 
                          "To: #{@params['to']}\r\n" +
@@ -183,6 +184,29 @@ describe IncomingMailsController do
       end
     end #directory
     
+    describe 'birthday list' do
+      before(:each) {@params['plain'] = "birthdays"}
+      
+      it 'sends birthday list as attachment' do
+        post :create, @params
+        ActionMailer::Base.deliveries.length.should == 1
+        ActionMailer::Base.deliveries.last.to.should == [@params['from']]
+        attachment = ActionMailer::Base.deliveries.last.attachments.first
+        attachment.filename.should == Settings.reports.filename_prefix + 'birthdays.pdf'
+      end
+    end #birthdays
+    
+    describe 'help command' do
+      before(:each) {@params['plain'] = "help"}
+      
+      it 'sends basic help info' do
+        post :create, @params
+        ActionMailer::Base.deliveries.length.should == 1
+        ActionMailer::Base.deliveries.last.to.should == [@params['from']]
+        mail = ActionMailer::Base.deliveries.last.to_s.gsub("\r", "")
+        mail.should match 'SIM Database Requests'
+      end
+    end #help
     
   end # handles these commands
    

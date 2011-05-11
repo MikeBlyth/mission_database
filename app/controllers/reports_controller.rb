@@ -271,20 +271,6 @@ class ReportsController < ApplicationController
       end
     end
   end
- 
- 
-  # Test showing how to generate tables with Prawn
-   def tabletest
-    selected = Member.select("family_id, last_name, first_name, status_id")
-    output = TableTest.new.to_pdf(selected,"Includes only those currently on the field")
-
-    respond_to do |format|
-      format.pdf do
-        send_data output, :filename => "tabletest.pdf", 
-                          :type => "application/pdf"
-      end
-    end
-  end
 
 #  # Test showing how to use multi-column layout with Prawn and our own (temporary?) flow_in_columns method
 #   def multi_col_test

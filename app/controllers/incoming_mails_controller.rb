@@ -50,6 +50,8 @@ private
     commands.each do |command|
 # puts "**********COMMAND: #{command}"
       case command[0]
+        when 'help'
+          Notifier.send_help(from).deliver
         when 'test'
           Notifier.send_test(from, 
              "You sent 'test' with parameter string (#{command[1]})").deliver
@@ -66,9 +68,14 @@ private
         when 'travel'
           selected = Travel.where("date >= ?", Date.today).order("date ASC")
           output = TravelScheduleTable.new(:page_size=>Settings.reports.page_size).to_pdf(selected)
-#puts "IncomingMailsController mailing report, params=#{params}"
           Notifier.send_report(from, 
                               Settings.reports.filename_prefix + 'travel_schedule.pdf', 
+                              output).deliver
+        when 'birthdays'
+          selected = Member.those_active_sim
+          output = BirthdayReport.new(:page_size=>Settings.reports.page_size).to_pdf(selected)
+          Notifier.send_report(from, 
+                              Settings.reports.filename_prefix + 'birthdays.pdf', 
                               output).deliver
       else
       end # case

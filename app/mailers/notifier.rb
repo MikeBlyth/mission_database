@@ -1,7 +1,15 @@
 class Notifier < ActionMailer::Base
   default :from => "database@sim-nigeria.org"
   include ApplicationHelper
+  include IncomingMailsHelper  
   
+  def send_help(recipients)
+      @content = help_content
+      mail(:to => recipients, :subject=>'SIM Nigeria Database Help') do |format|
+      format.text {render 'generic'}
+    end 
+  end
+
   def send_test(recipients, content)
     @content = "Test from database@sim-nigeria.org\n\n#{content}"
     mail(:to => recipients, :subject=>'Test from database') do |format|
@@ -52,11 +60,6 @@ class Notifier < ActionMailer::Base
   def travel_mod(recipients)
     @mods = Travel.where("travels.updated_at > ?", Date.today-7.days).includes(:member)
     mail :to => recipients, :subject=>'Travel schedule updates'
-  end
-
-  def contact_mod(recipients)
-    @greeting = "Hi"
-    mail :to => recipients, :subject=>'Contact information updates'
   end
 
 end
