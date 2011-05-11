@@ -25,6 +25,7 @@ gem 'chronic'
 gem "active_scaffold_vho"
 gem 'rack-ssl-enforcer'
 gem 'settingslogic'
+gem 'sass'
 # gem 'RedCloth'
 
 # Bundle gems for the local environment. Make sure to

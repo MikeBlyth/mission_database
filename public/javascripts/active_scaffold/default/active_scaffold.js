@@ -128,69 +128,7 @@ $(document).ready(function() {
     return true;
   });
   $('span.in_place_editor_field').live('click', function(event) {
-    var span = $(this);
-    span.data(); // jquery 1.4.2 workaround
-    if (typeof(span.data('editInPlace')) === 'undefined') {
-      var options = {show_buttons: true,
-                     hover_class: 'hover',
-                     element_id: 'editor_id',
-                     ajax_data_type: "script",
-                     update_value: 'value'},
-          csrf_param = $('meta[name=csrf-param]').first(),
-          csrf_token = $('meta[name=csrf-token]').first(),
-          my_parent = span.parent(),
-          column_heading = null;
-
-      if(!(my_parent.is('td') || my_parent.is('th'))){
-          my_parent = span.parents('td').eq(0);
-      }
-
-      if (my_parent.is('td')) {
-        var column_no = my_parent.prevAll('td').length;
-        column_heading = my_parent.closest('.active-scaffold').find('th:eq(' + column_no + ')');
-      } else if (my_parent.is('th')) {
-        column_heading = my_parent;
-      }
-        
-      var render_url = column_heading.attr('data-ie_render_url'),
-          mode = column_heading.attr('data-ie_mode'),
-          record_id = span.attr('data-ie_id');
-          
-      ActiveScaffold.read_inplace_edit_heading_attributes(column_heading, options);
-      
-      if (span.attr('data-ie_url')) { 
-        options.url = span.attr('data-ie_url').replace(/__id__/, record_id);
-      } else { 
-        options.url = column_heading.attr('data-ie_url').replace(/__id__/, record_id);
-      }
-      
-      if (csrf_param) options['params'] = csrf_param.attr('content') + '=' + csrf_token.attr('content');
-
-      if (span.closest('div.active-scaffold').attr('data-eid')) {
-        if (options['params'].length > 0) {
-          options['params'] += ";";
-        }
-        options['params'] += ("eid=" + span.closest('div.active-scaffold').attr('data-eid'));
-      }
-
-      if (mode === 'clone') {
-        options.clone_id_suffix = record_id;
-        options.clone_selector = '#' + column_heading.attr('id') + ' .as_inplace_pattern';
-        options.field_type = 'clone';
-      }
-      
-      if (render_url) {
-        var plural = false;
-        if (column_heading.attr('data-ie_plural')) plural = true;
-        options.field_type = 'remote';
-        options.editor_url = render_url.replace(/__id__/, record_id) 
-      }
-      if (mode === 'inline_checkbox') {
-        ActiveScaffold.process_checkbox_inplace_edit(span.find('input:checkbox'), options);
-      } else {
-        ActiveScaffold.create_inplace_editor(span, options);
-      }
-    }
+    ActiveScaffold.in_place_editor_field_clicked($(this));
   });
   $('a.as_paginate').live('ajax:before',function(event) {
     var as_paginate = $(this);
@@ -216,10 +154,19 @@ $(document).ready(function() {
   $('input.update_form, select.update_form').live('change', function(event) {
       var element = $(this);
       var as_form = element.closest('form.as_form');
+      var params = null;
+
+      if (element.attr('data-update_send_form')) {
+        params = as_form.serialize();
+        params += '&' + $.param({source_id: element.attr('id')});
+      } else {
+        params = {value: element.val()};
+        params.source_id = element.attr('id');
+      }
+
       $.ajax({
         url: element.attr('data-update_url'),
-        data: {value: element.val(),
-               source_id: element.attr('id')},
+        data: params,
         beforeSend: function(event) {
           element.nextAll('img.loading-indicator').css('visibility','visible');
           ActiveScaffold.disable_form(as_form)
@@ -258,10 +205,27 @@ $(document).ready(function() {
   });
 
   $('a[data-popup]').live('click', function(e) {
-      window.open($(this).attr('href'));
-      e.preventDefault();
-   });
-  
+    window.open($(this).attr('href'));
+    e.preventDefault();
+  });
+
+  $('.hover_click').live("click", function(event) {
+    var element = $(this);
+    var ul_element = element.children('ul').first();
+    if (ul_element.is(':visible')) {
+      element.find('ul').hide();
+    } else {
+      ul_element.show();
+    }
+    return false;
+  });
+  $('.hover_click a.as_action').live('click', function(event) {
+    var element = $(this).closest('.hover_click');
+    if (element) {
+      element.find('ul').hide();
+    }
+    return true;
+  });
 });
 
 /* Simple Inheritance
@@ -730,6 +694,71 @@ var ActiveScaffold = {
         mark_all_checkbox.removeAttr('checked');
       }
       mark_all_checkbox.attr('value', ('' + !options.checked));
+    }
+  },
+
+  in_place_editor_field_clicked: function(span) {
+    span.data(); // jquery 1.4.2 workaround
+    if (typeof(span.data('editInPlace')) === 'undefined') {
+      var options = {show_buttons: true,
+                     hover_class: 'hover',
+                     element_id: 'editor_id',
+                     ajax_data_type: "script",
+                     update_value: 'value'},
+          csrf_param = $('meta[name=csrf-param]').first(),
+          csrf_token = $('meta[name=csrf-token]').first(),
+          my_parent = span.parent(),
+          column_heading = null;
+
+      if(!(my_parent.is('td') || my_parent.is('th'))){
+          my_parent = span.parents('td').eq(0);
+      }
+
+      if (my_parent.is('td')) {
+        var column_no = my_parent.prevAll('td').length;
+        column_heading = my_parent.closest('.active-scaffold').find('th:eq(' + column_no + ')');
+      } else if (my_parent.is('th')) {
+        column_heading = my_parent;
+      }
+
+      var render_url = column_heading.attr('data-ie_render_url'),
+          mode = column_heading.attr('data-ie_mode'),
+          record_id = span.attr('data-ie_id');
+
+      ActiveScaffold.read_inplace_edit_heading_attributes(column_heading, options);
+
+      if (span.attr('data-ie_url')) {
+        options.url = span.attr('data-ie_url').replace(/__id__/, record_id);
+      } else {
+        options.url = column_heading.attr('data-ie_url').replace(/__id__/, record_id);
+      }
+
+      if (csrf_param) options['params'] = csrf_param.attr('content') + '=' + csrf_token.attr('content');
+
+      if (span.closest('div.active-scaffold').attr('data-eid')) {
+        if (options['params'].length > 0) {
+          options['params'] += "&";
+        }
+        options['params'] += ("eid=" + span.closest('div.active-scaffold').attr('data-eid'));
+      }
+
+      if (mode === 'clone') {
+        options.clone_id_suffix = record_id;
+        options.clone_selector = '#' + column_heading.attr('id') + ' .as_inplace_pattern';
+        options.field_type = 'clone';
+      }
+
+      if (render_url) {
+        var plural = false;
+        if (column_heading.attr('data-ie_plural')) plural = true;
+        options.field_type = 'remote';
+        options.editor_url = render_url.replace(/__id__/, record_id)
+      }
+      if (mode === 'inline_checkbox') {
+        ActiveScaffold.process_checkbox_inplace_edit(span.find('input:checkbox'), options);
+      } else {
+        ActiveScaffold.create_inplace_editor(span, options);
+      }
     }
   }
 }
