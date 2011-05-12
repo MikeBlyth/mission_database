@@ -16,9 +16,9 @@ class ContactsController < ApplicationController
     config.columns[:address].inplace_edit = true
     config.columns[:phone_1].inplace_edit = true
     config.columns[:email_1].inplace_edit = true
-    config.columns[:phone_public].description = "Tick box if phone is considered public"
-    config.columns[:skype_public].description = "Tick box if Skype name is considered public"
-    config.columns[:email_public].description = "Tick box if email is considered public"
+    config.columns[:phone_private].description = "Tick box if phone number is considered private/confidential"
+    config.columns[:skype_private].description = "Tick box if Skype name is considered private"
+    config.columns[:email_private].description = "Tick box if email address is considered private"
    config.subform.layout = :vertical
  #    list.sorting = {:member.last_name => 'ASC'}
   end

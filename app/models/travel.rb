@@ -1,4 +1,37 @@
 # == Schema Information
+# Schema version: 20110512072918
+#
+# Table name: travels
+#
+#  id               :integer         not null, primary key
+#  date             :date
+#  purpose          :string(255)
+#  return_date      :date
+#  flight           :string(255)
+#  member_id        :integer
+#  created_at       :datetime
+#  updated_at       :datetime
+#  origin           :string(255)
+#  destination      :string(255)
+#  guesthouse       :string(255)
+#  baggage          :integer
+#  total_passengers :integer
+#  confirmed        :date
+#  other_travelers  :string(255)
+#  with_spouse      :boolean
+#  with_children    :boolean
+#  arrival          :boolean
+#  time             :time
+#  return_time      :time
+#  driver_accom     :string(255)
+#  comments         :string(255)
+#  term_passage     :boolean
+#  personal         :boolean
+#  ministry_related :boolean
+#  own_arrangements :boolean
+#
+
+# == Schema Information
 # Schema version: 20110413013605
 #
 # Table name: travels

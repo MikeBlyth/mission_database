@@ -447,9 +447,9 @@ puts "Missing status code #{status}" unless Status.find_by_code(status)
     c.address = sample_address[1] + "\n" + sample_address[2]
     c.phone_1 = sample_address[3]
     c.phone_2 = sample_address[3].gsub('4','x').gsub('2','4').gsub('x','2') if rand > 0.9
-    c.email_public = coin_toss
-    c.skype_public = coin_toss
-    c.phone_public = coin_toss
+    c.email_private = coin_toss
+    c.skype_private = coin_toss
+    c.phone_private = coin_toss
     c.email_1 = member.first_name + "." + member.last_name + "@example.com"
     c.contact_name = member.name
     case c.contact_type.code

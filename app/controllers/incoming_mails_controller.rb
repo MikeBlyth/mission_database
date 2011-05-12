@@ -5,7 +5,7 @@ class IncomingMailsController < ApplicationController
   def create  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
     @mail = Mail.new(params[:message]) # May or may not want to use this
-    unless from_member?
+    unless from_member
       render :text => 'Refused--unknown sender', :status => 403, :content_type => Mime::TEXT.to_s
       return
     end
@@ -39,9 +39,10 @@ private
   
   # Is this message from someone in our database?
   # (look for a contact record having an email_1 or email_2 matching the message From: header)
-  def from_member?
+  def from_member
     from = params['from']
-    return !Contact.find_by_email_1(from).nil? || !Contact.find_by_email_2(from).nil?
+    matching_contact = Contact.where('email_1 = ? OR email_2 = ?', from, from).first 
+    return matching_contact ? matching_contact.member : nil
   end  
 
   def process_commands(commands)
@@ -56,7 +57,7 @@ private
           Notifier.send_test(from, 
              "You sent 'test' with parameter string (#{command[1]})").deliver
         when 'info'
-          do_info(from, command[1])
+          do_info(from, from_member, command[1])
         when 'directory'
           @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
           @visitors = Travel.current_visitors
@@ -83,9 +84,9 @@ private
     return successful    
   end # process_commands
 
-  def do_info(from, name)
+  def do_info(from, from_member, name)
     members = Member.find_with_name(name)
-    Notifier.send_info(from, name, members).deliver
+    Notifier.send_info(from, from_member, name, members).deliver
 #puts "****** AFTER DELIVER *********"
   end
 end # Class

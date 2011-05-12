@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110501073902) do
+ActiveRecord::Schema.define(:version => 20110512072918) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -63,9 +63,9 @@ ActiveRecord::Schema.define(:version => 20110501073902) do
     t.string   "skype",           :limit => 20
     t.string   "facebook",        :limit => 60
     t.string   "photos",          :limit => 50
-    t.boolean  "email_public",                   :default => false
-    t.boolean  "phone_public",                   :default => false
-    t.boolean  "skype_public",                   :default => false
+    t.boolean  "email_private",                  :default => false
+    t.boolean  "phone_private",                  :default => false
+    t.boolean  "skype_private",                  :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "member_id",                                         :null => false

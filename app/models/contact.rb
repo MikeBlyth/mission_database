@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110512072918
 #
 # Table name: contacts
 #
@@ -16,9 +16,9 @@
 #  skype           :string(20)
 #  facebook        :string(60)
 #  photos          :string(50)
-#  email_public    :boolean
-#  phone_public    :boolean
-#  skype_public    :boolean
+#  email_private   :boolean
+#  phone_private   :boolean
+#  skype_private   :boolean
 #  created_at      :datetime
 #  updated_at      :datetime
 #  member_id       :integer         not null
@@ -38,5 +38,17 @@ class Contact < ActiveRecord::Base
       "#{contact_type.description}"
     end  
   end
+
+  def email_public
+    ! email_private
+  end  
+
+  def phone_public
+    ! email_private
+  end  
+
+  def skype_public
+    ! email_private
+  end  
 
 end

@@ -30,7 +30,7 @@ class Notifier < ActionMailer::Base
     end
   end    
 
-  def send_info(recipients, request, members)
+  def send_info(recipients, from_member, request, members)
     @content = "Here is the info you requested ('info #{request}'):\n\n"
     if members.empty?
       @content << "No matching members found. Try with first or last name only. Check spelling.\n" +
@@ -44,8 +44,12 @@ class Notifier < ActionMailer::Base
         if contact
           phones = smart_join([format_phone(contact.phone_1), format_phone(contact.phone_2)])
           emails = smart_join([format_phone(contact.email_1), format_phone(contact.email_2)])
-          @content << "  phone:  #{phones}\n" + "  email:  #{emails}\n"
-          @content << "  Skype:  #{contact.skype}\n" if !contact.skype.blank? && contact.skype_public 
+          @content << "  phone:  #{phones}\n" unless phones.blank? || contact.phone_private
+          @content << "  email:  #{emails}\n" unless phones.blank? || contact.email_private
+          @content << "  Skype:  #{contact.skype}\n" unless contact.skype.blank? || contact.skype_private
+          @content << "  phone:  #{phones} (private!)\n" if (m == from_member) && contact.phone_private
+          @content << "  email:  #{emails} (private!)\n" if (m == from_member) && contact.email_private
+          @content << "  Skype:  #{contact.skype} (private!)\n" if (m == from_member) && contact.skype_private
           @content << "  blog:  #{contact.blog}\n" if contact.blog
           @content << "  photos:  #{contact.photos}\n" if contact.photos
         else

@@ -37,7 +37,7 @@ describe IncomingMailsController do
     end
     
     it 'accepts mail from SIM member (stubbed)' do
-      Contact.stub(:find_by_email_1).and_return(true)  # have a contact record that matches from line
+      controller.stub(:from_member).and_return(Member.new)  # have a contact record that matches from line
       post :create, @params
       response.status.should == 200
     end
@@ -53,7 +53,7 @@ describe IncomingMailsController do
 
   describe 'processes' do
     before(:each) do
-      Contact.stub(:find_by_email_1).and_return(true)  # have a contact record that matches from line
+      controller.stub(:from_member).and_return(Member.new)   # have a contact record that matches from line
     end      
     
     it 'variety of "command" lines without crashing' do
@@ -95,7 +95,7 @@ describe IncomingMailsController do
 
   describe 'handles these commands:' do
     before(:each) do
-      Contact.stub(:find_by_email_1).and_return(true)  # have a contact record that matches from line
+      controller.stub(:from_member).and_return(Member.new)   # have a contact record that matches from line
       contact_type = Factory(:contact_type)
     end      
     
@@ -140,7 +140,7 @@ describe IncomingMailsController do
                     :email_1 => 'spouse@example.com',
                     :email_2 => 'josette@gmail.com',
                     :phone_2 => '0707-777-7777',
-                    :skype => 'Josette', :skype_public => true,
+                    :skype => 'Josette', :skype_private => false,
                     :blog => 'http://josette.blogspot.com',
                     :photos => 'http://myphotos.photos.com'
         other = Factory :family, :last_name => 'Finklestein'
@@ -156,7 +156,62 @@ describe IncomingMailsController do
         required_contents.each do |target|
           mail.should =~ Regexp.new(target.to_s)
         end
+        mail.should_not match 'Finklestein'
       end    # example
+
+      describe 'info marked as private' do
+
+        it 'is hidden to 3rd party' do
+     #     requestor = Factory(:family).head  # This is the person mailing in the request
+     #     requestor_contact = Factory(:contact, :member=>requestor) # must have contact info in DB or will not recieve reply
+          member = Factory(:family).head     # This is the person for whom info is being requested
+          contact = Factory(:contact, :member => member, 
+                      :email_1 => 'member2@example.com',
+                      :email_2 => 'secondary@gmail.com',
+                      :phone_2 => '0707-777-7777',
+                      :phone_1 => '0807-777-7777',
+                      :skype => 'MySkype',
+                      :skype_private => true, # phone, email and skype are all marked as private
+                      :email_private => true,
+                      :phone_private => true,
+                      :blog => 'http://josette.blogspot.com',
+                      :photos => 'http://myphotos.photos.com')
+     #     @params['from'] = requestor_contact.email_1 # set up @params with requestor email and the request itself
+          @params['plain'] = "info #{member.last_name}"
+          post :create, @params
+          mail = ActionMailer::Base.deliveries.last.to_s
+          # None of these should be found as they're all marked private
+          [:phone_1, :phone_2, :email_1, :email_2, :skype].each do |field|
+            mail.should_not match(contact[field])
+          end 
+          mail.should match(contact[:photos])          
+        end # hides contact info marked as private     
+      
+        it 'is shown when requested by same member' do
+          member = Factory(:family).head
+          controller.stub(:from_member).and_return(member)   # indicate that mail originates from same member as being requested
+          contact = Factory(:contact, :member => member, 
+                      :email_2 => 'secondary@gmail.com',
+                      :phone_2 => '0707-777-7777'.phone_format,
+                      :phone_1 => '0807-777-7777'.phone_format,
+                      :skype => 'MySkype',
+                      :skype_private => true,
+                      :email_private => true,
+                      :phone_private => true,
+                      :blog => 'http://josette.blogspot.com',
+                      :photos => 'http://myphotos.photos.com')
+          @params['plain'] = "info #{member.last_name}"
+          post :create, @params
+          mail = ActionMailer::Base.deliveries.last.to_s
+          # None of these should be found as they're all marked private
+          [:phone_1, :phone_2, :email_1, :email_2, :skype].each do |field|
+            mail.should =~ Regexp.new("#{contact[field]}.*private")
+          end 
+          mail.should match(contact[:photos])          
+        end # hides contact info marked as private     
+
+      end # info marked as private
+      
     end # info
     
     describe 'directory' do
