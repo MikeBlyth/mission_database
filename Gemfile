@@ -34,7 +34,9 @@ gem 'sass'
 group :development, :test do
   gem 'annotate-models' #, '1.0.4'
   gem "rspec-rails"#, "2.5.0"
-  gem "cucumber-rails", ">= 0.3.2"
+#  gem "cucumber", "0.3.2"
+  gem "cucumber-rails" #, "0.3.2"
+#  gem "cucumber-rails", ">= 0.3.2"
 #  gem "webrat", ">= 0.7.2"
   gem "capybara"
 #  gem "rcov"
@@ -52,7 +54,7 @@ group :test do
 #  gem 'cover_me'
   gem "autotest"
   gem "redgreen"
-  gem "test-unit", "1.2.3"
+  gem "test-unit"#, "1.2.3"
 end
 
 # gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"

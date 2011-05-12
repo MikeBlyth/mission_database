@@ -80,8 +80,6 @@ GEM
     gherkin (2.3.7)
       json (>= 1.4.6)
     haml (3.1.1)
-    hoe (2.9.4)
-      rake (>= 0.8.7)
     i18n (0.5.0)
     jrails (0.6.0)
     json (1.5.1)
@@ -162,8 +160,7 @@ GEM
     settingslogic (2.0.6)
     spork (0.8.4)
     term-ansicolor (1.0.5)
-    test-unit (1.2.3)
-      hoe (>= 1.5.1)
+    test-unit (2.3.0)
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
@@ -185,7 +182,7 @@ DEPENDENCIES
   cancan
   capybara
   chronic
-  cucumber-rails (>= 0.3.2)
+  cucumber-rails
   database_cleaner (>= 0.5.2)
   factory_girl (= 2.0.0.beta1)
   factory_girl_rails (= 1.1.beta1)
@@ -203,4 +200,4 @@ DEPENDENCIES
   selenium-client (>= 1.2.18)
   settingslogic
   spork
-  test-unit (= 1.2.3)
+  test-unit
