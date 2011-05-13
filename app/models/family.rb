@@ -162,6 +162,12 @@ class Family < ActiveRecord::Base
     return answer
   end
 
+  # Primary email of the family head, if there is a contact record & email. Nil otherwise.
+  def email
+    c = self.head.primary_contact 
+    c ? c.email_1 : nil
+  end
+
   # When validating a family, verify on the head-of-family NAME that either
   # * a member with that name exists and is the head-of-family OR
   # * the record is new and the name fields are valid for a new member

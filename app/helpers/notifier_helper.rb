@@ -64,16 +64,17 @@ FIELDINFO
 member_info = <<"MEMBERINFO"
 *Name: #{m.name}
 *Birth date: #{m.birth_date || MISSING } (SIM listing will not include year)
-Citizenship: #{m.country.name || MISSING}
 *Location in Nigeria: #{m.residence_location}
 *Workplace: #{m.work_location}
 *Ministry: #{m.ministry}
-Ministry comment: #{m.ministry_comment}
 *Status: #{m.status}
+Citizenship: #{m.country.name || MISSING}
+Ministry comment: #{m.ministry_comment}
 Education level: #{m.personnel_data.education || MISSING}
 
-*Contact information
-#{m.primary_contact ? m.primary_contact.summary_text : '--None on file--'}
+Contact information
+#{m.primary_contact ? m.primary_contact.summary_text("  *") : '--None on file--'}
+
 Field Service Summary
 #{field_term_content(m)}
 MEMBERINFO

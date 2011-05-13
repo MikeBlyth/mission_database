@@ -15,10 +15,13 @@ class Notifier < ActionMailer::Base
 
   def send_family_summary(recipients)
     recipients.each do |family|
+puts "Family.email=#{family.email}"
+      next if family.email.blank?  # Can't send to someone without an email address
       @content = family_summary_content(family)
-    mail(:to => family.head.primary_contact.email_1, :subject=>'Your SIM Nigeria Database Information') do |format|
-      format.text {render 'generic'}
-      format.html {render 'generic'}
+      mail(:to => family.email, :subject=>'Your SIM Nigeria Database Information') do |format|
+        format.text {render 'generic'}
+        format.html {render 'generic'}
+      end
     end 
   end
 

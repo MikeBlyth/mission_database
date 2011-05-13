@@ -1,4 +1,6 @@
 require "spec_helper"
+require 'sim_test_helper'
+include SimTestHelper
 
 describe Notifier do
   describe "travel_mod" do
@@ -45,4 +47,35 @@ describe Notifier do
     end
   end
 
+  describe 'send_family_summary' do
+    before(:each) do # Consider making this a before(:all)
+      @status = Factory(:status)
+      Factory(:contact_type)
+      Factory(:country)
+      @employment_status = Factory(:employment_status)
+      @bloodtype = Factory(:bloodtype)
+      @residence = Factory(:location)
+      @family = Factory(:family, :status=>@status, :residence_location=>@residence)
+      @head = @family.head
+      add_details @family.head
+      @spouse = create_spouse(@head)
+      @kid = Factory.build(:child, :family=>@family) # Don't forget to save!
+      @family2 = Factory(:family) 
+      Factory(:contact, :member=>@head)
+      Factory(:contact, :member=>@family2.head)
+      Factory(:field_term, :member=>@head)
+      Factory(:field_term, :member=>@spouse)
+      @head.personnel_data.should_not be_nil
+      @spouse.personnel_data.should_not be_nil
+      @head.health_data.should_not be_nil
+      @spouse.health_data.should_not be_nil
+    end
+    
+    it 'sends email to each recipient' do
+      lambda do
+        Notifier.send_family_summary(Family.all)
+      end.should change(ActionMailer::Base.deliveries, :length).by(Family.count)
+    end
+  end
+      
 end

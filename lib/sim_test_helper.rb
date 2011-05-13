@@ -40,8 +40,8 @@ module SimTestHelper
     return s
   end
   
-  def create_couple
-    f = Factory(:family)
+  def create_couple(f=nil)
+    f ||= Factory(:family)
     husband = f.head
     wife = create_spouse(husband)
     return husband
@@ -73,6 +73,18 @@ module SimTestHelper
     return f.id
   end
 
+  def factory_family_full(params={})
+    f = Factory(:family)
+    head = f.head
+    if params[:couple]
+      spouse = Factory(:member_with_details, :family=>f, :spouse=>head, :sex=>'F')
+      head.spouse = spouse
+    end
+    add_details(head)
+    add_details(spouse) if head.spouse
+    return f
+  end
+
   def factory_member_create(params={})
     number = rand(1000000)
     params[:last_name] ||= "Johnson #{number}"
@@ -102,17 +114,17 @@ module SimTestHelper
     return member
   end
   
-  def add_details(member)
+  def add_details(member, params={})
     location = Location.last
 #puts "\nadd details, Country.all=#{Country.all}, first=#{Country.first}\n"
     member.update_attributes(:middle_name => 'Midname',
             :short_name => 'Shorty',
-            :sex => 'M',
-            :birth_date => '1980-01-01',
-            :country => Country.first,
-            :status => Status.first,
-            :residence_location => Location.first,
-            :ministry => Ministry.first,
+            :sex => params[:sex] || 'M',
+            :birth_date => params[:birth_date] || '1980-01-01',
+            :country => params[:country] || Country.first || Factory(:country),
+            :status => params[:status] || Status.first || Factory(:status),
+            :residence_location => params[:location] || Location.first || Factory(:location),
+            :ministry => Ministry.first || Factory(:ministry),
             :ministry_comment => 'Working with orphans'
             )
 #puts "**** Now member.country=#{member.country}, valid=#{member.valid?}, errors=#{member.errors}"
@@ -120,10 +132,14 @@ module SimTestHelper
 #puts "**** after reload in add_details member.country=#{member.country}"
 
     member.personnel_data.update_attributes(
-            :date_active => '2005-01-01',
-            :employment_status=> EmploymentStatus.first,
-            :education => Education.first,
+            :date_active => params[:date_active] || '2005-01-01',
+            :employment_status=> params[:employment_status] || EmploymentStatus.first || 
+                Factory(:employment_status)
+            :education => params[:education] || Education.first || Factory(:education),
             :qualifications => 'TESOL, qualified midwife')
+    Factory(:field_term, :member=>member) if params[:field_term_create] 
+    Factory(:contact, :member=>member, 
+            :contact_type=>params[:contact_type] || (ContactType.first || Factory(:contact_type)))
   end
 
   def test_init
