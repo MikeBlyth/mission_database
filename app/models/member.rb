@@ -68,10 +68,21 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
-  def self.those_active_sim
-    self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.active_sim_statuses)
-  end 
+  # Definitions of filters like those_active, those_on_field etc. are found in helper/filter_by_status_helper.rb
+  # These include
+  # * those_on_field
+  # * those_active_sim
+  # * those_active
+  # * those_on_field_or_active
+  # * those_with_status(*targets)
 
+  def those_umbrella
+    # This one is here because the definition is different between member and family classes
+    puts self.class
+    umbrella_status = EmploymentStatus.find_by_code('umbrella').id
+    self.joins(:personnel_data).where("employment_status_id = ?", umbrella_status)
+  end 
+  
   # Takes name in some free text formats and returns array of matches
   # To find Donald (Don) Duck, all of these will match:
   # D Duck; Duck, D; Duck, Don; D Du; Do Du; Du; Don; Donald; Dona Du;

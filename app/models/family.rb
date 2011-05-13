@@ -71,6 +71,10 @@ class Family < ActiveRecord::Base
     end  
   end
 
+  def self.those_umbrella
+    umbrella_members = Member.those_umbrella.map {|u| u.id}  # Generate array of ids of all 'umbrella members'
+    self.where("head_id in (?)", umbrella_members)
+  end
 
   def to_s
     to_label
@@ -121,7 +125,11 @@ class Family < ActiveRecord::Base
     head.spouse
   end
   
-  # Creating a new family ==> Need to create the member record for head
+  def employment_status
+    head.employment_status
+  end
+  
+ # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
  # debugger
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,

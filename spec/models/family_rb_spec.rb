@@ -144,10 +144,15 @@ describe Family do
     end
     
     it 'returns nil for husband/wife of single person' do
-      @family = Factory(:family)
+      @family = Factory(:family)   # override the before_each setup of @family as a couple
       @family.husband.should be_nil
       @family.wife.should be_nil
     end
+
+    it 'returns family_head employment status as its own' do
+     @family.employment_status.should == @family.head.employment_status
+   end
+            
 
   end # helpers  
 

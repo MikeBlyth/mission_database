@@ -25,6 +25,7 @@
 #
 
 class Contact < ActiveRecord::Base
+  include ApplicationHelper
   belongs_to :member
   belongs_to :contact_type
   validates_presence_of :member
@@ -37,6 +38,20 @@ class Contact < ActiveRecord::Base
     else
       "#{contact_type.description}"
     end  
+  end
+
+  def summary_text
+    phones = smart_join([phone_1, phone_2].map {|p| p.phone_format if p}, ", ")
+    s = <<"SUMTEXT"
+Phones: #{phones} #{phone_private? ? '*** private ***' : '' }
+Email: #{smart_join([email_1, email_2], ', ')} #{email_private? ? '*** private ***' : '' }
+Skype: #{skype} #{skype_private? ? '*** private ***' : '' }
+Photos: #{photos}
+Blog: #{blog}
+Other website: #{other_website}
+Facebook: #{facebook}
+SUMTEXT
+    return s
   end
 
   def email_public

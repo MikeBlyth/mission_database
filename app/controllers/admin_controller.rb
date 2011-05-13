@@ -24,6 +24,12 @@ class AdminController < ActionController::Base
     @trav_mod.deliver
   end  
 
+  def send_member_summary
+    recipients = Member.those_active
+    member_summary = Notifier.member_summary(recipients)
+    member_summary.deliver
+  end
+
   def before_report(title)
     @report = "\n<strong>*** Checking #{title} ***</strong>"
     @orig_report_length = @report.length

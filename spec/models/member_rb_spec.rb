@@ -493,7 +493,6 @@ describe Member do
         end
       
         it 'date format' do
-puts          Date.new(2099,12,25).to_s(:short)
           Date.new(2099,12,25).to_s(:short).should_not =~ /99/
         end
 

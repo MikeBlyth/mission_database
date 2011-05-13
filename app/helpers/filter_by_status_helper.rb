@@ -1,9 +1,9 @@
 # This module lets Member and Family share the same filtering methods. It can be extended
 # to add more filters and/or instance methods common to both models.
 module FilterByStatusHelper
-  # See http://railstips.org/blog/archives/2009/05/15/include-vs-extend-in-ruby/
   
   def self.included(base)
+    # See http://railstips.org/blog/archives/2009/05/15/include-vs-extend-in-ruby/ for how the self.included(base) works
     base.extend(ClassMethods)
   end
   
@@ -11,6 +11,10 @@ module FilterByStatusHelper
 
     def those_on_field
       self.joins(:status).where("on_field")
+    end 
+
+    def those_active_sim
+      self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.active_sim_statuses)
     end 
 
     def those_active

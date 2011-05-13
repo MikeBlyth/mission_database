@@ -2,11 +2,21 @@ class Notifier < ActionMailer::Base
   default :from => "database@sim-nigeria.org"
   include ApplicationHelper
   include IncomingMailsHelper  
-  
+  include NotifierHelper
+    
   def send_help(recipients)
     @content = help_content
 
     mail(:to => recipients, :subject=>'SIM Nigeria Database Help') do |format|
+      format.text {render 'generic'}
+      format.html {render 'generic'}
+    end 
+  end
+
+  def send_family_summary(recipients)
+    recipients.each do |family|
+      @content = family_summary_content(family)
+    mail(:to => family.head.primary_contact.email_1, :subject=>'Your SIM Nigeria Database Information') do |format|
       format.text {render 'generic'}
       format.html {render 'generic'}
     end 
