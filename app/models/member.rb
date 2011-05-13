@@ -149,7 +149,10 @@ class Member < ActiveRecord::Base
     end
   end
 
- 
+  def most_recent_term
+    self.field_terms.sort.last
+  end
+  
   def city
     return residence_location.city.name
   end

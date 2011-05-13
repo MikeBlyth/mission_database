@@ -40,20 +40,30 @@ class Contact < ActiveRecord::Base
     end  
   end
 
-  def summary_text
+  # Generate hash of contact info ready for display;
+  # * join multiple phones and emails
+  # * add "private" notice if needed
+  def summary
     phones = smart_join([phone_1, phone_2].map {|p| p.phone_format if p}, ", ")
-    s = <<"SUMTEXT"
-Phones: #{phones} #{phone_private? ? '*** private ***' : '' }
-Email: #{smart_join([email_1, email_2], ', ')} #{email_private? ? '*** private ***' : '' }
-Skype: #{skype} #{skype_private? ? '*** private ***' : '' }
-Photos: #{photos}
-Blog: #{blog}
-Other website: #{other_website}
-Facebook: #{facebook}
-SUMTEXT
-    return s
+    return {'Phone' => "#{phones}#{phone_private? ? ' *** private ***' : '' }",
+            'Email' => "#{smart_join([email_1, email_2], ', ')}#{email_private? ? ' *** private ***' : '' }",
+            'Skype' => "#{skype}#{skype_private? ? ' *** private ***' : '' }",
+            'Photos' => "#{photos}",
+            'Blog' => "#{blog}",
+            'Other website' => "#{other_website}",
+            'Facebook' => "#{facebook}",
+            }
   end
-
+  
+  # Make string form of 'summary', each line beginning with <prefix> 
+  # Example if prefix = "\t"
+  # "\tPhone: 0803-333-3333\n\tEmail: my@example.com\n\t ..."
+  def summary_text(prefix='')
+    fields = ['Phone', 'Email', 'Skype', 'Photos', 'Blog', 'Other website', 'Facebook']
+    summary_hash = self.summary
+    return prefix + (fields.map {|f| "#{f}: #{summary_hash[f]}"}.join("\n"+prefix))
+  end
+  
   def email_public
     ! email_private
   end  
