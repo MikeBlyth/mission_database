@@ -47,9 +47,9 @@ FactoryGirl.define do
   end 
   
   factory :country do
-    id 1
-    code 'AF'
-    name 'Afghanistan'
+    sequence(:id) {|n| n}
+    sequence(:code) {|n| "#{n}"}
+    sequence(:name) {|n| "Afghanistan #{n}" }
     nationality 'Afghan'
   end
   

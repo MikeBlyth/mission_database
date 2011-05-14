@@ -1,6 +1,7 @@
 require "spec_helper"
 require 'sim_test_helper'
 include SimTestHelper
+include NotifierHelper
 
 describe Notifier do
   describe "travel_mod" do
@@ -48,34 +49,89 @@ describe Notifier do
   end
 
   describe 'send_family_summary' do
-    before(:each) do # Consider making this a before(:all)
-      @status = Factory(:status)
-      Factory(:contact_type)
-      Factory(:country)
-      @employment_status = Factory(:employment_status)
-      @bloodtype = Factory(:bloodtype)
-      @residence = Factory(:location)
-      @family = Factory(:family, :status=>@status, :residence_location=>@residence)
-      @head = @family.head
-      add_details @family.head
-      @spouse = create_spouse(@head)
-      @kid = Factory.build(:child, :family=>@family) # Don't forget to save!
-      @family2 = Factory(:family) 
-      Factory(:contact, :member=>@head)
-      Factory(:contact, :member=>@family2.head)
-      Factory(:field_term, :member=>@head)
-      Factory(:field_term, :member=>@spouse)
-      @head.personnel_data.should_not be_nil
-      @spouse.personnel_data.should_not be_nil
-      @head.health_data.should_not be_nil
-      @spouse.health_data.should_not be_nil
+    before(:each) do 
+      @family = factory_family_full(:couple=>false, :child=>false)
+      @head = @family.head.reload
     end
     
     it 'sends email to each recipient' do
       lambda do
-        Notifier.send_family_summary(Family.all)
-      end.should change(ActionMailer::Base.deliveries, :length).by(Family.count)
+        Notifier.send_family_summary(Family.all * 2)
+      end.should change(ActionMailer::Base.deliveries, :length).by(Family.count * 2)
+      ActionMailer::Base.deliveries.last.to_s.should match summary_header[0..20]
     end
+ 
+    # The _contents_ of the summary are tested without having to invoke mailer
+    it 'includes all specified information' do
+      @head.personnel_data.reload.update_attributes(:est_end_of_service=> Date.today+5.years)
+      contacts = @head.primary_contact
+      contacts.update_attributes(
+          :phone_1 => '0805=999=9999'.phone_format,
+          :phone_2 => '0804-888-8999'.phone_format,
+          :email_2 => 'me2@example.com',
+          :photos => 'photo_site',
+          :blog => 'blog',
+          :other_website => 'other site',
+          :facebook => 'fb'
+          )
+      summary = family_summary_content(@family)
+      summary.should_not be_nil
+#puts summary
+      m = @head
+      c = contacts
+      h = @head.health_data
+      p = @head.personnel_data
+      t = @head.most_recent_term      
+      required_fields = [
+         m[:last_name], m[:first_name], m[:residence_location], m[:ministry], m[:status],
+         m[:work_location], m[:country_name], m[:ministry_comment], m[:education],
+         m[:birth_date],
+         h[:bloodtype],
+         p[:education], p[:date_active], p[:est_end_of_service],
+         t[:start_date], t[:end_date],
+         c[:phone_1], c[:phone_2], c[:email_1],  c[:email_2], c[:blog], c[:photos],
+         c[:other_website], c[:facebook],
+         ]
+      required_fields.each {|field| summary.should match field.to_s}
+    end            
+
+    it 'handles member with no contact or field_term record' do
+      Contact.delete_all
+      FieldTerm.delete_all
+      summary = family_summary_content(@family)
+      summary.should_not be_nil
+      missing = family_missing_info(@family).join("\n")
+      missing.should match("primary phone")
+      missing.should match("primary email")
+      missing.should match("estimated end of current term")
+      summary.should match(MISSING_CONTACT) 
+      missing_flag = MISSING.gsub("*", "\\*")
+        # This is ugly but since MISSING may have "*" inside it, must escape first to "\\*"
+        # It just means, for example, should have "Start ... ***MISSING***" within the message
+      summary.should match("Start.*#{missing_flag}") 
+      summary.should match("End.*#{missing_flag}") 
+      summary.should match("End.*#{missing_flag}") 
+    end 
+  
+    it 'includes spouse data' do
+      spouse = create_spouse(@head)
+      contact = Factory(:contact, :member=>spouse, :phone_1 => 'spousephone')
+      summary = family_summary_content(@family)
+      summary.should match 'spousephone'    
+      summary.should match spouse.first_name    
+      summary.should match 'SPOUSE'    
+      summary.should_not match 'CHILDREN'    
+    end
+
+    it 'includes child data' do
+      child = Factory(:child, :family=>@family, :first_name=>'Sandy')
+      summary = family_summary_content(@family)
+      summary.should match 'CHILDREN'    
+      summary.should match child.birth_date.to_s    
+      summary.should match child.first_name    
+      summary.should_not match 'SPOUSE'    
+    end
+
   end
       
 end

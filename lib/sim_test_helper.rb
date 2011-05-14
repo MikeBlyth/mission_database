@@ -34,7 +34,8 @@ module SimTestHelper
     
   def create_spouse(member)
     s = Factory(:member, :spouse=>member, :last_name=> member.last_name, 
-          :first_name=> "Honey", :family=>member.family, :sex=>member.other_sex, :child=>false)
+          :first_name=> "Honey", :family=>member.family, :sex=>member.other_sex, :child=>false,
+          :country=>member.country )
     member.update_attribute(:spouse, s)
     puts "Error creating/saving spouse (sim_test_helper ~38)" unless s.valid? && member.valid?
     return s
@@ -80,8 +81,14 @@ module SimTestHelper
       spouse = Factory(:member_with_details, :family=>f, :spouse=>head, :sex=>'F')
       head.spouse = spouse
     end
-    add_details(head)
+    add_details(head, {:personnel_data_create=>true, 
+                      :health_data_create=>true,     
+                      :contact_create=>true,
+                      :field_term_create=>true }.merge(params))
     add_details(spouse) if head.spouse
+    if params[:child]
+      child = Factory(:child, :family=>f, :country=>head.country)
+    end
     return f
   end
 
@@ -115,8 +122,6 @@ module SimTestHelper
   end
   
   def add_details(member, params={})
-    location = Location.last
-#puts "\nadd details, Country.all=#{Country.all}, first=#{Country.first}\n"
     member.update_attributes(:middle_name => 'Midname',
             :short_name => 'Shorty',
             :sex => params[:sex] || 'M',
@@ -127,19 +132,25 @@ module SimTestHelper
             :ministry => Ministry.first || Factory(:ministry),
             :ministry_comment => 'Working with orphans'
             )
-#puts "**** Now member.country=#{member.country}, valid=#{member.valid?}, errors=#{member.errors}"
-#member.reload
-#puts "**** after reload in add_details member.country=#{member.country}"
-
-    member.personnel_data.update_attributes(
-            :date_active => params[:date_active] || '2005-01-01',
-            :employment_status=> params[:employment_status] || EmploymentStatus.first || 
-                Factory(:employment_status)
-            :education => params[:education] || Education.first || Factory(:education),
-            :qualifications => 'TESOL, qualified midwife')
-    Factory(:field_term, :member=>member) if params[:field_term_create] 
-    Factory(:contact, :member=>member, 
-            :contact_type=>params[:contact_type] || (ContactType.first || Factory(:contact_type)))
+    if params[:personnel_data_create]
+      member.personnel_data.update_attributes(
+              :date_active => params[:date_active] || '2005-01-01',
+              :employment_status=> params[:employment_status] || EmploymentStatus.first || 
+                  Factory(:employment_status),
+              :education => params[:education] || Education.first || Factory(:education),
+              :qualifications => 'TESOL, qualified midwife')
+    end
+    if params[:field_term_create]
+      Factory(:field_term, :member=>member)  
+    end
+    if params[:contact_create]
+      Factory(:contact, :member=>member, 
+              :contact_type=>params[:contact_type] || (ContactType.first || Factory(:contact_type)))
+    end
+    if params[:health_data_create]
+      member.health_data.update_attribute(
+              :bloodtype, params[:bloodtype] || (Bloodtype.first || Factory(:bloodtype)) )
+    end
   end
 
   def test_init

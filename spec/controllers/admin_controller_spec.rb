@@ -253,10 +253,19 @@ describe AdminController do
         end  
 
       end # describe locations
-      
           
     end # database cleaner
+
+    describe 'family summaries' do
       
+      it 'are emailed' do
+        2.times {Factory(:family)} # create two families
+        lambda {controller.send_member_summary}.should   # should send one email to each of two families 
+          change(ActionMailer::Base.deliveries, :length).by(Family.count)
+      end
+
+    end # family summaries
+    
   end # for signed in admin
   
 end # AdminController

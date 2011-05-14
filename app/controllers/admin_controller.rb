@@ -26,8 +26,7 @@ class AdminController < ActionController::Base
 
   def send_member_summary
     recipients = Family.those_active
-    member_summary = Notifier.member_summary(recipients)
-    member_summary.deliver
+    Notifier.member_summary(recipients)  # This delivers as well as creates messages
   end
 
   def before_report(title)
