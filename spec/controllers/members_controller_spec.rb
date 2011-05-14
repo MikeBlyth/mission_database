@@ -52,6 +52,7 @@ describe MembersController do
 
   end # describe "authentication before controller access"
 
+  # These should probably be put into the member MODEL spec
   describe 'filtering by status' do
 
     before(:each) do

@@ -27,4 +27,4 @@ Feature: Administrative functions
     When I visit the home page
     And I click on "Send family summaries"
     Then the page title should be "Send summaries"
-    And show me the page
+

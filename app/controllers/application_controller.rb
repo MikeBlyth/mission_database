@@ -38,18 +38,23 @@ class ApplicationController < ActionController::Base
 
   # Set persistent filter for whether active, on-field, or all members will be shown
   def set_member_filter
-puts "set_member_filter, #{params[:filter]}"
     filter = params[:filter] ||= []
     session[:filter] = filter
     flash[:notice] = "Showing #{@@filter_notices[filter]}."
-    redirect_to(request.referer)
+    if request.referer =~ /members/
+      redirect_to members_path 
+    elsif request.referer =~ /famil/
+      redirect_to families_path
+    else 
+      redirect_to(root_path)
+    end  
   end
   
   def set_travel_filter
     filter = params[:travel_filter] ||= []
     session[:travel_filter] = filter
     flash[:notice] = "Showing #{@@filter_notices[filter]}."
-    redirect_to(request.referer)
+    redirect_to(travels_path)
   end
 
   

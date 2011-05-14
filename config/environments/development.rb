@@ -29,10 +29,10 @@ SIM::Application.configure do
   #**********************
   # ACTION MAILER
   #***********************
-  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 # config.action_mailer.delivery_method = :smtp | :sendmail | :test  
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :test
 
   ENV['SENDGRID_USERNAME'] = 'app435248@heroku.com'
   ENV['SENDGRID_PASSWORD'] = 'ab5dd188456f546fa4'

@@ -15,20 +15,20 @@
       %li 
         Set member filter
         %ul
-          %li= link_to 'Active only', :controller=>'application', :action=>'set_member_filter', :filter => :active 
-          %li= link_to 'On field only', :controller=>'application', :action=>'set_member_filter', :filter => :field 
-          %li= link_to 'Home assignment',  :controller=>'application', :action=>'set_member_filter', :filter => :home_assignment 
-          %li= link_to 'HA or leave',  :controller=>'application', :action=>'set_member_filter', :filter => :home_assignment_or_leave 
-          %li= link_to 'Pipeline',  :controller=>'application', :action=>'set_member_filter', :filter => :pipeline 
-          %li= link_to 'Other',  :controller=>'application', :action=>'set_member_filter', :filter => :other 
-          %li= link_to 'Clear filter',  :controller=>'application', :action=>'set_member_filter', :filter => :all 
+          %li= link_to 'Active only', set_member_filter_path(:filter => :active) 
+          %li= link_to 'On field only', set_member_filter_path(:filter => :field) 
+          %li= link_to 'Home assignment',  set_member_filter_path(:filter => :home_assignment) 
+          %li= link_to 'HA or leave',  set_member_filter_path(:filter => :home_assignment_or_leave) 
+          %li= link_to 'Pipeline',  set_member_filter_path(:filter => :pipeline) 
+          %li= link_to 'Other',  set_member_filter_path(:filter => :other) 
+          %li= link_to 'Clear filter',  set_member_filter_path(:filter => :all) 
       %li 
         Set travel filter
         %ul
-          %li= link_to 'All current travel', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :current
-          %li= link_to 'Current arrivals', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :arrivals
-          %li= link_to 'Current departures', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :departures
-          %li= link_to 'Include past', :controller=>'application', :action=>'set_travel_filter', :travel_filter => :all_dates
+          %li= link_to 'All current travel', set_travel_filter_path(:travel_filter => :current)
+          %li= link_to 'Current arrivals', set_travel_filter_path(:travel_filter => :arrivals)
+          %li= link_to 'Current departures', set_travel_filter_path(:travel_filter => :departures)
+          %li= link_to 'Include past', set_travel_filter_path(:travel_filter => :all_dates)
       %li= link_to "Edit your user info", edit_user_path(current_user)
       %li= link_to "Sign out", signout_path, :method => :delete       
     %hr

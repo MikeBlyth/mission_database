@@ -25,6 +25,8 @@ MISSING_CONTACT = '---None on file---'
     s  = <<"SUMMARYHEADER"
 Your SIM Nigeria Database Information
 
+Dear SIMers,
+
 Please take a minute to review the information we have for you on the SIM Nigeria 
 database. We're trying to make sure everything is accurate. Contact information is
 particularly important since in case of crisis or emergency we need to be able
