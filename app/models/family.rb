@@ -76,6 +76,10 @@ class Family < ActiveRecord::Base
     self.where("head_id in (?)", umbrella_members)
   end
 
+  def <=>(other)
+    self.name <=> other.name
+  end
+
   def to_s
     to_label
   end

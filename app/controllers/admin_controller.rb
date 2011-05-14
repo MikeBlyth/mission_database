@@ -26,6 +26,12 @@ class AdminController < ActionController::Base
     @trav_mod.deliver
   end  
 
+  def review_family_summaries
+    @title = 'Family data summaries'
+    @families= Family.those_active.sort
+  end
+    
+  # This actually MAILS the summaries after they've been approved.
   def send_family_summaries
     @title = 'Send summaries'
     recipients = Family.those_active

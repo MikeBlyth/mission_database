@@ -37,6 +37,7 @@ SIM::Application.routes.draw do
   match 'admin/clean_database' => 'admin#clean_database', :as => 'clean_database'
   match 'admin/mail_notices' => 'admin#mail_notices', :as => 'mail_notices'
   match 'admin/send_family_summaries' => 'admin#send_family_summaries', :as => 'send_family_summaries'
+  match 'admin/review_family_summaries' => 'admin#review_family_summaries', :as => 'review_family_summaries'
 
 #  resources :jqueries do as_routes end
 

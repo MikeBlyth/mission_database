@@ -26,5 +26,5 @@ Feature: Administrative functions
     Given that I am signed in as an administrator
     When I visit the home page
     And I click on "Send family summaries"
-    Then the page title should be "Send summaries"
+    Then the page title should be "Family data summaries"
 
