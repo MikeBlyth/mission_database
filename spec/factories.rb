@@ -74,7 +74,7 @@ FactoryGirl.define do
 
   factory :employment_status do
     sequence(:id) {|n| n}
-    sequence(:code) {|n| n}
+    sequence(:code) {|n| "career_#{n}"}
     sequence(:description) {|n| "Career #{n}"}
   end
   

@@ -115,7 +115,12 @@ class Member < ActiveRecord::Base
   end
 
   def employment_status
-    return personnel_data.employment_status
+    return personnel_data ? personnel_data.employment_status : nil
+  end  
+  
+  def employment_status_code
+    return nil unless personnel_data
+    return personnel_data.employment_status ? personnel_data.employment_status.code : nil
   end  
   
   def age_range

@@ -93,14 +93,16 @@ MEMBERINFO
       required_data = [ [m.birth_date, 'birth date'] ]
     else
       required_data = [ [m.birth_date, "birth date"], [m.country, "country/nationality"],
-                        [c.phone_1, "primary phone"], [c.email_1, "primary email"],
-                        [p.date_active, "date active with SIM"] ]
-      if m.status && m.status.on_field && f.end_date.blank?
-        required_data << [f.est_end_date, 'estimated end of current term']
+                        [c.phone_1, "primary phone"], [c.email_1, "primary email"] ]
+      if m.employment_status_code =~ /career|associate/i  # For SIM actual members (not umbrella)
+          required_data << [p.date_active, "date active with SIM"] 
+        if m.status && m.status.on_field && f.end_date.blank?
+          required_data << [f.est_end_date, 'estimated end of current term']
+        end
+        if m.status && m.status.code == 'home_assignment' && (f.start_date || f.est_start_date || Date.today) < Date.today  # on furlough but no next-term shown
+          required_data << [f.est_start_date, 'estimated start of next term']
+        end               
       end
-      if m.status && m.status.code == 'home_assignment' && (f.start_date || f.est_start_date || Date.today) < Date.today  # on furlough but no next-term shown
-        required_data << [f.est_start_date, 'estimated start of next term']
-      end               
     end
     return required_data.map{|r| r[1] if r[0].blank?}.compact   
   end #method
@@ -111,7 +113,8 @@ MEMBERINFO
       missing = member_missing_info(m)
       s << "#{m.short}: #{missing.join('; ')}" unless missing.empty?
     end
-    if family.head.personnel_data.est_end_of_service.blank?
+    if family.head.personnel_data.est_end_of_service.blank? &&
+       family.head.employment_status_code =~ /career|associate/i
       s << "Note: please estimate or guess when you plan to leave SIM Nigeria\nif it is within the next five years"
     end
     return s
