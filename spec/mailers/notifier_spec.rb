@@ -54,11 +54,9 @@ describe Notifier do
       @head = @family.head.reload
     end
     
-    it 'sends email to each recipient' do
-      lambda do
-        Notifier.send_family_summary(Family.all * 2)
-      end.should change(ActionMailer::Base.deliveries, :length).by(Family.count * 2)
-      ActionMailer::Base.deliveries.last.to_s.should match summary_header[0..20]
+    it 'creates a summary for a family' do
+      message = Notifier.send_family_summary(@family)
+      message.to_s.should match summary_header[0..20]
     end
  
     # The _contents_ of the summary are tested without having to invoke mailer

@@ -158,7 +158,7 @@ GEM
       json_pure
       rubyzip
     settingslogic (2.0.6)
-    spork (0.8.4)
+    spork (0.9.0.rc7)
     term-ansicolor (1.0.5)
     test-unit (2.3.0)
     thor (0.14.6)
@@ -199,5 +199,5 @@ DEPENDENCIES
   sass
   selenium-client (>= 1.2.18)
   settingslogic
-  spork
+  spork (= 0.9.0.rc7)
   test-unit

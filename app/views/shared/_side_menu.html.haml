@@ -46,7 +46,7 @@
       %li= link_to 'Status codes', statuses_path 
     - if current_user_admin?
       %li= link_to 'Clean database', clean_database_path 
-      %li= link_to 'Send family summaries', mail_notices_path
+      %li= link_to 'Send family summaries', send_family_summaries_path
       %hr
   - else 
     %p Please sign in 

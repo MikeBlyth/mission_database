@@ -33,7 +33,7 @@ include SimTestHelper
         select('Male')
         check 'Child'  
         fill_in "Birth date", :with => "2000-01-01"
-        fill_in "Country name", :with => "Afghanistan"
+        fill_in "Country name", :with => Country.first.name
         f = find_field('record[status]')
         select 'On field', :from=>'record[status]'
         select 'Ministry', :from=>'record[ministry]'
@@ -66,7 +66,7 @@ include SimTestHelper
       m.sex.should == 'M'
       m.child.should == true
       m.birth_date.should == Date.new(2000,1,1)
-      m.country.name.should == 'Afghanistan'
+      m.country.name.should == Country.first.name
       m.status.description.should =~ /On field/
       m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    
@@ -113,7 +113,7 @@ include SimTestHelper
       select('Female')
       check 'Child'  
       fill_in "Birth date", :with => birth_date.strftime("%F")
-      fill_in "Country name", :with => "Afghanistan"
+      fill_in "Country name", :with => Country.first.name
       select 'On field', :from=>'record[status]'
       select 'Ministry', :from=>'record[ministry]'
       fill_in 'Ministry comment', :with=> "ministry comment"
@@ -153,7 +153,7 @@ include SimTestHelper
       m.sex.should == 'F'
       m.child.should == true
       m.birth_date.should == birth_date
-      m.country.name.should == 'Afghanistan'
+      m.country.name.should == Country.first.name
       m.status.description.should =~ /On field/
       m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    

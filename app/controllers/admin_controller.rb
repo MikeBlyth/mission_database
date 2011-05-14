@@ -5,9 +5,11 @@ class AdminController < ActionController::Base
   include AuthenticationHelper
   include ApplicationHelper
   include SessionsHelper
-  
+  layout 'application'
+
   # Do various things to clean the database
   def clean_database
+    @title = "Clean database"
     fix = params[:fix]=='true'  # This boolean determines whether we actually make changes to the database
     cum_report = ""
     cum_report << clean_members(fix)
@@ -24,9 +26,16 @@ class AdminController < ActionController::Base
     @trav_mod.deliver
   end  
 
-  def send_member_summary
+  def send_family_summaries
+    @title = 'Send summaries'
     recipients = Family.those_active
-    Notifier.member_summary(recipients)  # This delivers as well as creates messages
+    @messages = []
+    recipients.each do |family|
+      if family.email
+        @messages << Notifier.send_family_summary(family)  
+      end
+    end
+    @messages.each {|m| m.deliver}
   end
 
   def before_report(title)

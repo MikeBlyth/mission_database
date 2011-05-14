@@ -121,6 +121,10 @@ Given /^a family with a "([^"]*)" and "([^"]*)" and "([^"]*)"$/ do |spouse, chil
 end
 
 
+When /^I visit the home page$/ do
+  visit root_path
+end
+
 When /^I ask to create a spouse$/ do
 #puts "****+++#{new_member_path(:id=>@head.id, :spouse=>'spouse')}"
 #puts "****+++ spouse_id = #{@head.id}, #{@head}"
@@ -220,12 +224,15 @@ When /^I enter names "([^"]*)" , "([^"]*)", "([^"]*)", and "([^"]*)"$/ do |last_
   @member = Member.new(:last_name=> last_name, :first_name => first_name, :middle_name => middle_name, :short_name => short_name)
 end
 
+Then /^(the )?[P|p]age title should be "([^"]*)"$/ do |nothing, title|
+  page.should have_xpath("//title", :text => title)
+end
+
 Then /^the new indexed name should be "([^"]*)"$/ do |name|
   @member.indexed_name.should == name
 end
 
 Then /^the member's family_id will be "([^"]*)"$/ do | new_family_id |
-  
   @member.family_id.should == new_family_id.to_i
 end
 
