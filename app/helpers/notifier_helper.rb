@@ -20,18 +20,24 @@ Note: dates and times are for the flight, not for leaving or arriving
 
 Your trip information:
 
-Date: #{t.date}
-  #{arrival ? 'Arriving' : 'Departing'} at #{t.time ? t.time.strftime('%l:%M %P') : MISSING} on airline #{t.flight || MISSING}
+Date and time: 
+  #{t.date}
+  #{t.arrival ? 'Arriving' : 'Departing'} at #{t.time ? t.time.strftime('%l:%M %P') : MISSING} on airline #{t.flight || MISSING}
 
-Travelers: #{t.total_passengers} total (#{t.travelers})
+Travelers: 
+  #{t.total_passengers} total (#{t.travelers})
 
-Baggage: #{t.baggage} pieces
+Baggage/boxes pieces: 
+  #{t.baggage ? t.baggage : MISSING }   
 
-Purpose: #{t.purpose_category=='?' ? '? (Ministry, Personal, or Term passage)' : t.purpose_category}
+Purpose (personal/ministry-related/term-passage): 
+  #{t.purpose_category=='?' ? '? (Ministry, Personal, or Term passage)' : t.purpose_category}
 
-Guesthouse: #{t.guesthouse ? t.guesthouse : (t.own_arrangements ? ' -- your own arrangements -- ' : MISSING)}
+Guesthouse: 
+  #{t.guesthouse ? t.guesthouse : (t.own_arrangements ? ' -- your own arrangements -- ' : MISSING)}
 
-In-country travel including to airport: #{t.own_arrangements ? ' -- your own arrangements -- ' : 'mission driver'}
+In-country travel including to airport: 
+  #{t.own_arrangements ? ' -- your own arrangements -- ' : 'mission driver'}
 
 TRAVELREMINDER
   if t.return_date
