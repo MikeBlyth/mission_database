@@ -750,6 +750,43 @@ describe Member do
     end
       
   end # finds members by name
+
+  describe 'travel helpers' do
+    before(:each) do
+      @member = Factory(:family).head
+      @other = Factory(:family).head
+      @previous = Factory(:travel, :date=>Date.today-1.year, :member=>@member,
+         :return_date=>Date.today-11.months)
+      @current = Factory(:travel, :date=>Date.today-1.week, :member=>@member,
+        :return_date=>Date.today+1.months)
+      @future = Factory(:travel, :date=>Date.today+1.week, :member=>@member,
+        :return_date=>Date.today+1.months)
+      @far_future = Factory(:travel, :date=>Date.today+6.months, :member=>@member,
+      :return_date=>Date.today+1.year)
+      @current_no_return = Factory(:travel, :date=>Date.today-1.week, :member=>@member,
+      :return_date=>nil)
+      # Generate records for "other", which should NOT appear in @member's list of travel
+      Factory(:travel, :date=>Date.today-1.year, :member=>@other,
+         :return_date=>Date.today-11.months)
+      Factory(:travel, :date=>Date.today-1.week, :member=>@other,
+        :return_date=>Date.today+1.months)
+      Factory(:travel, :date=>Date.today+1.week, :member=>@other,
+        :return_date=>Date.today+1.months)
+      Factory(:travel, :date=>Date.today+6.months, :member=>@other,
+      :return_date=>Date.today+1.year)
+      Factory(:travel, :date=>Date.today-1.week,:member=>@other,
+      :return_date=>nil)
+    end
+
     
+    it 'identifies current travel' do
+      @member.current_travel.should == [@current]
+    end
+    
+    it 'identifies pending travel' do
+      @member.pending_travel.should == [@future]
+    end
+    
+  end # 'travel helpers'
 end
 

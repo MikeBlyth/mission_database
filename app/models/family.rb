@@ -135,7 +135,6 @@ class Family < ActiveRecord::Base
   
  # Creating a new family ==> Need to create the member record for head
   def create_family_head_member
- # debugger
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
             :status_id=>status_id, :residence_location_id=>residence_location_id, :family =>self, :sex=>'M')

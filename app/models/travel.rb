@@ -77,6 +77,15 @@ class Travel < ActiveRecord::Base
     self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
   end
   
+  def self.current
+    self.includes(:member).where("date <= ? AND (return_date >= ? )", Date.today, Date.today)
+  end
+
+  def self.pending
+    return self.includes(:member).where("date > ? AND (date <= ? )", Date.today, 
+        Date.today + Settings.travel.pending_window)
+  end
+  
   def self.current_visitors
 #    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR travels.member_id IS NULL', Status.field_statuses)
     travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR other_travelers IS NOT NULL', Status.field_statuses)
@@ -103,6 +112,10 @@ class Travel < ActiveRecord::Base
 
   def to_label
     "#{date.to_s} #{flight}"
+  end
+
+  def to_s
+    "#{self.travelers}--#{date.to_s.strip} #{arrival ? 'arrive' : 'depart'} #{flight}; return#{return_date}"
   end
 
   def parse_name(name)

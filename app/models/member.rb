@@ -400,6 +400,14 @@ class Member < ActiveRecord::Base
     self.contacts.joins(:contact_type).where("contact_types.code = ?", primary_contact_type_code).first
   end
 
+  def current_travel
+    return Travel.current.where("member_id = ?", self.id)
+  end
+  
+  def pending_travel
+    return Travel.pending.where("member_id = ?", self.id)
+  end  
+
 private
 
   # Return true if I have existing spouse whose spouse_id points back to me (as it ordinarily should)

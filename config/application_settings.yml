@@ -26,6 +26,7 @@ defaults: &defaults
     # Travel to these airports will be reported as arrivals, from them = departures.
     airports_local: ['Kano', 'Lagos', 'Abuja']
     include_spouse_name_in_list: false
+    pending_window: 14 # days -- "Pending Travel" is those trips occuring within this many days from now
   family:
     member_names_delimiter: ', '
     member_names_dependent_only: true

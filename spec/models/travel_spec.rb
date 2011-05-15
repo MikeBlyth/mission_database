@@ -119,5 +119,29 @@ describe Travel do
     end
 
   end # describe "travelers method gives names"
-  
+
+  describe "time filters" do
+    before(:each) do
+      @previous = Factory(:travel, :date=>Date.today-1.year, 
+      :return_date=>Date.today-11.months)
+      @current = Factory(:travel, :date=>Date.today-1.week, 
+      :return_date=>Date.today+1.months)
+      @future = Factory(:travel, :date=>Date.today+1.week, 
+      :return_date=>Date.today+1.months)
+      @far_future = Factory(:travel, :date=>Date.today+6.months, 
+      :return_date=>Date.today+1.year)
+      @current_no_return = Factory(:travel, :date=>Date.today-1.week, 
+      :return_date=>nil)
+    #  Travel.stub(:where).and_return [@previous, @current, @future, @far_future, @current_no_return]
+    end
+    
+    it 'pending includes near-future trip only' do
+      Travel.pending.should == [@future] 
+    end
+
+    it 'current includes only current trip with a return date' do
+      Travel.current.should == [@current]
+    end
+    
+  end
 end
