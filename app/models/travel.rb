@@ -118,6 +118,7 @@ class Travel < ActiveRecord::Base
     "#{self.travelers}--#{date.to_s.strip} #{arrival ? 'arrive' : 'depart'} #{flight}; return#{return_date}"
   end
 
+  # Used for #traveler below, not to parse the member name
   def parse_name(name)
     return nil if name.nil? || name.blank?
     if name =~ /([^ ]+),\s+([^ ]+)\s+([^ ]+)/
@@ -191,4 +192,14 @@ class Travel < ActiveRecord::Base
     errors[:member] << "Must use existing member or enter name in 'Other travelers'"
     return false
   end
+  
+  def purpose_category
+    case
+      when term_passage then 'Term passage'
+      when ministry_related then 'Ministry related'
+      when personal then 'Personal'
+    else                 '?'
+    end
+  end 
+  
 end

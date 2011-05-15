@@ -3,6 +3,44 @@ module NotifierHelper
 MISSING = '*** MISSING ***'
 MISSING_CONTACT = '---None on file---'
   
+  def travel_reminder_content(travel)
+    member = travel.member
+    t = travel # for quick alias
+    s = <<"TRAVELREMINDER"
+Greetings SIMer!
+
+According to the travel schedule, you will be traveling soon. Please
+take a moment to review the information we have to make sure it is
+correct. We would hate to miss you at the airport, or not have a big-
+enough vehicle to carry your boxes! If there are any corrections,
+please send them to jos.travel@sim.org. Thanks!
+
+Note: dates and times are for the flight, not for leaving or arriving
+      at your home.
+
+Your trip information:
+
+Date: #{t.date}
+  #{arrival ? 'Arriving' : 'Departing'} at #{t.time ? t.time.strftime('%l:%M %P') : MISSING} on airline #{t.flight || MISSING}
+
+Travelers: #{t.total_passengers} total (#{t.travelers})
+
+Baggage: #{t.baggage} pieces
+
+Purpose: #{t.purpose_category=='?' ? '? (Ministry, Personal, or Term passage)' : t.purpose_category}
+
+Guesthouse: #{t.guesthouse ? t.guesthouse : (t.own_arrangements ? ' -- your own arrangements -- ' : MISSING)}
+
+In-country travel including to airport: #{t.own_arrangements ? ' -- your own arrangements -- ' : 'mission driver'}
+
+TRAVELREMINDER
+  if t.return_date
+    s << "You are planning to return on #{t.return_date}"
+    s << "at #{t.return_time.strftime('%l:%M %P')}" if t.return_time
+  end
+  return s
+end
+
   def family_summary_content(family)
     s = summary_header + "\n"
     s << "FAMILY HEAD\n"

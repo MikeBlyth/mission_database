@@ -4,6 +4,16 @@ class Notifier < ActionMailer::Base
   include IncomingMailsHelper  
   include NotifierHelper
     
+  def travel_reminder(travel)
+    return nil unless travel.member   # If no member, then no one to mail notice to!
+    @content = travel_reminder_content(travel)
+    email = travel.member.email
+    msg = mail(:to => email, :subject=>'Confirming your travel arrangements') do |format|
+      format.text {render 'generic'}
+      format.html {render 'generic'}
+    end
+  end
+
   def send_help(recipients)
     @content = help_content
 

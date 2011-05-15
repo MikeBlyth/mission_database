@@ -400,6 +400,10 @@ class Member < ActiveRecord::Base
     self.contacts.joins(:contact_type).where("contact_types.code = ?", primary_contact_type_code).first
   end
 
+  def email
+    self.primary_contact ? primary_contact.email_1 : nil
+  end
+
   def current_travel
     return Travel.current.where("member_id = ?", self.id)
   end
