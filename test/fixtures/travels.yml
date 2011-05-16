@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110516135320
 #
 # Table name: travels
 #
@@ -29,6 +29,7 @@
 #  personal         :boolean
 #  ministry_related :boolean
 #  own_arrangements :boolean
+#  reminder_sent    :date
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

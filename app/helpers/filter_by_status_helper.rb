@@ -18,7 +18,7 @@ module FilterByStatusHelper
     end 
 
     def those_active
-      self.joins(:status).where("active")
+      self.joins(:status).where("active").readonly(false) 
     end 
 
     def those_on_field_or_active

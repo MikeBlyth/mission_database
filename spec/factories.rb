@@ -96,6 +96,10 @@ FactoryGirl.define do
     name {"#{last_name}, #{first_name}"}
   end
 
+  factory :family_active, :parent=>:family do
+    status {|a| a.association :status}
+  end
+
   factory :field_term do
 #    member_id 1
     member { |a| a.association :member }

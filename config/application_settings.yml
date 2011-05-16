@@ -30,6 +30,7 @@ defaults: &defaults
   family:
     member_names_delimiter: ', '
     member_names_dependent_only: true
+    info_summary_interval: 180 # days
   formatting:
     format_phone_numbers: true  # by method ApplicationHelper::format_phone; false means bypass formatting
   email:

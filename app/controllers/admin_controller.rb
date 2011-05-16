@@ -26,11 +26,6 @@ class AdminController < ActionController::Base
     @trav_mod.deliver
   end  
 
-  def review_family_summaries
-    @title = 'Family data summaries'
-    @families= Family.those_active.sort
-  end
-    
   def review_travel_reminders
     @title = 'Travel reminders'
     @travels = Travel.pending
@@ -44,6 +39,7 @@ class AdminController < ActionController::Base
     @travels.each do |travel|
       if travel.member.email
         @messages << Notifier.travel_reminder(travel)  
+        travel.update_attribute(:reminder_sent, Date.today)
       end
     end
     @messages.each {|m| m.deliver}
@@ -53,17 +49,22 @@ class AdminController < ActionController::Base
 
   def review_family_summaries
     @title = 'Family data summaries'
-    @families= Family.those_active.sort
+    date_selection_filter = ["summary_sent IS ? OR (? - summary_sent) > ?", nil,
+         Date.today, Settings.family.info_summary_interval]
+    @families= Family.those_active.where(date_selection_filter).sort
   end
     
   # This actually MAILS the summaries after they've been approved.
   def send_family_summaries
     @title = 'Send summaries'
-    recipients = Family.those_active
+    date_selection_filter = ["summary_sent IS ? OR (? - summary_sent) > ?", nil,
+         Date.today, Settings.family.info_summary_interval]
+    recipients = Family.those_active.where(date_selection_filter)
     @messages = []
     recipients.each do |family|
       if family.email
         @messages << Notifier.send_family_summary(family)  
+        family.update_attribute(:summary_sent, Date.today)
       end
     end
     @messages.each {|m| m.deliver}

@@ -259,18 +259,54 @@ describe AdminController do
     describe 'family summaries' do
 
       it 'are reviewed' do
-        2.times {Factory(:family)} # create two families
-        Factory(:family, :last_name => "Aa")
+        2.times do  # create two families
+          head = Factory(:family_active).head
+          Factory(:contact, :member=>head)
+        end
+        Factory(:family_active, :last_name => "Aa")
+        Family.those_active.count.should == 3
         get :review_family_summaries
         response.should render_template('review_family_summaries')
         assigns[:families].should == Family.those_active.sort
       end
 
       it 'are emailed' do
-        2.times {Factory(:family)} # create two families
-        lambda {post :send_family_summaries}.should   # should send one email to each of two families 
-          change(ActionMailer::Base.deliveries, :length).by(Family.count)
+        2.times do  # create two families
+          @family = Factory(:family_active)
+          Factory(:contact, :member=>@family.head)
+        end
+        Family.those_active.count.should == 2
+        lambda {post :send_family_summaries}.should change(ActionMailer::Base.deliveries, :length).by(2)
       end
+
+      it 'review does not mark summary_sent date' do
+        @family = Factory(:family)
+        get :review_family_summaries
+        @family.reload.summary_sent.should be_nil
+      end
+
+      it 'mailing does mark summary_sent date' do
+        @family = Factory(:family_active)
+        Factory(:contact, :member=>@family.head)
+        post :send_family_summaries
+        @family.reload.summary_sent.should == Date.today
+      end
+
+      it 'are emailed if a summary was not sent recently' do
+        @family = Factory(:family_active, :summary_sent => nil)
+        Factory(:contact, :member=>@family.head)
+        post :send_family_summaries
+        lambda {post :send_family_summaries}.should 
+          change(ActionMailer::Base.deliveries, :length).by(1)
+      end        
+
+      it 'are not emailed if a summary was sent recently' do
+        @family = Factory(:family_active, :summary_sent => Date.today - 1.day)
+        Factory(:contact, :member=>@family.head)
+        post :send_family_summaries
+        lambda {post :send_family_summaries}.should
+          change(ActionMailer::Base.deliveries, :length).by(1)
+      end        
 
     end # family summaries
     
@@ -291,6 +327,22 @@ describe AdminController do
         Factory(:travel, :member=>member)
         lambda {post :send_travel_reminders}.should   # should send one email to each of two families 
           change(ActionMailer::Base.deliveries, :length).by(1)
+      end
+
+      it 'review does not mark reminder sent' do
+        member = Factory(:member)
+        Factory(:contact, :member=>member)
+        travel = Factory(:travel, :member=>member)
+        get :review_travel_reminders
+        travel.reminder_sent.should be_nil
+      end
+
+      it 'sending email does mark reminder sent date' do
+        member = Factory(:member)
+        Factory(:contact, :member=>member)
+        travel = Factory(:travel, :member=>member)
+        post :send_travel_reminders
+        travel.reload.reminder_sent.should == Date.today
       end
 
     end # travel reminders

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110516135320
 #
 # Table name: families
 #
@@ -16,6 +16,7 @@
 #  name                  :string(255)
 #  name_override         :boolean
 #  sim_id                :string(255)
+#  summary_sent          :date
 #
 
 class Family < ActiveRecord::Base
