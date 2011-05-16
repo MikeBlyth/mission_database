@@ -58,6 +58,7 @@ describe Notifier do
   end
 
   describe 'send_family_summary' do
+
     before(:each) do 
       @family = factory_family_full(:couple=>false, :child=>false)
       @head = @family.head.reload
@@ -138,6 +139,46 @@ describe Notifier do
       summary.should match child.first_name    
       summary.should_not match 'SPOUSE'    
     end
+
+    describe 'for those on field' do
+      before(:each) {@current = Factory(:field_term_current, :member=>@head)}      
+
+      it 'requires end of current term' do
+        @head.most_recent_term.should == @current
+        missing = family_missing_info(@family).join("\n")
+        missing.should match("estimated end of current term")
+      end
+
+      it 'does not requires start of next term' do
+        @head.most_recent_term.should == @current
+        missing = family_missing_info(@family).join("\n")
+        missing.should_not match("estimated start of next term")
+      end
+
+    end #for those on the field
+
+    describe 'for those on home assignment' do
+      before(:each) do 
+        @current = Factory(:field_term_current, :member=>@head)
+        home = Factory(:status_home_assignment)
+        @head.update_attribute(:status, home)
+      end        
+
+      it 'does not require end-of-current-term' do
+        @head.most_recent_term.should == @current
+        missing = family_missing_info(@family).join("\n")
+        missing.should_not match("estimated end of current term")
+      end
+
+      it 'does require start-of-next-term' do
+        missing = family_missing_info(@family).join("\n")
+        missing.should match("estimated start of next term")
+        pending = Factory(:field_term_future, :member=>@head) # create a pending term with est_start_date
+        @head.reload.pending_term.should == pending
+        missing = family_missing_info(@family).join("\n")
+        missing.should_not match("estimated start of next term")
+     end
+    end # for those on home assignment
 
   end
 

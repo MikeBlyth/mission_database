@@ -118,11 +118,18 @@ FactoryGirl.define do
     end_date nil
   end
 
+  factory :field_term_current, :parent => :field_term do
+    start_date Date.today - 6.months
+    est_start_date Date.today - 6.months
+    end_date nil
+    est_end_date nil
+  end
+
   factory :field_term_future, :parent => :field_term do
-    start_date ''
-    end_date ''
-    est_start_date '1 May 2011'
-    est_end_date '30 Jan 2013'  
+    start_date nil
+    est_start_date Date.today + 6.months
+    end_date nil
+    est_end_date nil  
   end
 
   factory :health_data do
@@ -239,6 +246,7 @@ FactoryGirl.define do
 
   factory :status_home_assignment, :parent => :status do 
     description "Home assignment"
+    code 'home_assignment'
     on_field false
     active true
   end

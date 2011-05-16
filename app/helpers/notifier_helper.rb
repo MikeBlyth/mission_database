@@ -115,11 +115,14 @@ SUMMARYHEADER
     
   def field_term_content(m)
     f = m.most_recent_term || FieldTerm.new
+    pending = m.pending_term || FieldTerm.new
     p = m.personnel_data
 info = <<"FIELDINFO"
 Current Term
-  Start or projected: #{f.start_date || f.est_start_date || MISSING}      
-  End or projected: #{f.end_date || f.est_end_date || MISSING}     
+  Start or projected start: #{f.start_date || f.est_start_date || MISSING}      
+  End or projected end: #{f.end_date || f.est_end_date || MISSING}     
+Next Term
+  Projected start: #{pending.est_start_date || pending.start_date || ''}
 Date Active with SIM: #{p.date_active || MISSING}
 Projected end of SIM Nigeria service: #{p.est_end_of_service || MISSING}
 FIELDINFO
@@ -151,22 +154,34 @@ MEMBERINFO
     h = m.health_data
     p = m.personnel_data
     f = m.most_recent_term || FieldTerm.new
+    pending = m.pending_term || FieldTerm.new
     c = m.primary_contact || Contact.new
+    # Make an array of [parameter, label] pairs, where each element is data required
+    # for this member. Then last step generates, via map statement, an array of labels
+    # representing the data that is missing.
     if m.child
       required_data = [ [m.birth_date, 'birth date'] ]
     else
+      # Required for all adults
       required_data = [ [m.birth_date, "birth date"], [m.country, "country/nationality"],
                         [c.phone_1, "primary phone"], [c.email_1, "primary email"] ]
+      # Required for SIM members
       if m.employment_status_code =~ /career|associate/i  # For SIM actual members (not umbrella)
           required_data << [p.date_active, "date active with SIM"] 
+        # For those on field
         if m.status && m.status.on_field && f.end_date.blank?
           required_data << [f.est_end_date, 'estimated end of current term']
         end
-        if m.status && m.status.code == 'home_assignment' && (f.start_date || f.est_start_date || Date.today) < Date.today  # on furlough but no next-term shown
-          required_data << [f.est_start_date, 'estimated start of next term']
+        # On home assignment      
+        if m.status && m.status.code == 'home_assignment' && 
+              (pending.start_date.blank? && pending.est_start_date.blank?)  # on furlough but no start-of-next-term
+          required_data << [nil, 'estimated start of next term'] # nil 'cause we already know it's missing
+puts "R"
         end               
       end
     end
+    # Create new array where each element is the label (r[1]) for a value (r[0]) that is missing
+    # Delete nil values with 'compact', leaving only the missing-value labels.
     return required_data.map{|r| r[1] if r[0].blank?}.compact   
   end #method
 
