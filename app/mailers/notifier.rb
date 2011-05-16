@@ -31,7 +31,10 @@ class Notifier < ActionMailer::Base
   def send_family_summary(family)
 #puts "Processing #{family ? family.name : "NIL"} for summary"
     @content = family_summary_content(family)
-    msg = mail(:to => family.email, :subject=>'Your SIM Nigeria Database Information') do |format|
+    msg = mail(:to => family.email, 
+               :cc => mike.blyth@sim.org,
+               :from => mike.blyth@sim.org,
+                :subject=>'Your SIM Nigeria Database Information') do |format|
       format.text {render 'generic'}
       format.html {render 'generic'}
     end
