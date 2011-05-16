@@ -60,7 +60,7 @@ describe "Report" do
     end
 
     it "reports outgoing travel of on-field member" do
-      @travel.update_attribute(:return_date, Date.tomorrow)
+      @travel.update_attribute(:return_date, Date.today+5.days)
       visit reports_path # whereis_report_path
       click_link "whereis-detailed-pdf"
       pdf_to_text
@@ -69,7 +69,7 @@ describe "Report" do
     end
 
     it "reports outgoing travel of on-field spouse" do
-      @travel.update_attributes(:return_date=>Date.tomorrow, :with_spouse=>true)
+      @travel.update_attributes(:return_date=>Date.today+5.days, :with_spouse=>true)
       spouse = Member.create(@member.attributes.merge({:spouse=>@member, :first_name=>'Sally',
            :sex=>@member.other_sex, :name=>"#{@member.last_name}, Sally"}))
       visit reports_path # whereis_report_path
@@ -81,7 +81,7 @@ describe "Report" do
     end
 
     it "reports incoming travel of off-field member " do
-      @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true)
+      @travel.update_attributes(:return_date=>Date.today+5.days, :arrival=>true)
       status = Factory(:status, :on_field=>false, :active=>false)
       @member.update_attribute(:status, status)   # Make member not active and not on field
       visit reports_path # whereis_report_path
