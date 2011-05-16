@@ -1,10 +1,11 @@
-.active-scaffold
-  .family_summary
-    %h4 Family Data Summaries
-    %p This shows for each family the desired information that is missing.  
-    %table
-      - @families.each do |family|
-        %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
-          %td= family.head.last_name_first :middle=>false, :short=>true
-          %td= family.head.employment_status_code 
-          %td= raw family_missing_info(family).join("<br>")
+.active-scaffold.family_summary
+  %h4 Family Data Summaries
+  %p This shows for each family the desired information that is missing.  
+  = form_tag(send_family_summaries_path, :method => "post")
+  %table
+    - @families.each do |family|
+      %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
+        %td= family.head.last_name_first :middle=>false, :short=>true
+        %td= family.head.employment_status_code 
+        %td= raw family_missing_info(family).join("<br>")
+  = submit_tag "Send"

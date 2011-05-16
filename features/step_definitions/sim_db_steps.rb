@@ -413,11 +413,6 @@ Then /^I should get a "([^"]*)" HTML report$/ do |target_text|
   page.should have_content target_text
 end
 
-Given /^a contact record$/ do
-  Factory(:contact_type) if ContactType.count == 0
-  @contact = Factory(:contact, :member_id => @head.id)
-end
-
 Then /^the report should include the name, phone and email$/ do 
   page.should have_content @head.last_name
   page.should have_content format_phone(@contact.phone_1)
@@ -431,9 +426,16 @@ Then /^the report should not include "([^"]*)"$/ do |arg1|
   page.should_not have_content arg1
 end
 
-Given /^a "([^"]*)" record$/ do |record_type|
+#Given /^a contact record$/ do
+#  Factory(:contact_type) if ContactType.count == 0
+#  @contact = Factory(:contact, :member_id => @head.id)
+#end
+
+Given /^a "?([^"]*)"? record$/ do |record_type|
   @detail = case record_type
   when 'travel' then Factory(:travel, :member_id => @head.id, :date=> Date::today + 1.day, :confirmed => Date::yesterday)
+  when 'contact' 
+    @contact = Factory(:contact, :member_id => @head.id)
   end
 # puts "Detail record created = #{@detail.attributes}"
 end
@@ -496,6 +498,14 @@ Given /^"([^"]*)" is traveling$/ do |first_name|
   m = Factory(:member,  :family_id => @family.id, :first_name => first_name)
   t = Factory(:travel, :member_id => m.id, :date => Date.today + 1.month, :arrival=>true)
 end
+
+Then /^there should be (\d+|a|one) (.*) email(?:|s)$/ do |count, tag|
+  footer = "##{tag}".downcase.gsub(' ', '_')
+  count = 1 if (count == 'a' || count == 'one')
+  ActionMailer::Base.deliveries.length.should == count.to_i
+  ActionMailer::Base.deliveries.last.to_s.should match(footer) # See that it's the right email
+end
+
 
 
 

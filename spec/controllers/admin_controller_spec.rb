@@ -257,14 +257,43 @@ describe AdminController do
     end # database cleaner
 
     describe 'family summaries' do
-      
+
+      it 'are reviewed' do
+        2.times {Factory(:family)} # create two families
+        Factory(:family, :last_name => "Aa")
+        get :review_family_summaries
+        response.should render_template('review_family_summaries')
+        assigns[:families].should == Family.those_active.sort
+      end
+
       it 'are emailed' do
         2.times {Factory(:family)} # create two families
-        lambda {controller.send_member_summary}.should   # should send one email to each of two families 
+        lambda {post :send_family_summaries}.should   # should send one email to each of two families 
           change(ActionMailer::Base.deliveries, :length).by(Family.count)
       end
 
     end # family summaries
+    
+    describe 'travel reminders' do
+      
+      it 'are reviewed' do
+        member = Factory(:member)
+        Factory(:contact, :member=>member)
+        Factory(:travel, :member=>member)
+        get :review_travel_reminders
+        response.should render_template('review_travel_reminders')
+        assigns[:travels].should == Travel.pending
+      end
+
+      it 'are emailed' do
+        member = Factory(:member)
+        Factory(:contact, :member=>member)
+        Factory(:travel, :member=>member)
+        lambda {post :send_travel_reminders}.should   # should send one email to each of two families 
+          change(ActionMailer::Base.deliveries, :length).by(1)
+      end
+
+    end # travel reminders
     
   end # for signed in admin
   

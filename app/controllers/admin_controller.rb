@@ -31,6 +31,31 @@ class AdminController < ActionController::Base
     @families= Family.those_active.sort
   end
     
+  def review_travel_reminders
+    @title = 'Travel reminders'
+    @travels = Travel.pending
+  end
+    
+  # This actually MAILS the travel reminders after they've been approved.
+  def send_travel_reminders
+    @title = 'Send reminders'
+    @travels = Travel.pending
+    @messages = []
+    @travels.each do |travel|
+      if travel.member.email
+        @messages << Notifier.travel_reminder(travel)  
+      end
+    end
+    @messages.each {|m| m.deliver}
+    flash[:notice] = "Sent #{@messages.count} reminder messages"
+    redirect_to travels_path
+  end
+
+  def review_family_summaries
+    @title = 'Family data summaries'
+    @families= Family.those_active.sort
+  end
+    
   # This actually MAILS the summaries after they've been approved.
   def send_family_summaries
     @title = 'Send summaries'
@@ -42,6 +67,8 @@ class AdminController < ActionController::Base
       end
     end
     @messages.each {|m| m.deliver}
+    flash[:notice] = "Sent #{@messages.count} family summary messages"
+    redirect_to families_path
   end
 
   def before_report(title)

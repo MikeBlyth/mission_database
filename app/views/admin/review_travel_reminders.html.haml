@@ -1,0 +1,10 @@
+.active-scaffold.travel_reminders
+  %h4 Travel Reminders
+  %p Here are the reminders that will be sent for pending travel:  
+  = form_tag(send_travel_reminders_path, :method => "post")
+  %table
+    - @travels.each do |travel|
+      %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
+        %td= travel.member.last_name_first :middle=>false, :short=>true
+        %td~ "<pre>#{travel_reminder_data(travel).gsub("\n\n","\n")}</pre>".html_safe
+  = submit_tag "Send"

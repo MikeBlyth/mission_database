@@ -110,8 +110,11 @@ table.new_family {
   table.new_family td {
     width: 25%; }
 
-.family_summary table tbody {
+.family_summary table tbody, .travel_reminders table tbody {
   vertical-align: top; }
+
+.travel_reminders table {
+  width: 600px; }
 
 a.big-link {
   font: bold 14px arial, sans-serif; }

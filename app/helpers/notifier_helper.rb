@@ -6,7 +6,42 @@ MISSING_CONTACT = '---None on file---'
   def travel_reminder_content(travel)
     member = travel.member
     t = travel # for quick alias
-    s = <<"TRAVELREMINDER"
+    s = travel_reminder_header + travel_reminder_data(travel) + travel_reminder_footer
+    return s
+  end
+  
+  def travel_reminder_data(travel)
+    t = travel # for quick alias
+    s = <<"TRAVELREMINDERDATA"
+Date and time: 
+  #{t.date}
+  #{t.arrival ? 'Arriving' : 'Departing'} at #{t.time ? t.time.strftime('%l:%M %P') : MISSING} on airline #{t.flight || MISSING}
+
+Travelers: 
+  #{t.total_passengers} total (#{t.travelers})
+
+Baggage/boxes: 
+  #{t.baggage ? t.baggage.to_s + ' pieces' : MISSING }   
+
+Purpose (personal/ministry-related/term-passage): 
+  #{t.purpose_category=='?' ? '? (Ministry, Personal, or Term passage)' : t.purpose_category}
+
+Guesthouse: 
+  #{t.guesthouse ? t.guesthouse : (t.own_arrangements ? ' -- your own arrangements -- ' : MISSING)}
+
+In-country travel including to airport: 
+  #{t.own_arrangements ? ' -- your own arrangements -- ' : 'mission driver'}
+
+TRAVELREMINDERDATA
+    if t.return_date
+      s << "Return trip:\n  You are planning to return on #{t.return_date}"
+      s << " at #{t.return_time.strftime('%l:%M %P')}" if t.return_time
+    end
+    return s
+  end
+  
+  def travel_reminder_header
+    s = <<"TRAVELREMINDERHEADER"
 Greetings SIMer!
 
 According to the travel schedule, you will be traveling soon. Please
@@ -19,33 +54,17 @@ Note: dates and times are for the flight, not for leaving or arriving
       at your home.
 
 Your trip information:
+TRAVELREMINDERHEADER
+    return s
+  end    
 
-Date and time: 
-  #{t.date}
-  #{t.arrival ? 'Arriving' : 'Departing'} at #{t.time ? t.time.strftime('%l:%M %P') : MISSING} on airline #{t.flight || MISSING}
-
-Travelers: 
-  #{t.total_passengers} total (#{t.travelers})
-
-Baggage/boxes pieces: 
-  #{t.baggage ? t.baggage : MISSING }   
-
-Purpose (personal/ministry-related/term-passage): 
-  #{t.purpose_category=='?' ? '? (Ministry, Personal, or Term passage)' : t.purpose_category}
-
-Guesthouse: 
-  #{t.guesthouse ? t.guesthouse : (t.own_arrangements ? ' -- your own arrangements -- ' : MISSING)}
-
-In-country travel including to airport: 
-  #{t.own_arrangements ? ' -- your own arrangements -- ' : 'mission driver'}
-
-TRAVELREMINDER
-  if t.return_date
-    s << "You are planning to return on #{t.return_date}"
-    s << "at #{t.return_time.strftime('%l:%M %P')}" if t.return_time
+  def travel_reminder_footer
+    "\n\n[SIM Database #travel_reminder]"
   end
-  return s
-end
+
+  def family_summary_footer
+    "\n\n[SIM Database #family_summary]"
+  end
 
   def family_summary_content(family)
     s = summary_header + "\n"
@@ -61,7 +80,7 @@ end
       s << "SUMMARY OF IMPORTANT MISSING DATA\n  "
       s << missing.join("\n  ")
     end
-    
+    s += family_summary_footer
     return s
   end
   

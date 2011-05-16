@@ -8,7 +8,9 @@ class Notifier < ActionMailer::Base
     return nil unless travel.member   # If no member, then no one to mail notice to!
     @content = travel_reminder_content(travel)
     email = travel.member.email
-    msg = mail(:to => email, :subject=>'Confirming your travel arrangements') do |format|
+    msg = mail(:to => email,
+               :from=>Settings.email.travel,
+               :subject=>'Confirming your travel arrangements') do |format|
       format.text {render 'generic'}
       format.html {render 'generic'}
     end

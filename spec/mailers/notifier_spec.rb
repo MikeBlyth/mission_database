@@ -4,10 +4,19 @@ include SimTestHelper
 include NotifierHelper
 
 describe Notifier do
+    let(:sixpm) {Time.new(2010,1,1,18,0,0)}    
+    let(:twopm) {Time.new(2010,1,1,14,0,0)}    
+#  ## NB! Using a before(:all) which can cause dependency problems if anything defined in this
+#  ##   block is changed directly or indirectly by examples. ContactType is defined so that
+#  ##   contact records have a valid type (without having to define it each time) and there
+#  ##   is no reason to change any ContactType records in this test suite. 
+#  before(:all) do 
+#    Factory :contact_type
+#  end
+
   describe "travel_mod" do
     let(:mail) { Notifier.travel_mod('test@example.com') }
     let(:trav_member) {Factory(:member)}
-    let(:sixpm) {Time.new(0,1,1,18,0,0)}    
 
     it "renders the headers" do
       mail.subject.should eq("Travel schedule updates")
@@ -131,5 +140,47 @@ describe Notifier do
     end
 
   end
+
+  describe 'travel_reminder' do
+    before(:each) do
+      @travel = Factory(:travel, :arrival=>true, :time=>sixpm, :personal=>true,
+        :return_date=>nil, :return_time=>nil)
+      Factory(:contact, :member=>@travel.member)
+    end
+    
+    it 'creates a reminder email' do
+      message = Notifier.travel_reminder(@travel).to_s
+      message.should match "To: #{@travel.member.email}"
+      message.should match "From: #{Settings.email.travel}"
+      message.should match "[SIM Database #travel_reminder]"
+    end
+
+    it 'contains essentials of travel info' do
+      message = Notifier.travel_reminder(@travel).to_s
+      message.should match @travel.date.to_s
+      message.should match @travel.time.strftime('%l:%M %P')
+      message.should match "#{@travel.total_passengers}.*total|total.*#{@travel.total_passengers}"
+      message.should match @travel.travelers
+      message.should match "#{@travel.baggage} pieces"
+      message.should match @travel.purpose_category
+      message.should match @travel.guesthouse
+      message.should_not match "Return trip"
+      message.should_not match "own arrangements"
+    end           
+
+    it 'reports return trip if present' do
+      @travel.update_attributes(:return_date=>@travel.date+5.months, :return_time=>twopm)
+      message = Notifier.travel_reminder(@travel).to_s
+      message.should match "Return trip"
+      message.should match twopm.strftime('%l:%M %P')
+      message.should match @travel.return_date.to_s
+    end
       
+    it 'reports "own arrangements" if applicable' do
+      @travel.update_attributes(:own_arrangements=>true)
+      message = Notifier.travel_reminder(@travel).to_s
+      message.should match "own arrangements"
+    end
+      
+  end
 end
