@@ -295,17 +295,15 @@ describe AdminController do
       it 'are emailed if a summary was not sent recently' do
         @family = Factory(:family_active, :summary_sent => nil)
         Factory(:contact, :member=>@family.head)
-        post :send_family_summaries
-        lambda {post :send_family_summaries}.should 
-          change(ActionMailer::Base.deliveries, :length).by(1)
+        lambda {post :send_family_summaries}.should change(ActionMailer::Base.deliveries, :length).by(1)
       end        
 
       it 'are not emailed if a summary was sent recently' do
         @family = Factory(:family_active, :summary_sent => Date.today - 1.day)
         Factory(:contact, :member=>@family.head)
         post :send_family_summaries
-        lambda {post :send_family_summaries}.should
-          change(ActionMailer::Base.deliveries, :length).by(1)
+        lambda {post :send_family_summaries}.
+           should_not change(ActionMailer::Base.deliveries, :length)
       end        
 
     end # family summaries
@@ -345,6 +343,14 @@ describe AdminController do
         travel.reload.reminder_sent.should == Date.today
       end
 
+      it 'by default does not resend reminders' do
+        member = Factory(:member)
+        Factory(:contact, :member=>member)
+        travel = Factory(:travel, :member=>member, :reminder_sent=>Date.today-1.week)
+        lambda {post :send_travel_reminders}.   # should send one email to each of two families 
+           should_not change(ActionMailer::Base.deliveries, :length)
+      end
+      
     end # travel reminders
     
   end # for signed in admin

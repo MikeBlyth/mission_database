@@ -112,9 +112,16 @@ table.new_family {
 
 .family_summary table tbody, .travel_reminders table tbody {
   vertical-align: top; }
+.family_summary table td.name, .travel_reminders table td.name {
+  font-weight: bold; }
 
 .travel_reminders table {
   width: 600px; }
+.travel_reminders span.name {
+  font-weight: bold; }
+.travel_reminders p {
+  width: 600px;
+  padding: 0.5em; }
 
 a.big-link {
   font: bold 14px arial, sans-serif; }

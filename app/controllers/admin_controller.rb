@@ -34,7 +34,7 @@ class AdminController < ActionController::Base
   # This actually MAILS the travel reminders after they've been approved.
   def send_travel_reminders
     @title = 'Send reminders'
-    @travels = Travel.pending
+    @travels = Travel.pending.where("reminder_sent IS ?", nil)
     @messages = []
     @travels.each do |travel|
       if travel.member.email

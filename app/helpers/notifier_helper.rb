@@ -14,8 +14,8 @@ MISSING_CONTACT = '---None on file---'
     t = travel # for quick alias
     s = <<"TRAVELREMINDERDATA"
 Date and time: 
-  #{t.date}
-  #{t.arrival ? 'Arriving' : 'Departing'} at #{t.time ? t.time.strftime('%l:%M %P') : MISSING} on airline #{t.flight || MISSING}
+  #{t.date.to_s.strip}
+  #{t.arrival ? 'Arriving' : 'Departing'} at #{t.time ? t.time.strftime('%l:%M %P').strip : MISSING} on airline #{t.flight || MISSING}
 
 Travelers: 
   #{t.total_passengers} total (#{t.travelers})
@@ -34,8 +34,8 @@ In-country travel including to airport:
 
 TRAVELREMINDERDATA
     if t.return_date
-      s << "Return trip:\n  You are planning to return on #{t.return_date}"
-      s << " at #{t.return_time.strftime('%l:%M %P')}" if t.return_time
+      s << "Return trip:\n  You are planning to return on #{t.return_date.to_s.strip}"
+      s << " at #{t.return_time.strftime('%l:%M %P').strip}" if t.return_time
     end
     return s
   end
