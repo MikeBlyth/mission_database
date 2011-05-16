@@ -777,7 +777,6 @@ describe Member do
       Factory(:travel, :date=>Date.today-1.week,:member=>@other,
       :return_date=>nil)
     end
-
     
     it 'identifies current travel' do
       @member.current_travel.should == [@current]
@@ -788,5 +787,6 @@ describe Member do
     end
     
   end # 'travel helpers'
+
 end
 

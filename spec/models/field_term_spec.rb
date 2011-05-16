@@ -36,6 +36,10 @@ describe FieldTerm do
     
   end
 
+  it 'identifies current, past and future terms' do
+    pending
+  end
+
   # Field_term model has a comparison operator (<=>) that compares by whichever dates are available
   it "compares by date" do
     today = Date.today

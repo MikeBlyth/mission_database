@@ -157,14 +157,16 @@ class Member < ActiveRecord::Base
   def most_recent_term
     terms = self.field_terms.sort
     terms.delete_if {|t| t.start_date && (t.start_date > Date.today) || 
-                         t.est_start_date && (t.est_start_date > Date.today)}
+                         t.est_start_date && (t.est_start_date > Date.today) }
     return terms.last
   end
   
   def pending_term
     terms = self.field_terms.sort
     terms.delete_if {|t| t.start_date && (t.start_date < Date.today) || 
-                         t.est_start_date && (t.est_start_date < Date.today)}
+                         t.est_start_date && (t.est_start_date < Date.today) ||
+                         t.end_date && (t.end_date < Date.today) ||
+                         t.est_end_date && (t.est_end_date < Date.today) }
     return terms.first
   end
   
