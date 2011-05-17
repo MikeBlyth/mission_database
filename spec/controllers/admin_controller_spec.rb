@@ -285,7 +285,7 @@ describe AdminController do
         @family.reload.summary_sent.should be_nil
       end
 
-      it 'mailing does mark summary_sent date' do
+      it 'mailing mark summary_sent date' do
         @family = Factory(:family_active)
         Factory(:contact, :member=>@family.head)
         post :send_family_summaries

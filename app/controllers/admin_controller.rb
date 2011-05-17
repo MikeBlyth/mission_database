@@ -40,9 +40,10 @@ class AdminController < ActionController::Base
       if travel.member.email
         @messages << Notifier.travel_reminder(travel)  
         travel.update_attribute(:reminder_sent, Date.today)
+puts "**Reminder_sent set to #{travel.reload.reminder_sent}"
       end
     end
-    @messages.each {|m| m.deliver}
+ #   @messages.each {|m| m.deliver}
     flash[:notice] = "Sent #{@messages.count} reminder messages"
     redirect_to travels_path
   end
@@ -65,9 +66,10 @@ class AdminController < ActionController::Base
       if family.email
         @messages << Notifier.send_family_summary(family)  
         family.update_attribute(:summary_sent, Date.today)
+puts "**Summary_sent set to #{family.reload.summary_sent}"
       end
     end
-    @messages.each {|m| m.deliver}
+ #   @messages.each {|m| m.deliver}
     flash[:notice] = "Sent #{@messages.count} family summary messages"
     redirect_to families_path
   end
