@@ -32,7 +32,15 @@ class City < ActiveRecord::Base
   def to_s
     self.name
   end
+  
+  def description
+    self.name
+  end
 
+  def description=(x)
+    self.name=x
+  end
+  
 protected
 
   def nigeria

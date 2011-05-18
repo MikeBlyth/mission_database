@@ -95,7 +95,8 @@ describe Member do
   describe 'creates associated records' do
     before(:each) do
       @family = Factory(:family)
-      @head = @family.head
+      @head = Member.create(:first_name=>'A', :name=>'A', :family => @family)
+      @head.should be_valid
     end    
 
     it '--health data' do

@@ -120,6 +120,13 @@ Given /^a family with a "([^"]*)" and "([^"]*)" and "([^"]*)"$/ do |spouse, chil
 #@family.members.each {|m| puts "****+++ Member #{m.name}" }
 end
 
+Given /^the family belongs to the organization$/ do
+  @employment_status = Factory(:employment_status, :org_member=>true)
+  @head.personnel_data.update_attribute(:employment_status, @employment_status)
+  if @head.spouse
+    @head.spouse.personnel_data.update_attribute(:employment_status=>@employment_status)
+  end
+end
 
 When /^I visit the home page$/ do
   visit root_path

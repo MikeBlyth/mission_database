@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110518071651
 #
 # Table name: employment_statuses
 #
@@ -9,6 +9,9 @@
 #  created_at  :datetime
 #  updated_at  :datetime
 #  mk_default  :boolean
+#  umbrella    :boolean
+#  org_member  :boolean         default(TRUE)
+#  current_use :boolean         default(TRUE)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

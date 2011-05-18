@@ -48,7 +48,7 @@ According to the travel schedule, you will be traveling soon. Please
 take a moment to review the information we have to make sure it is
 correct. We would hate to miss you at the airport, or not have a big-
 enough vehicle to carry your boxes! If there are any corrections,
-please send them to jos.travel@sim.org. Thanks!
+please send them to #{Settings.email.travel}. Thanks!
 
 Note: dates and times are for the flight, not for leaving or arriving
       at your home.
@@ -59,11 +59,11 @@ TRAVELREMINDERHEADER
   end    
 
   def travel_reminder_footer
-    "\n\n[SIM Database #travel_reminder]"
+    "\n\n[#{Settings.site.org} Database #travel_reminder]"
   end
 
   def family_summary_footer
-    "\n\n[SIM Database #family_summary]"
+    "\n\n[#{Settings.site.org} Database #family_summary]"
   end
 
   def family_summary_content(family)
@@ -86,11 +86,11 @@ TRAVELREMINDERHEADER
   
   def summary_header
     s  = <<"SUMMARYHEADER"
-Your SIM Nigeria Database Information
+Your #{Settings.site.org} Database Information
 
 Dear SIMers,
 
-Please take a minute to review the information we have for you on the SIM Nigeria 
+Please take a minute to review the information we have for you on the #{Settings.site.org} 
 database. We're trying to make sure everything is accurate. Contact information is
 particularly important since in case of crisis or emergency we need to be able
 to contact you. 
@@ -100,7 +100,7 @@ to be under the SIM "umbrella" in some way. If that is incorrect, please let us 
 
 Confidentiality
 
-Information marked with an asterisk "*" could appear in the SIM Nigeria directory, 
+Information marked with an asterisk "*" could appear in the #{Settings.site.org} directory, 
 calendars, or other lists. You may request your email, phone numbers, and Skype 
 name to be private if you wish. Other contact information may appear in the directory.
 The remainder of the information here will not be available except through the SIM 
@@ -123,8 +123,8 @@ Current Term
   End or projected end: #{f.end_date || f.est_end_date || MISSING}     
 Next Term
   Projected start: #{pending.est_start_date || pending.start_date || ''}
-Date Active with SIM: #{p.date_active || MISSING}
-Projected end of SIM Nigeria service: #{p.est_end_of_service || MISSING}
+Date Active with #{Settings.site.parent_org}: #{p.date_active || MISSING}
+Projected end of #{Settings.site.org} service: #{p.est_end_of_service || MISSING}
 FIELDINFO
     return info
   end  
@@ -132,7 +132,7 @@ FIELDINFO
   def member_summary_content(m)
 member_info = <<"MEMBERINFO"
 *Name: #{m.name}
-*Birth date: #{m.birth_date || MISSING } (SIM listing will not include year)
+*Birth date: #{m.birth_date || MISSING } (#{Settings.site.org} listing will not include year)
 *Location in Nigeria: #{m.residence_location}
 *Workplace: #{m.work_location}
 *Ministry: #{m.ministry}
@@ -166,8 +166,8 @@ MEMBERINFO
       required_data = [ [m.birth_date, "birth date"], [m.country, "country/nationality"],
                         [c.phone_1, "primary phone"], [c.email_1, "primary email"] ]
       # Required for SIM members
-      if m.employment_status_code =~ /career|associate/i  # For SIM actual members (not umbrella)
-          required_data << [p.date_active, "date active with SIM"] 
+      if m.org_member  # For SIM actual members (not umbrella)
+          required_data << [p.date_active, "date active with #{Settings.site.parent_org}"] 
         # For those on field
         if m.status && m.status.on_field && f.end_date.blank?
           required_data << [f.est_end_date, 'estimated end of current term']
@@ -176,7 +176,6 @@ MEMBERINFO
         if m.status && m.status.code == 'home_assignment' && 
               (pending.start_date.blank? && pending.est_start_date.blank?)  # on furlough but no start-of-next-term
           required_data << [nil, 'estimated start of next term'] # nil 'cause we already know it's missing
-puts "R"
         end               
       end
     end
@@ -192,8 +191,8 @@ puts "R"
       s << "#{m.short}: #{missing.join('; ')}" unless missing.empty?
     end
     if family.head.personnel_data.est_end_of_service.blank? &&
-       family.head.employment_status_code =~ /career|associate/i
-      s << "Note: please estimate or guess when you plan to leave SIM Nigeria\nif it is within the next five years"
+       family.head.employment_status.org_member
+      s << "Note: please estimate or guess when you plan to leave #{Settings.site.org}\nif it is within the next five years"
     end
     return s
   end 

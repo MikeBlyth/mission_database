@@ -80,6 +80,14 @@ FactoryGirl.define do
     sequence(:code) {|n| "career_#{n}"}
     sequence(:description) {|n| "Career #{n}"}
   end
+
+  factory :employment_status_umbrella, :parent => :employment_status do
+    code 'umbrella'
+    description "Umbrella"
+    umbrella true
+    org_member false
+  end
+  
   
   factory :employment_status_unspecified, :parent => :employment_status do
     id 999999

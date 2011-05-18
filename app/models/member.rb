@@ -119,10 +119,15 @@ class Member < ActiveRecord::Base
   end  
   
   def employment_status_code
-    return nil unless personnel_data
-    return personnel_data.employment_status ? personnel_data.employment_status.code : nil
+    return nil unless personnel_data && personnel_data.employment_status
+    return personnel_data.employment_status 
   end  
   
+  def org_member
+    return nil unless personnel_data && personnel_data.employment_status
+    return personnel_data.employment_status.org_member
+  end
+      
   def age_range
     case age_years
       when nil then '?'

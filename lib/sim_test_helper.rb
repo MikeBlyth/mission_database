@@ -36,8 +36,9 @@ module SimTestHelper
     s = Factory(:member, :spouse=>member, :last_name=> member.last_name, 
           :first_name=> "Honey", :family=>member.family, :sex=>member.other_sex, :child=>false,
           :country=>member.country )
+    s.personnel_data.update_attribute(:employment_status, member.employment_status)
     member.update_attribute(:spouse, s)
-    puts "Error creating/saving spouse (sim_test_helper ~38)" unless s.valid? && member.valid?
+    puts "Error creating/saving spouse (sim_test_helper ~40)" unless s.valid? && member.valid?
     return s
   end
   

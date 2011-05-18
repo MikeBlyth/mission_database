@@ -5,6 +5,9 @@ class TravelsController < ApplicationController
   load_and_authorize_resource
   
   active_scaffold :travel do |config|
+
+    config.actions << :config_list
+
     #  config.columns[:member].actions_for_association_links = [:show]
     config.subform.layout = :vertical
     config.columns = [:traveler_name, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,

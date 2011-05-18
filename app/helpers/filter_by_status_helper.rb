@@ -14,7 +14,7 @@ module FilterByStatusHelper
     end 
 
     def those_active_sim
-      self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.active_sim_statuses)
+      self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.org_statuses)
     end 
 
     def those_active

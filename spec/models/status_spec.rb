@@ -20,7 +20,7 @@ describe Status do
     Factory(:status, :on_field=>false)
     field_3 = Factory(:status, :on_field=>true).id
     Factory(:status, :on_field=>false)
-    Status.field_statuses.should == [field_1, field_2, field_3]
+    Status.field_statuses.sort.should == [field_1, field_2, field_3]
   end  
 
   it "returns array of status id's for active status" do
@@ -30,7 +30,7 @@ describe Status do
     Factory(:status, :active=>false)
     field_3 = Factory(:status, :active=>true).id
     Factory(:status, :active=>false)
-    Status.active_statuses.should == [field_1, field_2, field_3]
+    Status.active_statuses.sort.should == [field_1, field_2, field_3]
   end  
 
       

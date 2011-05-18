@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110518071651
 #
 # Table name: employment_statuses
 #
@@ -9,6 +9,9 @@
 #  created_at  :datetime
 #  updated_at  :datetime
 #  mk_default  :boolean
+#  umbrella    :boolean
+#  org_member  :boolean         default(TRUE)
+#  current_use :boolean         default(TRUE)
 #
 
 class EmploymentStatus < ActiveRecord::Base
@@ -20,8 +23,14 @@ class EmploymentStatus < ActiveRecord::Base
   validates_presence_of :description, :code
   validates_uniqueness_of :code, :description
 
-  def self.active_sim_statuses
-    statuses = self.where("code in (?)",['career', 'sta', 'associate'])
+  def self.org_statuses   # These are employment statuses that classify the person as a member (employee)
+    statuses = self.where("org_member")
+    return statuses.map {|s| s.id}
+  end
+
+  # These are employment statuses that classify the person as under the org's umbrella but not a member (employee)
+  def self.umbrella_statuses
+    statuses = self.where("umbrella")
     return statuses.map {|s| s.id}
   end
 

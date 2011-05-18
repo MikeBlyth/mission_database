@@ -33,6 +33,7 @@ Feature: Administrative functions
   Scenario: The send family summaries works
     Given that I am signed in as an administrator
     And a one-person family
+    And the family belongs to the organization
     And a contact record
     When I go to the family summaries page
     And I click on "Send"

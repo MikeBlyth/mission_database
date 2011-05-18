@@ -25,6 +25,9 @@ class Country < ActiveRecord::Base
   def to_s
     self.name
   end
+  def description
+    self.name
+  end
 
   def self.choices
     return Country.find(:all, :order => :name, :conditions=> 'include_in_selection = TRUE')
