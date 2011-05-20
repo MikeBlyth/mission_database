@@ -7,10 +7,13 @@
       %th Home Assignment
       %th Next term
     - @members.each do |m|
+      - next_ha = m.next_home_assignment
       %tr{:id => "member_#{m.id}", :class=> cycle('list_line_odd' , 'list_line_even' )}
         %td= m.last_name_first(:initial=>true)
         %td= m.most_recent_term.dates if m.most_recent_term
-        %td= "#{m.next_home_assignment[:start] || '?'}--#{m.next_home_assignment[:end] || '?'}"
+        %td= "#{next_ha[:start] || '?'}--#{next_ha[:end] || '?'} #{next_ha[:end_estimated]}"
         %td= m.pending_term.dates if m.pending_term
-        
+  %p.footnote
+    "(Est)" means that the end of home assignment has been estimated using the 
+    SIM formula. This may or may not be what the member has planned.     
 

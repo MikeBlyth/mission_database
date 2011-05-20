@@ -183,28 +183,41 @@ class Member < ActiveRecord::Base
     return first_current ? terms[first_current] : nil
   end    
   
+  # Use organization guidelines to estimate length of HA based on how long current term is/was
+  def estimate_home_assignment_duration(term_start, term_finish)
+    term_duration = most_recent_term.best_end_date - most_recent_term.best_start_date 
+    est_ha_duration = (term_duration-365)/3
+    return est_ha_duration
+  end
+  
   # Determine or estimate the dates of next home assignment for those on the field
   def next_home_assignment
   #  return [nil, nil] unless current_term
-    start = ending = eot_status = nil
+    start = ending = eot_status = end_estimated = nil
     if pending_term
       if pending_term.best_start_date
         ending = pending_term.best_start_date - 1
       end
     end        
     if most_recent_term
-      if most_recent_term.best_end_date
-        start = most_recent_term.best_end_date + 1
+      best_end_date = most_recent_term.best_end_date
+      best_start_date = most_recent_term.best_start_date
+      if best_end_date
+        start = best_end_date + 1
         if self.personnel_data.est_end_of_service  # Is there an estimated end-of-service/retirement date?
           if start > self.personnel_data.est_end_of_service - 360  # consider retiring if within a year of date
             eot_status = 'final'
             ending ||= eot_status  # For ease of formatting, but might want to leave as nil
           end
         end
-      else
+        # If end of HA not specified, estimate it using org. formula for HA duration
+        if ending.nil? && most_recent_term.best_start_date
+          ending = start + estimate_home_assignment_duration(best_start_date, best_end_date)
+          end_estimated = '(est)'
+        end
       end
     end
-    return {:start=>start, :end=>ending, :eot_status=>eot_status}
+    return {:start=>start, :end=>ending, :eot_status=>eot_status, :end_estimated=>end_estimated}
   end
   
   def city
