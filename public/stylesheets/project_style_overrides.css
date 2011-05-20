@@ -231,6 +231,11 @@ div.temporary_location_dates {
 .list_line_even {
   background: #cce4fc; }
 
+div.list_field_terms {
+  width: 600px; }
+  div.list_field_terms th {
+    background: #cce4fc; }
+
 div.crosstab p.title {
   font-weight: bold;
   font-size: 1.3em; }

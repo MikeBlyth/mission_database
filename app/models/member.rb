@@ -159,6 +159,10 @@ class Member < ActiveRecord::Base
     end
   end
 
+  def <=>(other)
+    self.name <=> other.name
+  end
+
   # The most recent, including present term.
   def most_recent_term
     terms = self.field_terms.sort
@@ -179,6 +183,29 @@ class Member < ActiveRecord::Base
     return first_current ? terms[first_current] : nil
   end    
   
+  # Determine or estimate the dates of next home assignment for those on the field
+  def next_home_assignment
+  #  return [nil, nil] unless current_term
+    start = ending = eot_status = nil
+    if pending_term
+      if pending_term.best_start_date
+        ending = pending_term.best_start_date - 1
+      end
+    end        
+    if most_recent_term
+      if most_recent_term.best_end_date
+        start = most_recent_term.best_end_date + 1
+        if self.personnel_data.est_end_of_service  # Is there an estimated end-of-service/retirement date?
+          if start > self.personnel_data.est_end_of_service - 360  # consider retiring if within a year of date
+            eot_status = 'final'
+            ending ||= eot_status  # For ease of formatting, but might want to leave as nil
+          end
+        end
+      else
+      end
+    end
+    return {:start=>start, :end=>ending, :eot_status=>eot_status}
+  end
   
   def city
     return residence_location.city.name

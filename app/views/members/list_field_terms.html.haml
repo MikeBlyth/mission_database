@@ -1,0 +1,16 @@
+.active-scaffold.list_field_terms
+  %h3 Current and next field terms of active members
+  %table
+    %tr
+      %th Member/Family
+      %th Current/recent term
+      %th Home Assignment
+      %th Next term
+    - @members.each do |m|
+      %tr{:id => "member_#{m.id}", :class=> cycle('list_line_odd' , 'list_line_even' )}
+        %td= m.last_name_first(:initial=>true)
+        %td= m.most_recent_term.dates if m.most_recent_term
+        %td= "#{m.next_home_assignment[:start] || '?'}--#{m.next_home_assignment[:end] || '?'}"
+        %td= m.pending_term.dates if m.pending_term
+        
+

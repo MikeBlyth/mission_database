@@ -52,6 +52,13 @@ class FieldTerm < ActiveRecord::Base
     end_date || est_end_date
   end
 
+  # String reporting the start & end dates
+  def dates
+    start_s = best_start_date ? best_start_date.to_s : '?'
+    end_s = best_end_date ? best_end_date.to_s : '?'
+    "#{start_s} to #{end_s}"
+  end
+
   def future?
     best_start_date && best_start_date > Date.today ||
     best_end_date && best_end_date > Date.today + 4.years

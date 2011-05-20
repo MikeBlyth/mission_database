@@ -18,7 +18,7 @@ SIM::Application.routes.draw do
   match 'autocomplete_searches/index'
   match 'members/set_full_names'
   match 'members/spouse_select'
-
+  match 'members/list_field_terms' => 'members#list_field_terms', :as=> :list_field_terms
   match 'families/:id/add_family_member' => 'families#add_family_member', :as => :add_family_member
   match 'members/edit_inline/:id' => 'members#edit_inline', :as => :edit_inline
    
