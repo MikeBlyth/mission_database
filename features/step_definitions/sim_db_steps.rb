@@ -128,6 +128,16 @@ Given /^the family belongs to the organization$/ do
   end
 end
 
+Given /^a current field term$/ do
+  @current_term = Factory(:field_term, :member=>@head, :start_date=>Date.today-1.month, 
+                          :end_date=>Date.today+1.year)
+end
+
+Given /^a future field term$/ do
+  @future_term = Factory(:field_term, :member=>@head, :start_date=>Date.today+1.month, 
+                          :end_date=>Date.today+1.year)
+end
+
 When /^I visit the home page$/ do
   visit root_path
 end
@@ -150,6 +160,7 @@ end
 When /^I ask to create a child$/ do
   visit new_member_path(:id=>@head.id, :child=>'child')
 end
+
 
 Then /^I receive a valid form for a child$/ do
   find_field("record[spouse]").value.should == ""
@@ -431,6 +442,11 @@ end
 
 Then /^the report should not include "([^"]*)"$/ do |arg1|
   page.should_not have_content arg1
+end
+
+Then /^I should see the member name$/ do
+  page.should have_content @head.last_name
+  page.should have_content @head.first_name
 end
 
 #Given /^a contact record$/ do

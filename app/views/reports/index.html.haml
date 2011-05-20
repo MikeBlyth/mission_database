@@ -19,8 +19,8 @@
   %li#list_field_terms 
     Current & projected field terms
     %ul
-      %li#list_field_terms= link_to "HTML", "/reports/list_field_terms"
-      %li#list_field_terms= link_to "PDF", "/reports/list_field_terms.pdf"
+      %li= link_to "HTML", "/reports/list_field_terms", :id=>'field_terms_html'
+      %li= link_to "PDF", "/reports/list_field_terms.pdf", :id=>'field_terms_pdf'
   %li#statistics_1= link_to "Statistics 1", "/reports/statistics_1.html"
 %hr
 %h4 Calendars

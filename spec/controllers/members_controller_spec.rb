@@ -122,8 +122,4 @@ describe MembersController do
 
   end
   
-  describe 'List field terms' do
-    
-  end # List field terms
-
 end

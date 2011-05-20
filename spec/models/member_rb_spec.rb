@@ -815,5 +815,59 @@ describe Member do
     end
   end #identifies field terms
 
+  describe 'determines dates of next home assignment' do
+    before(:each) do
+      @current = Factory.build(:field_term, :start_date=>Date.today-1.year, :end_date=>Date.today+6.months)
+      @future =  Factory.build(:field_term, :start_date=>Date.today+1.year, :end_date=>nil)
+      @personnel = Factory.build(:personnel_data)
+      @member = Factory.stub(:member)
+      @member.stub(:most_recent_term).and_return(@current)
+      @member.stub(:pending_term).and_return(@future)
+      @member.stub(:personnel_data).and_return(@personnel)
+    end
+
+    it 'uses gap between terms if end of current & beginning of next are specified' do
+      @member.most_recent_term.should == @current
+      @member.pending_term.should == @future
+      ha = @member.next_home_assignment
+      ha[:start].should == @current.end_date + 1.day
+      ha[:end].should == @future.start_date - 1.day
+      ha[:end_estimated].should be_nil
+      ha[:eot_status].should be_nil
+    end
+
+    it 'has unknown start of HA if end of current is unknown' do
+      @current.end_date = nil
+      ha = @member.next_home_assignment
+      ha[:start].should be_nil
+      ha[:end].should == @future.start_date - 1.day
+      ha[:end_estimated].should be_nil
+      ha[:eot_status].should be_nil
+    end
+
+    it 'estimates end of HA if current term specified and future not' do
+      @future.start_date = nil
+      ha = @member.next_home_assignment
+      ha[:start].should == @current.end_date + 1.day
+      ha[:end].should_not be_nil
+      ha[:end_estimated].should_not be_nil
+      ha[:eot_status].should be_nil
+    end
+
+    it 'gives unknown HA dates if end-current and begin-next are unspecified' do
+      @future.start_date = nil
+      @current.end_date = nil
+      ha = @member.next_home_assignment
+      ha[:start].should be_nil
+      ha[:end].should be_nil
+    end
+
+    it 'notes end-of-service if end-term is near estimated retirement' do
+      @personnel.est_end_of_service = @current.end_date + 60.days
+      @member.next_home_assignment[:eot_status].should =~ /final|end|retir|termin/
+    end
+    
+  end # determines dates of next home assignment
+      
 end
 

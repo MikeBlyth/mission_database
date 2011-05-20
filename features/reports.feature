@@ -118,5 +118,26 @@ Feature: report generation
     Then I should get a "Where Is" HTML report
     And the report should include the "Where Is" information
     
-
-  
+  Scenario: Generate field terms report
+    Given that I am signed in
+    And a one-person family
+    And the family belongs to the organization
+    And a current field term
+    And a future field term
+    When I click on "Reports"
+    And I click on "field_terms_html"
+    Then I should get a "Current and next field terms" HTML report
+    And I should see the member name  
+    
+  Scenario: Generate field terms pdf report
+    Given that I am signed in
+    And a one-person family
+    And the family belongs to the organization
+    And a current field term
+    And a future field term
+    When I click on "Reports"
+    And I click on "field_terms_pdf"
+    Then I should get a "Current and Projected Field Terms" PDF report
+    And I should see the member name
+    
+    

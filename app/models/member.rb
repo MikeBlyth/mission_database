@@ -363,7 +363,7 @@ class Member < ActiveRecord::Base
   end
 
   def on_field
-    return self.status_id && Status.find(self.status_id).on_field 
+    return self.status_id && self.status.on_field 
   end
 
   def age_years
