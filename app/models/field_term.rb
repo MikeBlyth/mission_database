@@ -44,6 +44,38 @@ class FieldTerm < ActiveRecord::Base
       return 0
   end
 
+  def best_start_date
+    start_date || est_start_date
+  end
+
+  def best_end_date
+    end_date || est_end_date
+  end
+
+  def future?
+    best_start_date && best_start_date > Date.today ||
+    best_end_date && best_end_date > Date.today + 4.years
+  end
+  
+  def past?
+    best_end_date && best_end_date < Date.today ||
+    best_start_date && best_start_date < Date.today-4.years
+  end
+  
+  def current?
+    if best_start_date && best_end_date
+      return ( best_start_date <= Date.today && best_end_date >= Date.today )
+    end
+    if best_start_date
+      # Assume that terms starting more than 4 years ago are not current even if no end date is present
+      return ( best_start_date <= Date.today && best_start_date > Date.today-4.years )
+    end
+    if best_end_date
+      return (best_end_date >= Date.today && best_end_date < Date.today+4.years)
+    end
+    return false
+  end
+
   def copy_from_most_recent_term
     return unless self.new_record? && !member_id.nil?
     terms = member.field_terms

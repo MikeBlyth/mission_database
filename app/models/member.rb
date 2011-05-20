@@ -159,21 +159,26 @@ class Member < ActiveRecord::Base
     end
   end
 
+  # The most recent, including present term.
   def most_recent_term
     terms = self.field_terms.sort
-    terms.delete_if {|t| t.start_date && (t.start_date > Date.today) || 
-                         t.est_start_date && (t.est_start_date > Date.today) }
+    terms.delete_if {|t| t.future? }
     return terms.last
   end
   
+  # The earliest future term
   def pending_term
     terms = self.field_terms.sort
-    terms.delete_if {|t| t.start_date && (t.start_date < Date.today) || 
-                         t.est_start_date && (t.est_start_date < Date.today) ||
-                         t.end_date && (t.end_date < Date.today) ||
-                         t.est_end_date && (t.est_end_date < Date.today) }
-    return terms.first
+    first_future = terms.find_index {|t| t.future?} 
+    return first_future ? terms[first_future] : nil
   end
+  
+  def current_term
+    terms = self.field_terms.sort
+    first_current = terms.find_index {|t| t.current?} 
+    return first_current ? terms[first_current] : nil
+  end    
+  
   
   def city
     return residence_location.city.name

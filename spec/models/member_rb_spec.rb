@@ -788,6 +788,32 @@ describe Member do
     end
     
   end # 'travel helpers'
+  
+  describe 'identifies field terms' do
+    before(:each) do
+      @member = Factory(:family).head
+      @future_2 = Factory(:field_term, :member=>@member, :start_date=>Date.today+4.years, 
+                :end_date=>Date.today+6.years)
+      @future_1 = Factory(:field_term, :member=>@member, :start_date=>Date.today+2.days, 
+                :end_date=>Date.today + 1.year) 
+      @current_1 = Factory(:field_term, :member=>@member, :start_date=>Date.today-2.days, :end_date=>nil)
+#      @current_3 = Factory(:field_term, :member=>@member, :start_date=>nil, :end_date=>Date.tomorrow + 1.year)
+      @past_1 = Factory(:field_term, :member=>@member, :start_date=>Date.yesterday-1.year, :end_date=>Date.today-2.days)
+#      @past_2 = Factory(:field_term, :member=>@member, :start_date=>nil, :end_date=>Date.today-2.days)
+    end   
+
+    it 'most recent' do
+      @member.most_recent_term.should == @current_1
+    end
+    
+    it 'pending' do
+      @member.pending_term.should == @future_1
+    end
+    
+    it 'current' do
+      @member.current_term.should == @current_1
+    end
+  end #identifies field terms
 
 end
 
