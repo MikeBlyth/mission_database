@@ -16,6 +16,11 @@
       %li= link_to 'By location (HTML)', '/reports/whereis.html?by=location', :id=>'whereis-location'
       %li= link_to 'By family and location--basic (PDF)', '/reports/whereis.pdf', :id=>'whereis-pdf'
       %li= link_to 'By family and location--detailed (PDF)', '/reports/whereis.pdf?location=long', :id=>'whereis-detailed-pdf'
+  %li#list_field_terms 
+    Current & projected field terms
+    %ul
+      %li#list_field_terms= link_to "HTML", "/reports/list_field_terms"
+      %li#list_field_terms= link_to "PDF", "/reports/list_field_terms.pdf"
   %li#statistics_1= link_to "Statistics 1", "/reports/statistics_1.html"
 %hr
 %h4 Calendars

@@ -158,11 +158,6 @@ class MembersController < ApplicationController
     end
   end
 
-  def list_field_terms
-    @title = 'Current field term information'
-    @members = Member.those_active_sim.map {|m| m if m.family_head}.compact.sort
-  end
-
   def set_full_names
     Member.find(:all).each do |m| 
       if m.name.blank? || (m.first_name == m.short_name)

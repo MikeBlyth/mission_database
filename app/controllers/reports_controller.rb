@@ -33,6 +33,21 @@ class ReportsController < ApplicationController
     end
   end
 
+  def list_field_terms
+    @title = 'Current field term information'
+    @members = Member.those_active_sim.map {|m| m if m.family_head}.compact.sort
+    respond_to do |format|
+      format.html
+      format.pdf do
+        output = ListFieldTerms.new(:page_size=>Settings.reports.page_size).
+             to_pdf(@members)
+        send_data output, :filename => "field_terms.pdf", 
+                          :type => "application/pdf"
+      end
+    end
+  end
+
+
   def whereis
     # Who to include in the report ... options not implemented yet
     # include_home_assignment = params[:include_home_assignment]
