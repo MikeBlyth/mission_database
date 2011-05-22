@@ -88,7 +88,7 @@ describe TravelsController do
     before(:each) do
         @user = Factory.build(:user, :admin=>true)
         test_sign_in(@user)
-        @member = Factory(:family).head
+        @member = Factory(:member)
         @attr = {:member=>"#{@member.id}", :date=>Date.today, :arrival=>false, 
               :time => Time.new(1,1,1,5,15,0,"+01:00"),
               :return_time => Time.new(1,1,1,6,45,0,"+01:00"),

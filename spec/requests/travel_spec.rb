@@ -27,7 +27,7 @@ describe "Travels" do
     end      
 
     it "stores all the input correctly" do
-      member = Factory(:family).head
+      member = Factory(:member)
       visit new_travel_path
       select(member.last_name)
       fill_in "record[other_travelers]", :with => 'Santa Claus'

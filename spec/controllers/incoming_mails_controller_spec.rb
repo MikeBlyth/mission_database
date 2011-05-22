@@ -115,7 +115,7 @@ describe IncomingMailsController do
       end
 
       it "sends basic info if contact record not found" do
-        member = Factory(:family, :last_name=>'Jehu').head
+        member = Factory(:member, :last_name=>'Jehu')
         @params['plain'] = "info Jehu"
         post :create, @params
         mail = ActionMailer::Base.deliveries.last.to_s
@@ -164,7 +164,7 @@ describe IncomingMailsController do
         it 'is hidden to 3rd party' do
      #     requestor = Factory(:family).head  # This is the person mailing in the request
      #     requestor_contact = Factory(:contact, :member=>requestor) # must have contact info in DB or will not recieve reply
-          member = Factory(:family).head     # This is the person for whom info is being requested
+          member = Factory(:member)     # This is the person for whom info is being requested
           contact = Factory(:contact, :member => member, 
                       :email_1 => 'member2@example.com',
                       :email_2 => 'secondary@gmail.com',
@@ -188,7 +188,7 @@ describe IncomingMailsController do
         end # hides contact info marked as private     
       
         it 'is shown when requested by same member' do
-          member = Factory(:family).head
+          member = Factory(:member)
           controller.stub(:from_member).and_return(member)   # indicate that mail originates from same member as being requested
           contact = Factory(:contact, :member => member, 
                       :email_2 => 'secondary@gmail.com',

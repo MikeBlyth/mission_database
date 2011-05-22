@@ -11,8 +11,7 @@ describe FieldTerm do
   describe "New field term" do
   
     before(:each) do
-      @family = Factory(:family)
-      @head = @family.head
+      @head = Factory(:member)
       @info_1 = term_info
       @info_2 = term_info  # new information for second term
       @term_1 = Factory(:field_term, @info_1.merge({:start_date => Date.today-5.years, 

@@ -3,8 +3,9 @@ include SimTestHelper
 
 describe Family do
   before(:each) do
-    @family= Factory.build(:family)
-    @head = @family.head
+    @family= Factory(:family)
+    @head = Factory(:member, :family=>@family)
+    @family.update_attribute(:head, @head)
   end    
 
   it "is valid with valid attributes" do
@@ -58,19 +59,19 @@ describe Family do
     should_reject_duplicate(:sim_id, [:name])
   end
 
-  it "creates a corresponding family head in the members table" do
-    city=Factory.create(:city)
-    @family.residence_location = Factory.create(:location)
-    @family.status = Factory.create(:status)
-    @family.save!    # has to be saved in order to create the member
-    head = @family.head
-    head.family_head.should be true
-    head.family.should == @family
-    head.name.should == @family.name
-    head.status.should == @family.status
-    head.residence_location.should == @family.residence_location
-  end
-  
+#  it "creates a corresponding family head in the members table" do
+#    city=Factory.create(:city)
+#    @family.residence_location = Factory.create(:location)
+#    @family.status = Factory.create(:status)
+#    @family.save!    # has to be saved in order to create the member
+#    head = Factory(:member, :family=>@family)
+#    head.family_head.should be_true
+#    head.family.should == @family
+#    head.status.should == @family.status
+#    head.residence_location.should == @family.residence_location
+#    head.name.should == @family.name
+#  end
+#  
   it "can be deleted when it contains no members" do
     @family.save!    # automatically saves first member (family head) also
     Family.count.should == 1        

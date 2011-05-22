@@ -264,7 +264,9 @@ describe AdminController do
 
       it 'are reviewed' do
         2.times do  # create two families
-          head = Factory(:family_active).head
+          family = Factory(:family_active)
+          head = Factory(:member, :family=> family)
+          family.update_attribute(:head, head)
           Factory(:contact, :member=>head)
         end
         Factory(:family_active, :last_name => "Aa")
@@ -276,46 +278,54 @@ describe AdminController do
 
       it 'are emailed' do
         2.times do  # create two families
-          @family = Factory(:family_active)
-          Factory(:contact, :member=>@family.head)
-          @family.head.personnel_data.update_attribute(:employment_status, @employment_status)
+          family = Factory(:family_active)
+          head = Factory(:member, :family=> family)
+          family.update_attribute(:head, head)
+          Factory(:contact, :member=>head)
+          family.head.personnel_data.update_attribute(:employment_status, @employment_status)
         end
         Family.those_active.count.should == 2
         lambda {post :send_family_summaries}.should change(ActionMailer::Base.deliveries, :length).by(2)
       end
 
       it 'review does not mark summary_sent date' do
-        @family = Factory(:family)
+        family = Factory(:family)
+        head = Factory(:member, :family=> family)
+        family.update_attribute(:head, head)
         # Try to get around this update!
-        @family.head.personnel_data.update_attribute(:employment_status, @employment_status)
+        family.head.personnel_data.update_attribute(:employment_status, @employment_status)
         get :review_family_summaries
-        @family.reload.summary_sent.should be_nil
+        family.reload.summary_sent.should be_nil
       end
 
       it 'mailing mark summary_sent date' do
-        @family = Factory(:family_active)
+        family = Factory(:family_active)
+        head = Factory(:member, :family=> family)
+        family.update_attribute(:head, head)
         # Try to get around this update!
-        @family.head.personnel_data.update_attribute(:employment_status, @employment_status)
-        Factory(:contact, :member=>@family.head)
+        head.personnel_data.update_attribute(:employment_status, @employment_status)
+        Factory(:contact, :member=>head)
         post :send_family_summaries
-        @family.reload.summary_sent.should == Date.today
+        family.reload.summary_sent.should == Date.today
       end
 
       it 'are emailed if a summary was not sent recently' do
-        @family = Factory(:family_active, :summary_sent => nil)
+        family = Factory(:family_active, :summary_sent => nil)
+        head = Factory(:member, :family=> family)
+        family.update_attribute(:head, head)
         # Try to get around this update!
-        @family.head.personnel_data.update_attribute(:employment_status, @employment_status)
-@family.reload.employment_status.should_not be_nil
-        Factory(:contact, :member=>@family.head)
+        family.head.personnel_data.update_attribute(:employment_status, @employment_status)
+        Factory(:contact, :member=>head)
         lambda {post :send_family_summaries}.should change(ActionMailer::Base.deliveries, :length).by(1)
       end        
 
       it 'are not emailed if a summary was sent recently' do
-        @family = Factory(:family_active, :summary_sent => Date.today - 1.day)
+        family = Factory(:family_active, :summary_sent => Date.today - 1.day)
         # Try to get around this update!
-        @family.head.personnel_data.update_attribute(:employment_status, @employment_status)
-@family.employment_status.should_not be_nil
-        Factory(:contact, :member=>@family.head)
+        head = Factory(:member, :family=> family)
+        family.update_attribute(:head, head)
+        head.personnel_data.update_attribute(:employment_status, @employment_status)
+        Factory(:contact, :member=>family.head)
         post :send_family_summaries
         lambda {post :send_family_summaries}.
            should_not change(ActionMailer::Base.deliveries, :length)

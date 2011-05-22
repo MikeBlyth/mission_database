@@ -18,6 +18,8 @@ describe Location do
     before(:each) do
       @location = Factory(:location)
       @family = Factory(:family)
+      @member = Factory(:member, :family=>@family)
+      @family.update_attribute(:head, @member)
     end
     
     it "does destroy if there are no existing linked records" do

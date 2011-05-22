@@ -45,7 +45,24 @@ class FamiliesController < ApplicationController
         render :action => "create" 
       return
     end
+    create_family_head(@record)
   end    
+  
+   # Creating a new family ==> Need to create the member record for head
+  def create_family_head(record)
+    head = Member.create(:name=>record.name, :last_name=>record.last_name, 
+            :first_name=>record.first_name, 
+            :middle_name => record.middle_name,
+            :status_id=>record.status_id, 
+            :residence_location_id=>record.residence_location_id, 
+            :family_id =>record.id, :sex=>'M')
+    if ! head.valid?
+      errors.add(:head, "Unable to create head of family")
+      raise ActiveRecord::Rollback
+    end   
+    record.update_attributes(:head => head)  # Record newly-created member as the head of family
+
+  end
 
   def add_family_member
     record = Member.new(:last_name=>'NewMember', :first_name=>'Guess')
@@ -80,6 +97,7 @@ class FamiliesController < ApplicationController
   end  
 
   def create_respond_to_html 
+#puts "create_respond_to_html: @record=#{@record}, valid=#{@record.valid?}, path=#{edit_member_path @record.head}"
    redirect_to edit_member_path @record.head if @record.valid?
   end  
 

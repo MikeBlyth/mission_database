@@ -16,8 +16,8 @@ include SimTestHelper
 
     before(:each) do
       integration_test_sign_in(:admin=>true)
-      @family = Factory(:family)
-      @head = @family.head
+      @head = factory_member_basic
+      @family = @head.family
       seed_tables
     end  
 

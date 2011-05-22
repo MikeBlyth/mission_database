@@ -10,9 +10,10 @@ describe StatusList do
     
     it 'as hash of all active members' do
       @inactive_status = Factory(:status_inactive)
-      @member = Factory(:family_active).head
-      @member2 = Factory(:member, :family=>@member.family)
-      @member_inactive = Factory(:member, :family=>@member.family, :status=>@inactive_status)
+      @family = Factory(:family_active)
+      @member  = Factory(:member, :family=>@family)
+      @member2 = Factory(:member, :family=>@family)
+      @member_inactive = Factory(:member, :family=>@family, :status=>@inactive_status)
       status_list = StatusList.new
       status_list[@member.id].should == @member
       status_list[@member2.id].should == @member2
@@ -24,9 +25,10 @@ describe StatusList do
   it 'counts members within a given set of statuses' do
     @status_1 = Factory(:status)
     @status_2 = Factory(:status)
-    @member = Factory(:family_active, :status=>@status_1).head
-    @member2 = Factory(:member, :family=>@member.family, :status=>@status_2)
-    @member3 = Factory(:member, :family=>@member.family, :status=>@status_2)
+    @family = Factory(:family_active, :status=>@status_1)
+    @member  = Factory(:member, :family=>@family, :status=>@status_1)
+    @member2 = Factory(:member, :family=>@family, :status=>@status_2)
+    @member3 = Factory(:member, :family=>@family, :status=>@status_2)
     status_list = StatusList.new
     status_list.status_count([@status_1.id]).should == 1
     status_list.status_count([@status_2.id]).should == 2
@@ -37,7 +39,7 @@ describe StatusList do
     before(:each) do
       @status_home_assignment = Factory(:status_home_assignment)
       @status_field = Factory(:status, :on_field=>true)
-      @member = Factory(:family_active, :status=>@status_home_assignment).head
+      @member = Factory(:member, :status=>@status_home_assignment)
       @status_list = StatusList.new
     end
   

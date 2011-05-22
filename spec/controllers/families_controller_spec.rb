@@ -1,15 +1,9 @@
 require 'spec_helper'
-#require "webrat"
-
-#Webrat.configure do |config|
-#  config.mode = :rails
-#end
-
 describe FamiliesController do
   
   before(:each) do
-    @family = Factory(:family)
-    @member = @family.head
+#    @family = Factory(:family)
+#    @member = @family.head
   end
 
   describe "authentication before controller access" do
@@ -28,6 +22,7 @@ describe FamiliesController do
       
       it "should allow access to 'destroy'" do
         # Family.should_receive(:destroy) # Why can't this work ??
+        @family = Factory(:family)
         lambda do
           put :destroy, :id => @family.id
           response.should_not redirect_to(signin_path)
@@ -35,7 +30,7 @@ describe FamiliesController do
       end
       
       it "should allow access to 'update'" do
-        # Family.should_receive(:update)
+        @family = Factory(:family)
         put :update, :id => @family.id, :record => @family.attributes, :family => @family.attributes
         response.should_not redirect_to(signin_path)
       end
@@ -52,6 +47,45 @@ describe FamiliesController do
     end # for non-signed-in users
 
   end # describe "authentication before controller access"
+
+  describe 'new_family also creates family head' do
+    before(:each) do
+        @user = Factory.build(:user, :admin=>true)
+        test_sign_in(@user)
+      @params={:record=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"}}
+    end  
+
+    it 'creates a "family head" member' do
+      lambda{post :create, @params}.should change(Member, :count).by(1)  
+      family = Family.last
+      family.should_not be_nil
+      family.head.should_not be_nil
+    end
+
+    it 'family head member belongs to family' do
+      lambda{post :create, @params}.should change(Member, :count).by(1)  
+      family = Family.last
+      family.head.family.should == family
+    end
+
+    it 'family head inherits family info' do
+      status = Factory(:status)
+      location = Factory(:location)
+      lambda do
+        @params[:record].merge!({:status=>status.id.to_s, :residence_location=>location.id.to_s})
+        post :create, @params
+       end.should change(Member, :count).by(1)  
+      family = Family.last
+      head = family.head.reload
+      head.status.should == status
+      head.residence_location.should == location
+      head.name.should == family.name
+      head.last_name.should == family.last_name
+      head.first_name.should == family.first_name
+      head.middle_name.should == family.middle_name
+    end
+
+  end # 'new_family also creates family head'
 
   describe 'filtering by status' do
 
@@ -110,8 +144,10 @@ describe FamiliesController do
       @new_location = Factory(:location, :description=>"New Location")
       @original_status = Factory(:status, :description=>"Original status")
       @new_status = Factory(:status, :description=>"New status")
-      @family = Factory(:family,:residence_location=>@original_location, :status=>@original_status)
-      @member = @family.head
+      @member = Factory(:member)
+      @family = Factory(:family,:residence_location=>@original_location, 
+              :head=>@member, :status=>@original_status)
+      @member.update_attribute(:family, @family)
       @spouse = Factory(:member, :family=>@family, :last_name=>@family.last_name, :spouse=>@member, :child=>false,
               :sex=>@member.other_sex)
       @child = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>true, :spouse=>nil)
@@ -192,6 +228,12 @@ describe FamiliesController do
   
   describe "member list" do
     include FamiliesHelper
+    before(:each) do
+      @member = Factory(:member)
+      @family = Factory(:family,:residence_location=>@original_location, 
+              :head=>@member, :status=>@original_status)
+      @member.update_attribute(:family, @family)
+    end      
     
     it "exists" do
       members_column(@family).should_not be_nil

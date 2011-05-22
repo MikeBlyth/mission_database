@@ -1,5 +1,7 @@
 require 'spec_helper'
+require 'sim_test_helper'
   include ApplicationHelper
+  include SimTestHelper
 
 describe 'Contacts' do
 
@@ -18,7 +20,7 @@ describe 'Contacts' do
   
     it "should add a contact record with all info for an existing member" do
       lambda do
-        member = Factory(:family).head
+        member = factory_member_basic
         visit members_path
         click_link "as_members-edit-#{member.id}-link"
 ##save_and_open_page

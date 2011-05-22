@@ -3,9 +3,8 @@ include SimTestHelper
 include ApplicationHelper
   
 def construct_family
-  @family = Factory(:family)
-  @head = @family.head
-  @family.update_attribute(:status,Factory(:status))
+  @family = Factory(:family, :status=>Factory(:status))
+  @head = @family.create_family_head
 #puts "**** Constructed family, head=#{@head.attributes}, errors=#{@head.errors}"
 end
 
@@ -91,7 +90,8 @@ end
 Given /^a one-person family with a location and status$/ do
 # Requires @location and @status to be defined already!
   @family = Factory(:family, :residence_location=>@location, :status=>@status)
-  @head = @family.head
+  @head = Factory(:member, :family=>@family)
+  @family.update_attribute(:head, @head)
 #puts ">>>> one-person family head=#{@head.attributes}"
 end
 

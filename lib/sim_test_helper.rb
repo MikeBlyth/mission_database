@@ -33,18 +33,19 @@ module SimTestHelper
   end  
     
   def create_spouse(member)
-    s = Factory(:member, :spouse=>member, :last_name=> member.last_name, 
+    spouse = Factory(:member, :spouse=>member, :last_name=> member.last_name, 
           :first_name=> "Honey", :family=>member.family, :sex=>member.other_sex, :child=>false,
           :country=>member.country )
-    s.personnel_data.update_attribute(:employment_status, member.employment_status)
-    member.update_attribute(:spouse, s)
-    puts "Error creating/saving spouse (sim_test_helper ~40)" unless s.valid? && member.valid?
-    return s
+    spouse.personnel_data.update_attribute(:employment_status, member.employment_status)
+    member.update_attribute(:spouse, spouse)
+    puts "Error creating/saving spouse (sim_test_helper ~40)" unless spouse.valid? && member.valid?
+    return spouse
   end
   
   def create_couple(f=nil)
-    f ||= Factory(:family)
-    husband = f.head
+    family ||= Factory(:family)
+    husband = Factory(:member, :family=>family)
+    family.update_attribute(:head, husband)
     wife = create_spouse(husband)
     return husband
   end
@@ -75,11 +76,18 @@ module SimTestHelper
     return f.id
   end
 
+  def factory_member_basic(params={})
+    family = Factory(:family)
+    head = Factory(:member, :family=>family)
+    family.update_attribute(:head, head)
+    return head
+  end    
+
   def factory_family_full(params={})
-    f = Factory(:family)
-    head = f.head
+    head = factory_member_basic
+    family = head.family
     if params[:couple]
-      spouse = Factory(:member_with_details, :family=>f, :spouse=>head, :sex=>'F')
+      spouse = Factory(:member_with_details, :family=>family, :spouse=>head, :sex=>'F')
       head.spouse = spouse
     end
     add_details(head, {:personnel_data_create=>true, 
@@ -88,9 +96,9 @@ module SimTestHelper
                       :field_term_create=>true }.merge(params))
     add_details(spouse) if head.spouse
     if params[:child]
-      child = Factory(:child, :family=>f, :country=>head.country)
+      child = Factory(:child, :family=>family, :country=>head.country)
     end
-    return f
+    return family
   end
 
   def factory_member_create(params={})
@@ -107,14 +115,17 @@ module SimTestHelper
       member = Member.create(params)
       family.head.update_attributes(params) if family.head == member
     else
-      f = Family.create(:last_name=>params[:last_name],
+      family = Family.create(:last_name=>params[:last_name],
                         :first_name=>params[:first_name],
                         :name=>params[:name],
                         :status_id=>params[:status_id],
                         :residence_location_id=>params[:residence_location_id],
                         :sim_id => rand(100000)
                         )
-      member = f.head 
+      member = Factory(:member, :family=>family, :last_name=>family.last_name,
+          :first_name=>family.first_name, :name=>family.name, :status=>family.status,
+          :residence_location=>family.residence_location)
+      family.update_attribute(:head, member)
     end
 
     puts "Error updating family or family head" unless member.valid? && member.family.valid?

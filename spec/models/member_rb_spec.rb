@@ -21,7 +21,8 @@ describe Member do
 #      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
 #                              #   This second family member @member is *not* saved yet
       @family = Factory(:family)
-      @head = @family.head
+      @head = Factory(:member, :family=>@family)
+      @family.update_attribute(:head, @head)
       @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
                               #   This second family member @member is *not* saved yet
     end    
@@ -62,6 +63,7 @@ describe Member do
     end
 
     it "is invalid if full name already exists in database" do
+      @family.head.should == @head
       @member.name  = @family.head.name
       @member.should_not be_valid
     end
@@ -70,8 +72,9 @@ describe Member do
 
   describe "deletion protect:" do
     before(:each) do
-      @family = Factory(:family) 
-      @head = @family.head
+      @family = Factory(:family)
+      @head = Factory(:member, :family=>@family)
+      @family.update_attribute(:head, @head)
       @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
                               #   This second family member @member is *not* saved yet
     end    
@@ -255,6 +258,8 @@ describe Member do
   describe "marrying: " do
     before(:each) do
       @family = Factory(:family)
+      @head = Factory(:member, :family=>@family)
+      @family.update_attribute(:head, @head)
       @man = @family.head
       @man.update_attributes(:sex=>'M', :birth_date=>Date.new(1980,1,1))
       @woman = Factory(:member, :sex=>"F", :birth_date=>Date.new(1980,1,1))
@@ -376,7 +381,8 @@ describe Member do
     before(:each) do
       @status = Factory(:status)
       @family = Factory(:family, :status=> @status)
-      @head = @family.head
+      @head = Factory(:member, :family=>@family)
+      @family.update_attribute(:head, @head)
     end    
     
     it "reports location of member with no status" do
@@ -671,7 +677,7 @@ describe Member do
 
   describe 'finds members by name' do
     before(:each) do
-      @member = Factory(:family).head
+      @member = Factory(:member)
       @member.update_attribute(:short_name, "Shorty")
     end
 
@@ -744,7 +750,7 @@ describe Member do
     end
       
     it 'excludes partial match to "same_short_name different_last_name"' do  
-      other = Factory(:family).head
+      other = Factory(:member)
       other.update_attribute(:short_name, @member.short_name)
       Member.find_with_name("#{@member.last_name}, #{@member.short_name}").should == [@member]
         # == [@member] implies that spouse is not included
@@ -754,8 +760,8 @@ describe Member do
 
   describe 'travel helpers' do
     before(:each) do
-      @member = Factory(:family).head
-      @other = Factory(:family).head
+      @member = Factory(:member)
+      @other = Factory(:member)
       @previous = Factory(:travel, :date=>Date.today-1.year, :member=>@member,
          :return_date=>Date.today-11.months)
       @current = Factory(:travel, :date=>Date.today-1.week, :member=>@member,
@@ -791,7 +797,7 @@ describe Member do
   
   describe 'identifies field terms' do
     before(:each) do
-      @member = Factory(:family).head
+      @member = Factory(:member)
       @future_2 = Factory(:field_term, :member=>@member, :start_date=>Date.today+4.years, 
                 :end_date=>Date.today+6.years)
       @future_1 = Factory(:field_term, :member=>@member, :start_date=>Date.today+2.days, 

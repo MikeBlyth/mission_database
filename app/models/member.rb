@@ -240,8 +240,11 @@ class Member < ActiveRecord::Base
 
   # Copy last name & other family-level attributes to new member as defaults
   def inherit_from_family
-    return unless new_record? &&             # Inheritance only applies to new, unsaved records
-                  family_id && Family.find_by_id(family_id) # must belong to existing family
+#puts "inherit_ff, new=#{new_record?}, family=#{family}"
+    return unless new_record? && !family.nil?            # Inheritance only applies to new, unsaved records
+
+#    return unless new_record? &&             # Inheritance only applies to new, unsaved records
+#                  family_id && Family.find_by_id(family_id) # must belong to existing family
     self.last_name ||= family.last_name
     self.status ||= family.status
     self.residence_location ||= family.residence_location

@@ -9,7 +9,8 @@ describe MembersController do
   
   before(:each) do
     @family = Factory(:family)
-    @member = @family.head
+    @member = Factory(:member, :family=>@family)
+    @family.update_attribute(:head, @member)
     Factory(:country_unspecified)
   end
 
@@ -76,11 +77,12 @@ describe MembersController do
                   :other => @status_codes - ['field', 'home_assignment', 'mkfield', 'visitor', 'visitor_past', 'leave', 'pipeline']
                   }
       # Create a member for each status
+      @family = Factory(:family)
       @status_codes.each do |status_code|
         status=Status.find_by_code(status_code)
         puts "**** status code '#{status_code}' not found in Status table created by seeds.rb" unless status
         status.should_not be_nil # If it's nil, it means the codes in this test do not match those in seeds.rb
-        member = Factory(:family, :status_id=>status.id)
+        member = Factory(:member, :family=>@family, :status_id=>status.id)
       end  
     end
     

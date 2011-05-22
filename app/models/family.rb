@@ -36,7 +36,7 @@ class Family < ActiveRecord::Base
   validates_uniqueness_of :name, :sim_id, :allow_blank=>true
   validate :name_not_exists
 
-  after_create :create_family_head_member
+ # after_create :create_family_head_member
   after_save   :update_member_locations
   after_save   :update_member_statuses
 
@@ -107,13 +107,13 @@ class Family < ActiveRecord::Base
   
   # Husband of family as Member object, nil if single
   def husband
-    return nil if self.head.spouse.nil?
+    return nil if self.head.nil? || self.head.spouse.nil?
     return self.head.male? ? self.head : self.head.spouse
   end
   
   # Wife of family as Member object, nil if single
   def wife
-    return nil if self.head.spouse.nil?
+    return nil if self.head.nil? || self.head.spouse.nil?
     return self.head.female? ? self.head : self.head.spouse
   end
   
@@ -135,16 +135,19 @@ class Family < ActiveRecord::Base
   end
   
  # Creating a new family ==> Need to create the member record for head
-  def create_family_head_member
+  def create_family_head
     head = Member.create(:name=>name, :last_name=>last_name, :first_name=>first_name,
             :middle_name => middle_name,
-            :status_id=>status_id, :residence_location_id=>residence_location_id, :family =>self, :sex=>'M')
-    if ! head.valid?
+            :status_id=>status_id, 
+            :residence_location_id=>residence_location_id, 
+            :family =>self, 
+            :sex=>'M')
+    if !head.valid?
       errors.add(:head, "Unable to create head of family")
       raise ActiveRecord::Rollback
     end   
     self.update_attributes(:head => head)  # Record newly-created member as the head of family
-
+    return head
   end
 
   # Like member current location, and will be the same if both spouses have same current_location,
