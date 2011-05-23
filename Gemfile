@@ -50,8 +50,10 @@ group :development, :test do
 end
 
 group :test do
-gem "spork", '0.9.0.rc7'
+  gem "spork", '0.9.0.rc7'
 #  gem 'cover_me'
+  gem "shoulda-matchers"
+
   gem "autotest"
   gem "redgreen"
   gem "test-unit"#, "1.2.3"

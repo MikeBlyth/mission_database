@@ -51,11 +51,11 @@ class Member < ActiveRecord::Base
   belongs_to :work_location, :class_name => "Location"#, :foreign_key => "work_location_id"
 #  belongs_to :employment_status
   belongs_to :status
-  validates_presence_of :last_name, :first_name, :name
+  validates_presence_of :last_name, :first_name, :name, :family
   validates_uniqueness_of :spouse_id, :allow_blank=>true
-  validate :family_record_exists
+#  validate :family_record_exists
   validate :valid_spouse
-  validates_uniqueness_of :name, :id
+  validates_uniqueness_of :name
 
   after_initialize :inherit_from_family
   before_validation :set_indexed_name_if_empty
@@ -256,7 +256,7 @@ class Member < ActiveRecord::Base
     #   newly-created records with an invalid ID. If we say ...Family.find(family_id),
     #   it fails when id = nil, so we resort to Family.find_by_id(family_id)
     errors.add(:family, "must belong to an existing family") unless 
-        family_id && Family.find_by_id(family_id)
+        family_id # && Family.exists?(family_id)
   end
 
   # Validate spouse based on opposite sex, age, single ...

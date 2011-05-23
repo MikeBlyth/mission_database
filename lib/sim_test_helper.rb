@@ -236,15 +236,16 @@ module SimTestHelper
   # not be able to delete a status record if there are still members who have that status.
   # Example: test_check_before_destroy(:status, :member)
   def test_check_before_destroy(parent, child)
+    # Ensure that can destroy parent without child
     @parent = Factory(parent)
-    @other_parent = Factory((parent.to_s+'_unspecified').to_sym)
-    @child = Factory(child, parent=>@other_parent)
     lambda do
       @parent.destroy
     end.should change(parent.to_s.camelcase.constantize, :count).by(-1)
   
-    @child = Factory(child)
-    @child.update_attribute(parent, @parent)
+    @parent = Factory(parent)
+    # Stub so that it appears @parent does have child records.
+    @parent.stub(child.to_s.pluralize).and_return([1])
+    @parent.stub(child).and_return([1])
     lambda do
       @parent.destroy
     end.should_not change(parent.to_s.camelcase.constantize, :count)

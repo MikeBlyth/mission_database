@@ -14,8 +14,20 @@ describe Member do
 
   describe 'does basic validation' do
     before(:each) do
+<<<<<<< Updated upstream
+#      @status = Factory.stub(:status)
+#      @head = Factory.build(:member)
+#      @family = Factory.create(:family, :status=> @status, :head=>@head)
+##      @head = @family.head
+#      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
+#                              #   This second family member @member is *not* saved yet
+      @family = Factory(:family)
+      @head = Factory(:member, :family=>@family)
+      @family.update_attribute(:head, @head)
+=======
       @family = Factory.stub(:family)
       @head = Factory.stub(:member, :family=>@family)
+>>>>>>> Stashed changes
       @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
                               #   This second family member @member is *not* saved yet
     end    
@@ -44,6 +56,25 @@ describe Member do
       @member.should be_valid
     end
 
+<<<<<<< Updated upstream
+    it "is invalid without a family_id" do
+      @member.family_id = nil
+      @member.should_not be_valid
+    end
+
+    it "is invalid without a matching family" do
+      @member.family_id = 999
+      @member.should_not be_valid
+    end
+
+    it "is invalid if full name already exists in database" do
+      @family.head.should == @head
+      @member.name  = @family.head.name
+      @member.should_not be_valid
+    end
+
+=======
+>>>>>>> Stashed changes
   end # basic validation
 
   describe "deletion protect:" do
