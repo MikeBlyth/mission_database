@@ -173,6 +173,28 @@ module SimTestHelper
     end
   end
 
+  def finds_recent(model)
+    model_sym = model.to_s.downcase.to_sym
+    describe 'finds recent' do
+      before(:each) do
+        member = Factory(:member_without_family)
+        @old = Factory(model_sym, :member=>member, :updated_at=>Date.today-100.days)
+        @new = Factory(model_sym, :member=>member, :updated_at=>Date.today)
+        model.count.should == 2
+      end
+      
+      it 'with specified duration' do
+        model.recently_updated(10).all.should == [@new]
+        model.recently_updated(120).all.should =~ [@new, @old]
+      end
+      
+      it 'with default duration' do
+        model.recently_updated.all.should == [@new]
+      end
+    end # describe 'finds recent'       
+  end #finds recent
+    
+
   def test_init
     SimTestHelper::seed_tables
     @f = Factory.create(:family)

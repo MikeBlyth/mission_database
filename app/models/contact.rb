@@ -40,6 +40,10 @@ class Contact < ActiveRecord::Base
     end  
   end
 
+  def self.recently_updated(since=10)
+    return self.where('updated_at > ?', Date.today - since.days).includes(:member)
+  end
+
   # Generate hash of contact info ready for display;
   # * join multiple phones and emails
   # * add "private" notice if needed

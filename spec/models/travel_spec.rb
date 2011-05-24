@@ -1,3 +1,5 @@
+include SimTestHelper
+
 describe Travel do
 
   before(:each) do
@@ -14,6 +16,8 @@ describe Travel do
     @object.should_not be_valid
   end
   
+  it {finds_recent(Travel)}
+
   describe "with guest travelers" do
 
     before(:each) do

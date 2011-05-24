@@ -86,6 +86,11 @@ class Travel < ActiveRecord::Base
     return self.includes(:member).where("date > ? AND (date <= ? )", Date.today, 
         Date.today + Settings.travel.pending_window)
   end
+
+  # This returns recently *updated* travel records
+  def self.recently_updated(since=10)
+    return self.where('updated_at > ?', Date.today - since.days).includes(:member)
+  end
   
   def self.current_visitors
 #    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR travels.member_id IS NULL', Status.field_statuses)
