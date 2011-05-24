@@ -65,10 +65,11 @@ describe MembersController do
   describe 'filtering by status' do
 
     before(:each) do
+      Member.delete_all  
       seed_statuses
       status_codes = Status.all.map {|status| status.code}
       @status_groups = {:active => ['on_field', 'home_assignment'],
-                  :field => ['on_field'],
+                  :on_field => ['on_field'],
                   :home_assignment => ['home_assignment'],
                   :home_assignment_or_leave => ['home_assignment', 'leave'],
                   :pipeline => ['pipeline'],
@@ -84,10 +85,10 @@ describe MembersController do
     it "should select members with the right status" do
       @status_groups.each do | category, statuses |
         session[:filter] = category.to_s
-        selected = Member.where(controller.conditions_for_collection)
+        selected = Member.where(controller.conditions_for_collection).all
         if selected.count != statuses.count
           puts "Error: looking for category '#{category}' statuses #{statuses}, found"
-          selected.each {|m| puts "--#{m.status.code}"}
+          selected.each {|m| puts "--#{m.status}"}
         end
         selected.count.should == statuses.count
         selected.each do |m|

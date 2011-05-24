@@ -210,15 +210,13 @@ puts "@json_resp = #{@json_resp}"
 # DEBT: This method is a weak point because it has to be manually adjusted to fit
 # any changes in status categories. 
   def conditions_for_collection
-    target_category = session[:filter]
-    target_statuses = case target_category
-      when 'active' then Status.active_statuses
-      when 'field'  then Status.field_statuses
-      when 'home_assignment' then Status.home_assignment_statuses 
-      when 'home_assignment_or_leave' then Status.statuses_by_category('home_assignment or leave')  
-      when 'pipeline' then Status.pipeline_statuses
-      when 'other' then Status.other_statuses
-      else return "TRUE"  # to match everything if not a recognized status category
+    target_group = session[:filter]
+    existing_groups = %w(active on_field home_assignment home_assignment_or_leave pipeline other)
+    return 'true' unless existing_groups.include?(target_group.to_s)
+    if target_group == 'other'  # treat separately since won't work in Status#statuses_by_category
+      target_statuses = Status.other_statuses
+    else
+      target_statuses = Status.statuses_by_category(target_group.to_s.gsub('_or_', ' or '))
     end
     return ['members.status_id IN (?)', target_statuses]
   end   # conditions_for_collection
