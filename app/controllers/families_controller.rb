@@ -73,28 +73,16 @@ class FamiliesController < ApplicationController
   def edit_inline
   end  
 
+# Generate a filter string for use in Family.where(conditions_for_collection)...
   def conditions_for_collection
-    status_groups = {'active' => %w( field home_assignment mkfield),
-                'field' => %w( field mkfield visitor),
-                'home_assignment' => %w( home_assignment ),
-                'home_assignment_or_leave' => %w( home_assignment leave),
-                'pipeline' => %w( pipeline ),
-                'visitor' => %w( visitor visitor_past ),
-                'other' => %w( alumni college mkadult retired deceased mkalumni unspecified )
-                }
-      # The groups reflect the status codes matched by the various filters. So, for example,
-      #   the filter "active" (or :active) should trigger a selection string that includes the statuses with codes
-      #   'field', 'home_assignment', and 'mkfield'
-
-    target_statuses = status_groups[session[:filter]]
-    return "TRUE" if target_statuses.nil?
-    # Find all status records that match that filter
-    matches = [] # This will be the list of matching status ids. 
-    Status.where("statuses.code IN (?)", target_statuses).each do |status|
-      matches << status.id 
+    target_statuses = Status.statuses_by_group(session[:filter])
+    if target_statuses.is_a?(Array)
+      return ['families.status_id IN (?)', target_statuses]
+    else
+      return target_statuses
     end
-    return ['families.status_id IN (?)', matches]
-  end  
+  end   # conditions_for_collection
+
 
   def create_respond_to_html 
 #puts "create_respond_to_html: @record=#{@record}, valid=#{@record.valid?}, path=#{edit_member_path @record.head}"

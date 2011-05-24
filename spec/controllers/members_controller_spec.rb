@@ -98,6 +98,10 @@ describe MembersController do
       # An invalid group should return all the members.
       session[:filter] = 'ALL!'
       Member.where(controller.conditions_for_collection).count.should == Member.count
+      # A filter=nil should return all the members.
+      session[:filter] = nil
+puts "conditions=#{controller.conditions_for_collection}"      
+      Member.where(controller.conditions_for_collection).count.should == Member.count
       
     end    #  it "should select members with active status"
 

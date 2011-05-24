@@ -202,23 +202,13 @@ puts "@json_resp = #{@json_resp}"
   end
 
 # Generate a filter string for use in Member.where(conditions_for_collection)...
-# The twist is that we have to use member.status_id in the search string since ActiveScaffold
-# is not doing a joined search and we don't have access to the status_code at the time of the 
-# filtering. So we either have to be sure to have the record ids pre-coded (brittle) or dynamically
-# determine them based on the codes such as 'field' or "home_assignment".
-#
-# DEBT: This method is a weak point because it has to be manually adjusted to fit
-# any changes in status categories. 
   def conditions_for_collection
-    target_group = session[:filter]
-    existing_groups = %w(active on_field home_assignment home_assignment_or_leave pipeline other)
-    return 'true' unless existing_groups.include?(target_group.to_s)
-    if target_group == 'other'  # treat separately since won't work in Status#statuses_by_category
-      target_statuses = Status.other_statuses
+    target_statuses = Status.statuses_by_group(session[:filter])
+    if target_statuses.is_a?(Array)
+      return ['members.status_id IN (?)', target_statuses]
     else
-      target_statuses = Status.statuses_by_category(target_group.to_s.gsub('_or_', ' or '))
+      return target_statuses
     end
-    return ['members.status_id IN (?)', target_statuses]
   end   # conditions_for_collection
 
 end

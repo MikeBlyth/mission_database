@@ -23,7 +23,6 @@ describe 'Contacts' do
         member = factory_member_basic
         visit members_path
         click_link "as_members-edit-#{member.id}-link"
-##save_and_open_page
         within(:xpath, "//li[@id='as_members-#{member.id}-contacts-subform']") do
           @form_data.each {|key, value| fill_in key.humanize, :with=>value}
           check 'Phone private'
