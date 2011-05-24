@@ -18,13 +18,16 @@ include SimTestHelper
       integration_test_sign_in(:admin=>true)
       @head = factory_member_basic
       @family = @head.family
+#puts "Start seed: #{Time.now}"
       seed_tables
     end  
 
     it "should create a new user with all values filled in" do
       lambda do
+#puts "Start visit new_member: #{Time.now}"
         visit new_member_path
 # save_and_open_page
+#puts "Start filling in: #{Time.now}"
         fill_in "Last name", :with => "#{@head.last_name}"
         select("#{@family.name}", :from=> 'record[family]')
         fill_in "First name", :with => "Samuel"
@@ -37,7 +40,7 @@ include SimTestHelper
         f = find_field('record[status]')
         select 'On field', :from=>'record[status]'
         select 'Ministry', :from=>'record[ministry]'
-#        puts "f=#{f.native}"
+#        #puts "f=#{f.native}"
 #        select_second_option(:record_status_id)
 #        select_second_option(:ministry_id)
         fill_in 'Ministry comment', :with=> "ministry comment"
@@ -55,10 +58,13 @@ include SimTestHelper
         select 'Career'
         fill_in "Date active", :with => "2000-02-01"
         fill_in "record[personnel_data][comments]", :with => "What a lot of info to fill in."
+
+#puts "Start click create: #{Time.now}"
         click_button "Create"
       end.should change(Member, :count).by(1)
+#puts "Start checking: #{Time.now}"
       m = Member.last
-#puts "After filled in, member=#{m.attributes}"
+##puts "After filled in, member=#{m.attributes}"
       m.family_id.should == @family.id
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
@@ -83,9 +89,12 @@ include SimTestHelper
       m.personnel_data.employment_status.description.should =~ /Career/
       m.personnel_data.date_active.should == Date.new(2000,2,1)
       m.personnel_data.comments.should == 'What a lot of info to fill in.'
+#puts "end checking: #{Time.now}"
+
     end # it should
 
     it "should create a new member with minimal values" do
+#puts "Start create w minimal values: #{Time.now}"
       lambda do
         visit new_member_path
         fill_in "Last name", :with => "#{@head.last_name}"
@@ -96,6 +105,7 @@ include SimTestHelper
     end # it should
 
     it "editing user should change all values correctly" do
+#puts "Start editing: #{Time.now}"
       @new_family = Factory(:family, :name=>'New Family')
       birth_date = Date.new(2000,1,1)
       temp_loc_from = Date.new(2011,1,1)
@@ -142,10 +152,12 @@ include SimTestHelper
         select 'Career'
       end
 #save_and_open_page
+#puts "Start update: #{Time.now}"
       click_button "Update"
+#puts "End update: #{Time.now}"
 
       m = @head.reload
-#puts "After filled in, member=#{m.attributes}"
+##puts "After filled in, member=#{m.attributes}"
       m.family_id.should == @new_family.id
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
@@ -183,12 +195,14 @@ include SimTestHelper
     describe "adding new member" do
     
       before(:each) do 
+#puts "Start visit new_member_path: #{Time.now}"
         visit new_member_path
         fill_in "Last name", :with => "#{@head.last_name}"
         fill_in "First name", :with => "Sally"
       end        
 
       it "should add a corresponding health_data record" do
+#puts "Start add new: #{Time.now}"
         lambda do
           click_button "Create"
         end.should change(HealthData, :count).by(1)

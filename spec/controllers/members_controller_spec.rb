@@ -16,10 +16,10 @@ end
 describe MembersController do
   
   before(:each) do
-    @family = Factory(:family)
-    @member = Factory(:member, :family=>@family)
-    @family.update_attribute(:head, @member)
-    Factory(:country_unspecified)
+  #  @family = Factory(:family)
+  #  @member = Factory(:member, :family=>@family)
+  #  @family.update_attribute(:head, @member)
+  #  Factory(:country_unspecified)
   end
 
   describe "authentication before controller access" do
@@ -38,12 +38,14 @@ describe MembersController do
       
       it "should allow access to 'destroy'" do
         # Member.should_receive(:destroy) # Why can't this work ??
+        @member = Factory(:member_without_family)
         put :destroy, :id => @member.id
         response.should_not redirect_to(signin_path)
       end
       
       it "should allow access to 'update'" do
         # Member.should_receive(:update)
+        @member = Factory(:member_without_family)
         put :update, :id => @member.id, :record => @member.attributes, :member => @member.attributes
         response.should_not redirect_to(signin_path)
       end
@@ -100,7 +102,6 @@ describe MembersController do
       Member.where(controller.conditions_for_collection).count.should == Member.count
       # A filter=nil should return all the members.
       session[:filter] = nil
-puts "conditions=#{controller.conditions_for_collection}"      
       Member.where(controller.conditions_for_collection).count.should == Member.count
       
     end    #  it "should select members with active status"
@@ -110,7 +111,8 @@ puts "conditions=#{controller.conditions_for_collection}"
   describe 'Handling spouses' do
   
     before(:each) do
-      @spouse = Factory.build(:member, :family_id=>@family.id, :sex=>@member.other_sex, :spouse=>@member)
+      @member = Factory(:member_without_family)
+      @spouse = Factory.build(:member_without_family, :sex=>@member.other_sex, :spouse=>@member)
       @user = Factory(:user, :admin=>true)
       test_sign_in(@user)
     end  

@@ -17,8 +17,6 @@ end
 describe FamiliesController do
   
   before(:each) do
-#    @family = Factory(:family)
-#    @member = @family.head
   end
 
   describe "authentication before controller access" do
