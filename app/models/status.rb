@@ -89,6 +89,15 @@ class Status < ActiveRecord::Base
         target_statuses = self.statuses_by_category(target_group)
       end
     end
+    
+    def self.filter_condition_for_group(target_group)
+      target_statuses = self.statuses_by_group(target_group)
+      if target_statuses.is_a?(Array)
+        return ['status_id IN (?)', target_statuses]
+      else
+        return target_statuses
+      end
+    end      
 
   def to_label
     self.to_s

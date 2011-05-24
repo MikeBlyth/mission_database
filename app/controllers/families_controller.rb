@@ -70,19 +70,10 @@ class FamiliesController < ApplicationController
     redirect_to new_member_path
   end
 
-  def edit_inline
-  end  
-
 # Generate a filter string for use in Family.where(conditions_for_collection)...
   def conditions_for_collection
-    target_statuses = Status.statuses_by_group(session[:filter])
-    if target_statuses.is_a?(Array)
-      return ['families.status_id IN (?)', target_statuses]
-    else
-      return target_statuses
-    end
+    Status.filter_condition_for_group(session[:filter])
   end   # conditions_for_collection
-
 
   def create_respond_to_html 
 #puts "create_respond_to_html: @record=#{@record}, valid=#{@record.valid?}, path=#{edit_member_path @record.head}"

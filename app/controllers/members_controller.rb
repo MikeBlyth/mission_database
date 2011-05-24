@@ -68,14 +68,6 @@ class MembersController < ApplicationController
    config.create.link.page = false 
   end
 
-
-  def edit_inline
-    respond_to do |format|
-      puts "**** Edit Inline"
-      format.js
-    end
-  end
-
   # Given params hash, change :something_id to :something
   def convert_keys_to_id(params, *keys_to_change)
     return params if keys_to_change.nil? || params.nil?
@@ -203,13 +195,9 @@ puts "@json_resp = #{@json_resp}"
 
 # Generate a filter string for use in Member.where(conditions_for_collection)...
   def conditions_for_collection
-    target_statuses = Status.statuses_by_group(session[:filter])
-    if target_statuses.is_a?(Array)
-      return ['members.status_id IN (?)', target_statuses]
-    else
-      return target_statuses
-    end
+    Status.filter_condition_for_group(session[:filter])
   end   # conditions_for_collection
+
 
 end
   
