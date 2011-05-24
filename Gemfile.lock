@@ -40,7 +40,7 @@ GEM
     autotest (4.4.6)
       ZenTest (>= 4.4.1)
     builder (2.1.2)
-    cancan (1.6.4)
+    cancan (1.6.5)
     capybara (0.4.1.2)
       celerity (>= 0.7.9)
       culerity (>= 0.2.4)
@@ -158,7 +158,6 @@ GEM
       json_pure
       rubyzip
     settingslogic (2.0.6)
-    shoulda-matchers (1.0.0.beta2)
     spork (0.9.0.rc7)
     term-ansicolor (1.0.5)
     test-unit (2.3.0)
@@ -200,6 +199,5 @@ DEPENDENCIES
   sass
   selenium-client (>= 1.2.18)
   settingslogic
-  shoulda-matchers
   spork (= 0.9.0.rc7)
   test-unit

@@ -102,7 +102,7 @@ describe FieldTerm do
     end
 
     it 'identifies future terms' do
-      @future.each {|f| puts "#{f.best_start_date}-#{f.best_end_date}"; f.future?.should be_true}
+      @future.each {|f| f.future?.should be_true}
       (@current+@past).each {|f| f.future?.should be_false}
     end
 

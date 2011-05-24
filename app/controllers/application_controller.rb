@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
+# puts "CanCan AccessDenied #{exception.message}\n\tsigned in=#{signed_in?} as #{current_user}, #{current_user.admin if current_user}"
 # puts "CanCan AccessDenied #{exception.message}"
     if !signed_in? 
       redirect_to signin_path

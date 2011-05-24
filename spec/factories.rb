@@ -180,6 +180,15 @@ FactoryGirl.define do
     end
   end
 
+    factory :member_without_family, :parent=>:member do
+      sequence(:last_name) {|n| "LastNameA_#{n}" }
+      first_name "King"  
+      middle_name "MiddleName"  
+      short_name "Shorty"
+      name {"#{last_name}, #{first_name}"}
+  #    family Factory.stub(:family)  # Works in console but not in Spork
+    end      
+
     factory :member_with_details, :parent=> :member do
       middle_name 'Midname'
       short_name 'Shorty'

@@ -11,6 +11,7 @@ include AuthSpecHelper
 def generic(controller, objectsym)
   describe controller do
     it "should limit access to signed-in users" do
+#puts "**** Testing #{controller}"   
       object = Factory(objectsym)
       check_authentication(object)
     end

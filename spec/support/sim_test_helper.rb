@@ -1,6 +1,6 @@
-require Rails.root.join('spec/factories')
-#require 'application_helper'
-
+#require Rails.root.join('spec/factories')
+#require Rails.root.join('spec/spec_helper')
+puts "**** INCLUDING SIMTESTHELPER ***"
 module SimTestHelper
 #  include ApplicationHelper
   def create_one_unspecified_code(type, params={})
@@ -82,6 +82,14 @@ module SimTestHelper
     family.update_attribute(:head, head)
     return head
   end    
+
+  # A member that can be saved without saving a family
+  # Note that if retrieved from the database it will no longer have a family!
+  def build_member_without_family
+    member = Factory.build(:member_without_family)
+    member.stub(:family).and_return(Factory.stub(:family))
+    return member
+  end
 
   def factory_family_full(params={})
     head = factory_member_basic

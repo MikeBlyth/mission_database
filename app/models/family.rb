@@ -181,7 +181,7 @@ class Family < ActiveRecord::Base
   def name_not_exists
     if self.new_record?
       if Member.find_by_name(self.name)
-        errors.add(:name, "#{name} already exists for family or member. Modify name to avoid duplication.")
+        errors.add(:name, "There is already a member named #{name}. Modify name to avoid duplication.")
         return false
       else
         return true

@@ -14,29 +14,47 @@ describe Family do
       @family= Factory.build(:family)
     end    
 
-  it "is valid with valid attributes" do
-    @family.should be_valid
-  end
+    it "is valid with valid attributes" do
+      @family.should be_valid
+    end
 
-    it { should validate_presence_of(:first_name) }
-    it { should validate_presence_of(:last_name) }
-    it { should_not validate_presence_of(:name) }
+#    it { should validate_presence_of(:first_name) }
+#    it { should validate_presence_of(:last_name) }
+#    it { should_not validate_presence_of(:name) }
 
-    describe "uniqueness of name" do
-      before(:each) {Factory(:family)}
-      it { should validate_uniqueness_of(:name) }
-      it { should validate_uniqueness_of(:sim_id) }
+#    describe "uniqueness of name" do
+#      before(:each) {Factory(:family)}
+#      it { should validate_uniqueness_of(:name) }
+#      it { should validate_uniqueness_of(:sim_id) }
+#    end
+
+    it "is not valid without a first name" do
+      @family.first_name = ''
+      @family.should_not be_valid
+      @family.errors[:first_name].should_not be_nil
+    end
+
+    it "is not valid without a last name" do
+      @family.last_name = ''
+      @family.should_not be_valid
+      @family.errors[:last_name].should_not be_nil
+    end
+
+    it "is invalid with duplicate name" do
+      @family.save
+      @new = Factory.build(:family, :name=>@family.name)
+      @new.should_not be_valid
+      @family.errors[:name].should_not be_nil
     end
 
     it "is invalid if new and name matches existing member" do
       # This is not a straight check for duplication, but checking whether the FAMILY.name
       # already exists as a MEMBER.name. 
-      @head = Factory(:member, :family=>@family, :name=>@family.name) #has to be saved since method accesses database
-      @family.stub(:head).and_return(@head)
-      @family.stub(:name).and_return("Any name")
-      @new_family = Factory.build(:family, :name=>@head.name)
-      @new_family.should_not be_valid
-      @family.errors[:name].should be_true    # ie there is an error against Name
+      @other_member = build_member_without_family #has to be saved since method accesses database
+      @other_member.save
+      @family[:name] = @other_member.name
+      @family.valid?
+      @family.errors[:name].to_s.should =~ /already a member named/    # ie there is an error against Name
     end
   end # basic validation
   

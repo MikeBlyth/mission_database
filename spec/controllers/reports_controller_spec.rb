@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ReportsController do
-    render_views
+ #   render_views
   include ApplicationHelper
 
 #  reports = %w(bloodtypes birthdays birthday_calendar phone_email travel_schedule)

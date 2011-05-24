@@ -51,7 +51,6 @@ describe "LayoutLinks" do
       page.should have_link("Clean database")
       page.should have_link("Send family summaries")
       f = find_link("Send family summaries")
-      puts f.text
     end
 
   end # "when signed in as administrator"

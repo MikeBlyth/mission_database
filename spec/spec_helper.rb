@@ -62,8 +62,6 @@ puts "SPORK PREFORK ..."
       click_button "Sign in"
   end
 
-#>  require Rails.root+'app/helpers/application_helper.rb'
-  require Rails.root+'lib/sim_test_helper.rb'
 #  require 'cover_me'  # This is for CoverMe code coverage
 
   # This line is ONLY needed when tests require the full set of tables (countries, locations, and so on) found
@@ -75,8 +73,6 @@ end # Spork.prefork
 
 Spork.each_run do
 puts "SPORK EACH_RUN ..."
-  load Rails.root+'app/models/member.rb'
-  load Rails.root+'lib/sim_test_helper.rb'
 #>  load Rails.root+'app/helpers/application_helper.rb'
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by

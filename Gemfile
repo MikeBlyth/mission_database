@@ -52,7 +52,7 @@ end
 group :test do
   gem "spork", '0.9.0.rc7'
 #  gem 'cover_me'
-  gem "shoulda-matchers"
+#  gem "shoulda-matchers"
 
   gem "autotest"
   gem "redgreen"
