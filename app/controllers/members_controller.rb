@@ -206,57 +206,21 @@ puts "@json_resp = #{@json_resp}"
 # is not doing a joined search and we don't have access to the status_code at the time of the 
 # filtering. So we either have to be sure to have the record ids pre-coded (brittle) or dynamically
 # determine them based on the codes such as 'field' or "home_assignment".
-# 
-  # ToDo: Should Active and OnField be determined by those flags in the status objects themselves rather
-  #    than by using these pre-determined status codes?
+#
+# DEBT: This method is a weak point because it has to be manually adjusted to fit
+# any changes in status categories. 
   def conditions_for_collection
-    status_groups = {'active' => %w( field home_assignment mkfield ),
-                'field' => %w( field mkfield umbrella visitor),
-                'home_assignment' => %w( home_assignment ),
-                'home_assignment_or_leave' => %w( home_assignment leave),
-                'pipeline' => %w( pipeline ),
-                'visitor' => %w( visitor visitor_past ),
-                'other' => %w( alumni college mkadult retired deceased mkalumni unspecified )
-                }
-      # The groups reflect the status codes matched by the various filters. So, for example,
-      #   the filter "active" (or :active) should trigger a selection string that includes the statuses with codes
-      #   'field', 'home_assignment', and 'mkfield'
-
-    target_statuses = status_groups[session[:filter]]
-#puts "Conditions for collection: filter=#{session[:filter]}"
-#puts "conditions_for_collection=TRUE" if target_statuses.nil?
-    return "TRUE" if target_statuses.nil?
-    # Find all status records that match that filter
-    matches = [] # This will be the list of matching status ids. 
-    Status.where("statuses.code IN (?)", target_statuses).each do |status|
-      matches << status.id 
+    target_category = session[:filter]
+    target_statuses = case target_category
+      when 'active' then Status.active_statuses
+      when 'field'  then Status.field_statuses
+      when 'home_assignment' then Status.home_assignment_statuses 
+      when 'home_assignment_or_leave' then Status.statuses_by_category('home_assignment or leave')  
+      when 'pipeline' then Status.pipeline_statuses
+      when 'other' then Status.other_statuses
+      else return "TRUE"  # to match everything if not a recognized status category
     end
-#puts "conditions_for_collection=#{['members.status_id IN (?)', matches]}"
-    return ['members.status_id IN (?)', matches]
-#
-# This is how to do it using the pre-determined record ids, which are determined by seeds.rb
-# but could be changed as users add or remove statuses!
-#    selector = case
-#    when session[:filter] == 'active'
-#      ['members.status_id IN (?)', ['2','3','5']]
-#    when session[:filter] == 'field'
-#      ['members.status_id IN (?)', ['2','3', '15']]
-#    when session[:filter] == 'home_assignment'
-#      ['members.status_id IN (?)', ['5']]
-#    when session[:filter] == 'home_assignment_or_leave'
-#      ['members.status_id IN (?)', ['5','6']]
-#    when session[:filter] == 'pipeline'
-#      ['members.status_id IN (?)', ['12']]
-#    when session[:filter] == 'visitor'
-#      ['members.status_id IN (?)', ['14', '15']]
-#    when session[:filter] == 'other'
-#      ['members.status_id NOT IN (?)', ['2','3','5','6','12', '14', '15']]
-#    else
-# #     ['?', true]
-#      ['members.id > 0']  # no filter; use this if can't get "true" to work
-#    end
-#
-#  return  selector
+    return ['members.status_id IN (?)', target_statuses]
   end   # conditions_for_collection
 
 end

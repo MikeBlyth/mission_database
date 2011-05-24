@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110518071651) do
+ActiveRecord::Schema.define(:version => 20110524121604) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -235,6 +235,9 @@ ActiveRecord::Schema.define(:version => 20110518071651) do
     t.datetime "updated_at"
     t.boolean  "active"
     t.boolean  "on_field"
+    t.boolean  "pipeline"
+    t.boolean  "leave"
+    t.boolean  "home_assignment"
   end
 
   add_index "statuses", ["code"], :name => "index_status_codes_on_code", :unique => true

@@ -1,15 +1,18 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110524121604
 #
 # Table name: statuses
 #
-#  id          :integer         not null, primary key
-#  description :string(255)
-#  code        :string(255)
-#  created_at  :datetime
-#  updated_at  :datetime
-#  active      :boolean
-#  on_field    :boolean
+#  id              :integer         not null, primary key
+#  description     :string(255)
+#  code            :string(255)
+#  created_at      :datetime
+#  updated_at      :datetime
+#  active          :boolean
+#  on_field        :boolean
+#  pipeline        :boolean
+#  leave           :boolean
+#  home_assignment :boolean
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
