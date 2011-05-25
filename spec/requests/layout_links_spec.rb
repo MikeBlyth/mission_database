@@ -49,6 +49,7 @@ describe "LayoutLinks" do
       visit root_path
       page.should have_link("Users")
       page.should have_link("Clean database")
+      page.should have_link("Send travel reminders")
       page.should have_link("Send family summaries")
       f = find_link("Send family summaries")
     end

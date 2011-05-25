@@ -30,7 +30,4 @@
           - flash.each do |key, value| 
             %div{:class=>"flash #{key}" }= value
       #main= yield 
-      - if Rails.env.development? || Rails.env.test?  
-        #debug 
-          = debug(params) 
 

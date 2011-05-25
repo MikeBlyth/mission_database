@@ -41,7 +41,7 @@ class Contact < ActiveRecord::Base
   end
 
   def self.recently_updated(since=10)
-    return self.where('updated_at > ?', Date.today - since.days).includes(:member)
+    return self.where("contacts.updated_at > ?", Date.today - since.days).includes(:member)
   end
 
   # Generate hash of contact info ready for display;
@@ -59,13 +59,14 @@ class Contact < ActiveRecord::Base
             }
   end
   
-  # Make string form of 'summary', each line beginning with <prefix> 
+  # Make string form of 'summary', each line delimited by <separator> and beginning with <prefix> 
+  #   (prefix occurs before every line including the first, while separator only BETWEEN lines)
   # Example if prefix = "\t"
   # "\tPhone: 0803-333-3333\n\tEmail: my@example.com\n\t ..."
-  def summary_text(prefix='')
+  def summary_text(prefix='', separator="\n")
     fields = ['Phone', 'Email', 'Skype', 'Photos', 'Blog', 'Other website', 'Facebook']
     summary_hash = self.summary
-    return prefix + (fields.map {|f| "#{f}: #{summary_hash[f]}"}.join("\n"+prefix))
+    return prefix + (fields.map {|f| "#{f}: #{summary_hash[f]}"}.join("#{separator}#{prefix}"))
   end
   
   def email_public

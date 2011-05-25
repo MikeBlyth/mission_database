@@ -1,0 +1,12 @@
+.active-scaffold.contact_updates
+  %h2 Updated Contacts
+  %p 
+    These contacts have been recently updated. Not every piece of information
+    in any contact has been changed, and there may be some contacts where in
+    fact nothing has changed (if the record was updated in the database but
+    the information was not changed).
+  - if !@contacts.empty?
+    - @contacts.each do |contact|
+      %p.name= contact.member.name
+      %p.contact_type= "Contact type: #{contact.contact_type}"
+      %p.contact_info= contact.summary_text('',"<br>").html_safe

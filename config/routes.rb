@@ -28,6 +28,7 @@ SIM::Application.routes.draw do
   match 'reports/travel_calendar' => 'reports#travel_calendar', :as => 'travel_calendar_report'
   match 'reports/birthday_travel_calendar' => 'reports#birthday_travel_calendar', :as => 'birthday_travel_calendar_report'
   match 'reports/whereis' => 'reports#whereis', :as => 'whereis_report'
+  match 'reports/contact_updates' => 'reports#contact_updates', :as => 'contact_updates'
   match 'reports/index' => 'reports#index', :as => 'reports'
   match 'members/list_field_terms' => 'members#list_field_terms', :as=> :list_field_terms
   match 'reports/:action(.:format)' => 'reports#:action'

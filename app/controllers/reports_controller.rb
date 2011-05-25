@@ -81,6 +81,10 @@ class ReportsController < ApplicationController
   end
 
 
+  def contact_updates
+    @contacts = Contact.recently_updated
+  end
+
    # Blood Type Reports
    def bloodtypes
      selected = Member.select("family_id, last_name, first_name, middle_name, status_id, id, child")

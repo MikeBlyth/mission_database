@@ -103,7 +103,6 @@ describe "Report" do
     end
     
     it "reports location of someone not in database but in travel record" do
-#      pending
       @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true, :member=>nil, 
           :other_travelers=>"Santa Claus")
       visit reports_path # whereis_report_path

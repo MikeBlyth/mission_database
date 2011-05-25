@@ -139,5 +139,17 @@ Feature: report generation
     And I click on "field_terms_pdf"
     Then I should get a "Current and Projected Field Terms" PDF report
     And I should see the member name
+
+  @now    
+  Scenario: Generate contact updates report
+    Given that I am signed in
+    And a one-person family
+    And the family belongs to the organization
+    And a contact record
+    When I click on "Reports"
+    And I click on "contact-updates"
+    Then show me the page
+    And I should get a "Updated Contacts" HTML report
+    And I should see the member name
     
     

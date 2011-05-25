@@ -20,4 +20,8 @@ class ContactType < ActiveRecord::Base
     "#{description}"
   end
 
+  def to_s
+    "#{description}"
+  end
+    
 end
