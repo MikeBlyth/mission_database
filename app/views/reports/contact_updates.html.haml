@@ -7,6 +7,8 @@
     the information was not changed).
     - if !@contacts.empty?
       - @contacts.each do |contact|
-        %p.name= contact.member.name
+        %p.name
+          = contact.member.name
+          = "(updated #{contact.updated_at.to_s(:short)})"
         %p.contact_type= "Contact type: #{contact.contact_type}"
         = render(:partial => "contact", :object=>contact )
