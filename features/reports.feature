@@ -148,7 +148,6 @@ Feature: report generation
     And a contact record
     When I click on "Reports"
     And I click on "contact-updates"
-    Then show me the page
     And I should get a "Updated Contacts" HTML report
     And I should see the member name
     

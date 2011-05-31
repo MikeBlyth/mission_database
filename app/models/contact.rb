@@ -40,7 +40,7 @@ class Contact < ActiveRecord::Base
     end  
   end
 
-  def self.recently_updated(since=10)
+  def self.recently_updated(since=Settings.contacts.updates_window)
     return self.where("contacts.updated_at > ?", Date.today - since.days).includes(:member)
   end
 

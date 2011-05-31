@@ -88,7 +88,7 @@ class ReportsController < ApplicationController
   def send_contact_updates
     @title = 'Send contact updates'
     @contacts = Contact.recently_updated
-    recipients = 'mike@example.org'
+    recipients = Settings.contacts.updates_recipients
     message = Notifier.contact_updates(recipients, @contacts)
     message.deliver
     flash[:notice] = "Sent contact updates."
