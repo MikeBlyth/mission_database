@@ -3,10 +3,13 @@ class StatusesController < ApplicationController
   include AuthenticationHelper
   
   active_scaffold :status do |config|
-    config.columns = [:code, :description, :active, :on_field]
+    config.columns = [:code, :description, :active, :on_field, :pipeline, :leave, :home_assignment]
     config.show.link = false
     config.columns[:description].inplace_edit = true
     config.columns[:active].inplace_edit = true
+    config.columns[:pipeline].inplace_edit = true
+    config.columns[:leave].inplace_edit = true
+    config.columns[:home_assignment].inplace_edit = true
     config.columns[:on_field].inplace_edit = true
     config.columns[:on_field].description = "People with this status are on the field?"
     config.columns[:active].description = "People with this status are active?"
