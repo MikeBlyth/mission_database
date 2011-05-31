@@ -224,4 +224,30 @@ describe Notifier do
     end
       
   end
+
+  describe "contact updates" do
+    before(:each) do
+      @member = Factory.stub(:member)
+      @contact = Factory.stub(:contact, :member=>@member, :updated_at=>Time.now)
+      @member.stub(:contacts).and_return([@contact])
+    end
+
+    it "includes contact name" do
+      message = Notifier.contact_updates('mike@example.com', [@contact])
+#puts "message => #{message}"
+      message.to_s.should match @member.last_name
+    end
+
+    it "includes contact email" do
+      message = Notifier.contact_updates('mike@example.com', [@contact])
+      message.to_s.should match @contact.email_1
+    end
+
+    it "includes message if there are no updates" do
+      message = Notifier.contact_updates('mike@example.com', [])
+      message.to_s.should match "No changes"
+    end
+
+
+  end
 end

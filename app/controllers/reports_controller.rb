@@ -90,7 +90,6 @@ class ReportsController < ApplicationController
     @contacts = Contact.recently_updated
     recipients = 'mike@example.org'
     message = Notifier.contact_updates(recipients, @contacts)
-puts "message => #{message}"
     message.deliver
     flash[:notice] = "Sent contact updates."
     redirect_to reports_path

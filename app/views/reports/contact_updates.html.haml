@@ -1,5 +1,4 @@
 .active-scaffold.contact_updates
-  - puts "View: @contacts=#{@contacts}, @email=#{@email}"
   %h2 Updated Contacts
   %p 
     These contacts have been recently updated. Not every piece of information
@@ -10,8 +9,10 @@
   - if !@contacts.empty?
     - @contacts.each do |contact|
       %p.name
-        = contact.member.name
+        = contact.member.last_name_first(:initial=>true, :short=>true)
         = "(updated #{contact.updated_at.to_s(:date)})"
       %p.contact_type= "Contact type: #{contact.contact_type}"
       = render(:partial => "reports/contact", :object=>contact )
+  - else
+    %p *** No changes recorded ***  
   = (submit_tag "Send") unless @email

@@ -86,7 +86,6 @@ class Notifier < ActionMailer::Base
         @content << "\n"
       end
     end
-#puts "******* Mailing to #{recipients}"
     mail(:to => recipients, :subject=>'Your request for info') do |format|
       format.text {render 'generic'}
       format.html {render 'generic'}
@@ -98,7 +97,7 @@ class Notifier < ActionMailer::Base
     @contacts = contacts
     @email = true
     mail(:to => recipients, :subject=>'Recently updated contact info') do |format|
-      format.text {render 'generic'}
+      format.text {render 'reports/contact_updates'}
       format.html {render 'reports/contact_updates'}
     end 
   end

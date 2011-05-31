@@ -76,7 +76,6 @@ describe ReportsController do
       test_sign_in_fast
     end      
     
-    
     it 'are reviewed' do
       member = Factory(:member_without_family)
       contact = Factory(:contact, :member=>member)
@@ -101,6 +100,8 @@ describe ReportsController do
       mail.to_s.should =~ Regexp.new(member.last_name)
       mail.to_s.should =~ Regexp.new(contact.email_1)
     end
+
+
 
   end # contact updates
 
