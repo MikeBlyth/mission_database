@@ -128,4 +128,12 @@ describe MembersController do
 
   end
   
+  describe 'bug' do
+    it 'bugs' do
+          session[:filter] = 'active'
+          get :index
+        end
+      end
+      
+          
 end

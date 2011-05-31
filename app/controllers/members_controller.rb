@@ -195,7 +195,7 @@ puts "@json_resp = #{@json_resp}"
 
 # Generate a filter string for use in Member.where(conditions_for_collection)...
   def conditions_for_collection
-    Status.filter_condition_for_group(session[:filter])
+    Status.filter_condition_for_group('members', session[:filter])
   end   # conditions_for_collection
 
 

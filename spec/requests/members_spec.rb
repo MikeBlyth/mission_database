@@ -21,6 +21,11 @@ include SimTestHelper
 #puts "Start seed: #{Time.now}"
       seed_tables
     end  
+    
+    it 'avoids "ambiguous status_id" bug' do
+      visit root_path
+      click_link "Active only"
+    end
 
     it "should create a new user with all values filled in" do
       lambda do

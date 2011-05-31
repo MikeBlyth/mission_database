@@ -90,10 +90,10 @@ class Status < ActiveRecord::Base
       end
     end
     
-    def self.filter_condition_for_group(target_group)
+    def self.filter_condition_for_group(table, target_group)
       target_statuses = self.statuses_by_group(target_group)
       if target_statuses.is_a?(Array)
-        return ['status_id IN (?)', target_statuses]
+        return ["#{table}.status_id IN (?)", target_statuses]
       else
         return target_statuses
       end
