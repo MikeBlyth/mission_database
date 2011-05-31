@@ -50,6 +50,11 @@ puts "SPORK PREFORK ..."
     controller.sign_in(user)
   end
 
+  def test_sign_in_fast
+      controller.stub(:authenticate_admin).and_return(:true)
+      controller.stub(:authenticate).and_return(:true)
+  end
+
   def test_sign_out
     controller.sign_out
   end

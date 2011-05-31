@@ -111,7 +111,17 @@ describe "Report" do
       page.should have_content("Santa Claus")
       page.should have_content('isitor')
     end
+  end # Where Is
+  
+  describe 'Contact Update' do
+    before(:each) do
+      integration_test_sign_in(:admin=>true)
+    end   
 
-  end
+    it 'includes Send button' do
+      visit contact_updates_path
+      page.should have_button('Send')
+    end
+  end # 'Contact Update'
 
 end

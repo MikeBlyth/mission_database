@@ -80,11 +80,22 @@ class ReportsController < ApplicationController
     end
   end
 
-
   def contact_updates
+    puts "Contact Updates"
     @contacts = Contact.recently_updated
   end
 
+  def send_contact_updates
+    @title = 'Send contact updates'
+    @contacts = Contact.recently_updated
+    recipients = 'mike@example.org'
+    message = Notifier.contact_updates(recipients, @contacts)
+puts "message => #{message}"
+    message.deliver
+    flash[:notice] = "Sent contact updates."
+    redirect_to reports_path
+  end
+ 
    # Blood Type Reports
    def bloodtypes
      selected = Member.select("family_id, last_name, first_name, middle_name, status_id, id, child")

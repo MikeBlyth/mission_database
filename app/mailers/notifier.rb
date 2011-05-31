@@ -93,6 +93,16 @@ class Notifier < ActionMailer::Base
     end 
   end
 
+  def contact_updates(recipients, contacts)
+    @content = "--Content--"
+    @contacts = contacts
+    @email = true
+    mail(:to => recipients, :subject=>'Recently updated contact info') do |format|
+      format.text {render 'generic'}
+      format.html {render 'reports/contact_updates'}
+    end 
+  end
+
   def travel_mod(recipients)
     @mods = Travel.where("travels.updated_at > ?", Date.today-7.days).includes(:member)
     mail :to => recipients, :subject=>'Travel schedule updates'

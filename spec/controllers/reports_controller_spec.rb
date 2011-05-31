@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ReportsController do
- #   render_views
+   # render_views
   include ApplicationHelper
 
 #  reports = %w(bloodtypes birthdays birthday_calendar phone_email travel_schedule)
@@ -64,11 +64,45 @@ describe ReportsController do
     it 'email contains attachment' do
       get :whereis, @params
       mail = ActionMailer::Base.deliveries.last
+      mail.attachments.should_not be_empty
     end  
 
   end # sends Where Is report by email
 
   # Field Term report: tested in reports.feature
   
+  describe 'contact updates' do
+    before(:each) do
+      test_sign_in_fast
+    end      
+    
+    
+    it 'are reviewed' do
+      member = Factory(:member_without_family)
+      contact = Factory(:contact, :member=>member)
+      get :contact_updates
+
+      assigns[:contacts].should == [contact] 
+      response.should render_template('contact_updates')
+    end
+
+    it 'are emailed' do
+      member = Factory(:member_without_family)
+      contact = Factory(:contact, :member=>member)
+      lambda {post :send_contact_updates}.
+        should change(ActionMailer::Base.deliveries, :length).by(1)  
+    end
+    
+    it 'are shown in the email' do
+      member = Factory(:member_without_family)
+      contact = Factory(:contact, :member=>member)
+      post :send_contact_updates
+      mail = ActionMailer::Base.deliveries.last
+      mail.to_s.should =~ Regexp.new(member.last_name)
+      mail.to_s.should =~ Regexp.new(contact.email_1)
+    end
+
+  end # contact updates
+
 end # describe ReportsController
 
