@@ -140,7 +140,6 @@ Feature: report generation
     Then I should get a "Current and Projected Field Terms" PDF report
     And I should see the member name
 
-  @now    
   Scenario: Generate contact updates report
     Given that I am signed in
     And a one-person family
@@ -148,7 +147,17 @@ Feature: report generation
     And a contact record
     When I click on "Reports"
     And I click on "contact-updates"
-    And I should get a "Updated Contacts" HTML report
+    Then I should get a "Updated Contacts" HTML report
     And I should see the member name
     
+  @now
+  Scenario: Mail the contact updates report
+    Given that I am signed in
+    And a one-person family
+    And the family belongs to the organization
+    And a contact record
+    When I click on "Reports"
+    And I click on "contact-updates"
+    And I click on "Send"
+    Then there should be 1 contact updates email
     
