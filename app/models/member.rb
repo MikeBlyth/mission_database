@@ -470,11 +470,21 @@ class Member < ActiveRecord::Base
   end
 
   def current_travel
-    return Travel.current.where("member_id = ?", self.id)
+    if spouse
+      spouse_travel = Travel.current.where("member_id = ? and with_spouse = ?", spouse_id, true)
+    else
+      spouse_travel = []
+    end
+    return Travel.current.where("member_id = ?", self.id) + spouse_travel
   end
   
   def pending_travel
-    return Travel.pending.where("member_id = ?", self.id)
+    if spouse
+      spouse_travel = Travel.pending.where("member_id = ? and with_spouse = ?", spouse_id, true)
+    else
+      spouse_travel = []
+    end
+    return Travel.pending.where("member_id = ?", self.id) + spouse_travel
   end  
 
 private

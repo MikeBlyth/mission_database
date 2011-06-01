@@ -784,9 +784,32 @@ describe Member do
       @member.current_travel.should == [@current]
     end
     
+    it 'identifies spouse as traveling if accompanied' do
+      spouse = Factory.stub(:member, :spouse=>@member, :sex=>'F')
+      @current.update_attribute(:with_spouse, true)
+      spouse.current_travel.should == [@current]
+    end
+    
+    it 'does not identify spouse as traveling if member traveling alone' do
+      spouse = Factory.stub(:member, :spouse=>@member, :sex=>'F')
+      spouse.current_travel.should == []
+    end
+    
     it 'identifies pending travel' do
       @member.pending_travel.should == [@future]
     end
+
+    it 'identifies pending travel of spouse if member accompanied by spouse' do
+      spouse = Factory.stub(:member, :spouse=>@member, :sex=>'F')
+      @future.update_attribute(:with_spouse, true)
+      spouse.pending_travel.should == [@future]
+    end
+    
+    it 'does not identify pending travel of spouse if member not accompanied by spouse' do
+      spouse = Factory.stub(:member, :spouse=>@member, :sex=>'F')
+      spouse.pending_travel.should == []
+    end
+    
     
   end # 'travel helpers'
   
