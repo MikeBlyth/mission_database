@@ -24,6 +24,7 @@ CALLER_ID = '+14155992671';
 #puts "IncomingController create: params=#{params}"
 # SMS.text("*SQUAWK* #{params[:body]} *SQUAWK*", :to => params[:from])
     CalendarEvent.create(:date=>Time.now, :event => "Received msg with params #{params}")
+puts "Received msg with params #{params}"
     if from_member
       render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
       CalendarEvent.create(:date=>Time.now, :event => "Received msg with params #{params}")
@@ -50,6 +51,7 @@ CALLER_ID = '+14155992671';
 private
 
   def from_member  
+    return true
     Contact.find_by_phone_1(params[:from]) || Contact.find_by_phone_2(params[:from])
   end
 
