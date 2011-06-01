@@ -48,5 +48,6 @@ SIM::Application.configure do
     :domain         => ENV['SENDGRID_DOMAIN']
   }
 
+ENV['TWILIO_ID'] = 'ACe9b242ff1c3e1a3c03e8b283eba854f0'
 end
 
