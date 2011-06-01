@@ -26,6 +26,9 @@ gem "active_scaffold_vho"
 gem 'rack-ssl-enforcer'
 gem 'settingslogic'
 gem 'sass'
+#gem 'sms-rb'
+gem 'twiliolib'
+gem 'sms-rb'
 # gem 'RedCloth'
 
 # Bundle gems for the local environment. Make sure to

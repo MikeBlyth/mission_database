@@ -1,7 +1,10 @@
 SIM::Application.routes.draw do
 
-  resources :sessions, :only => [:new, :create, :destroy]
+# SMS with Twilio
 
+  resources :sms
+
+  resources :sessions, :only => [:new, :create, :destroy]
   get "sessions/new"
 
 #  match '/signup',  :to => 'users#new'
