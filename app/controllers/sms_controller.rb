@@ -22,30 +22,30 @@ CALLER_ID = '+14155992671';
 
   def create  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
-# SMS.text("*SQUAWK* #{params[:body]} *SQUAWK*", :to => params[:from])
-#puts "Received msg on create with params #{params}"
+    CalendarEvent.create(:date=>Time.now, 
+        :event => "Received SMS from #{params[:from]}: #{params[:body]}"[0,240])
     if from_member
 #      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
-      CalendarEvent.create(:date=>Time.now, :event => "Received create with params #{params}"[0,240])
+member = Member.find_by_last_name(params[:body].strip)
+resp = "#{member.full_name_short} is at #{member.current_location}"
+      render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
     else  
-#      render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
+      render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
     end
-#    render :nothing=>true
-      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
   end 
   
-  def index  # need the name 'create' to conform with REST defaults, or change routes
-#puts "IncomingController create: params=#{params}"
-# SMS.text("*SQUAWK* #{params[:body]} *SQUAWK*", :to => params[:from])
-#puts "Received msg on index with params #{params}"
-    if from_member
-      CalendarEvent.create(:date=>Time.now, :event => "Received msg on index with params #{params}"[0,240])
-    else  
-    end
-#    render :nothing=>true
-      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
-  end 
-  
+#  def index  # need the name 'create' to conform with REST defaults, or change routes
+##puts "IncomingController create: params=#{params}"
+## SMS.text("*SQUAWK* #{params[:body]} *SQUAWK*", :to => params[:from])
+##puts "Received msg on index with params #{params}"
+#    if from_member
+#      CalendarEvent.create(:date=>Time.now, :event => "Received msg on index with params #{params}"[0,240])
+#    else  
+#    end
+##    render :nothing=>true
+#      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
+#  end 
+#  
   
   def send_a_page(num)
       account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
@@ -64,7 +64,8 @@ CALLER_ID = '+14155992671';
 private
 
   def from_member  
-    return true
+    from = params[:from]
+    return true if from == '+16199282591'
     Contact.find_by_phone_1(params[:from]) || Contact.find_by_phone_2(params[:from])
   end
 
