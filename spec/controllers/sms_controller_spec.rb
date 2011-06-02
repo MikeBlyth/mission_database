@@ -16,13 +16,15 @@ describe SmsController do
     it 'creates a CalendarEvent for testing' do
       post :create, @params
       CalendarEvent.last.event.should =~ /Received sms/i
-      puts CalendarEvent.last.event
+puts CalendarEvent.last.event
     end      
 
     it 'accepts sms from SIM member (using phone_1)' do
       @contact = Factory(:contact, :phone_1 => @params[:from])  # have a contact record that matches from line
+@params[:body] = 'xxx'
       post :create, @params
       response.status.should == 200
+puts response.body
     end
     
     it 'accepts sms from SIM member (using phone_2)' do
