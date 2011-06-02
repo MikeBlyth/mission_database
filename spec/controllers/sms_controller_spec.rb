@@ -6,8 +6,8 @@ describe SmsController do
   before(:each) do
     @member = Factory(:member)
     @params = {
-             :from => '+2348030000000',
-             :body => @member.last_name
+             :From => '+2348030000000',
+             :Body => @member.last_name
              }
   end
 
@@ -20,15 +20,15 @@ puts CalendarEvent.last.event
     end      
 
     it 'accepts sms from SIM member (using phone_1)' do
-      @contact = Factory(:contact, :phone_1 => @params[:from])  # have a contact record that matches from line
-@params[:body] = 'xxx'
+      @contact = Factory(:contact, :phone_1 => @params[:From])  # have a contact record that matches from line
+#@params[:body] = 'xxx'
       post :create, @params
       response.status.should == 200
 puts response.body
     end
     
     it 'accepts sms from SIM member (using phone_2)' do
-      @contact = Factory(:contact, :phone_2 => @params[:from])  # have a contact record that matches from line
+      @contact = Factory(:contact, :phone_2 => @params[:From])  # have a contact record that matches from line
       post :create, @params
       response.status.should == 200
     end

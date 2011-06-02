@@ -22,14 +22,14 @@ CALLER_ID = '+14155992671';
 
   def create  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
-    from = params[:from]
-    body = params[:body]
+    from = params[:From]
+    body = params[:Body]
     params.delete 'SmsSid'
     params.delete 'AccountSid'
     params.delete 'SmsMessageSid'
     CalendarEvent.create(:date=>Time.now, 
         :event => "Received SMS from #{from}: #{body}; #{params}"[0,240])
-    if from_member
+    if from_member(from)
 member = Member.find_by_last_name(body.strip)
 resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
@@ -67,10 +67,9 @@ resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "
 
 private
 
-  def from_member  
-    from = params[:from]
+  def from_member(from) 
     return true if from == '+16199282591'
-    Contact.find_by_phone_1(params[:from]) || Contact.find_by_phone_2(params[:from])
+    Contact.find_by_phone_1(from) || Contact.find_by_phone_2(from)
   end
 
 end # Class
