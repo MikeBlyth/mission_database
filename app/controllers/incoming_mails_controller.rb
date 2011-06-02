@@ -1,3 +1,4 @@
+require 'application_helper'
 class IncomingMailsController < ApplicationController
   require 'mail'
   skip_before_filter :verify_authenticity_token
@@ -23,20 +24,6 @@ class IncomingMailsController < ApplicationController
 
 private
 
-  # with incoming body like
-  #   COMMAND_1 
-  #   command_2 Parameters for this command 
-  #   ...
-  # make array like [ [command_1, ''], [command_2, 'Parameters for this command']]
-  def extract_commands
-    commands = params['plain'].lines.map do |line| 
-      line =~ /\s*(\w+)( .*)?/ 
-      [($1 || '').downcase, ($2 || '').strip.chomp]
-    end  
- #puts "*** Commands = #{commands}"
-    return commands
-  end
-  
   # Is this message from someone in our database?
   # (look for a contact record having an email_1 or email_2 matching the message From: header)
   def from_member

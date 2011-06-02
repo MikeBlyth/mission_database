@@ -79,6 +79,27 @@ module ApplicationHelper
       return s.phone_format(options)
     end
 
+    # Standardize phone number string to "+2349999999" format
+    def phone_std(s,options={})
+      return s unless s.respond_to? :phone_std
+      return s.phone_format(options)
+    end
+
+  # with incoming body like
+  #   COMMAND_1 
+  #   command_2 Parameters for this command 
+  #   ...
+  # make array like [ [command_1, ''], [command_2, 'Parameters for this command']]
+  def extract_commands
+    commands = params['plain'].lines.map do |line| 
+      line =~ /\s*(\w+)( .*)?/ 
+      [($1 || '').downcase, ($2 || '').strip.chomp]
+    end  
+ #puts "*** Commands = #{commands}"
+    return commands
+  end
+  
+
 end  # ApplicationHelper module
 
 #******* Anything below this point is not in the module itself *********
@@ -104,6 +125,13 @@ class String
     end
     return self  # nothing to do
   end
+
+  # Standardize phone number string to "+2349999999" format
+  def phone_std(options={})
+    raw = (self =~ /\A[0+]/  ? '' : '0') + self  # Add zero if leading plus or zero not present
+    return raw.gsub(/\A0/,Settings.contacts.local_country_code).gsub(/-|\.| /,'')
+  end
+
 end
 
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on
