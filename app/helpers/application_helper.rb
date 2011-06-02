@@ -90,8 +90,8 @@ module ApplicationHelper
   #   command_2 Parameters for this command 
   #   ...
   # make array like [ [command_1, ''], [command_2, 'Parameters for this command']]
-  def extract_commands
-    commands = params['plain'].lines.map do |line| 
+  def extract_commands(body)
+    commands = body.lines.map do |line| 
       line =~ /\s*(\w+)( .*)?/ 
       [($1 || '').downcase, ($2 || '').strip.chomp]
     end  

@@ -81,7 +81,6 @@ class ReportsController < ApplicationController
   end
 
   def contact_updates
-    puts "Contact Updates"
     @contacts = Contact.recently_updated
   end
 

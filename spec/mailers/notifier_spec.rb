@@ -91,18 +91,20 @@ describe Notifier do
       p = @head.personnel_data
       t = @head.most_recent_term      
       required_fields = [
-         m[:last_name], m[:first_name], m[:residence_location], m[:ministry], m[:status],
-         m[:work_location], m[:country_name], m[:ministry_comment], m[:education],
-         m[:birth_date],
-         h[:bloodtype],
-         p[:education], p[:date_active], p[:est_end_of_service],
-         t[:start_date], t[:end_date],
-         c[:email_1],  c[:email_2], c[:blog], c[:photos],
-         c[:other_website], c[:facebook],
+         m.last_name, m.first_name, m.residence_location, m.ministry, m.status,
+         m.work_location, m.country_name, m.ministry_comment,
+         m.birth_date,
+      #   h.bloodtype,
+         p.education, p.date_active, p.est_end_of_service,
+         t.start_date, t.end_date,
+         c.email_1,  c.email_2, c.blog, c.photos,
+         c.other_website, c.facebook,
          ]
-      required_fields.each {|field| summary.should match field} #escape + for regex
-      summary.should match c[:phone_1].phone_format
-      summary.should match c[:phone_2].phone_format
+      required_fields.each do |field| 
+        summary.should match(Regexp.escape(field.to_s)) 
+      end  
+      summary.should match c.phone_1.phone_format
+      summary.should match c.phone_2.phone_format
     end            
 
     it 'handles member with no contact or field_term record' do

@@ -142,14 +142,17 @@ module SimTestHelper
   end
   
   def add_details(member, params={})
+    location = params[:location] || Location.first || Factory(:location)
     member.update_attributes(:middle_name => 'Midname',
             :short_name => 'Shorty',
             :sex => params[:sex] || 'M',
             :birth_date => params[:birth_date] || '1980-01-01',
             :country => params[:country] || Country.first || Factory(:country),
             :status => params[:status] || Status.first || Factory(:status),
-            :residence_location => params[:location] || Location.first || Factory(:location),
+            :residence_location => location,
+            :work_location => location,
             :ministry => Ministry.first || Factory(:ministry),
+            :education => Education.first || Factory(:education),
             :ministry_comment => 'Working with orphans'
             )
     if params[:personnel_data_create]

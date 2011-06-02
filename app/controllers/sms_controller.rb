@@ -1,5 +1,7 @@
 #require 'sms-rb'
 require 'twiliolib'
+require 'application_helper'
+include ApplicationHelper
 #require 'sms-rb'
 
 class SmsController < ApplicationController
@@ -30,28 +32,17 @@ CALLER_ID = '+14155992671';
     CalendarEvent.create(:date=>Time.now, 
         :event => "Received SMS from #{from}: #{body}; #{params}"[0,240])
     if from_member(from)
-member = Member.find_by_last_name(body.strip)
-resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
+      resp = process_sms(body)
+#member = Member.find_by_last_name(body.strip)
+#resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
     else  
       render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
     end
   end 
   
-#  def index  # need the name 'create' to conform with REST defaults, or change routes
-##puts "IncomingController create: params=#{params}"
-## SMS.text("*SQUAWK* #{params[:body]} *SQUAWK*", :to => params[:from])
-##puts "Received msg on index with params #{params}"
-#    if from_member
-#      CalendarEvent.create(:date=>Time.now, :event => "Received msg on index with params #{params}"[0,240])
-#    else  
-#    end
-##    render :nothing=>true
-#      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
-#  end 
-#  
-  
-  def send_a_page(num)
+ 
+  def send_msg(num)
       account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
 
       outgoing = {
@@ -66,6 +57,25 @@ resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "
    end
 
 private
+
+  def process_sms(body)
+    return "Nothing found in your message!" if body.blank?
+    command = extract_commands(body)[0]
+    name = command[1] 
+    member = Member.find_with_name(name).first  
+    if member
+      return (member.last_name_first(:initial=>true) + ' ' + contact_info(member) + '. ' +
+        member.current_location)[0,160]
+    else
+      return "#{name} not found in database"[0,160]
+    end
+  end
+  
+  def contact_info(member)
+    contact = member.primary_contact
+    phones = 
+    contact ? "#{contact.phone_1} #{contact.phone_2} #{contact.summary['Email']}" : "**no contact info found**"
+  end
 
   def from_member(from) 
     return true if from == '+16199282591'

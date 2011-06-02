@@ -10,7 +10,7 @@ class IncomingMailsController < ApplicationController
       render :text => 'Refused--unknown sender', :status => 403, :content_type => Mime::TEXT.to_s
       return
     end
-    commands = extract_commands
+    commands = extract_commands(params['plain'])
     success = process_commands(commands)
 
     # if the message was handled successfully then send a status of 200,
