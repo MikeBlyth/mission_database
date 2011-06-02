@@ -181,9 +181,12 @@ describe IncomingMailsController do
           post :create, @params
           mail = ActionMailer::Base.deliveries.last.to_s
           # None of these should be found as they're all marked private
-          [:phone_1, :phone_2, :email_1, :email_2, :skype].each do |field|
+          [:email_1, :email_2, :skype].each do |field|
             mail.should_not match(contact[field])
           end 
+          [:phone_1, :phone_2].each do |field|
+            mail.should_not match Regexp.new("#{contact[field].phone_format}.*private")
+          end
           mail.should match(contact[:photos])          
         end # hides contact info marked as private     
       
@@ -203,12 +206,14 @@ describe IncomingMailsController do
           @params['plain'] = "info #{member.last_name}"
           post :create, @params
           mail = ActionMailer::Base.deliveries.last.to_s
-          # None of these should be found as they're all marked private
-          [:phone_1, :phone_2, :email_1, :email_2, :skype].each do |field|
+          [:email_1, :email_2, :skype].each do |field|
             mail.should =~ Regexp.new("#{contact[field]}.*private")
-          end 
+          end
+          [:phone_1, :phone_2].each do |field|
+            mail.should =~ Regexp.new("#{contact[field].phone_format}.*private")
+          end
           mail.should match(contact[:photos])          
-        end # hides contact info marked as private     
+        end # is shown when requested by same member 
 
       end # info marked as private
       

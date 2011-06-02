@@ -11,7 +11,7 @@ describe 'Contacts' do
       @contact_type = Factory(:contact_type)
       @form_data = {'address'=>'MyAddress', 'blog' => 'MyBlog', 'contact_name'=>'my Contact name',
                     'email_1' => 'me@example.com', 'email_2' => 'me2@example.com',
-                    'phone_1' => '0808-888-8888', 'phone_1' => '0808-888-8889', 
+                    'phone_1' => '0808-888-8888', 'phone_2' => '0808-888-8889', 
                     'skype' => 'MySkype', 'facebook' => 'MyFacebook', 'photos' => 'MyPhotos',
                     'other_website'=> 'My Other Website'
                     }
@@ -32,6 +32,8 @@ describe 'Contacts' do
         click_link_or_button('Update')
       end.should change(Contact, :count).by(1)
       c = Contact.last
+      @form_data['phone_1'] = @form_data['phone_1'].phone_std
+      @form_data['phone_2'] = @form_data['phone_2'].phone_std
       @form_data.each {|key, value| c.send(key).should == value}
       c.phone_private.should be_true
       c.email_private.should be_true

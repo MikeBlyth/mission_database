@@ -79,11 +79,11 @@ module ApplicationHelper
       return s.phone_format(options)
     end
 
-    # Standardize phone number string to "+2349999999" format
-    def phone_std(s,options={})
-      return s unless s.respond_to? :phone_std
-      return s.phone_format(options)
-    end
+#    # Standardize phone number string to "+2349999999" format
+#    def phone_std(s,options={})
+#      return s unless s.respond_to? :phone_std
+#      return s.phone_format(options)
+#    end
 
   # with incoming body like
   #   COMMAND_1 
@@ -118,7 +118,7 @@ class String
     if Settings.formatting.format_phone_numbers && !self.blank? 
       delim_1 = options[:delim_1] || " "
       delim_2 = options[:delim_2] || " "
-      squished = self.ljust(7).gsub(' ','').gsub('-','').gsub('.','').gsub('+234','0')
+      squished = self.ljust(7).gsub(/[^\+0-9]/,'').gsub('+234','0')
       if squished.length == 11 && squished[0]=='0'
         return squished.insert(7,delim_2).insert(4,delim_1)
       end

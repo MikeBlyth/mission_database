@@ -31,6 +31,7 @@ class Contact < ActiveRecord::Base
   validates_presence_of :member
   validates :email_1, :allow_blank=>true, :email => true
   validates :email_2, :allow_blank=>true, :email => true
+  before_validation :standardize_phone_numbers
 
   def to_label
     if contact_type.nil?
@@ -59,6 +60,11 @@ class Contact < ActiveRecord::Base
             }
   end
   
+  def standardize_phone_numbers
+    self.phone_1 = phone_1.phone_std if phone_1
+    self.phone_2 = phone_2.phone_std if phone_2
+  end
+
   # Make string form of 'summary', each line delimited by <separator> and beginning with <prefix> 
   #   (prefix occurs before every line including the first, while separator only BETWEEN lines)
   # Example if prefix = "\t"

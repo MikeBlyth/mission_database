@@ -97,10 +97,12 @@ describe Notifier do
          h[:bloodtype],
          p[:education], p[:date_active], p[:est_end_of_service],
          t[:start_date], t[:end_date],
-         c[:phone_1], c[:phone_2], c[:email_1],  c[:email_2], c[:blog], c[:photos],
+         c[:email_1],  c[:email_2], c[:blog], c[:photos],
          c[:other_website], c[:facebook],
          ]
-      required_fields.each {|field| summary.should match field.to_s}
+      required_fields.each {|field| summary.should match field} #escape + for regex
+      summary.should match c[:phone_1].phone_format
+      summary.should match c[:phone_2].phone_format
     end            
 
     it 'handles member with no contact or field_term record' do
