@@ -75,7 +75,7 @@ class AdminController < ActionController::Base
   end
 
   def before_report(title)
-    @report = "\n<strong>*** Checking #{title} ***</strong>"
+    @report = "\n\n<strong>*** Checking #{title} ***</strong>\n"
     @orig_report_length = @report.length
   end
   
@@ -106,9 +106,7 @@ class AdminController < ActionController::Base
         check_and_fix_link(p, :education, m.name)
         p.save if p.changed? & fix
       end
-#      @report << "Changed? for #{m.name} = #{m.changed?}\n"
-      m.save if m.changed? & fix
-
+      m.update_record_without_timestamping  if m.changed? & fix
     end # each member
     after_report 'Members', fix
   end # clean members
@@ -119,7 +117,9 @@ class AdminController < ActionController::Base
       check_and_fix_link(m, :residence_location, m.name)
       check_and_fix_link(m, :head, m.name)
       check_and_fix_link(m, :status, m.name)
+      Family.record_timestamps = false
       m.save if (m.changed_attributes.count > 0) & fix
+      Family.record_timestamps = true
     end # each member
     after_report 'Families', fix
   end # clean families
@@ -152,7 +152,9 @@ class AdminController < ActionController::Base
       check_and_fix_link(m, :employment_status, name)
       check_and_fix_link(m, :primary_work_location, name)
       check_and_fix_link(m, :ministry, name)
+      FieldTerm.record_timestamps = false
       m.save if (m.changed_attributes.count > 0) & fix
+      FieldTerm.record_timestamps = true
     end # each field term
     after_report 'Field Terms', fix
   end # clean field terms
@@ -162,8 +164,11 @@ class AdminController < ActionController::Base
     report_destroy_orphans(:contact, :member, fix)
     Contact.all.each do |m|
       trim_email_addresses(m)
+      standardize_phone_numbers(m)
       check_and_fix_link(m, :contact_type, (m.member ? m.member.name : "Unknown member"))
+      Contact.record_timestamps = false
       m.save if (m.changed_attributes.count > 0) & fix
+      Contact.record_timestamps = true
     end # each location
     after_report 'Contacts', fix
   end # clean contacts
@@ -235,12 +240,27 @@ class AdminController < ActionController::Base
       @report << "\t#{link} (#{link_value(record, link)}) deleted (changed to nil).\n"
       delete_bad_link(record,link)
     end  
-  end   
+  end
+  
+  def standardize_phone_numbers(record)
+    phones = [record.phone_1, record.phone_2]
+    standardized = phones.map {|p| p.phone_std if p}
+#    std_1, std_2 = (record.phone_1.phone_std if record.phone_1), (record.phone_2.phone_std if record.phone_2)
+    if standardized != phones
+      @report << "Standardized phone number(s) for  #{record.member.name}: #{record.phone_1 || 'nil'}/#{record.phone_2 || 'nil'}=>#{standardized[0] || 'nil'}/#{standardized[1] || 'nil'}\n"
+      record.phone_1, record.phone_2 = standardized
+    end
+    standardized.each do |p|
+      if p && p[0] != '+'
+        @report << "<strong>***Phone number #{p} for #{record.member.name} is missing country code: not fixed!</strong>\n"
+      end
+    end
+  end       
 
   def trim_email_addresses(record)
     stripped_1, stripped_2 = (record.email_1).strip, record.email_2.strip
     if [stripped_1, stripped_2] != [record.email_1, record.email_2]
-      @report << "Fix leading/trailing blanks in email address for #{record.member.name}"
+      @report << "Fix leading/trailing blanks in email address for #{record.member.name}\n"
       record.email_1, record.email_2 = stripped_1, stripped_2
     end
   end

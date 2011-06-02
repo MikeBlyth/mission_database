@@ -64,6 +64,29 @@ describe AdminController do
         end  
       end  
 
+      it "does not change timestamp when performing fixes" do
+        long_ago = Time.new(2000,1,1)
+        @member.update_attribute(:status_id, 900)
+        @member.update_attribute(:updated_at,long_ago)
+        @member.reload.updated_at.should == long_ago
+        controller.clean_members(true)
+        @member.reload.updated_at.should == long_ago
+      end  
+
+      it "it restores time stamping after running" do
+        long_ago = Time.new(2000,1,1)
+        @member.update_attribute(:status_id, 900)
+        @member.update_attribute(:updated_at,long_ago)
+        @member.reload.updated_at.should == long_ago
+        controller.clean_members(true)
+        @member.reload.updated_at.should == long_ago
+        @member.update_attributes(:name => 'XYZ')
+#        @member.update_attributes(:status => nil) # for some reason, this does not change time stamp!
+        @member.reload.updated_at.should_not == long_ago
+      end  
+
+
+
     end # describe members
     
     describe 'families' do
@@ -169,8 +192,30 @@ describe AdminController do
     
     describe 'contacts' do
       before :each do
-        @contact_type = Factory(:contact_type).reload
-        @object = Factory(:contact)
+        @contact_type = Factory.stub(:contact_type)
+        @object = Factory(:contact, :phone_1 => "+2348081234567", :phone_2=>nil)
+        @raw_phone = '08031234567'
+        @no_zero = '8031234567'
+      end
+
+      it 'complains about non-std phone numbers' do
+        @object.update_attribute(:phone_1, @raw_phone)
+        controller.clean_contacts(false).should =~ /Standardized phone/i
+      end
+
+      it 'complains about phone numbers w/o country code or prefix-0' do
+        @object.update_attribute(:phone_1, @no_zero)
+        controller.clean_contacts(false).should =~ /country code/i
+      end
+
+      it 'fixes non-std phone numbers' do
+        @object.update_attribute(:phone_1, @raw_phone)
+        controller.clean_contacts(true).should =~ /Standardized phone/i
+        @object.reload.phone_1.should == @raw_phone.phone_std
+      end
+
+      it 'accepts std phone numbers' do
+        controller.clean_contacts(false).should =~ /no errors/
       end
 
       it "does not complain about object with nil optional associations" do
@@ -195,7 +240,7 @@ describe AdminController do
         @object.reload.contact_type_id.should == nil
       end  
 
-      it "does not delete records with bad links but valid parent" do
+      it "does not delete records with bad contact_type but valid parent" do
         @object.update_attribute(:contact_type_id, 999)
         lambda do
           controller.clean_contacts(true)
@@ -221,6 +266,25 @@ describe AdminController do
         @object.update_attribute(:email_1, " test@example.com \t")
         controller.clean_contacts(true).should =~ /blanks/
         @object.reload.email_1.should == "test@example.com"
+      end  
+
+      it "does not change timestamp when performing fixes" do
+        long_ago = Time.new(2000,1,1)
+        @object.update_attributes(:email_1=>" test@example.com \t")
+        @object.update_attribute(:updated_at,long_ago)
+        @object.reload.updated_at.should == long_ago
+        controller.clean_contacts(true)
+        @object.reload.updated_at.should == long_ago
+      end  
+
+      it "it restores time stamping after running" do
+        long_ago = Time.new(2000,1,1)
+        @object.update_attributes(:email_1=>" test@example.com \t")
+        @object.update_attribute(:updated_at,long_ago)
+        controller.clean_contacts(true)
+        @object.reload.updated_at.should == long_ago
+        @object.update_attributes(:email_1=>nil)
+        @object.reload.updated_at.should_not == long_ago
       end  
 
     end # describe contacts

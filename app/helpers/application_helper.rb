@@ -128,7 +128,9 @@ class String
 
   # Standardize phone number string to "+2349999999" format
   def phone_std(options={})
-    raw = (self =~ /\A[0+]/  ? '' : '0') + self  # Add zero if leading plus or zero not present
+    return nil if self.blank?
+      raw = self
+#    raw = (self =~ /\A[0+]/  ? '' : '0') + self  # Add zero if leading plus or zero not present
     return raw.gsub(/\A0/,Settings.contacts.local_country_code).gsub(/-|\.| /,'')
   end
 
@@ -156,3 +158,22 @@ class Fixnum
     return false
   end
 end # class Fixnum 
+
+module ActiveRecord  
+  class Base  
+
+    def update_record_without_timestamping  
+      class << self  
+        def record_timestamps; false; end  
+      end  
+
+      save!  
+
+      class << self  
+        def record_timestamps; super ; end  
+      end  
+    end  
+
+  end  
+end
+

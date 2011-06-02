@@ -24,7 +24,8 @@ describe Contact do
     it {'+2348023456789'.phone_std.should == '+2348023456789'}
     it {'+234-802.3456789'.phone_std.should == '+2348023456789'}
     it {'0802 3 45 6789'.phone_std.should == '+2348023456789'}
-    it {'802 3 45 6789'.phone_std.should == '+2348023456789'}
+ #   it {'802 3 45 6789'.phone_std.should == '+2348023456789'}
     it {'+44802 3 45 6789'.phone_std.should == '+448023456789'}
+    it {''.phone_std.should be_nil}
   end
 end
