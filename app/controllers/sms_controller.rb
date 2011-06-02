@@ -30,7 +30,8 @@ CALLER_ID = '+14155992671';
     else  
 #      render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
     end
-    render :nothing=>true
+#    render :nothing=>true
+      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
   end 
   
   def index  # need the name 'create' to conform with REST defaults, or change routes
@@ -41,7 +42,8 @@ CALLER_ID = '+14155992671';
       CalendarEvent.create(:date=>Time.now, :event => "Received msg on index with params #{params}"[0,240])
     else  
     end
-    render :nothing=>true
+#    render :nothing=>true
+      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
   end 
   
   
