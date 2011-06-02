@@ -26,24 +26,24 @@ CALLER_ID = '+14155992671';
     CalendarEvent.create(:date=>Time.now, :event => "Received msg with params #{params}")
 puts "Received msg on create with params #{params}"
     if from_member
-      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
-      CalendarEvent.create(:date=>Time.now, :event => "Received msg on create with params #{params}")
+#      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
+      CalendarEvent.create(:date=>Time.now, :event => "Received create with params #{params}"[0,240])
     else  
-      render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
+#      render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
     end
+    render :nothing=>true
   end 
   
   def index  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
 # SMS.text("*SQUAWK* #{params[:body]} *SQUAWK*", :to => params[:from])
-    CalendarEvent.create(:date=>Time.now, :event => "Received msg on index with params #{params}")
-puts "Received msg on index with params #{params}"
+    CalendarEvent.create(:date=>Time.now, :event => "Received msg on index with params #{params}"[0,240])
+#puts "Received msg on index with params #{params}"
     if from_member
-      render :text => "Success", :status => 200, :content_type => Mime::TEXT.to_s
       CalendarEvent.create(:date=>Time.now, :event => "Received msg with params #{params}")
     else  
-      render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
     end
+    render :nothing=>true
   end 
   
   
