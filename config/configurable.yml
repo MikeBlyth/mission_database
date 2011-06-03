@@ -66,7 +66,15 @@ twilio_phone_number:
   name: Twilio Phone Number
   type: string
     
+sendgrid_username:
+  name: Sendgrid User Name
+  type: string
   
+sendgrid_password:
+  name: Sendgrid Password
+  type: password
+  
+    
   
       
 
