@@ -27,7 +27,8 @@ gem 'rack-ssl-enforcer'
 gem 'settingslogic'
 gem 'sass'
 gem 'twiliolib'
-
+#gem 'rails-settings', :git => "git://github.com/ledermann/rails-settings.git"
+gem 'configurable_engine', ">=0.2.6", :git=>"git://github.com/paulca/configurable_engine.git"
 # gem 'RedCloth'
 
 # Bundle gems for the local environment. Make sure to
