@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/paulca/configurable_engine.git
+  revision: e79b26d5c668cfaec470f2f08a0d533b41bdf92c
+  specs:
+    configurable_engine (0.2.6)
+      activerecord (~> 3.0)
+      builder (~> 2.1.2)
+      rails (~> 3.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -184,6 +193,7 @@ DEPENDENCIES
   cancan
   capybara
   chronic
+  configurable_engine (>= 0.2.6)!
   cucumber-rails
   database_cleaner (>= 0.5.2)
   factory_girl (= 2.0.0.beta1)

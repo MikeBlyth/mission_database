@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110524121604) do
+ActiveRecord::Schema.define(:version => 20110603092603) do
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"
@@ -39,6 +39,15 @@ ActiveRecord::Schema.define(:version => 20110524121604) do
     t.float    "latitude"
     t.float    "longitude"
   end
+
+  create_table "configurables", :force => true do |t|
+    t.string   "name"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "configurables", ["name"], :name => "index_configurables_on_name"
 
   create_table "contact_types", :force => true do |t|
     t.integer  "code"
