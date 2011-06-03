@@ -40,15 +40,6 @@ ActiveRecord::Schema.define(:version => 20110603092603) do
     t.float    "longitude"
   end
 
-  create_table "configurables", :force => true do |t|
-    t.string   "name"
-    t.string   "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "configurables", ["name"], :name => "index_configurables_on_name"
-
   create_table "contact_types", :force => true do |t|
     t.integer  "code"
     t.string   "description"
@@ -227,6 +218,15 @@ ActiveRecord::Schema.define(:version => 20110603092603) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "site_settings", :force => true do |t|
+    t.string   "name"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "site_settings", ["name"], :name => "index_site_settings_on_name"
 
   create_table "states", :force => true do |t|
     t.string   "name"

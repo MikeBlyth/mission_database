@@ -1,17 +1,16 @@
 class CreateConfigurables < ActiveRecord::Migration
   def self.up
-    create_table :configurables do |t|
+    create_table :site_settings do |t|
       t.string :name
       t.string :value
 
       t.timestamps
     end
-    
-    add_index :configurables, :name
+    add_index :site_settings, :name
   end
 
   def self.down
-    remove_index :configurables, :name
-    drop_table :configurables
+    remove_index :site_settingss, :name
+    drop_table :site_settings
   end
 end

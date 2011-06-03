@@ -1,15 +1,9 @@
-#require 'sms-rb'
 require 'twiliolib'
 require 'application_helper'
 include ApplicationHelper
-#require 'sms-rb'
 
 class SmsController < ApplicationController
   skip_before_filter :verify_authenticity_token
-
-#(415) 599-2671	PIN 9501-1019
-#http://demo.twilio.com/welcome/sms
-
 
   def create  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
@@ -25,13 +19,23 @@ class SmsController < ApplicationController
 #member = Member.find_by_last_name(body.strip)
 #resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
+      if SiteSetting[:outgoing_sms].downcase == 'clickatell'
+        send_clickatell(from, resp)
+      end
     else  
       render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
     end
   end 
   
- 
-  def send_msg(num)
+   def send_clickatell(num, body)
+    user = SiteSetting['clickatell_user_name']
+    pwd =  SiteSetting[:clickatell_password]
+    api =  SiteSetting[:clickatell_api_id]
+    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{num}&text=#{body}"
+    httparty uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+  end
+
+  def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
       account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
 
       outgoing = {

@@ -46,7 +46,13 @@ SIM::Application.routes.draw do
   get   'admin/travel_reminders' => 'admin#review_travel_reminders', :as => 'travel_reminders'
   post  'admin/travel_reminders' => 'admin#send_travel_reminders', :as => 'send_travel_reminders'
 
+   get   'admin/site_settings' => 'site_settings#edit', :as=>'site_settings'
+   get   'admin/site_settings/index' => 'site_settings#index', :as=>'index_site_settings'
+   put  'admin/site_settings' => 'site_settings#update', :as=>'update_site_settings'
+  
+
 #  resources :jqueries do as_routes end
+#  resources :site_settings do as_routes end
 
   resources :bloodtypes do as_routes end
   resources :incoming_mails do as_routes end
@@ -58,6 +64,7 @@ SIM::Application.routes.draw do
   resources :educations do as_routes end
   resources :employment_statuses do as_routes end
   resources :families do as_routes end
+  resources :field_terms do as_routes end
   resources :health_data do as_routes end
   resources :locations do as_routes end
   resources :members do as_routes end
@@ -65,7 +72,6 @@ SIM::Application.routes.draw do
   resources :personnel_data do as_routes end
   resources :states do as_routes end
   resources :statuses do as_routes end
-  resources :field_terms do as_routes end
   resources :travels do as_routes end
   resources :users do
     member do

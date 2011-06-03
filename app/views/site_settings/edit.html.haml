@@ -1,0 +1,27 @@
+.active-scaffold.site_settings
+  %h2 Site Settings
+  = form_tag(update_site_settings_path, :method => :put) do 
+    %h3 Email
+    
+    = label_tag :sendgrid_username, "Sendgrid User Name"
+    %br
+    = text_field_tag :sendgrid_username,  SiteSetting[:sendgrid_username]
+    %br
+    = label_tag :sendgrid_password, "Sendgrid Password"
+    %br
+    = text_field_tag :sendgrid_password,  SiteSetting[:sendgrid_password]
+    %br
+    %h3 SMS Text Messaging
+    = settings_field(:outgoing_sms)
+    %h4 Clickatell 
+    = settings_field(:clickatell_user_name)
+    = settings_field(:clickatell_password)
+    = settings_field(:clickatell_api_id)
+    %h4 Twilio
+    = settings_field(:twilio_account_sid)
+    = settings_field(:twilio_account_token)
+    = settings_field(:twilio_api_version)
+    = settings_field(:twilio_phone_number)
+    
+    = submit_tag 'Save'
+

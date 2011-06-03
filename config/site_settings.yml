@@ -37,15 +37,20 @@ birthday_prefix:
   default: BD 
   type: string
     
-click_user:
+outgoing_sms:
+  name: SMS gateway for outgoing messages
+  default: Clickatell
+  type: string
+
+clickatell_user_name:
   name: Clickatell User Name
   type: string
       
-click_pwd:
+clickatell_password:
   name: Clickatell Password
   type: password
   
-click_api:
+clickatell_api_id:
   name: Clickatell HTTP API number
   type: string
   
