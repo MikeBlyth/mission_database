@@ -89,6 +89,7 @@ class Member < ActiveRecord::Base
   # Conditions parameter will pre-filter the output, e.g. can be ["status IN ?", [1,3,5]], "sex='M'", etc.
   def self.find_with_name(name, conditions="true")
 #puts "Find_with_name #{name}"
+    return [] if name.blank?
     filtered = self.where(conditions)
     result = filtered.where("first_name LIKE ?", name+"%") + filtered.where("last_name LIKE ?", name+"%") + 
       filtered.where("name LIKE ?", name+"%") + filtered.where("short_name LIKE ?", name+"%")

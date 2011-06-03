@@ -680,6 +680,15 @@ describe Member do
       Member.find_with_name('stranger').should == []
     end
 
+    it 'returns empty array if name blank' do
+      Member.find_with_name('').should == []
+    end
+
+    it 'returns empty array if name nil' do
+      Member.find_with_name(nil).should == []
+    end
+
+
     it 'finds simple name' do  # searching for ONE of last name, first name, short name, full name
       Member.find_with_name(@member.first_name).should == [@member]
       Member.find_with_name(@member.last_name).should == [@member]

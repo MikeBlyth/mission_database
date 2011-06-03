@@ -10,17 +10,6 @@ class SmsController < ApplicationController
 #(415) 599-2671	PIN 9501-1019
 #http://demo.twilio.com/welcome/sms
 
-# Twilio REST API version 
-API_VERSION = '2010-04-01'
-# Twilio AccountSid and AuthToken
-ACCOUNT_SID = 'ACe9b242ff1c3e1a3c03e8b283eba854f0'
-ACCOUNT_TOKEN = '095bc832b449ffb9fb503d6b94ae00fe'
-
-# Outgoing Caller ID previously validated with Twilio
-CALLER_ID = '+14155992671';
-
-
-
 
   def create  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
@@ -62,7 +51,9 @@ private
     return "Nothing found in your message!" if body.blank?
     command = extract_commands(body)[0]
     name = command[1] 
+puts "name=#{name}, #{name.class}"
     member = Member.find_with_name(name).first  
+puts "member=#{member}, #{member.class}"
     if member
       return (member.last_name_first(:initial=>true) + ' ' + contact_info(member) + '. ' +
         member.current_location)[0,160]
