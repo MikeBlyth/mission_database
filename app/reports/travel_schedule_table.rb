@@ -42,7 +42,7 @@ private
   # Generate a table row from a given travel record
   def data_row(travel, params)
     names = travel.travelers
-    names << ". (#{travel.total_passengers} total)" if travel.total_passengers > 2
+    names << ". (#{travel.total_passengers} total)" if (travel.total_passengers || 1) > 2
     arrdep = travel.arrival? ? 'A' : 'D'
     sim_or_personal = 'S' if travel.term_passage
     sim_or_personal = 'P' if travel.personal
