@@ -35,7 +35,7 @@ SIM::Application.routes.draw do
   post 'reports/contact_updates' => 'reports#send_contact_updates', :as => 'send_contact_updates'
   match 'reports/index' => 'reports#index', :as => 'reports'
   match 'members/list_field_terms' => 'members#list_field_terms', :as=> :list_field_terms
-  match 'reports/:actionn(.:format)' => 'reports#:action'
+  match 'reports/:action(.:format)' => 'reports#:action'
 #  match 'reports/tabletest' => 'reports#tabletest'
 #  match 'reports/multi_col_test' => 'reports#multi_col_test'
 

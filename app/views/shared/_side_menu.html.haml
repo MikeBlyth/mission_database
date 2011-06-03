@@ -45,6 +45,7 @@
       %li= link_to 'States', states_path 
       %li= link_to 'Status codes', statuses_path 
     - if current_user_admin?
+      %li= link_to 'Settings', 'admin/configurable'
       %li= link_to 'Clean database', clean_database_path 
       %li= link_to 'Send family summaries', family_summaries_path
       %li= link_to 'Send travel reminders', travel_reminders_path
