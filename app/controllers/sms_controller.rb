@@ -51,9 +51,7 @@ private
     return "Nothing found in your message!" if body.blank?
     command = extract_commands(body)[0]
     name = command[1] 
-puts "name=#{name}, #{name.class}"
     member = Member.find_with_name(name).first  
-puts "member=#{member}, #{member.class}"
     if member
       return (member.last_name_first(:initial=>true) + ' ' + contact_info(member) + '. ' +
         member.current_location)[0,160]

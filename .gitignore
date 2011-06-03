@@ -8,4 +8,5 @@ coverage.data
 heroku.log
 heroku.logs
 test.pdf
+config/initializers/secret_token.rb
 

@@ -34,7 +34,6 @@ SIM::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.autoload_paths += %W(#{Rails.root}/spec/support)
-ENV['TWILIO_ID'] = 'ACe9b242ff1c3e1a3c03e8b283eba854f0'
 
 config.gem 'factory_girl'
 

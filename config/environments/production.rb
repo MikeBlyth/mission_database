@@ -56,5 +56,4 @@ config.action_controller.perform_caching             = false
 #  # In production mode, enforce use of https://
 #  config.middleware.use Rack::SslEnforcer
 
-ENV['TWILIO_ID'] = 'ACe9b242ff1c3e1a3c03e8b283eba854f0'
 end
