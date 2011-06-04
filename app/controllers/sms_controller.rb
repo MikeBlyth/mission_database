@@ -35,11 +35,12 @@ class SmsController < ApplicationController
 
     pwd =  SiteSetting[:clickatell_password]
     api =  SiteSetting[:clickatell_api_id]
+    dest = num.gsub('+', '')
 if (user.blank? || pwd.blank? || api.blank?)
 puts "Error - Clickatell settings not all defined or retrieved"
   return "Error - Clickatell settings not all defined or retrieved"
 end
-    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{num}&text=#{URI.escape(body)}"
+    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
 puts uri
     puts  HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
   end

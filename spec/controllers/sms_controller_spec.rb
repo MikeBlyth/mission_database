@@ -83,6 +83,7 @@ describe SmsController do
                      )
         contact=Factory(:contact, :member=>member, :phone_2=>"+2348079999999")
         @params['Body'] = "info #{@last_name}"
+        @params['From'] = '2348162522097'
         post :create, @params
         response.body.should match @last_name
         response.body.should match Regexp.escape(contact.phone_1)
