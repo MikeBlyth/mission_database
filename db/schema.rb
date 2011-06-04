@@ -10,7 +10,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110603092603) do
+ActiveRecord::Schema.define(:version => 20110604193420) do
+
+  create_table "app_logs", :force => true do |t|
+    t.string   "severity"
+    t.string   "code"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bloodtypes", :force => true do |t|
     t.string   "abo"

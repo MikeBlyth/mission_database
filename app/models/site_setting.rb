@@ -1,3 +1,15 @@
+# == Schema Information
+# Schema version: 20110604193420
+#
+# Table name: site_settings
+#
+#  id         :integer         not null, primary key
+#  name       :string(255)
+#  value      :string(255)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class SiteSetting < ActiveRecord::Base
 # Taken from Configurable_Engine by Paulca
 # https://github.com/paulca/configurable_engine

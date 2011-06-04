@@ -15,15 +15,15 @@ class SmsController < ApplicationController
     params.delete 'SmsSid'
     params.delete 'AccountSid'
     params.delete 'SmsMessageSid'
-    CalendarEvent.create(:date=>Time.now, 
-        :event => "Received SMS from #{from}: #{body}; #{params}"[0,240])
+    AppLog.create(:code => "SMS.received", :description=>"from #{from}: #{body}")
     if from_member(from)
       resp = process_sms(body)[0..159]
 #member = Member.find_by_last_name(body.strip)
 #resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
+      puts AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}").attributes
       if SiteSetting[:outgoing_sms].downcase == 'clickatell'
-      send_clickatell(from, resp)
+        send_clickatell(from, resp)
    #   send_clickatell('+2348162522097', "Response sent")
       end
     else  
@@ -31,19 +31,31 @@ class SmsController < ApplicationController
     end
   end 
   
+  def clickatell_missing_parameters(user, pwd, api)
+    if (user.blank? || pwd.blank? || api.blank?)
+      error_msg = "Error - Clickatell settings not all defined or retrieved"
+#puts "Error - Clickatell settings not all defined or retrieved" 
+      AppLog.create(:severity=>'Error', :code=>'Clickatell.undefined', 
+                    :description=> error_msg)
+      return error_msg
+    end
+  end
+  
    def send_clickatell(num, body)
     user = SiteSetting[:clickatell_user_name]
 
     pwd =  SiteSetting[:clickatell_password]
     api =  SiteSetting[:clickatell_api_id]
-    dest = num.gsub('+', '')
-    if (user.blank? || pwd.blank? || api.blank?)
-    puts "Error - Clickatell settings not all defined or retrieved"
-      return "Error - Clickatell settings not all defined or retrieved"
-    end
-    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body).gsub('.',';')}"
+    missing = clickatell_missing_parameters(user, pwd, api)
+    return missing if missing
+    dest = num.gsub('+', '')  # Clickatell may not like '+' prefix
+    clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
+    uri = clickatell_base_uri + "?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
 puts "getting #{uri}" if Rails.env.to_s == 'test'
-    puts  HTTParty::get uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+    reply =  HTTParty::get uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+    AppLog.create(:code => "SMS.sent.clickatell", 
+      :description=>"to #{from}: #{body[0..30]}, resp=#{http_status}")
+    return reply
   end
 
   def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!

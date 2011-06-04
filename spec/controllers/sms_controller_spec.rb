@@ -13,10 +13,22 @@ describe SmsController do
 
   describe 'filters based on member status' do
 
-    it 'creates a CalendarEvent for testing' do
-      post :create, @params
-      CalendarEvent.last.event.should =~ /Received sms/i
-    end      
+    describe 'logging' do
+      it 'creates a log entry for SMS received' do
+        post :create, @params
+        AppLog.first.code.should =~ /SMS.received/i
+        AppLog.first.description.should =~ /23480300000/
+      end      
+
+      it 'creates a log entry for response' do
+        post :create, @params
+        entry = AppLog.find_by_code('SMS.reply')
+puts "AppLog"
+puts AppLog.tail
+        entry.description.should =~ /23480300000/
+      end      
+
+    end
 
     it 'accepts sms from SIM member (using phone_1)' do
       @contact = Factory(:contact, :phone_1 => @params[:From])  # have a contact record that matches from line

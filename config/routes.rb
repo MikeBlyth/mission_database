@@ -54,6 +54,7 @@ SIM::Application.routes.draw do
 #  resources :jqueries do as_routes end
 #  resources :site_settings do as_routes end
 
+  resources :app_logs do as_routes end
   resources :bloodtypes do as_routes end
   resources :incoming_mails do as_routes end
   resources :calendar_events do as_routes end
