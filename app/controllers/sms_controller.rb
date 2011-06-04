@@ -35,7 +35,7 @@ class SmsController < ApplicationController
     pwd =  SiteSetting[:clickatell_password]
     api =  SiteSetting[:clickatell_api_id]
     uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{num}&text=#{URI.escape(body)}"
-    HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+    puts  HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
   end
 
   def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
