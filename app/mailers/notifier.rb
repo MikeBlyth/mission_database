@@ -58,6 +58,7 @@ class Notifier < ActionMailer::Base
     end
   end    
 
+  # TODO: should be able to use contact.summary here for all the contact info.
   def send_info(recipients, from_member, request, members)
     @content = "Here is the info you requested ('info #{request}'):\n\n"
     if members.empty?

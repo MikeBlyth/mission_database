@@ -41,8 +41,8 @@ class SmsController < ApplicationController
     puts "Error - Clickatell settings not all defined or retrieved"
       return "Error - Clickatell settings not all defined or retrieved"
     end
-    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
-#puts "getting #{uri[0..30]}..."
+    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body).gsub('.',';')}"
+puts "getting #{uri}" if Rails.env.to_s == 'test'
     puts  HTTParty::get uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
   end
 
