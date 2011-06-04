@@ -97,7 +97,8 @@ describe SmsController do
 
         describe 'contact record found' do
           before(:each) do
-            @contact=Factory(:contact, :member=>@member, :phone_2=>"+2348079999999")
+            @contact=Factory(:contact, :member=>@member, :phone_2=>"+2348079999999",
+                               :email_2 => 'something@example.com')
           end
 
           it "sends contact info and location" do
@@ -105,6 +106,8 @@ describe SmsController do
             response.body.should match @last_name
             response.body.should match Regexp.escape(@contact.phone_1.phone_format)
             response.body.should match Regexp.escape(@contact.phone_2.phone_format)
+            response.body.should match Regexp.escape(@contact.email_1)
+            response.body.should_not match Regexp.escape(@contact.email_2)
               # have to escape the parens in the current location string 
             response.body.should match Regexp.escape(@member.current_location)
           end
@@ -113,7 +116,16 @@ describe SmsController do
             @contact.update_attribute(:phone_private, true)
             post :create, @params
             response.body.should match Regexp.escape(@contact.email_1)
-            response.body.should_not match Regexp.escape(@contact.phone_1)
+            response.body.should_not match Regexp.escape(@contact.phone_1.phone_format)
+            response.body.should_not match Regexp.escape(@contact.phone_2.phone_format)
+          end
+
+          it 'does not send email if marked as private' do
+            @contact.update_attribute(:email_private, true)
+            post :create, @params
+            response.body.should match Regexp.escape(@contact.phone_1.phone_format)
+            response.body.should_not match Regexp.escape(@contact.email_1)
+            response.body.should_not match Regexp.escape(@contact.email_2)
           end
 
         end # when contact info is available

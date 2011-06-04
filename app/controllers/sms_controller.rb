@@ -85,8 +85,12 @@ private
   
   def contact_info(member)
     contact = member.primary_contact
-    phones = 
-    contact ? "#{contact.summary['Phone']} #{contact.summary['Email']}" : "**no contact info found**"
+    if contact
+      email = contact.summary['Email'].split(',')[0] # use only the first email address
+      return "#{contact.summary['Phone']} #{email}" 
+    else
+      return "**no contact info found**"
+    end
   end
 
   def from_member(from) 

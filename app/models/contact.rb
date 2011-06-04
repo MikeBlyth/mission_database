@@ -48,17 +48,25 @@ class Contact < ActiveRecord::Base
   # Generate hash of contact info ready for display;
   # * join multiple phones and emails
   # * add "private" notice if needed
-  def summary
+  def summary(params={})
     phones = smart_join([phone_1, phone_2].map {|p| p.phone_format if p}, ", ")
-    return {'Phone' => "#{phones}#{phone_private? ? ' *** private ***' : '' }",
-            'Email' => "#{smart_join([email_1, email_2], ', ')}#{email_private? ? ' *** private ***' : '' }",
-            'Skype' => "#{skype}#{skype_private? ? ' *** private ***' : '' }",
+    emails = smart_join([email_1, email_2], ', ')
+    override_private = params[:override_private]    
+    return {'Phone' => filter_private(phones, phone_private, override_private),
+            'Email' => filter_private(emails, email_private, override_private),
+            'Skype' => filter_private(skype, skype_private, override_private),
             'Photos' => "#{photos}",
             'Blog' => "#{blog}",
             'Other website' => "#{other_website}",
             'Facebook' => "#{facebook}",
             }
   end
+  
+  def filter_private(field, marked_as_private, override_private)
+    return field unless marked_as_private
+    return '*private*' unless override_private
+    return "#{field} (private)"
+  end 
   
   def standardize_phone_numbers
     self.phone_1 = phone_1.phone_std if phone_1
