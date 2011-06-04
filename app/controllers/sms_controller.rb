@@ -42,8 +42,8 @@ class SmsController < ApplicationController
       return "Error - Clickatell settings not all defined or retrieved"
     end
     uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
-puts uri
-#    puts  HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+puts "getting " + uri
+    puts  HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
   end
 
   def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
