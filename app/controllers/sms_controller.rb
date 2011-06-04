@@ -18,7 +18,7 @@ class SmsController < ApplicationController
     CalendarEvent.create(:date=>Time.now, 
         :event => "Received SMS from #{from}: #{body}; #{params}"[0,240])
     if from_member(from)
-      resp = process_sms(body)
+      resp = process_sms(body)[0..159]
 #member = Member.find_by_last_name(body.strip)
 #resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
@@ -42,8 +42,8 @@ class SmsController < ApplicationController
       return "Error - Clickatell settings not all defined or retrieved"
     end
     uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
-puts "getting #{uri[0..30]}..."
-    puts  HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+#puts "getting #{uri[0..30]}..."
+    puts  HTTParty::get uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
   end
 
   def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
@@ -64,21 +64,29 @@ private
 
   def process_sms(body)
     return "Nothing found in your message!" if body.blank?
-    command = extract_commands(body)[0]
-    name = command[1] 
-    member = Member.find_with_name(name).first  
+    command, text = extract_commands(body)[0] # parse to first word=command, rest = text
+    return case command.downcase
+           when 'info' then do_info(text)  
+           # More commands go here ...
+           else
+             "unknown '#{command}'. Info=" + (do_info(text) if Member.find_with_name(text))
+           end
+  end
+  
+  def do_info(text)
+    member = Member.find_with_name(text).first  
     if member
       return (member.last_name_first(:initial=>true) + ' ' + contact_info(member) + '. ' +
-        member.current_location)[0,160]
+        member.current_location)
     else
-      return "#{name} not found in database"[0,160]
+      return "#{text} not found in database"
     end
-  end
+  end    
   
   def contact_info(member)
     contact = member.primary_contact
     phones = 
-    contact ? "#{contact.phone_1} #{contact.phone_2} #{contact.summary['Email']}" : "**no contact info found**"
+    contact ? "#{contact.summary['Phone']} #{contact.summary['Email']}" : "**no contact info found**"
   end
 
   def from_member(from) 

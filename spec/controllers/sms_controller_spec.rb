@@ -4,10 +4,10 @@
 #  
 describe SmsController do
   before(:each) do
-    @member = Factory(:member)
+    @member = Factory(:member)  # Request is going to be for this person's info
     @params = {
-             :From => '+2348030000000',
-             :Body => @member.last_name
+             :From => '+2348030000000',  # This is the number of incoming SMS
+             :Body => "info #{@member.last_name}"
              }
   end
 
@@ -52,53 +52,81 @@ describe SmsController do
       contact_type = Factory(:contact_type)
       @last_name = "Abcde"
     end      
-    
-    describe 'info sends contact info' do
 
-      it "gives error message if name not found" do
-        @params['Body'] = "info stranger"
-        post :create, @params
-        response.body.should =~ /no.*found/i      
-        response.body.should =~ /stranger/i      
+    describe "'info'" do
+
+      describe 'when name not found' do
+        it "gives error message" do
+          @params['Body'] = "info stranger"
+          post :create, @params
+          response.body.should =~ /no.*found/i      
+          response.body.should =~ /stranger/i      
+        end
       end
 
-      it "sends basic info if contact record not found" do
-        member = Factory(:member, :last_name=>@last_name)
-        @params['Body'] = "info #{@last_name}"
-        post :create, @params
-        response.body.should =~ Regexp.new(@last_name)
-        response.body.should =~ /no contact/i
-      end
+      describe 'when name found and' do  # record for requested name is found
+        before(:each) do
+          residence_location = Factory(:location, :description=>'Rayfield')
+          work_location = Factory(:location, :description=>'Spring of Life')
+          @member = Factory(:member, :last_name=>@last_name,
+                       :birth_date => Date.new(1980,6,15),
+                       :residence_location=>residence_location,
+                       :work_location=>work_location,
+                       :temporary_location => 'Miango Resort Hotel',
+                       :temporary_location_from_date => Date.today - 10.days,
+                       :temporary_location_until_date => Date.today + 2.days,
+                       )
+          @params['Body'] = "info #{@last_name}"
+        end
+                          
+        it 'returns error for unrecognized command' do
+          @params['Body'] = "xxxx #{@last_name}"
+          post :create, @params
+          response.body.should =~ Regexp.new(@last_name)
+          response.body.should =~ /unknown .*xxxx/i
+        end
+        
+        describe 'no contact record found' do
+          it "sends basic info" do
+            post :create, @params
+            response.body.should =~ Regexp.new(@last_name)
+            response.body.should =~ /no contact/i
+            response.body.should match Regexp.escape(@member.current_location)
+          end
+        end
 
-      it "sends contact info if available" do
-        residence_location = Factory(:location, :description=>'Rayfield')
-        work_location = Factory(:location, :description=>'Spring of Life')
-        member = Factory(:member, :last_name=>@last_name,
-                     :birth_date => Date.new(1980,6,15),
-                     :residence_location=>residence_location,
-                     :work_location=>work_location,
-                     :temporary_location => 'Miango Resort Hotel',
-                     :temporary_location_from_date => Date.today - 10.days,
-                     :temporary_location_until_date => Date.today + 2.days,
-                     )
-        contact=Factory(:contact, :member=>member, :phone_2=>"+2348079999999")
-        @params['Body'] = "info #{@last_name}"
-        @params['From'] = '2348162522097'
-        post :create, @params
-        response.body.should match @last_name
-        response.body.should match Regexp.escape(contact.phone_1)
-        response.body.should match Regexp.escape(contact.phone_2)
-          # have to escape the parens in the current location string 
-        response.body.should match Regexp.escape(member.current_location)
-      end
+        describe 'contact record found' do
+          before(:each) do
+            @contact=Factory(:contact, :member=>@member, :phone_2=>"+2348079999999")
+          end
+
+          it "sends contact info and location" do
+            post :create, @params
+            response.body.should match @last_name
+            response.body.should match Regexp.escape(@contact.phone_1.phone_format)
+            response.body.should match Regexp.escape(@contact.phone_2.phone_format)
+              # have to escape the parens in the current location string 
+            response.body.should match Regexp.escape(@member.current_location)
+          end
+
+          it 'does not send phone number if marked as private' do
+            @contact.update_attribute(:phone_private, true)
+            post :create, @params
+            response.body.should match Regexp.escape(@contact.email_1)
+            response.body.should_not match Regexp.escape(@contact.phone_1)
+          end
+
+        end # when contact info is available
+
+      end # when name and
 
       it 'limits response length to 160 chars' do
         @params['Body'] = "info #{'a'*170}"
         post :create, @params
         response.body.length.should < 161
       end     
-    end # 'info sends contact info'
 
+    end # 'info sends contact info'
 
   end # 'handles these commands:'
 
