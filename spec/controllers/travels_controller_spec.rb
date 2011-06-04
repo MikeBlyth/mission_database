@@ -1,10 +1,4 @@
 require 'spec_helper'
-#require "webrat"
-
-#Webrat.configure do |config|
-#  config.mode = :rails
-#end
-
 describe TravelsController do
   
   context "role based authorization" do

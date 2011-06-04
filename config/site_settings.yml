@@ -71,7 +71,7 @@ twilio_phone_number:
   name: Twilio Phone Number
   type: string
     
-sendgrid_username:
+sendgrid_user_name:
   name: Sendgrid User Name
   type: string
   

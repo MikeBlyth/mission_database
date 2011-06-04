@@ -18,6 +18,7 @@ class SiteSettingsController < ActionController::Base
       SiteSetting.find_or_create_by_name(key).
                    update_attribute(:value,params[key])
     end
+    flash[:notice] = "Settings saved"
     redirect_to site_settings_path
   end
 end
