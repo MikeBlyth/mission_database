@@ -15,19 +15,19 @@ class SmsController < ApplicationController
     params.delete 'SmsSid'
     params.delete 'AccountSid'
     params.delete 'SmsMessageSid'
-    AppLog.create(:code => "SMS.received", :description=>"from #{from}: #{body}")
     if from_member(from)
+      AppLog.create(:code => "SMS.received", :description=>"from #{from}: #{body}")
       resp = process_sms(body)[0..159]
-#member = Member.find_by_last_name(body.strip)
-#resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
-      puts AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}").attributes
+      AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}")
       if SiteSetting[:outgoing_sms].downcase == 'clickatell'
         send_clickatell(from, resp)
    #   send_clickatell('+2348162522097', "Response sent")
       end
     else  
+      AppLog.create(:code => "SMS.rejected", :description=>"from #{from}: #{body}")
       render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
+puts "refused"
     end
   end 
   

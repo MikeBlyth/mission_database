@@ -13,8 +13,9 @@
 class AppLog < ActiveRecord::Base
   def self.tail(lines=10)
     reply = ''
-    self.order('created_at DESC').limit(lines).each do |line|
-      reply << "#{line.created_at} #{line.code} #{line.description}\n"
+    first_line = self.count > lines ? self.count-lines : 0
+    self.order('id ASC').offset(first_line).each do |line|
+      reply << "#{line.id} #{line.created_at} #{line.code} #{line.description}\n"
     end
     reply
   end
