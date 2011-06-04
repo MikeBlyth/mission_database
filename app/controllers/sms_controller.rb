@@ -23,8 +23,8 @@ class SmsController < ApplicationController
 #resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
       if SiteSetting[:outgoing_sms].downcase == 'clickatell'
-      #  send_clickatell(from, resp)
-      send_clickatell('+2348162522097', "Response sent")
+      send_clickatell('+2348162522097', resp.gsub('.','%2e'))
+   #   send_clickatell('+2348162522097', "Response sent")
       end
     else  
       render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
@@ -37,13 +37,13 @@ class SmsController < ApplicationController
     pwd =  SiteSetting[:clickatell_password]
     api =  SiteSetting[:clickatell_api_id]
     dest = num.gsub('+', '')
-if (user.blank? || pwd.blank? || api.blank?)
-puts "Error - Clickatell settings not all defined or retrieved"
-  return "Error - Clickatell settings not all defined or retrieved"
-end
+    if (user.blank? || pwd.blank? || api.blank?)
+    puts "Error - Clickatell settings not all defined or retrieved"
+      return "Error - Clickatell settings not all defined or retrieved"
+    end
     uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
 puts uri
-    puts  HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+#    puts  HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
   end
 
   def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
