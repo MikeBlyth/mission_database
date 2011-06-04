@@ -23,7 +23,7 @@ class SmsController < ApplicationController
 #resp = member ? "#{member.full_name_short} is at #{member.current_location}" : "Unknown '#{body.strip}'"
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
       if SiteSetting[:outgoing_sms].downcase == 'clickatell'
-      send_clickatell('+2348162522097', resp)
+      send_clickatell(from, resp)
    #   send_clickatell('+2348162522097', "Response sent")
       end
     else  
