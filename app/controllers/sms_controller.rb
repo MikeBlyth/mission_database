@@ -1,8 +1,11 @@
 require 'twiliolib'
 require 'application_helper'
 include ApplicationHelper
+require 'httparty'
+require 'uri'
 
 class SmsController < ApplicationController
+  include HTTParty
   skip_before_filter :verify_authenticity_token
 
   def create  # need the name 'create' to conform with REST defaults, or change routes
@@ -31,8 +34,8 @@ class SmsController < ApplicationController
     user = SiteSetting['clickatell_user_name']
     pwd =  SiteSetting[:clickatell_password]
     api =  SiteSetting[:clickatell_api_id]
-    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{num}&text=#{body}"
-    httparty uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+    uri = "http://api.clickatell.com/http/sendmsg?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{num}&text=#{URI.escape(body)}"
+    HTTParty::get uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
   end
 
   def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
