@@ -8,9 +8,9 @@
   }
 
 vars = [ 
-         %w(clickatell_user_name DonaldDuck),
-         %w(clickatell_password clickatell_pwd),
-         %w(clickatell_api_id 12345),
+         %w(clickatell_user_name MikeBlyth),
+         %w(clickatell_password eCKAH3qXG7lwnGjZ1y),
+         %w(clickatell_api_id 3310717),
          %w(clickatell_client_id XYZ992),
          %w(twilio_api_version 2010-04-01),
          %w(twilio_account_sid AcctSID),
@@ -23,3 +23,5 @@ vars = [
         ]
         
 vars.each {|v| SiteSetting.create(:name=>v[0], :value=>v[1])}
+
+puts "Secret Cred: SiteSetting[:clickatell_user_name] = #{SiteSetting[:clickatell_user_name]}"
