@@ -55,7 +55,7 @@ puts "refused"
 puts "getting #{uri}" if Rails.env.to_s == 'test'
     reply =  HTTParty::get uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
     AppLog.create(:code => "SMS.sent.clickatell", 
-      :description=>"to #{dest}: #{body[0..30]}, resp=#{http_status}")
+      :description=>"to #{dest}: #{body[0..30]}, resp=#{reply}")
     return reply
   end
 
