@@ -21,6 +21,7 @@ class SmsController < ApplicationController
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
       AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}")
       if SiteSetting[:outgoing_sms].downcase == 'clickatell'
+        from = '+2348162522097' if from =~/82591/
         send_clickatell(from, resp)
    #   send_clickatell('+2348162522097', "Response sent")
       end
