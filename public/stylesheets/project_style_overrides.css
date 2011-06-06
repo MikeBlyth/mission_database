@@ -212,9 +212,9 @@ div.temporary_location_dates {
 #as_calendar_events-tbody .date-column {
   width: 20%; }
 
-.whereis th {
+.whereis th, .status_mismatch th {
   text-align: left; }
-.whereis td {
+.whereis td, .status_mismatch td {
   padding: 0.1em 0.7em 0.1em 0.4em; }
 
 .whereis tr.new_location {
@@ -231,9 +231,11 @@ div.temporary_location_dates {
 .list_line_even {
   background: #cce4fc; }
 
-div.list_field_terms {
+div.list_field_terms,
+div.status_mismatch {
   width: 600px; }
-  div.list_field_terms th {
+  div.list_field_terms th,
+  div.status_mismatch th {
     background: #cce4fc; }
 
 div.contact_updates {

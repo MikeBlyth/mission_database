@@ -1,0 +1,29 @@
+.active-scaffold.status_mismatch
+  %h2 Mismatched Statuses
+  %p 
+    These are members whose status in the database ("on field," "leave", "home assigment" etc.)
+    does not match their travel records. Either the recent travel record should be deleted 
+    (or changed) or the member's status should be changed.
+  %h3 
+    Members having "on field" status, though travel shows they have departed at end of term
+  = form_tag(members_update_statuses_path, :method => "put") do
+    %table
+      %th Member
+      %th Status
+      %th Latest travel
+      - @on_field_mismatches.each do |m|
+        %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
+          %td= link_to m[:member].name, edit_member_path(m[:member])
+          %td= collection_select("member_#{m[:member].id}", :status_id, Status.all, :id, :description)
+          %td= link_to m[:travel].to_s, edit_travel_path(m[:travel])
+
+    %h3 Members having "off field" status, though travel shows they have arrived at start of term
+    %table
+      %th Member
+      %th Status
+      %th Latest travel
+      - @off_field_mismatches.each do |m|
+        %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
+          %td= m[:member].name
+          %td= m[:travel].to_s
+    = submit_tag "Update"

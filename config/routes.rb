@@ -28,6 +28,8 @@ SIM::Application.routes.draw do
   match 'reports/birthdays' => 'reports#birthdays', :as => 'birthday_report'
   match 'reports/calendar' => 'reports#calendar', :as => 'calendar_report'
   match 'reports/birthday_calendar' => 'reports#birthday_calendar', :as => 'birthday_calendar_report'
+  get 'reports/status_mismatch' => 'reports#status_mismatch', :as => 'status_mismatch_report'
+  put 'reports/status_mismatch' => 'members#update_statuses', :as => 'members_update_statuses'
   match 'reports/travel_calendar' => 'reports#travel_calendar', :as => 'travel_calendar_report'
   match 'reports/birthday_travel_calendar' => 'reports#birthday_travel_calendar', :as => 'birthday_travel_calendar_report'
   match 'reports/whereis' => 'reports#whereis', :as => 'whereis_report'

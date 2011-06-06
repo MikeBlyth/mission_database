@@ -47,6 +47,11 @@ class ReportsController < ApplicationController
     end
   end
 
+  def status_mismatch
+    @title = 'Status mismatch'
+    @on_field_mismatches = Member.on_field_mismatches
+    @off_field_mismatches = Member.off_field_mismatches
+  end
 
   def whereis
     # Who to include in the report ... options not implemented yet

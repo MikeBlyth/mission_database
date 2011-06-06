@@ -137,7 +137,7 @@ class Travel < ActiveRecord::Base
   end
 
   def to_s
-    "#{self.travelers}--#{date.to_s.strip} #{arrival ? 'arrive' : 'depart'} #{flight}; return#{return_date}"
+    "#{self.travelers}--#{date.to_s.strip} #{arrival ? 'arrive' : 'depart'} #{flight}; return #{return_date}"
   end
 
   # Used for #traveler below, not to parse the member name

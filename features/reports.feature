@@ -150,7 +150,6 @@ Feature: report generation
     Then I should get a "Updated Contacts" HTML report
     And I should see the member name
     
-  @now
   Scenario: Mail the contact updates report
     Given that I am signed in
     And a one-person family
@@ -160,4 +159,10 @@ Feature: report generation
     And I click on "contact-updates"
     And I click on "Send"
     Then there should be 1 contact updates email
-    
+  
+  @now  
+  Scenario: View the status mismatch report
+    Given that I am signed in
+    When I click on "Reports"
+    And I click on "status-mismatch"    
+    Then I should get a "Mismatched Statuses" HTML report

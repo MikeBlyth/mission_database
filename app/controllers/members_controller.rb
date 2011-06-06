@@ -150,6 +150,15 @@ class MembersController < ApplicationController
     end
   end
 
+  def update_statuses
+    params.each do |member, status_id|
+      if member =~ /member_(\d+)/
+        Member.find($1.to_i).update_attribute(:status_id, status_id[:status_id].to_i)
+      end
+    end
+    redirect_to(status_mismatch_report_path)
+  end
+        
   def set_full_names
     Member.find(:all).each do |m| 
       if m.name.blank? || (m.first_name == m.short_name)
