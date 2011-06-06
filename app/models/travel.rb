@@ -73,6 +73,10 @@ class Travel < ActiveRecord::Base
   validates_presence_of :date
   validate :name_info
 
+
+  def <=>(other)
+      self.date <=> other.date
+  end
   
   def self.current_arrivals
     self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
@@ -81,6 +85,18 @@ class Travel < ActiveRecord::Base
   def self.current
     self.includes(:member).where("date <= ? AND (return_date >= ? )", Date.today, Date.today)
   end
+
+  def self.current_or_no_return
+    self.includes(:member).where("date <= ? AND (return_date >= ? OR return_date IS ? )", Date.today, Date.today, nil)
+  end
+
+  def self.past_or_no_return
+    self.includes(:member).where("date <= ? AND (return_date < ? OR return_date IS ? )", Date.today, Date.today, nil)
+  end
+
+  def self.not_future
+    self.includes(:member).where("date <= ?", Date.today)
+  end    
 
   def self.pending
     return self.includes(:member).where("date > ? AND (date <= ? )", Date.today, 
@@ -207,5 +223,13 @@ class Travel < ActiveRecord::Base
     else                 '?'
     end
   end 
+  
+  def end_of_term
+    self.term_passage && ! arrival
+  end
+  
+  def beginning_of_term
+    self.term_passage && arrival
+  end
   
 end

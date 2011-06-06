@@ -901,6 +901,85 @@ describe Member do
     end
     
   end # determines dates of next home assignment
+  
+  describe 'mismatched statuses:' do
+    before(:all) do
+      @on_field = Factory(:status) # "field" is true by default
+      @leave = Factory(:status, :on_field=>false, :leave=>true) # "field" is true by default
+    end
+    after(:all) do
+      Status.delete_all
+    end
+
+    before(:each) do
+      @travel = Factory.build(:travel, :member=>@member, :date=>Date.today-10, 
+                        :return_date=>Date.today+10, :arrival=>false, :term_passage => true)
+    end
+    
+    describe 'a member with on-field status' do
+      before(:each) do
+#        @status = Factory(:status) # "field" is true by default
+        @member = Factory(:member_without_family, :status=>@on_field)
+        @travel.member = @member
+      end
+            
+      it 'is flagged if travel shows him as departed' do
+        @travel.save
+        Member.mismatched_status.should include({:travel=>@travel, :member=>@member})
+      end 
+      
+      it 'is not flagged if travel does not show him as departed' do
+        @travel[:arrival] = true
+        @travel.save
+        Member.mismatched_status.should_not include({:travel=>@travel, :member=>@member})
+      end 
+      
+      it 'is not flagged if recent travel is completed (return date is past)' do
+        @travel.return_date = Date.today - 2.days
+        @travel.save
+        Member.mismatched_status.should_not include({:travel=>@travel, :member=>@member})
+      end 
+      
+      it 'is not flagged if there is no travel record' do
+        Member.mismatched_status.should be_empty
+      end 
+      
+      it 'is not flagged if status is deceased!' do
+        @deceased = Factory.stub(:status, :code=>'deceased', :on_field=>false)
+        @member.update_attribute(:status, @deceased)
+        @member.status.code.should == 'deceased'
+        @travel.save
+        Member.mismatched_status.should be_empty
+      end 
+      
+      
+    end # when member listed as on-field
+       
+    describe 'a member with off-field status' do
+      before(:each) do
+#        @status = Factory(:status, :on_field=>false, :leave=>true) # "field" is true by default
+        @member = Factory(:member_without_family, :status=>@leave)
+        @travel.member = @member
+      end
+            
+      it 'is flagged if travel shows him as arrived' do
+        @travel[:arrival] = true
+        @travel.save
+        Member.mismatched_status.should include({:travel=>@travel, :member=>@member})
+      end 
+
+      it 'is not flagged if status is deceased even if arrival shows arrived' do
+        @deceased = Factory.stub(:status, :code=>'deceased', :on_field=>false)
+        @member.update_attribute(:status, @deceased)
+        @member.status.code.should == 'deceased'
+        @travel[:arrival] = true
+        @travel.save
+        Member.mismatched_status.should be_empty
+      end 
+
+    end # when member listed as off-field
+     
+  end # finds mismatched statuses
       
 end
 

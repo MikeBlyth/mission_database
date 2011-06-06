@@ -78,7 +78,6 @@ class Member < ActiveRecord::Base
 
   def those_umbrella
     # This one is here because the definition is different between member and family classes
-    puts self.class
     umbrella_status = EmploymentStatus.find_by_code('umbrella').id
     self.joins(:personnel_data).where("employment_status_id = ?", umbrella_status)
   end 
@@ -106,6 +105,44 @@ class Member < ActiveRecord::Base
     end
     return result.uniq.compact
   end
+
+  # Find members who are marked as being on the field (status.on_field == true) but who
+  # have a current travel record showing their departure with "term_passage". This is a 
+  # logical mismatch as they should not be "on field" if they have left at end of term.
+  def self.on_field_mismatches
+    field_statuses = Status.field_statuses
+    departures = Travel.current.joins(:member).where(
+          "status_id IN (?) and term_passage and NOT arrival", field_statuses)
+    departures.map {|t| {:member=>t.member, :travel=>t}}
+  end    
+
+  # Find members who are NOT marked as being on the field (status.on_field == false) but who
+  # have a recent travel record showing their arrival with "term_passage". This is a 
+  # logical mismatch as they should be "on field" if they have arrived at beginning of term.
+  def self.off_field_mismatches
+    field_statuses = Status.field_statuses
+    off_field_members = Member.joins(:travels).
+      where("members.status_id NOT IN (?) AND term_passage AND arrival AND "+
+            "travels.date < ? AND travels.date > ?", 
+            field_statuses, Date.today, Date.today-3.months).all.uniq
+            # "+deceased_status" as part of NOT IN limits members to the living!
+    # Select those members whose MOST RECENT travel is an "term passage" arrival
+    mismatches = off_field_members.map do |member| 
+      most_recent = member.most_recent_travel
+      if most_recent.arrival && most_recent.term_passage && member.living
+        {:member=>member, :travel=>most_recent}
+      end # "else return nil" is implied
+    end.compact # remove nils leaving only one hash for each member/latest_travel pair.
+  end
+  
+  def self.mismatched_status
+    return off_field_mismatches + on_field_mismatches
+  end
+
+  def living
+    status && status.code.to_s != 'deceased'
+  end
+  alias_method :alive, :living 
 
   def family_head
     return Family.find_by_id(family_id) && (family.head_id == self.id)
@@ -479,6 +516,17 @@ class Member < ActiveRecord::Base
     return Travel.current.where("member_id = ?", self.id) + spouse_travel
   end
   
+  # This is the most recent trip regardless of the return status.
+  def most_recent_travel
+    if spouse
+      spouse_travel = Travel.not_future.where("member_id = ? and with_spouse = ?", spouse_id, true)
+    else
+      spouse_travel = []
+    end
+    return (Travel.not_future.where("member_id = ?", self.id) + spouse_travel).sort.last
+  end
+    
+
   def pending_travel
     if spouse
       spouse_travel = Travel.pending.where("member_id = ? and with_spouse = ?", spouse_id, true)
