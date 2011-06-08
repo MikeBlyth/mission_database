@@ -138,10 +138,10 @@ describe Notifier do
     it "does not show member's contact info as spouse's when spouse data is missing" do
       spouse = create_spouse(@head)
       summary = family_summary_content(@family)
-      # Have to find a way to show that the husband's record is not used,
-      # .. and this is the way for now, because the summary of missing data 
-      # .. contains a line of MISSING DATA like "Sally: birth date; primary phone"
+      # The summary of missing data contains a line for missing data
+      #   like "Sally: birth date; primary phone"
       summary.should match spouse.first_name    
+      summary.should match MISSING_CONTACT
       summary.should match Regexp.new("#{spouse.first_name}: .*primary phone")
     end
 

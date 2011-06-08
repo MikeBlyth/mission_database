@@ -363,15 +363,49 @@ describe Member do
     
   end # describe marrying  
 
-  describe "contacts" do
+  describe "primary_contact" do
     before(:each) do
-      @member=Factory(:member)
+      @member=Factory.stub(:member)
       @contact = Factory.build(:contact, :member=>@member)
     end
     
-    it 'identifies field contact as primary if it exists' do
+    it 'identifies contact record with is_primary==true' do
       @contact.save
       @member.primary_contact.should == @contact
+    end
+
+    it 'returns nil if no contact record has is_primary==true' do
+      @contact.is_primary=false
+      @contact.save
+      @member.primary_contact.should be_nil
+    end
+
+    it "returns child's parent's primary_contact if child has none" do
+      head = @member.family.head = Factory.stub(:member, :family=>@member.family)
+      @member.should_not == head # 'cause we'll use member as the child
+      @member.stub(:child).and_return(true)
+      @contact.member = head  # making contact belong to the family head
+      @contact.save
+      @member.primary_contact.should == @contact
+    end
+
+    it "returns spouse's primary_contact if member has none" do
+      spouse = Factory.stub(:member, :spouse=>@member)
+      @contact.save
+      spouse.primary_contact.should == @contact
+    end
+
+    it "does not returns spouse's primary_contact if :no_substitution is set" do
+      spouse = Factory.stub(:member, :spouse=>@member)
+      @contact.save
+      spouse.primary_contact(:no_substitution=>true).should be_nil
+    end
+
+    it "returns spouse's own contact if she has one" do
+      spouse = Factory.stub(:member, :spouse=>@member)
+      @contact.save
+      spouse_contact = Factory(:contact, :member=>spouse)
+      spouse.primary_contact.should == spouse_contact
     end
 
   end
