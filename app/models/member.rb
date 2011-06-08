@@ -519,10 +519,10 @@ class Member < ActiveRecord::Base
   # * His own contact record marked as primary (arbitrary selection if more than one)
   # * His spouse's contact marked as primary, if he has none himself
   # * His family head's primary_contact in the case of a child.
-  def primary_contact
+  def primary_contact(options={})
     primary = self.contacts.where(:is_primary=>true).first
     primary ||= (self.family.head.primary_contact if self.child && family.head.primary_contact)
-    if !primary && is_married?
+    if !primary && is_married? && options[:no_substitution].nil?
       primary = spouse.contacts.where(:is_primary=>true).first
     end
     return primary

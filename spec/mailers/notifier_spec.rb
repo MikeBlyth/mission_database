@@ -72,10 +72,7 @@ describe Notifier do
     # The _contents_ of the summary are tested without having to invoke mailer
     it 'includes all specified information' do
       @head.personnel_data.reload.update_attributes(:est_end_of_service=> Date.today+5.years)
-@head.contacts.count.should == 1
-@head.contacts.first.is_primary.should be_true
       contacts = @head.primary_contact
-contacts.should_not be_nil
       contacts.update_attributes(
           :phone_1 => '0805=999=9999'.phone_format,
           :phone_2 => '0804-888-8999'.phone_format,
@@ -136,6 +133,16 @@ contacts.should_not be_nil
       summary.should match spouse.first_name    
       summary.should match 'SPOUSE'    
       summary.should_not match 'CHILDREN'    
+    end
+
+    it "does not show member's contact info as spouse's when spouse data is missing" do
+      spouse = create_spouse(@head)
+      summary = family_summary_content(@family)
+      # Have to find a way to show that the husband's record is not used,
+      # .. and this is the way for now, because the summary of missing data 
+      # .. contains a line of MISSING DATA like "Sally: birth date; primary phone"
+      summary.should match spouse.first_name    
+      summary.should match Regexp.new("#{spouse.first_name}: .*primary phone")
     end
 
     it 'includes child data' do

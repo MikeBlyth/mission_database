@@ -142,7 +142,7 @@ Ministry comment: #{m.ministry_comment}
 Education level: #{m.personnel_data.education || MISSING}
 
 Contact information
-#{m.primary_contact ? m.primary_contact.summary_text("  *") : MISSING_CONTACT}
+#{m.primary_contact(:no_substitution=>true) ? m.primary_contact.summary_text("  *") : MISSING_CONTACT}
 
 Field Service Summary
 #{field_term_content(m)}
@@ -155,7 +155,7 @@ MEMBERINFO
     p = m.personnel_data
     f = m.most_recent_term || FieldTerm.new
     pending = m.pending_term || FieldTerm.new
-    c = m.primary_contact || Contact.new
+    c = m.primary_contact(:no_substitution=>true) || Contact.new
     # Make an array of [parameter, label] pairs, where each element is data required
     # for this member. Then last step generates, via map statement, an array of labels
     # representing the data that is missing.
