@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110604193420) do
+ActiveRecord::Schema.define(:version => 20110608134408) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(:version => 20110604193420) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "member_id",                                         :null => false
+    t.boolean  "is_primary"
   end
 
   add_index "contacts", ["id"], :name => "ID", :unique => true

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110512072918
+# Schema version: 20110608134408
 #
 # Table name: contacts
 #
@@ -22,6 +22,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  member_id       :integer         not null
+#  is_primary      :boolean
 #
 
 class Contact < ActiveRecord::Base

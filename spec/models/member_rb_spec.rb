@@ -363,23 +363,18 @@ describe Member do
     
   end # describe marrying  
 
-#  describe "contacts" do
-#    before(:each) do
-#Contact.delete_all
-#      @field_type = Factory(:contact_type)
-#      @home_type = Factory(:contact_type_home)
-#      @member=Factory(:member)
-#      @home = Factory.build(:contact, :member=>@member, :contact_type=>@home_type)
-#      @field = Factory.build(:contact, :member=>@member, :contact_type=>@field_type)
-#    end
-#    
-#    it 'identifies field contact as primary if it exists' do
-#      @field.save
-#      @home.save
-#      @member.primary_contact.should == @field
-#    end
+  describe "contacts" do
+    before(:each) do
+      @member=Factory(:member)
+      @contact = Factory.build(:contact, :member=>@member)
+    end
+    
+    it 'identifies field contact as primary if it exists' do
+      @contact.save
+      @member.primary_contact.should == @contact
+    end
 
-#  end
+  end
 
   describe "current location" do
     before(:each) do

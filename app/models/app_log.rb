@@ -1,10 +1,11 @@
 # == Schema Information
-# Schema version: 20110604193420
+# Schema version: 20110608134408
 #
 # Table name: app_logs
 #
 #  id          :integer         not null, primary key
 #  severity    :string(255)
+#  code        :string(255)
 #  description :string(255)
 #  created_at  :datetime
 #  updated_at  :datetime

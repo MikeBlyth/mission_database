@@ -165,6 +165,10 @@ class Member < ActiveRecord::Base
     return spouse.nil?
   end
 
+  def is_married?
+    return !spouse.nil?
+  end
+
   def employment_status
     return personnel_data ? personnel_data.employment_status : nil
   end  
@@ -511,13 +515,22 @@ class Member < ActiveRecord::Base
     end         
   end
   
+  # Finds primary contact for this member:
+  # * His own contact record marked as primary (arbitrary selection if more than one)
+  # * His spouse's contact marked as primary, if he has none himself
+  # * His family head's primary_contact in the case of a child.
   def primary_contact
-    primary_contact_type_code = Settings.contacts.primary_contact_type_code
-    self.contacts.joins(:contact_type).where("contact_types.code = ?", primary_contact_type_code).first
+    primary = self.contacts.where(:is_primary=>true).first
+    primary ||= (self.family.head.primary_contact if self.child && family.head.primary_contact)
+    if !primary && is_married?
+      primary = spouse.contacts.where(:is_primary=>true).first
+    end
+    return primary
   end
 
+  # Email address in member's primary contact record. Return one only with email_1 having priority.
   def email
-    self.primary_contact ? primary_contact.email_1 : nil
+    self.primary_contact ? (primary_contact.email_1 || primary_contact.email_2) : nil
   end
 
   def current_travel

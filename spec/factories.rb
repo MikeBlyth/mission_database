@@ -32,6 +32,7 @@ FactoryGirl.define do
     email_1 'my_email@example.com'
     phone_1 '0808-888-8888'
     skype 'MySkypeName'
+    is_primary true
     after_build do
       Factory(:contact_type) unless ContactType.exists?(1)
     end
