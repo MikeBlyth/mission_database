@@ -167,15 +167,6 @@ describe Member do
   end
 
   describe "names: " do
-#    before(:each) do
-#      @status = Factory(:status)
-#      @family = Factory(:family, :status=> @status)
-#      @head = @family.head
-#      @member = new_family_member    # This is in addition to the family_head, which is *saved* on creation of a family
-#                              #   This second family member @member is *not* saved yet
-#    end    
-
-
     before(:each) do
       @member = Member.new
       @member.first_name = 'Katarina'
@@ -371,6 +362,24 @@ describe Member do
     end
     
   end # describe marrying  
+
+#  describe "contacts" do
+#    before(:each) do
+#Contact.delete_all
+#      @field_type = Factory(:contact_type)
+#      @home_type = Factory(:contact_type_home)
+#      @member=Factory(:member)
+#      @home = Factory.build(:contact, :member=>@member, :contact_type=>@home_type)
+#      @field = Factory.build(:contact, :member=>@member, :contact_type=>@field_type)
+#    end
+#    
+#    it 'identifies field contact as primary if it exists' do
+#      @field.save
+#      @home.save
+#      @member.primary_contact.should == @field
+#    end
+
+#  end
 
   describe "current location" do
     before(:each) do
@@ -926,6 +935,26 @@ describe Member do
       it 'is flagged if travel shows him as departed' do
         @travel.save
         Member.mismatched_status.should include({:travel=>@travel, :member=>@member})
+      end 
+      
+      it 'is flagged if spouse travel shows him as departed' do
+        @travel.with_spouse = true
+        @travel.save
+        spouse = Factory(:member_without_family, :sex=>'F', :spouse=>@member)
+        @member.update_attribute(:spouse, spouse)
+        mismatched = Member.mismatched_status
+        mismatched.should include({:travel=>@travel, :member=>@member})
+        mismatched.should include({:travel=>@travel, :member=>spouse})
+      end 
+      
+      it 'is not flagged if spouse travel shows him as departed but not accompanied' do
+        @travel.with_spouse = false
+        @travel.save
+        spouse = Factory(:member_without_family, :sex=>'F', :spouse=>@member)
+        @member.update_attribute(:spouse, spouse)
+        mismatched = Member.mismatched_status
+        mismatched.should include({:travel=>@travel, :member=>@member})
+        mismatched.should_not include({:travel=>@travel, :member=>spouse})
       end 
       
       it 'is not flagged if travel does not show him as departed' do

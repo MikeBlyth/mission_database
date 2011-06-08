@@ -153,7 +153,8 @@ class MembersController < ApplicationController
   def update_statuses
     params.each do |member, status_id|
       if member =~ /member_(\d+)/
-        Member.find($1.to_i).update_attribute(:status_id, status_id[:status_id].to_i)
+        new_status = status_id[:status_id].to_i
+        Member.find($1.to_i).update_attribute(:status_id, new_status)
       end
     end
     redirect_to(status_mismatch_report_path)

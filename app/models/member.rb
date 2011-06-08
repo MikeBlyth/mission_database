@@ -113,7 +113,8 @@ class Member < ActiveRecord::Base
     field_statuses = Status.field_statuses
     departures = Travel.current.joins(:member).where(
           "status_id IN (?) and term_passage and NOT arrival", field_statuses)
-    departures.map {|t| {:member=>t.member, :travel=>t}}
+    mismatches = departures.map {|t| {:member=>t.member, :travel=>t}}
+    add_spouses(mismatches)
   end    
 
   # Find members who are NOT marked as being on the field (status.on_field == false) but who
@@ -133,8 +134,20 @@ class Member < ActiveRecord::Base
         {:member=>member, :travel=>most_recent}
       end # "else return nil" is implied
     end.compact # remove nils leaving only one hash for each member/latest_travel pair.
+    add_spouses(mismatches)
   end
   
+  def self.add_spouses(mismatches)
+    with_spouses = []
+    mismatches.each do |mismatch|
+      with_spouses << mismatch
+      if mismatch[:travel].with_spouse
+        with_spouses << {:member=>mismatch[:member].spouse, :travel=>mismatch[:travel]}
+      end
+    end
+    return with_spouses
+  end
+    
   def self.mismatched_status
     return off_field_mismatches + on_field_mismatches
   end

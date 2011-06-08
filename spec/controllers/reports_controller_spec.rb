@@ -39,6 +39,10 @@ describe ReportsController do
       merged[4][:font_size].should == nil
       merged[4][:align].should == birthdays[4][:align]
     end
+ 
+    it "indicates when couple and/or kids traveling wtih member" do
+      pending
+    end
     
   end # describe "calendar reports"  
 

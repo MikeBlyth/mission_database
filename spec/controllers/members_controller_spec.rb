@@ -134,6 +134,19 @@ describe MembersController do
           get :index
         end
       end
-      
+
+  describe 'update_statuses method' do
+    
+    it 'updates the statuses of a group of members' do
+      # Using a set of parameters like {... 'member_29'=>{'status_id=>'2'} ...}
+      test_sign_in(Factory.stub(:user, :admin=>true))
+      id_1 = Factory(:member).id
+      id_2 = Factory(:member).id
+      params = {:garbage=>'xyz', "member_#{id_1}"=>{'status_id'=>'2'}, "member_#{id_2}"=>{'status_id'=>'5'} }
+      put :update_statuses, params
+      Member.find(id_1).status_id.should == 2
+      Member.find(id_2).status_id.should == 5
+    end
+  end
           
 end
