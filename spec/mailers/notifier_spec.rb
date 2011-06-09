@@ -72,7 +72,8 @@ describe Notifier do
     # The _contents_ of the summary are tested without having to invoke mailer
     it 'includes all specified information' do
       @head.personnel_data.reload.update_attributes(:est_end_of_service=> Date.today+5.years)
-      contacts = @head.primary_contact
+      contacts = @head.primary_contact(:no_substitution=>true)
+      contacts.should_not be_nil
       contacts.update_attributes(
           :phone_1 => '0805=999=9999'.phone_format,
           :phone_2 => '0804-888-8999'.phone_format,
@@ -87,6 +88,7 @@ describe Notifier do
 #puts summary
       m = @head
       c = contacts
+      c.reload.is_primary.should be_true
       h = @head.health_data
       p = @head.personnel_data
       t = @head.most_recent_term      

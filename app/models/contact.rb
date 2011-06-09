@@ -33,6 +33,8 @@ class Contact < ActiveRecord::Base
   validates :email_1, :allow_blank=>true, :email => true
   validates :email_2, :allow_blank=>true, :email => true
   before_validation :standardize_phone_numbers
+  after_initialize :check_is_primary
+  before_save :clear_other_records_is_primary
 
   def to_label
     if contact_type.nil?
@@ -94,6 +96,20 @@ class Contact < ActiveRecord::Base
 
   def skype_public
     ! email_private
-  end  
+  end 
+  
+private
 
+  def check_is_primary
+    return unless self.member
+    self.is_primary = true if self.member.contacts.where(:is_primary=>true).empty?
+  end
+  
+  def clear_other_records_is_primary
+    return unless self.member
+    if self.member.contacts.length > 0 && self.is_primary 
+      puts "doing it"
+   #   self.member.contacts.update_all("is_primary = false", "id != #{id}")
+    end
+  end
 end

@@ -130,6 +130,10 @@ FIELDINFO
   end  
     
   def member_summary_content(m)
+puts "\n*********** CALLING ************"
+pc = m.primary_contact
+puts "member_summary_content pc = #{pc.id if pc}"
+puts "**********************************\n"
 member_info = <<"MEMBERINFO"
 *Name: #{m.name}
 *Birth date: #{m.birth_date || MISSING } (#{Settings.site.org} listing will not include year)
@@ -142,6 +146,8 @@ Ministry comment: #{m.ministry_comment}
 Education level: #{m.personnel_data.education || MISSING}
 
 Contact information
+Checking: #{m.contacts.first.attributes} : 
+PC= #{m.primary_contact(:no_substitution=>true)}
 #{m.primary_contact(:no_substitution=>true) ? m.primary_contact.summary_text("  *") : MISSING_CONTACT}
 
 Field Service Summary

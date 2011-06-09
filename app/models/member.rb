@@ -520,11 +520,18 @@ class Member < ActiveRecord::Base
   # * His spouse's contact marked as primary, if he has none himself
   # * His family head's primary_contact in the case of a child.
   def primary_contact(options={})
+puts ".. primary_contact called, contacts=#{self.contacts.count}"
+puts "   where ... = #{self.contacts.where("is_primary").all}"
+false1 = self.contacts.where(:is_primary=>false).first
+puts "   false ... = #{false1} where is_primary=#{false1.is_primary if false1}"
+puts "   first ... = #{self.contacts.first.is_primary}"
     primary = self.contacts.where(:is_primary=>true).first
     primary ||= (self.family.head.primary_contact if self.child && family.head.primary_contact)
     if !primary && is_married? && options[:no_substitution].nil?
       primary = spouse.contacts.where(:is_primary=>true).first
     end
+puts "** No primary contact found, #{self.contacts.first.attributes}\n" if !primary
+puts "++    primary contact found, #{primary.attributes}\n" if primary
     return primary
   end
 

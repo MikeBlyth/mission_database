@@ -37,5 +37,49 @@ describe Contact do
     contact.reload.phone_1.should == phone.phone_std
     contact.reload.phone_2.should == phone.phone_std
   end
+
+  describe 'is_primary flag' do
+    before(:each) {@member=Factory.stub(:member_without_family)}
     
+    describe 'on new record' do
+      
+      it 'is not set if member is not defined for contact record' do
+        Contact.new.is_primary.should_not be_true
+      end 
+
+      it 'is set on new record if there is NOT an existing primary contact for member' do
+        Contact.new(:member=>@member).is_primary.should be_true
+      end
+    
+      it 'is NOT set on new record if there IS existing primary contact for member' do
+        Factory(:contact, :member=>@member, :is_primary=>true)
+        Contact.new(:member=>@member).is_primary.should_not be_true
+      end
+    end # on new record
+    
+    describe 'on record being updated' do
+      
+      it "is cleared from other records when set in update parameters" do
+        first = Factory(:contact, :member=>@member, :is_primary=>true)
+        second = Factory(:contact, :member=>@member, :is_primary=>false)
+        first.reload.is_primary.should be_true
+        second.reload.is_primary.should be_false
+        second.update_attributes(:member=>@member, :is_primary=>true)
+        first.reload.is_primary.should be_false
+        second.reload.is_primary.should be_true
+      end 
+
+      it "is NOT cleared from other records when NOT set in update parameters" do
+        first = Factory(:contact, :member=>@member, :is_primary=>true)
+        second = Factory(:contact, :member=>@member, :is_primary=>false)
+        first.reload.is_primary.should be_true
+        second.reload.is_primary.should be_false
+        second.update_attributes(:member=>@member, :is_primary=>false)
+        first.reload.is_primary.should be_true
+        second.reload.is_primary.should be_false
+      end 
+
+    end # on record being updated
+      
+  end     # is_primary flag
 end
