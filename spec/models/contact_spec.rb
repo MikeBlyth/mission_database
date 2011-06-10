@@ -3,9 +3,11 @@ include SimTestHelper
 describe Contact do
 
   describe 'summary' do
+    pending
   end
   
   describe 'summary_text' do
+    pending
   end
   
   describe 'finds recent' do

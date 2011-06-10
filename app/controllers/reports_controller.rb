@@ -86,12 +86,12 @@ class ReportsController < ApplicationController
   end
 
   def contact_updates
-    @contacts = Contact.recently_updated
+    @contacts = Contact.recently_updated.sort
   end
 
   def send_contact_updates
     @title = 'Send contact updates'
-    @contacts = Contact.recently_updated
+    @contacts = Contact.recently_updated.sort
     recipients = Settings.contacts.updates_recipients
     message = Notifier.contact_updates(recipients, @contacts)
     message.deliver

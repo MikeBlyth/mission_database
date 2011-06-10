@@ -142,7 +142,7 @@ Ministry comment: #{m.ministry_comment}
 Education level: #{m.personnel_data.education || MISSING}
 
 Contact information
-#{m.primary_contact(:no_substitution=>true) ? m.primary_contact.summary_text("  *") : MISSING_CONTACT}
+#{m.primary_contact(:no_substitution=>true) ? m.primary_contact.summary_text(:prefix=>"  *") : MISSING_CONTACT}
 
 Field Service Summary
 #{field_term_content(m)}

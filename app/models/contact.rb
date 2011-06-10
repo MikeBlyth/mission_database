@@ -48,6 +48,10 @@ class Contact < ActiveRecord::Base
     return self.where("contacts.updated_at > ?", Date.today - since.days).includes(:member)
   end
 
+  def <=>(other)
+    self.member.name <=> other.member.name
+  end
+
   # Generate hash of contact info ready for display;
   # * join multiple phones and emails
   # * add "private" notice if needed
@@ -80,10 +84,18 @@ class Contact < ActiveRecord::Base
   #   (prefix occurs before every line including the first, while separator only BETWEEN lines)
   # Example if prefix = "\t"
   # "\tPhone: 0803-333-3333\n\tEmail: my@example.com\n\t ..."
-  def summary_text(prefix='', separator="\n")
+  # Lines without content are not included unless :include_blanks=>true
+  def summary_text(params={})
+    prefix = params[:prefix] || ''
+    separator = params[:separator] || "\n"
+    include_blanks = params[:include_blanks]
     fields = ['Phone', 'Email', 'Skype', 'Photos', 'Blog', 'Other website', 'Facebook']
     summary_hash = self.summary
-    return prefix + (fields.map {|f| "#{f}: #{summary_hash[f]}"}.join("#{separator}#{prefix}"))
+    summary = fields.map do |f|
+      content = summary_hash[f]
+      "#{f}: #{content}" if (!content.blank? || include_blanks)
+    end
+    return prefix + summary.compact.join("#{separator}#{prefix}")
   end
   
   def email_public
