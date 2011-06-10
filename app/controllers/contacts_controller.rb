@@ -32,5 +32,14 @@ class ContactsController < ApplicationController
  #    list.sorting = {:member.last_name => 'ASC'}
   end
 
+  # Set is_primary true if new record belongs to a member with no primary contact or if
+  # it belongs to no member at all.
+  def do_new
+    super
+puts "Do New"
+    @record.is_primary = (@record.member && @record.member.contacts.where(:is_primary=>true).empty?) ||
+                          @record.member.nil?
+  end
+
 end 
 

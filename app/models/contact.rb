@@ -101,8 +101,9 @@ class Contact < ActiveRecord::Base
 private
 
   def check_is_primary
-    return unless self.member
-    self.is_primary = true if self.member.contacts.where(:is_primary=>true).empty?
+    return unless new_record? && is_primary.nil?
+    self.is_primary = true if self.member.nil? || 
+          (self.member && self.member.contacts.where(:is_primary=>true).empty?)
   end
   
   def clear_other_records_is_primary

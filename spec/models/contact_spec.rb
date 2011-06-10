@@ -43,8 +43,8 @@ describe Contact do
     
     describe 'on new record' do
       
-      it 'is not set if member is not defined for contact record' do
-        Contact.new.is_primary.should_not be_true
+      it 'is set if member is not defined for contact record' do
+        Contact.new.is_primary.should be_true
       end 
 
       it 'is set on new record if there is NOT an existing primary contact for member' do
@@ -55,6 +55,18 @@ describe Contact do
         Factory(:contact, :member=>@member, :is_primary=>true)
         Contact.new(:member=>@member).is_primary.should_not be_true
       end
+      
+      it 'is NOT set on new record when it is initialized as false' do
+        Contact.new(:member=>@member, :is_primary=>false).is_primary.should be_false
+      end
+      
+      it 'is NOT set on OLD record (one retrieved from db)' do
+        f = Factory(:contact, :is_primary=>false, :member=>@member)
+        f.reload.is_primary.should_not be_true
+      end
+      
+
+
     end # on new record
     
     describe 'on record being updated' do
