@@ -2,7 +2,11 @@
 #require Rails.root.join('spec/spec_helper')
 puts "**** INCLUDING SIMTESTHELPER ***"
 module SimTestHelper
-#  include ApplicationHelper
+
+  def regexcape(s)
+    Regexp.new(Regexp.escape(s))
+  end
+
   def create_one_unspecified_code(type, params={})
     type = type.to_s.camelcase.constantize if type.class == Symbol
     unless type.find_by_id(UNSPECIFIED)

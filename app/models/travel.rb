@@ -108,17 +108,22 @@ class Travel < ActiveRecord::Base
     return self.where('updated_at > ?', Date.today - since.days).includes(:member)
   end
   
+  # For use in Where Is Everyone & any other directory information,
+  # List who is visiting and give email & phone information as available.
+  # Visitors are those with current incoming travel who are not "on field" as well
+  # as any listed in the other_travelers field. Only those in the database can have a
+  # contact information.
   def self.current_visitors
-#    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR travels.member_id IS NULL', Status.field_statuses)
-    travels = self.current_arrivals.where('(members.status_id NOT IN (?)) OR other_travelers IS NOT NULL', Status.field_statuses)
+    travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
     visitors = []
     travels.each do |t|
       # Add contact info if there is a (database) member as a visitor
       if t.member && t.member.primary_contact
+        contact = t.member.primary_contact
         # Include the name only if there are other travelers to be distinguished
         contacts_name = t.other_travelers ? "#{t.member.full_name_short}: " : ''
         contacts = contacts_name + smart_join(
-                                         [t.member.primary_contact.phone_1.phone_format,
+                                         [format_phone(contact.phone_1),
                                           t.member.primary_contact.email_1 ])
       else
         contacts = ''

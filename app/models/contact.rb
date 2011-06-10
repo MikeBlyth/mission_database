@@ -106,10 +106,9 @@ private
   end
   
   def clear_other_records_is_primary
-    return unless self.member
-    if self.member.contacts.length > 0 && self.is_primary 
-      puts "doing it"
-   #   self.member.contacts.update_all("is_primary = false", "id != #{id}")
+    return unless self.member.reload
+    if self.member.contacts.length > 0 && self.is_primary && self.id
+      self.member.contacts.update_all("is_primary = false", "id != #{id}")
     end
   end
 end

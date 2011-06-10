@@ -4,6 +4,7 @@ describe Travel do
 
   before(:each) do
     @object = Factory.build(:travel)
+    @travel = @object
     @attr = @object.attributes
   end
   
@@ -147,5 +148,56 @@ describe Travel do
       Travel.current.should == [@current]
     end
     
-  end
+  end # time filters
+  
+  describe "current_visitors" do
+    before(:each) do
+      @on_field = Factory(:status)
+      @member=Factory.build(:member_without_family, :status=>Factory(:status_home_assignment))
+      @travel.member=@member
+      @travel.date = Date.today - 10.days
+    end
+    
+    it 'includes member "on leave" coming to the field' do
+      @member.save
+      @travel.save
+      current_visitors = Travel.current_visitors
+      current_visitors.should_not be_empty
+      current_visitors[0][:names].should =~ Regexp.new(@member.last_name)
+    end
+
+    it 'does not include member "on field" coming to the field' do
+      @member.status=@on_field
+      @member.save
+      @travel.save
+      Travel.current_visitors.should be_empty
+    end
+
+    it 'does not include member "on leave" leaving the field' do
+      @member.save
+      @travel.arrival = false
+      @travel.save
+      Travel.current_visitors.should be_empty
+    end
+
+    it 'includes "other traveler" arriving on field' do
+      @travel.other_travelers = 'Grandma'
+      @travel.save
+      current_visitors = Travel.current_visitors
+      current_visitors.should_not be_empty
+      current_visitors[0][:names].should =~ /Grandma/
+    end
+
+    it 'includes phone number of member "on leave" coming to the field' do
+      @member.save
+      contact=Factory(:contact, :member=>@member)
+      @travel.save
+      current_visitors = Travel.current_visitors
+      current_visitors.should_not be_empty
+      current_visitors[0][:contacts].should =~ regexcape(contact.phone_1.phone_format)
+    end
+
+    
+    
+  end # current_visitors      
 end

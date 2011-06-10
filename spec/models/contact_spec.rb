@@ -39,7 +39,7 @@ describe Contact do
   end
 
   describe 'is_primary flag' do
-    before(:each) {@member=Factory.stub(:member_without_family)}
+    before(:each) {@member=Factory(:member_without_family)}
     
     describe 'on new record' do
       
