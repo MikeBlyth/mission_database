@@ -1,9 +1,9 @@
 Here are the latest changes in the latest travel schedule:
 
-<%- if @mods.empty? %>
+<%- if @travel_updates.empty? %>
   ** No changes found during last reporting period. **
 <%- else %>
-  <%- @mods.each do |m| %>
+  <%- @travel_updates.each do |m| %>
     <%= "#{m.member.name || other_travelers}, #{m.date}, #{m.arrival ? 'arriving' : 'departing'} #{m.origin || '?'} to #{m.destination || '?'} on flight #{m.flight || '?'}" %>
     <%- if m.with_spouse || m.with_children %>
       <%- accompanied_by = [] %>

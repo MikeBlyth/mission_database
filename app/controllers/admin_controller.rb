@@ -21,9 +21,26 @@ class AdminController < ActionController::Base
     @report = cum_report
   end
 
-  def mail_notices
-    @trav_mod = Notifier.travel_mod
-    @trav_mod.deliver
+  def email_addresses(s)
+    (s || '').split(';').map {|address| address.strip}
+  end
+
+  def review_travel_updates
+    @title = 'Travel updates'
+    @travels = Travel.recent_updates.includes(:member)
+  end  
+
+  def send_travel_updates
+    recipients=email_addresses(SiteSetting[:travel_update_recipients])
+    if recipients.empty?
+      flash[:notice] = "No recipients defined in settings 'Travel Update Recipients.'"
+    else
+      @travels = Travel.recent_updates.includes(:member)
+      @notice = Notifier.travel_updates(recipients, @travels)
+      @notice.deliver
+      flash[:notice] = "Sent #{recipients.length} notices."
+    end
+    redirect_to travels_path
   end  
 
   def review_travel_reminders

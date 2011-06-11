@@ -1,0 +1,10 @@
+= "#{travel.member.name || other_travelers}, #{travel.date}, #{travel.arrival ? 'arriving' : 'departing'} #{travel.origin || '?'} to #{travel.destination || '?'} on flight #{travel.flight || '?'}" 
+- if travel.with_spouse || travel.with_children 
+  - accompanied_by = [] 
+  - accompanied_by << 'spouse' if travel.with_spouse 
+  - accompanied_by << 'child(ren)' if travel.with_children 
+  = "Traveling with #{accompanied_by.join(' and ')}." 
+- if  travel.member && !travel.other_travelers.blank? 
+  = "Other travelers: #{travel.other_travelers}." 
+- if travel.return_date 
+  = "Planned return date: #{travel.return_date}." 

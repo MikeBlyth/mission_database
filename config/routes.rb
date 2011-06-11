@@ -42,7 +42,7 @@ SIM::Application.routes.draw do
 #  match 'reports/multi_col_test' => 'reports#multi_col_test'
 
   match 'admin/clean_database' => 'admin#clean_database', :as => 'clean_database'
-  match 'admin/mail_notices' => 'admin#mail_notices', :as => 'mail_notices'
+  put 'admin/travel_update_notices' => 'admin#travel_update_notices', :as => 'travel_update_notices'
   get   'admin/family_summaries' => 'admin#review_family_summaries', :as => 'family_summaries'
   post  'admin/family_summaries' => 'admin#send_family_summaries', :as => 'send_family_summaries'
   get   'admin/travel_reminders' => 'admin#review_travel_reminders', :as => 'travel_reminders'

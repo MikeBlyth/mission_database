@@ -104,7 +104,7 @@ class Travel < ActiveRecord::Base
   end
 
   # This returns recently *updated* travel records
-  def self.recently_updated(since=10)
+  def self.recently_updated(since=SiteSettings[:travel_update_window])
     return self.where('updated_at > ?', Date.today - since.days).includes(:member)
   end
   

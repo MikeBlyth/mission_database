@@ -17,6 +17,14 @@
     = settings_field(:twilio_account_token, :password=>true)
     = settings_field(:twilio_api_version, :label=>'Twilio API version')
     = settings_field(:twilio_phone_number)
-    
+    %h3 Notifications
+    %p 
+      Specify who will receive various notifications from this program, and when they will be sent.
+      Include email addresses only (no names), separated by ";" semicolons.
+    %h4 Contact Updates
+    = settings_field(:contact_update_recipients)
+    %h4 Travel Updates
+    = settings_field(:travel_update_recipients)
+    = settings_field(:travel_update_window)
     = submit_tag 'Save'
 

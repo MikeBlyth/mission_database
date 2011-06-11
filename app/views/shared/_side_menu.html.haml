@@ -50,6 +50,7 @@
       %li= link_to 'Clean database', clean_database_path 
       %li= link_to 'Send family summaries', family_summaries_path
       %li= link_to 'Send travel reminders', travel_reminders_path
+      %li= link_to 'Send travel update notices', travel_update_notices_path, :method=>:put
       %li= link_to 'Send contact updates', contact_updates_path
       %hr
   - else 

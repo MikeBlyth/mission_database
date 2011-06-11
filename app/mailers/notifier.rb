@@ -103,8 +103,8 @@ class Notifier < ActionMailer::Base
     end 
   end
 
-  def travel_mod(recipients)
-    @mods = Travel.where("travels.updated_at > ?", Date.today-7.days).includes(:member)
+  def travel_updates(recipients, updated_travels)
+    @updated_travels = updated_travels
     mail :to => recipients, :subject=>'Travel schedule updates'
   end
 
