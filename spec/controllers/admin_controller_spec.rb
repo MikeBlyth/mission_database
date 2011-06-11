@@ -441,6 +441,33 @@ describe AdminController do
       end
       
     end # travel reminders
+    
+    describe 'Travel updates' do
+      before(:each) do
+        @member = Factory(:member)
+        @travel = Factory(:travel, :member=>@member)
+      end        
+
+      it 'are reviewed' do
+        get :review_travel_updates
+        response.should render_template('travel_updates')
+        assigns[:travel_updates].should == [@travel]
+      end
+
+      it 'are emailed' do
+        lambda {put :send_travel_updates}.
+          should change(ActionMailer::Base.deliveries, :length).by(1)
+      end
+
+      it 'contain travel information' do
+        put :send_travel_updates
+        notice = ActionMailer::Base.deliveries.last
+        notice.html_part.to_s.should match @member.last_name
+        notice.text_part.to_s.should match @member.last_name
+      end
+
+    end # Travel updates
+    
   end # notices
   
 end # AdminController

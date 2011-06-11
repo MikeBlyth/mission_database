@@ -5,15 +5,16 @@
     in any contact has been changed, and there may be some contacts where in
     fact nothing has changed (if the record was updated in the database but
     the information was not changed).
-  = form_tag(send_contact_updates_path, :method => "post") unless @email   
-  - if !@contacts.empty?
-    - @contacts.each do |contact|
-      %p.name
-        = contact.member.last_name_first(:initial=>true, :short=>true)
-        = "(updated #{contact.updated_at.to_s(:date)})"
-      %p.contact_type= "Contact type: #{contact.contact_type}"
-      = render(:partial => "reports/contact", :object=>contact )
-  - else
-    %p *** No changes recorded ***  
-  = (submit_tag "Send") unless @email
+  - unless @email 
+    = form_tag(send_contact_updates_path, :method => "put")  do
+      - if !@contacts.empty?
+        - @contacts.each do |contact|
+          %p.name
+            = contact.member.last_name_first(:initial=>true, :short=>true)
+            = "(updated #{contact.updated_at.to_s(:date)})"
+          %p.contact_type= "Contact type: #{contact.contact_type}"
+          = render(:partial => "reports/contact", :object=>contact )
+      - else
+        %p *** No changes recorded ***  
+      = (submit_tag "Send") unless @email
   %p.footer reports#contact_updates

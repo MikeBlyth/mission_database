@@ -1,18 +1,10 @@
-Here are the latest changes in the latest travel schedule:
-
-- if @travel_updates.empty? 
+Here are the latest updates to the SIM travel schedule:
+- if @travel_updates.nil? || @travel_updates.empty? 
+  = ""
   ** No changes found during last reporting period. **
 - else 
-  - @travel_updates.each do |m| 
-    = "#{m.member.name || other_travelers}, #{m.date}, #{m.arrival ? 'arriving' : 'departing'} #{m.origin || '?'} to #{m.destination || '?'} on flight #{m.flight || '?'}" 
-    - if m.with_spouse || m.with_children 
-      - accompanied_by = [] 
-      - accompanied_by << 'spouse' if m.with_spouse 
-      - accompanied_by << 'child(ren)' if m.with_children 
-      = "Traveling with #{accompanied_by.join(' and ')}" 
-    - if  m.member && !m.other_travelers.blank? 
-      = "Other travelers: #{m.other_travelers}" 
-    - if m.return_date 
-      = "Planned return date: #{m.return_date}" 
+  - @travel_updates.each do |travel| 
+    = ""
+    = render(:partial => "travels/travel", :object=>travel)
 
 Do not reply to this email, it is for your information only. For questions, contact jos.travel@sim.org.

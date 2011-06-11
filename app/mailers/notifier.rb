@@ -103,8 +103,9 @@ class Notifier < ActionMailer::Base
     end 
   end
 
-  def travel_updates(recipients, updated_travels)
-    @updated_travels = updated_travels
+  def travel_updates(recipients, travel_updates)
+    @travel_updates = travel_updates
+    @email = true
     mail :to => recipients, :subject=>'Travel schedule updates'
   end
 

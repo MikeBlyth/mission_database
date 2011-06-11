@@ -14,9 +14,11 @@ describe Notifier do
 #    Factory :contact_type
 #  end
 
-  describe "travel_mod" do
-    let(:mail) { Notifier.travel_mod('test@example.com') }
-    let(:trav_member) {Factory(:member)}
+  # TODO: this partly duplicates tests found in admin controller
+  # Need to rationalize division of mailer tests between controllers and mailer.
+  describe "travel_updates" do
+    let(:mail) { Notifier.travel_updates('test@example.com', (@travel ? [@travel] : nil)) }
+    let(:trav_member) {Factory.stub(:member_without_family)}
 
     it "renders the headers" do
       mail.subject.should eq("Travel schedule updates")
@@ -26,6 +28,7 @@ describe Notifier do
 
     it "renders the body" do
       mail.body.encoded.should match("No changes found during last reporting period.")
+      mail.body.encoded.should match "latest updates"
     end
 
     it "makes deliverable mail" do
@@ -34,26 +37,10 @@ describe Notifier do
     end
     
     it "reports a changed travel record" do
-      travel = Factory(:travel, :member=>trav_member, :date=>Date.today, :arrival=>false, :time=>Time.now, 
+      @travel = Factory.stub(:travel, :member=>trav_member, :date=>Date.today, :arrival=>false, :time=>Time.now, 
           :with_spouse=>true, :with_children=>true,
           :other_travelers=>'Grandparents')
-      mail.body.should match(travel.member.name)      
-      mail.deliver
-    end
-  end
-
-  describe "send_test" do
-    let(:mail) { Notifier.send_test('test@example.com', 'message') }
-
-    it "renders the headers" do
-      mail.subject.should =~ /test/i
-      mail.to.should eq(["test@example.com"])
-      mail.from.should eq(["database@sim-nigeria.org"])
-    end
-
-    it "renders the body" do
-      mail.body.encoded.should =~ /test/i
-      mail.body.encoded.should =~ /message/i
+      mail.body.encoded.should match(@travel.member.name)      
     end
   end
 
@@ -200,7 +187,7 @@ describe Notifier do
 
   describe 'travel_reminder' do
     before(:each) do
-      @travel = Factory(:travel, :arrival=>true, :time=>sixpm, :personal=>true,
+      @travel = Factory.stub(:travel, :arrival=>true, :time=>sixpm, :personal=>true,
         :return_date=>nil, :return_time=>nil)
       Factory(:contact, :member=>@travel.member)
     end
@@ -226,7 +213,9 @@ describe Notifier do
     end           
 
     it 'reports return trip if present' do
-      @travel.update_attributes(:return_date=>@travel.date+5.months, :return_time=>twopm)
+#      @travel.update_attributes(:return_date=>@travel.date+5.months, :return_time=>twopm)
+      @travel.return_date = @travel.date+5.months
+      @travel.return_time = twopm
       message = Notifier.travel_reminder(@travel).to_s
       message.should match "Return trip"
       message.should match twopm.strftime('%l:%M %P')
@@ -234,7 +223,8 @@ describe Notifier do
     end
       
     it 'reports "own arrangements" if applicable' do
-      @travel.update_attributes(:own_arrangements=>true)
+#      @travel.update_attributes(:own_arrangements=>true)
+      @travel.own_arrangements = true
       message = Notifier.travel_reminder(@travel).to_s
       message.should match "own arrangements"
     end

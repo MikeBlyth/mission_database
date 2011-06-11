@@ -104,8 +104,9 @@ class Travel < ActiveRecord::Base
   end
 
   # This returns recently *updated* travel records
-  def self.recently_updated(since=SiteSettings[:travel_update_window])
-    return self.where('updated_at > ?', Date.today - since.days).includes(:member)
+  def self.recently_updated(since=SiteSetting[:travel_update_window])
+    return self.where('travels.updated_at > ?', Date.today - since.days).
+      order('date ASC').includes(:member)
   end
   
   # For use in Where Is Everyone & any other directory information,

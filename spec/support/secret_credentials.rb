@@ -19,7 +19,10 @@ vars = [
          %w(sendgrid_username suchandso),
          %w(sendgrid_password sosecret),
          %w(outgoing_sms clickatell),
-         %w(sendgrid_domain heroku.com)
+         %w(sendgrid_domain heroku.com),
+         ["contact_update_recipients", "tester@example.com; mike@example.com"],
+         ["travel_update_recipients", "tester@example.com; mike@example.com"],
+         ["travel_update_window", "10"]
         ]
         
 vars.each {|v| SiteSetting.create(:name=>v[0], :value=>v[1])}

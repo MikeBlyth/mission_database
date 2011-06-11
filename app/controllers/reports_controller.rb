@@ -64,7 +64,7 @@ class ReportsController < ApplicationController
     @visitors = Travel.current_visitors
     respond_to do |format|
       format.html do 
-        if params[:by] == 'location'
+        if params[:by] == 'bylocation'
           render :template=>'reports/whereis_by_location' 
         else
           render :template=>'reports/whereis' 

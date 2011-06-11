@@ -27,7 +27,8 @@ class AdminController < ActionController::Base
 
   def review_travel_updates
     @title = 'Travel updates'
-    @travels = Travel.recent_updates.includes(:member)
+    @travel_updates = Travel.recently_updated.includes(:member)
+    render :template=>'notifier/travel_updates' 
   end  
 
   def send_travel_updates
@@ -35,9 +36,10 @@ class AdminController < ActionController::Base
     if recipients.empty?
       flash[:notice] = "No recipients defined in settings 'Travel Update Recipients.'"
     else
-      @travels = Travel.recent_updates.includes(:member)
-      @notice = Notifier.travel_updates(recipients, @travels)
+      @travel_updates = Travel.recently_updated.includes(:member)
+      @notice = Notifier.travel_updates(recipients, @travel_updates)
       @notice.deliver
+puts "Notice=#{@notice}"
       flash[:notice] = "Sent #{recipients.length} notices."
     end
     redirect_to travels_path
