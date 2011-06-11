@@ -49,11 +49,9 @@ class Member < ActiveRecord::Base
   belongs_to :ministry
   belongs_to :residence_location, :class_name => "Location"#, :foreign_key => "residence_location_id"
   belongs_to :work_location, :class_name => "Location"#, :foreign_key => "work_location_id"
-#  belongs_to :employment_status
   belongs_to :status
   validates_presence_of :last_name, :first_name, :name, :family
   validates_uniqueness_of :spouse_id, :allow_blank=>true
-#  validate :family_record_exists
   validate :valid_spouse
   validates_uniqueness_of :name
 
@@ -62,8 +60,6 @@ class Member < ActiveRecord::Base
   before_create :build_personnel_data
   before_create :build_health_data
   before_save   :unlink_spouses_if_indicated
-#  after_create :create_personnel_data
-#  after_create :create_health_data
   after_save  :cross_link_spouses
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse

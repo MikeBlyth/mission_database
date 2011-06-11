@@ -196,8 +196,38 @@ describe Travel do
       current_visitors.should_not be_empty
       current_visitors[0][:contacts].should =~ regexcape(contact.phone_1.phone_format)
     end
-
-    
     
   end # current_visitors      
+
+  describe 'relates to field_terms:' do
+    before(:each) do
+      @member=Factory(:member_without_family)
+      @previous_term = Factory(:field_term, :member=>@member,
+           :start_date=>Date.today-600, :end_date=>Date.today-250)
+      @current_term = Factory(:field_term, :member=>@member,
+           :start_date=>Date.today-200, :end_date=>Date.today+30)
+      @future_term = Factory(:field_term, :member=>@member,
+           :start_date=>Date.today+100, :end_date=>nil)
+      @far_future_term = Factory(:field_term, :member=>@member,
+           :start_date=>Date.today+300, :end_date=>nil)
+    end
+    
+    describe 'finds right existing field_term that is not yet linked:' do
+      before(:each) do
+        @travel=Factory.stub(:travel, :member=>@member, :arrival=>true, :date=>Date.today+100.days)
+      end
+    
+      it 'nearest beginning of term if travel is arrival' do
+        @travel.existing_term.should == @future_term
+      end
+      
+      it 'nearest end of term if travel is departure' do
+        @travel.arrival = false
+        @travel.existing_term.should == @current_term
+      end
+      
+    end  # finds right field_term that is not yet linked
+    
+  end
+  
 end

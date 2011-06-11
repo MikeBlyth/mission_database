@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20110611203047
 #
 # Table name: field_terms
 #
@@ -14,6 +14,8 @@
 #  est_end_date             :date
 #  created_at               :datetime
 #  updated_at               :datetime
+#  beginning_travel_id      :integer
+#  ending_travel_id         :integer
 #
 
 class FieldTerm < ActiveRecord::Base
@@ -22,6 +24,9 @@ class FieldTerm < ActiveRecord::Base
   belongs_to :primary_work_location, :class_name => "Location", :foreign_key => "primary_work_location_id"
   belongs_to :employment_status
   belongs_to :ministry
+  belongs_to :beginning_travel, :class_name => "Travel"
+  belongs_to :ending_travel, :class_name => "Travel"
+  belongs_to :spouse, :class_name => "Member", :foreign_key => "spouse_id"
 
   after_initialize :copy_from_most_recent_term
 

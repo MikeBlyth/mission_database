@@ -70,6 +70,8 @@ class Travel < ActiveRecord::Base
   extend ApplicationHelper
    
   belongs_to :member
+  has_one :field_term, :foreign_key => :beginning_travel_id
+  has_one :field_term, :foreign_key => :ending_travel_id
   validates_presence_of :date
   validate :name_info
 
@@ -144,6 +146,19 @@ class Travel < ActiveRecord::Base
 
   def to_s
     "#{self.travelers}--#{date.to_s.strip} #{arrival ? 'arrive' : 'depart'} #{flight}; return #{return_date}"
+  end
+
+  def existing_term(max_difference=100)
+    if arrival
+      self.member.field_terms.last
+    else
+      # find most recent field term which starts before travel and is open-ended or has an 
+      # end_date "near" the specified travel date.
+      reverse_sorted = self.member.field_terms.sort.reverse
+      match_index = reverse_sorted.find_index {|f| f.start_date < self.date && 
+        (f.end_date.nil? || (f.end_date - self.date).abs < max_difference)}
+      reverse_sorted[match_index]        
+    end
   end
 
   # Used for #traveler below, not to parse the member name
