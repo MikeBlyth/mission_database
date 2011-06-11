@@ -7,6 +7,10 @@ class AdminController < ActionController::Base
   include SessionsHelper
   layout 'application'
 
+  def self.daily
+    puts "This is the daily job runner"
+  end
+
   # Do various things to clean the database
   def clean_database
     @title = "Clean database"
