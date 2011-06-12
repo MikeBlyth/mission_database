@@ -163,7 +163,7 @@ describe Travel do
       @travel.save
       current_visitors = Travel.current_visitors
       current_visitors.should_not be_empty
-      current_visitors[0][:names].should =~ Regexp.new(@member.last_name)
+      current_visitors[0][:names].should match @member.last_name
     end
 
     it 'does not include member "on field" coming to the field' do
@@ -201,15 +201,16 @@ describe Travel do
 
   describe 'relates to field_terms:' do
     before(:each) do
-      @member=Factory(:member_without_family)
-      @previous_term = Factory(:field_term, :member=>@member,
+      @member=Factory.stub(:member_without_family)
+      @previous_term = Factory.stub(:field_term, :member=>@member,
            :start_date=>Date.today-600, :end_date=>Date.today-250)
-      @current_term = Factory(:field_term, :member=>@member,
+      @current_term = Factory.stub(:field_term, :member=>@member,
            :start_date=>Date.today-200, :end_date=>Date.today+30)
-      @future_term = Factory(:field_term, :member=>@member,
+      @future_term = Factory.stub(:field_term, :member=>@member,
            :start_date=>Date.today+100, :end_date=>nil)
-      @far_future_term = Factory(:field_term, :member=>@member,
+      @far_future_term = Factory.stub(:field_term, :member=>@member,
            :start_date=>Date.today+300, :end_date=>nil)
+      @member.stub(:field_terms).and_return [@previous_term, @current_term, @future_term, @far_future_term]
     end
     
     describe 'finds right existing field_term that is not yet linked:' do
@@ -221,9 +222,27 @@ describe Travel do
         @travel.existing_term.should == @future_term
       end
       
+      it 'current term if arrival near beginning of it' do
+        @travel.date = @current_term.start_date + 60
+        @travel.existing_term.should == @current_term    
+      end
+      
       it 'nearest end of term if travel is departure' do
         @travel.arrival = false
         @travel.existing_term.should == @current_term
+      end
+      
+      it 'nil if departure date not near any end of term' do
+        @travel.arrival = false
+#        @current_term.destroy
+      @member.stub(:field_terms).and_return [@previous_term, @future_term, @far_future_term]
+        @travel.existing_term.should == nil
+      end
+      
+      it 'nil if arrival date not near start of any term' do
+#        @future_term.destroy
+      @member.stub(:field_terms).and_return [@previous_term, @current_term, @far_future_term]
+        @travel.existing_term.should == nil
       end
       
     end  # finds right field_term that is not yet linked

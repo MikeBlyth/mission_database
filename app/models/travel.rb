@@ -149,16 +149,19 @@ class Travel < ActiveRecord::Base
   end
 
   def existing_term(max_difference=100)
-    if arrival
-      self.member.field_terms.last
-    else
-      # find most recent field term which starts before travel and is open-ended or has an 
-      # end_date "near" the specified travel date.
-      reverse_sorted = self.member.field_terms.sort.reverse
-      match_index = reverse_sorted.find_index {|f| f.start_date < self.date && 
-        (f.end_date.nil? || (f.end_date - self.date).abs < max_difference)}
-      reverse_sorted[match_index]        
+    terms = self.member.field_terms.sort
+    # find earliest field term which ... 
+    match_index = terms.find_index do |f| 
+      if arrival
+        # ... has starting date "near" the travel date
+        (f.best_start_date - self.date).abs < max_difference
+      else
+        # ... starts before travel and is open-ended or has an end_date "near" the travel date.
+        f.best_start_date < self.date && 
+          (f.best_end_date.nil? || (f.best_end_date - self.date).abs < max_difference)
+      end
     end
+    match_index ? terms[match_index] : nil       
   end
 
   # Used for #traveler below, not to parse the member name
