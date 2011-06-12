@@ -83,7 +83,7 @@ class AdminController < ActionController::Base
       @travel_updates = Travel.recently_updated.includes(:member)
       @notice = Notifier.travel_updates(recipients, @travel_updates)
       @notice.deliver
-puts "Notice=#{@notice}"
+#puts "Notice=#{@notice}"
       flash[:notice] = "Sent #{recipients.length} notices."
     end
     AppLog.create(:severity=>'info', :code=>'Notice.travel_updates', 
