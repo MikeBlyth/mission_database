@@ -95,7 +95,10 @@ class ReportsController < ApplicationController
     recipients = SiteSetting.contact_update_recipients
     message = Notifier.contact_updates(recipients, @contacts)
     message.deliver
+puts "#{message}"
     flash[:notice] = "Sent contact updates."
+    AppLog.create(:severity=>'info', :code=>'Notice.contact_updates', 
+      :description => "#{@contacts.length} updated contacts, sent to #{recipients.length} recipients")
     redirect_to reports_path
   end
  

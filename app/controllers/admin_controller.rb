@@ -9,7 +9,46 @@ class AdminController < ActionController::Base
 
   def self.daily
     puts "This is the daily job runner"
+    autosend_travel_reminders
+    self.weekly if Date.today.wday == 0
   end
+  
+  def self.weekly
+    autosend_contact_updates
+    autosend_travel_updates
+  end
+
+  def self.autosend_contact_updates
+    contacts = Contact.recently_updated.sort
+    recipients = SiteSetting.contact_update_recipients
+    message = Notifier.contact_updates(recipients, contacts)
+    message.deliver
+    AppLog.create(:severity=>'info', :code=>'Notice.contact_updates', 
+      :description => "#{contacts.length} updated contacts")
+  end
+
+  def self.autosend_travel_reminders
+    travels = Travel.pending.where("reminder_sent IS ?", nil)
+    messages = []
+    travels.each do |travel|
+      if travel.member.email
+        messages << Notifier.travel_reminder(travel)  
+        travel.update_attribute(:reminder_sent, Date.today)
+      end
+    end
+    messages.each {|m| m.deliver}
+    AppLog.create(:severity=>'info', :code=>'Notice.travel_reminder', 
+        :description => "sent #{messages.length} messages")
+  end
+
+  def self.autosend_travel_updates
+    recipients=SiteSetting[:travel_update_recipients]
+    travel_updates = Travel.recently_updated.includes(:member)
+    notice = Notifier.travel_updates(recipients, travel_updates)
+    notice.deliver
+    AppLog.create(:severity=>'info', :code=>'Notice.travel_updates', 
+      :description => "#{travel_updates.length} updated travels")
+  end  
 
   # Do various things to clean the database
   def clean_database
@@ -23,6 +62,7 @@ class AdminController < ActionController::Base
     cum_report << clean_contacts(fix)
     flash[:notice] = fix ? 'Database cleaned' : 'Report only; database not yet cleaned'
     @report = cum_report
+    AppLog.create(:severity=>'info', :code=>'CleanDatabase', :description => "Fixed = #{fix}")
   end
 
   def email_addresses(s)
@@ -46,6 +86,8 @@ class AdminController < ActionController::Base
 puts "Notice=#{@notice}"
       flash[:notice] = "Sent #{recipients.length} notices."
     end
+    AppLog.create(:severity=>'info', :code=>'Notice.travel_updates', 
+      :description => "#{@travel_updates.length} updated travels, sent to #{recipients.length} recipients")
     redirect_to travels_path
   end  
 
@@ -67,7 +109,8 @@ puts "Notice=#{@notice}"
       end
     end
     @messages.each {|m| m.deliver}
-    flash[:notice] = "Sent #{@messages.count} reminder messages"
+    flash[:notice] = "Sent #{@messages.count} travel reminder messages"
+    AppLog.create(:severity=>'info', :code=>'Notice.travel_reminder', :description => flash[:notice])
     redirect_to travels_path
   end
 
