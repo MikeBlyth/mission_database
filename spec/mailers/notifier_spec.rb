@@ -42,6 +42,13 @@ describe Notifier do
           :other_travelers=>'Grandparents')
       mail.body.encoded.should match(@travel.member.name)      
     end
+
+    it "reports a changed travel record without member" do
+      @travel = Factory.stub(:travel, :member=>nil, :date=>Date.today, :arrival=>false, :time=>Time.now, 
+          :with_spouse=>true, :with_children=>true,
+          :other_travelers=>'Santa Claus')
+      mail.body.encoded.should match(@travel.other_travelers)      
+    end
   end
 
   describe 'send_family_summary' do

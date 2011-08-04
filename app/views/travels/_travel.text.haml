@@ -1,4 +1,4 @@
-= "#{travel.member.name || other_travelers}, #{travel.date}, #{travel.arrival ? 'arriving' : 'departing'} #{travel.origin || '?'} to #{travel.destination || '?'} on flight #{travel.flight || '?'}" 
+= "#{travel.member ? travel.member.name : travel.other_travelers}, #{travel.date}, #{travel.arrival ? 'arriving' : 'departing'} #{travel.origin || '?'} to #{travel.destination || '?'} on flight #{travel.flight || '?'}" 
 - if travel.with_spouse || travel.with_children 
   - accompanied_by = [] 
   - accompanied_by << 'spouse' if travel.with_spouse 
