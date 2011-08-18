@@ -96,7 +96,8 @@ class Notifier < ActionMailer::Base
   def contact_updates(recipients, contacts)
     @content = "--Content--"
     @contacts = contacts
-    @email = true
+    @email = true # Same template used for screen display (check) & actual mailing, so @email is
+                  # used to flag that we are emailing msg. So we don't include the "Send" button.
     mail(:to => recipients, :subject=>'Recently updated contact info') do |format|
       format.text {render 'reports/contact_updates'}
       format.html {render 'reports/contact_updates'}

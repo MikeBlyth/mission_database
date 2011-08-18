@@ -238,13 +238,16 @@ div.status_mismatch {
   div.status_mismatch th {
     background: #cce4fc; }
 
-div.contact_updates {
+div.contact_updates p.name {
+  font-weight: bold;
+  margin-top: 0.6em; }
+div.contact_updates .contact_type, div.contact_updates .contact_info {
+  margin-left: 1em; }
+div.contact_updates .contact_type {
   font-style: italic; }
-  div.contact_updates p.name {
-    font-weight: bold;
-    margin-top: 0.6em; }
-  div.contact_updates .contact_type, div.contact_updates .contact_info {
-    margin-left: 1em; }
+div.contact_updates .footer {
+  font-style: italic;
+  margin-top: 0.6em; }
 
 div.crosstab p.title {
   font-weight: bold;

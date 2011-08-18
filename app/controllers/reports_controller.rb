@@ -98,7 +98,7 @@ class ReportsController < ApplicationController
 puts "#{message}"
     flash[:notice] = "Sent contact updates."
     AppLog.create(:severity=>'info', :code=>'Notice.contact_updates', 
-      :description => "#{@contacts.length} updated contacts, sent to #{recipients.length} recipients")
+      :description => "#{@contacts.length} updated contacts, sent to #{recipients}")
     redirect_to reports_path
   end
  
