@@ -127,9 +127,8 @@ puts "#{message}"
 
   # Birthday reports
    def birthdays
-    selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, short_name, birth_date, status_id")
- #   selected = selected.delete_if{|x| !x.active }   # delete members not on the field
-    filter = (session[:filter] || "").gsub('_', ' ')
+    selected = Member.where(conditions_for_collection) # .select("family_id, last_name, first_name, middle_name, short_name, birth_date, status_id")
+    filter = (session[:filter] || "").gsub('_', ' ')  # For display of current filter on report head
     left_head = filter.blank? ? '' : "with status = #{filter}" 
 
     respond_to do |format|

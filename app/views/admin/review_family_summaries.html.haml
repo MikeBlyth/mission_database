@@ -6,6 +6,6 @@
     - @families.each do |family|
       %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
         %td.name= family.head.last_name_first :middle=>false, :short=>true
-        %td= family.head.employment_status_code 
+        %td= family.head.employment_status
         %td= raw family_missing_info(family).join("<br>")
   = submit_tag "Send"

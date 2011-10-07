@@ -19,7 +19,9 @@ include ReportsHelper
       if m.birth_date.blank?
         text_data << "unknown"
       else
-        text_data << "<i>"+m.birth_date.to_s(:short)+"</i>"
+        # Include year for dependent MKs but not for others
+        date_format = m.employment_status_code == "mk_dependent" ? :long : :short
+        text_data << "<i>"+m.birth_date.to_s(date_format)+"</i>"
       end
       text_data << "\n\n"
     end

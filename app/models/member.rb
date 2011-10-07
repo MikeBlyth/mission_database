@@ -171,7 +171,7 @@ class Member < ActiveRecord::Base
   
   def employment_status_code
     return nil unless personnel_data && personnel_data.employment_status
-    return personnel_data.employment_status 
+    return personnel_data.employment_status.code 
   end  
   
   def org_member
@@ -557,6 +557,23 @@ class Member < ActiveRecord::Base
     end
     return Travel.pending.where("member_id = ?", self.id) + spouse_travel
   end  
+
+#  def in_country_per_travel
+#    most_recent_travel = self.travels.where('date < ?', Date.today).order('date asc').last
+#    if most_recent_travel.nil?
+#      return self.on_field
+#    else
+#      return most_recent_travel.arrival
+#    end
+#  end
+  def in_country_per_travel
+    rt = self.most_recent_travel
+    return rt ? rt.arrival : self.on_field
+  end
+  
+  def self.those_in_country
+    return self.all
+  end
 
 private
 

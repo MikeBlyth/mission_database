@@ -1038,6 +1038,74 @@ describe Member do
     end # when member listed as off-field
      
   end # finds mismatched statuses
-      
+  
+  # For testing handling of travel records and on field status, make some travel records for @member.
+  # Take an array like [ [-5,true], [-3, false], [4,true]] to generate travel records
+  # where first of pair is date
+  #       second of pair is true for arrival, false for departure
+  def set_up_travel_records(travels)
+    travels.each do |t|
+      Factory.create(:travel, :member=>@member, :date=>t[0], :arrival=>t[1])
+    end
+  end
+  
+  describe 'in_country_per_travel:' do    
+
+    before(:each) do
+      @on_field = Factory.stub(:status) # "field" is true by default
+      @member = Factory(:member_without_family, :status=>@on_field)
+      @past = Date.today-20.days
+      @recent = Date.today - 5.days
+      @future = Date.today + 10.days
+    end
+            
+
+    describe 'when past travel exists' do
+      it 'returns true when last travel is arrival' do
+        set_up_travel_records([ [@past, false], [@recent, true], [@future, false] ])
+        @member.in_country_per_travel.should be_true
+      end
+      it 'returns true when last travel is arrival and member is leaving today' do
+        set_up_travel_records([ [@past, false], [@recent, true], [@future, false] ])
+        @member.in_country_per_travel.should be_true
+      end
+      it 'returns false when last travel is not arrival' do
+        set_up_travel_records([ [@past, false], [@recent, false], [@future, false] ])
+        @member.in_country_per_travel.should be_false
+      end
+    end # when past travel exists
+
+    describe 'when no past travel exists' do
+      it 'returns true when member status is on_field' do
+        set_up_travel_records([ [@future, false] ])
+        @member.in_country_per_travel.should be_true
+      end
+      it 'returns true when status is on_field and member is leaving today' do
+        set_up_travel_records([ [Date.today, false] ])
+        @member.in_country_per_travel.should be_true
+      end
+      it 'returns false when member status is not on_field' do
+        @leave = Factory(:status, :on_field=>false, :leave=>true) # "field" is true by default
+        @member.update_attribute(:status, @leave)
+        @member.in_country_per_travel.should be_false
+      end
+    end # when no past travel exists
+  end # on_field_per_travel
+  
+  describe 'those_in_country:' do
+    before(:each) do 
+      @on_field = Factory.stub(:status) # "field" is true by default
+      @member = Factory(:member_without_family, :status=>@on_field)
+    end
+    
+    it 'includes members w no travel but status=on_field' do
+      Member.those_in_country.should == [@member]
+    end
+    it 'does not include members w no travel and status!=on_field' do
+      @member.update_attribute(:status,nil)
+      Member.those_in_country.include?(@member).should be_false
+     
+    end
+  end 
 end
 
