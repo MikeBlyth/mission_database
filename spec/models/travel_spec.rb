@@ -197,7 +197,67 @@ describe Travel do
       current_visitors[0][:contacts].should =~ regexcape(contact.phone_1.phone_format)
     end
     
+    it 'does not include anyone who has already returned' do
+      @member.save
+      @travel.save
+      travel2 = Factory(:travel, :member=>@member, :arrival=>false, :date=>Date.yesterday)
+      Travel.current_visitors.should be_empty
+    end
+    
   end # current_visitors      
+
+  describe 'current arrivals' do
+    before(:each) do
+      @member=Factory.build(:member_without_family)
+      @travel.member=@member
+      @travel.date = Date.today - 100
+    end
+    
+    it 'includes person who has arrived but not departed' do
+      @member.save
+      @travel.save
+      Travel.current_arrivals.should_not be_empty
+      Travel.current_arrivals[0].member.should == @member
+    end
+    
+    it 'includes person who has arrived but departs today' do
+      @member.save
+      @travel.save
+      travel2 = Factory(:travel, :member=>@member, :arrival=>false, :date=>Date.today)
+      Travel.current_arrivals.should_not be_empty
+      Travel.current_arrivals[0].member.should == @member
+    end
+    
+    it 'does not includes person who has arrived and departed' do
+      @member.save
+      @travel.save
+      travel2 = Factory(:travel, :member=>@member, :arrival=>false, :date=>Date.yesterday)
+      Travel.current_arrivals.should be_empty
+    end
+
+    it 'does not includes person who has not arrived' do
+      @member.save
+      # @travel.save - this person hasn't arrived!
+      travel2 = Factory(:travel, :member=>@member, :arrival=>false, :date=>Date.yesterday)
+      Travel.current_arrivals.should be_empty
+    end
+    
+    it 'includes non-database person who has arrived but not departed' do
+      @travel.member = nil;
+      @travel.other_travelers = 'Santa Claus';
+      @travel.save
+      Travel.current_arrivals.should_not be_empty
+    end
+    
+    it 'does not include non-database person who has arrived and departed' do
+      @travel.member = nil;
+      @travel.other_travelers = 'Santa Claus';
+      @travel.save
+      travel2 = Factory(:travel, :member=>nil, :other_travelers=>'Santa Claus', :arrival=>false, :date=>Date.yesterday)
+      Travel.current_arrivals.should be_empty
+    end
+    
+  end
 
   describe 'relates to field_terms:' do
     before(:each) do

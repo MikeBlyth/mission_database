@@ -81,7 +81,29 @@ class Travel < ActiveRecord::Base
   end
   
   def self.current_arrivals
-    self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
+    # self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
+    all_travel = self.includes(:member).where("date <= ?", Date.today).order('member_id,date DESC, other_travelers')  
+    # Now all_travel is in order by member_id, then date. We can simply extract the records where 
+    #   * first record for member (i.e. the last one) and
+    #   * that record is an arrival OR that record's date is today (because the person is counted 
+    #     as being currently arrived even if he is leaving today)
+    cur_arr = []
+    cur_member_id = nil
+    cur_trav_names = nil
+    all_travel.each do |t|
+      if t.member_id  # this part is for travel records with a database member
+        if t.member_id != cur_member_id  # next member in the list?
+          cur_member_id = t.member_id
+          cur_arr << t if (t.date == Date.today) || (t.arrival)
+        end
+      else # deal with travel records without a database members, only "other_travelers"
+        if t.other_travelers != cur_trav_names  # next member in the list?
+          cur_trav_names = t.other_travelers
+          cur_arr << t if (t.date == Date.today) || (t.arrival)
+        end
+      end
+    end
+    return cur_arr
   end
   
   def self.current
