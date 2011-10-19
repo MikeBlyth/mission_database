@@ -82,7 +82,7 @@ class Travel < ActiveRecord::Base
   
   def self.current_arrivals
     # self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
-    all_travel = self.includes(:member).where("date <= ?", Date.today).order('member_id,date DESC, other_travelers')  
+    all_travel = self.includes(:member).where("date <= ?", Date.today).order('member_id, other_travelers, date DESC')  
     # Now all_travel is in order by member_id, then date. We can simply extract the records where 
     #   * first record for member (i.e. the last one) and
     #   * that record is an arrival OR that record's date is today (because the person is counted 
@@ -139,7 +139,8 @@ class Travel < ActiveRecord::Base
   # as any listed in the other_travelers field. Only those in the database can have a
   # contact information.
   def self.current_visitors
-    travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
+    # travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
+    travels = self.current_arrivals.delete_if {|t| t.member && t.member.on_field && t.other_travelers.blank?}
     visitors = []
     travels.each do |t|
       # Add contact info if there is a (database) member as a visitor
