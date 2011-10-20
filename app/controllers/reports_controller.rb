@@ -60,7 +60,7 @@ class ReportsController < ApplicationController
 
 #puts "ReportsController#whereis report, params=#{params}"
     @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
-    @title = "Where Is Everyone?"
+    @title = "Where Is Everyone? [#{params}]"
     @visitors = Travel.current_visitors
     respond_to do |format|
       format.html do 

@@ -1,12 +1,14 @@
 module TravelsHelper
   
-  def traveler_name_column(record)
-    if record.member
-      link_to record.traveler_name, member_path(record.member_id)
-    else  
-      record.traveler_name 
-    end  
-  end
+# Uncomment this to cause names in traveler_name column to be linked to members. However, it links to the 
+# whole traveler_name at the moment, which may have a member name plus others. Untangle if desired.
+#  def traveler_name_column(record)
+#    if record.member
+#      link_to record.traveler_name, member_path(record.member_id)
+#    else  
+#      record.traveler_name 
+#    end  
+#  end
 
   def time_form_column(record, params)
     result = "<input id='record_time_#{record.id}' class='time-input text-input' type='text'" + 
