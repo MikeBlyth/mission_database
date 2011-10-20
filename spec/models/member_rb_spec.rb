@@ -1043,9 +1043,9 @@ describe Member do
   # Take an array like [ [-5,true], [-3, false], [4,true]] to generate travel records
   # where first of pair is date
   #       second of pair is true for arrival, false for departure
-  def set_up_travel_records(travels)
+  def set_up_travel_records(travels, with_spouse=false)
     travels.each do |t|
-      Factory.create(:travel, :member=>@member, :date=>t[0], :arrival=>t[1])
+      Factory.create(:travel, :member=>@member, :date=>t[0], :arrival=>t[1], :with_spouse=>with_spouse)
     end
   end
   
@@ -1059,7 +1059,6 @@ describe Member do
       @future = Date.today + 10.days
     end
             
-
     describe 'when past travel exists' do
       it 'returns true when last travel is arrival' do
         set_up_travel_records([ [@past, false], [@recent, true], [@future, false] ])
@@ -1074,6 +1073,49 @@ describe Member do
         @member.in_country_per_travel.should be_false
       end
     end # when past travel exists
+
+    describe 'when referring to spouse' do
+      before(:each) do
+        @spouse = create_spouse(@member)
+      end
+
+      it 'returns true when spouse accompanied arriving member' do
+        set_up_travel_records([ [@past, false], [@recent, true] ], true)
+        @member.in_country_per_travel.should be_true
+        @spouse.in_country_per_travel.should be_true
+      end   
+
+      it 'returns false when spouse did not accompany arriving member' do
+        set_up_travel_records([ [@past, false], [@recent, true] ], false)
+        @member.in_country_per_travel.should be_true
+        @spouse.in_country_per_travel.should be_false
+      end   
+
+      # A tricky one
+      it 'returns true when spouses arrived together but other spouse has departed' do
+        set_up_travel_records([ [@past, true]], true) # Arrived together
+        @member.in_country_per_travel.should be_true
+        @spouse.in_country_per_travel.should be_true
+        set_up_travel_records([ [@recent, false]], false) # @member departed alone
+        @member.in_country_per_travel.should be_false
+        @spouse.in_country_per_travel.should be_true
+      end
+      
+      # Another tricky one
+      it 'returns false when spouses arrived separately but leave together' do
+        set_up_travel_records([ [@past, true]], false) # @member arrived
+        @member.in_country_per_travel.should be_true
+        @spouse.in_country_per_travel.should be_false
+        Factory.create(:travel, :member=>@spouse, :date=>@past, :arrival=>true, :with_spouse=>false)
+            # @spouse arrived separately
+        @member.in_country_per_travel.should be_true
+        @spouse.in_country_per_travel.should be_true
+        set_up_travel_records([ [@recent, false]], true) # @member departed together
+        @member.in_country_per_travel.should be_false
+        @spouse.in_country_per_travel.should be_false
+      end
+      
+    end
 
     describe 'when no past travel exists' do
       it 'returns true when member status is on_field' do

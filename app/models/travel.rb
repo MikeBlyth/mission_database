@@ -80,6 +80,16 @@ class Travel < ActiveRecord::Base
       self.date <=> other.date
   end
   
+  # Select travel records of arrivals which are still current (person has not departed)
+  # NB *****
+  # There is an overall weakness in the way we're using travel records to determine who is present in the
+  # country. Travel records are matched (arrival-departure) based on member id or, if none, the other_travelers.
+  # This means that the results will be incorrect when the people arriving are not exactly the same as 
+  # those departing. Even a husband arriving with his wife, but then departing alone, will probably be
+  # interpreted as the wife leaving as well. The whole scheme needs to be rethought if it's going to be 
+  # made more accurate.
+  # NB 
+  # Current_arrivals returns an array of _Travel_ records (linked with members)
   def self.current_arrivals
     # self.includes(:member).where("arrival AND date <= ? AND ((return_date >= ? OR return_date IS NULL))", Date.today, Date.today)
     all_travel = self.includes(:member).where("date <= ?", Date.today).order('member_id, other_travelers, date DESC')  
@@ -190,6 +200,10 @@ class Travel < ActiveRecord::Base
   # Used for #traveler below, not to parse the member name
   def parse_name(name)
     return nil if name.nil? || name.blank?
+    if name =~ /([^ ]+)\s+(&|and)\s+([^ ]+)\s+([^ ]+)/
+      return [ "#{$~[1]} & #{$~[3]}", nil, $~[4] ]
+    end
+    
     if name =~ /([^ ]+),\s+([^ ]+)\s+([^ ]+)/
       return [ $~[2], $~[3], $~[1] ]
     end
@@ -243,6 +257,7 @@ class Travel < ActiveRecord::Base
 
   # "Virtual column" for use in listing travels
   def traveler_name
+    return other_travelers if member_id.nil?
     result = traveler.full_name_short
     if with_spouse
       if member && member.spouse && # There is a spouse listed in the database
@@ -252,7 +267,8 @@ class Travel < ActiveRecord::Base
         result = "M/M " + result 
       end
     end
-    result
+    result << " with #{other_travelers}" unless other_travelers.blank?
+    return result
   end  
   
   # Ensure that record has either a valid member or something in other_travelers

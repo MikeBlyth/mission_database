@@ -25,7 +25,7 @@ class TravelsController < ApplicationController
     config.columns[:member].clear_link
     config.columns[:date].sort_by :sql
     config.columns[:baggage].description = "Number of pieces of baggage"
-    config.columns[:other_travelers].description = "Names of other travelers (optional)"
+    config.columns[:other_travelers].description = "Names of other travelers (separate with \";\")"
     config.columns[:with_spouse].description = "Traveling with spouse?"
     config.columns[:with_children].description = "Traveling with children?"
     config.columns[:total_passengers].description = "Total number of passengers beyond first"
