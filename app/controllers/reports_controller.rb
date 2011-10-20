@@ -60,7 +60,7 @@ class ReportsController < ApplicationController
 
 #puts "ReportsController#whereis report, params=#{params}"
     @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
-    @title = "Where Is Everyone? [#{params}]"
+    @title = "Where Is Everyone?"
     @visitors = Travel.current_visitors
     respond_to do |format|
       format.html do 
@@ -74,7 +74,7 @@ class ReportsController < ApplicationController
         output = WhereIsTable.new(:page_size=>Settings.reports.page_size).
              to_pdf(@families, @visitors, params)
         if params[:mail_to] then
-#puts "Mailing report, params=#{params}"
+puts "Mailing report, params=#{params}"
           Notifier.send_report(params[:mail_to], @title, output).deliver
           redirect_to reports_path
         else
