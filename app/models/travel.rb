@@ -164,7 +164,15 @@ class Travel < ActiveRecord::Base
       else
         contacts = ''
       end
-      visitors << {:names => t.travelers,
+
+      # If the traveler is a (database) member with on-field status, then don't count her as a visitor
+      if t.member && t.member.on_field
+        visitor_names = t.other_travelers # just the other travelers since primary one has on-field status
+      else
+        visitor_names = t.travelers  # formatted string with primary & other travelers
+      end
+
+      visitors << {:names => visitor_names,
                    :arrival_date => t.date,
                    :departure_date => t.return_date,
                    :contacts => contacts

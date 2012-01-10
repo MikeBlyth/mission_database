@@ -111,6 +111,18 @@ describe "Report" do
       page.should have_content("Santa Claus")
       page.should have_content('isitor')
     end
+
+#    it "does not include member with on-field status as a visitor" do
+#      @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true,  
+#          :other_travelers=>"Santa Claus")
+#      visit reports_path # whereis_report_path
+#      click_link "whereis-detailed-pdf"
+#      pdf_to_text
+#      page.should have_content("Santa Claus")
+#      page.should have_content('isitor')
+#      page.should_not have_content(@member.last_name)
+#    end
+
   end # Where Is
   
   describe 'Contact Update' do

@@ -173,6 +173,18 @@ describe Travel do
       Travel.current_visitors.should be_empty
     end
 
+    it 'includes visitors but not on-field member when arriving together' do
+      @member.status=@on_field
+      @travel.other_travelers = 'Santa Claus'
+      @member.save
+      @travel.save
+      puts Travel.current_visitors
+      Travel.current_visitors.should_not be_empty
+      visitors = Travel.current_visitors[0][:names]
+      visitors.should match 'Santa Claus'
+      visitors.should_not match @member.last_name
+    end
+
     it 'does not include member "on leave" leaving the field' do
       @member.save
       @travel.arrival = false

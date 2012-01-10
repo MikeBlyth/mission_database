@@ -27,6 +27,14 @@
 #  temporary_location_from_date  :date
 #  temporary_location_until_date :date
 #
+# Definitions of filters like those_active, those_on_field etc. are found in helper/filter_by_status_helper.rb
+# These include
+# * those_on_field
+# * those_active_sim
+# * those_active
+# * those_on_field_or_active
+# * those_with_status(*targets)
+
 
 class Member < ActiveRecord::Base
   include NameHelper
@@ -64,14 +72,6 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
-  # Definitions of filters like those_active, those_on_field etc. are found in helper/filter_by_status_helper.rb
-  # These include
-  # * those_on_field
-  # * those_active_sim
-  # * those_active
-  # * those_on_field_or_active
-  # * those_with_status(*targets)
-
   def those_umbrella
     # This one is here because the definition is different between member and family classes
     umbrella_status = EmploymentStatus.find_by_code('umbrella').id
