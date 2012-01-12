@@ -321,4 +321,43 @@ describe Travel do
     
   end
   
+  describe 'traveler array function parses passenger names' do
+    
+    it 'gives member id (not name) if the only passenger' do
+      @travel.traveler_array.should == [@travel.member.id]
+    end
+    
+    it 'gives only name of single other_traveler when no member specified' do
+      @travel.member = nil
+      @travel.other_travelers = 'Santa Claus'
+      @travel.traveler_array.should == ['Santa Claus']
+    end
+
+    it 'gives member id plus name of other_traveler' do
+      @travel.other_travelers = 'Santa Claus'
+      @travel.traveler_array.should == [@travel.member.id,'Santa Claus']
+    end
+
+    it 'gives member id plus name of other_traveler' do
+      @travel.other_travelers = 'Santa Claus'
+      @travel.traveler_array.should == [@travel.member.id,'Santa Claus']
+    end
+
+    it 'handles various combinations of names for other travelers' do
+      @travel.other_travelers = 'Santa & Mrs. Claus'
+      @travel.traveler_array.should == [@travel.member.id,'Santa Claus', 'Mrs. Claus']
+      @travel.other_travelers = 'Santa and Mrs. Claus'
+      @travel.traveler_array.should == [@travel.member.id,'Santa Claus', 'Mrs. Claus']
+      @travel.other_travelers = 'Santa Claus & Mrs. Elf'
+      @travel.traveler_array.should == [@travel.member.id,'Santa Claus', 'Mrs. Elf']
+      @travel.other_travelers = 'Santa & Mrs. Claus; Rudolph Reindeer'
+      @travel.traveler_array.should == [@travel.member.id,'Santa Claus', 'Mrs. Claus', 'Rudolph Reindeer']
+    end
+
+    it 'includes spouse name if "with spouse" is specified' do
+      create_spouse(@travel.member)
+      @travel.with_spouse = true
+      @travel.traveler_array.should == [@travel.member.id, @travel.member.spouse.id]
+    end
+  end
 end

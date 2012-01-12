@@ -181,6 +181,25 @@ class Travel < ActiveRecord::Base
     return visitors
   end 
 
+  def traveler_array
+
+    others = self.other_travelers.split(';').map {|n| n.strip}.compact.map do |n|
+      n.sub(/^(\w*) +(&|and|) +(.*) +(.*)/,'\1 \4; \3 \4').gsub(/\s+/,' ').split(/ & | and |; /)
+    end.flatten
+    return (
+            [(self.member.id if self.member), 
+             (self.member.spouse.id if self.member && self.with_spouse)] + 
+            others).compact
+  end
+
+  def self.most_recent_summary
+    summary = {}
+    self.each do |t|
+    end
+
+  end
+
+
   def to_label
     "#{date.to_s} #{flight}"
   end
@@ -261,7 +280,6 @@ class Travel < ActiveRecord::Base
     end
     return other_travelers
   end
-
 
   # "Virtual column" for use in listing travels
   def traveler_name
