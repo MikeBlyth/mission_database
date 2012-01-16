@@ -427,6 +427,21 @@ describe Travel do
   #      puts Travel.current_travel_status_hash
         Travel.current_travel_status_hash[@spouse.id][:arrival].should == true
       end
+
+      it 'arrival is false when arrived alone and later departs with spouse status' do
+        husband = @travel.member
+        wife = @spouse
+        # First, wife arrives alone
+        @prior_arrival.member = wife
+        @prior_arrival.with_spouse = false
+        @prior_arrival.save
+        # Now husband and wife depart together under husband's name
+        @travel.with_spouse = true  # spouse is traveling alone
+        @travel.arrival = false  # departing, leaving spouse in country
+        @travel.save
+        puts Travel.current_travel_status_hash
+        Travel.current_travel_status_hash[@spouse.id][:arrival].should == false
+      end
     end # when using spouse field
 
     describe 'when using other_travelers field' do

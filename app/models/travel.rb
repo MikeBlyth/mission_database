@@ -229,10 +229,14 @@ class Travel < ActiveRecord::Base
   # * Mike Blyth & Little Bo Peep ==> ["Mike Blyth", "Little Bo Peep"]  
   def traveler_array
     # Parse the other_travelers field
-    return [self.member.id] unless self.other_travelers  # if nil, just return member
-    others = self.other_travelers.split(/;|,/).map {|n| n.strip}.compact.map do |n|
-      n.sub(/^(\w*) +(&|and|) +(.*) +(.*)/,'\1 \4; \3 \4').gsub(/\s+/,' ').split(/ & | and |; /)
-    end.flatten
+  #  return [self.member.id] unless self.other_travelers  # if nil, just return member
+    if !self.other_travelers.blank?
+      others = self.other_travelers.split(/;|,/).map {|n| n.strip}.compact.map do |n|
+        n.sub(/^(\w*) +(&|and|) +(.*) +(.*)/,'\1 \4; \3 \4').gsub(/\s+/,' ').split(/ & | and |; /)
+      end.flatten
+    else
+      others = []
+    end  
     # Add the member & spouse if any
     return (
             [(self.member.id if self.member), 
