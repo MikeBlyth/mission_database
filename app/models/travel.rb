@@ -148,55 +148,117 @@ class Travel < ActiveRecord::Base
   # Visitors are those with current incoming travel who are not "on field" as well
   # as any listed in the other_travelers field. Only those in the database can have a
   # contact information.
+#  def self.current_visitors -- OLD!
+#    # travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
+#    travels = self.current_arrivals.delete_if {|t| t.member && t.member.on_field && t.other_travelers.blank?}
+#    visitors = []
+#    travels.each do |t|
+#      # Add contact info if there is a (database) member as a visitor
+#      if t.member && t.member.primary_contact
+#        contact = t.member.primary_contact
+#        # Include the name only if there are other travelers to be distinguished
+#        contacts_name = t.other_travelers ? "#{t.member.full_name_short}: " : ''
+#        contacts = contacts_name + smart_join(
+#                                         [format_phone(contact.phone_1),
+#                                          t.member.primary_contact.email_1 ])
+#      else
+#        contacts = ''
+#      end
+
+#      # If the traveler is a (database) member with on-field status, then don't count her as a visitor
+#      if t.member && t.member.on_field
+#        visitor_names = t.other_travelers # just the other travelers since primary one has on-field status
+#      else
+#        visitor_names = t.travelers  # formatted string with primary & other travelers
+#      end
+
+#      visitors << {:names => visitor_names,
+#                   :arrival_date => t.date,
+#                   :departure_date => t.return_date,
+#                   :contacts => contacts
+#                   }
+#    end
+#    return visitors
+#  end 
+
   def self.current_visitors
     # travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
-    travels = self.current_arrivals.delete_if {|t| t.member && t.member.on_field && t.other_travelers.blank?}
+    visitor_list = self.current_travel_status_hash.delete_if { |traveler, hash| 
+        traveler.class == Fixnum && Member.find(traveler).on_field ||
+        hash[:arrival] == false
+        }
     visitors = []
-    travels.each do |t|
+    visitor_list.each do |traveler, hash|
       # Add contact info if there is a (database) member as a visitor
-      if t.member && t.member.primary_contact
-        contact = t.member.primary_contact
-        # Include the name only if there are other travelers to be distinguished
-        contacts_name = t.other_travelers ? "#{t.member.full_name_short}: " : ''
-        contacts = contacts_name + smart_join(
-                                         [format_phone(contact.phone_1),
-                                          t.member.primary_contact.email_1 ])
+      if traveler.class == Fixnum 
+        member = Member.find(traveler)
+        name = member.full_name_short
+        contacts = format_phone(member.primary_contact.phone_1) if member.primary_contact
+        ## Include the name only if there are other travelers to be distinguished
+        # contacts_name = t.other_travelers ? "#{t.member.full_name_short}: " : ''
+        # contacts = smart_join(
+        #                       [format_phone(contact.phone_1),
+        #                        member.primary_contact.email_1 ])
       else
         contacts = ''
+        name = traveler
       end
 
-      # If the traveler is a (database) member with on-field status, then don't count her as a visitor
-      if t.member && t.member.on_field
-        visitor_names = t.other_travelers # just the other travelers since primary one has on-field status
-      else
-        visitor_names = t.travelers  # formatted string with primary & other travelers
-      end
-
-      visitors << {:names => visitor_names,
-                   :arrival_date => t.date,
-                   :departure_date => t.return_date,
+      visitors << {:names => name,
+                   :arrival_date => hash[:date],
+                   :departure_date => hash[:return_date],
                    :contacts => contacts
                    }
     end
     return visitors
   end 
 
+  # Use member field, with_spouse, and other_travelers to generate an array of all travelers 
+  #   for this travel record. 
+  # NB: Members and spouses are included as their member ids (integers)
+  #   while other travelers are listed by name (strings). 
+  # The other_travelers field is parsed
+  #   twice: first split by ";" for separate sets of people, then by "&" or "and" to split
+  #   couples. Examples:
+  # * Mike Blyth; Santa Claus ==> ['Mike Blyth', 'Santa Claus']
+  # * Mike Blyth; Santa & Mrs. Claus ==> ['Mike Blyth', 'Santa Claus', 'Mrs. Claus']
+  # * Mike & Barb Blyth ==> ['Mike Blyth', 'Barb Blyth']
+  # * Mike and Barb Blyth ==> ['Mike Blyth', 'Barb Blyth']
+  # * Mike Blyth ==> ['Mike Blyth']
+  # * Mike & Little Bo Peep ==> ["Mike Peep", "Little Bo Peep"]
+  # * Mike Blyth & Little Bo Peep ==> ["Mike Blyth", "Little Bo Peep"]  
   def traveler_array
-
-    others = self.other_travelers.split(';').map {|n| n.strip}.compact.map do |n|
+    # Parse the other_travelers field
+    return [self.member.id] unless self.other_travelers  # if nil, just return member
+    others = self.other_travelers.split(/;|,/).map {|n| n.strip}.compact.map do |n|
       n.sub(/^(\w*) +(&|and|) +(.*) +(.*)/,'\1 \4; \3 \4').gsub(/\s+/,' ').split(/ & | and |; /)
     end.flatten
+    # Add the member & spouse if any
     return (
             [(self.member.id if self.member), 
              (self.member.spouse.id if self.member && self.with_spouse)] + 
             others).compact
   end
 
-  def self.most_recent_summary
+  # Finds the latest travel record for each person who has traveled. 
+  # - Since any travel record can include multiple travelers, in various combinations
+  #   and since Travel can't be indexed by them, we have to go through each record from the
+  #   beginning. There should be a limit (5 years?) so it won't be necessary to go through
+  #   20 years of records to see if someone is still on the field!
+  def self.current_travel_status_hash(date=Date.today)
     summary = {}
-    self.each do |t|
+    self.where('date <= ?', date).order('date').each do |t|
+      t.traveler_array.each do | traveler |
+        unless summary[traveler] # create new person in hash if not existing
+          summary[traveler] ||= {}  
+        end
+        summary[traveler][:date] = t.date
+        summary[traveler][:return_date] = t.return_date
+        summary[traveler][:arrival] = t.arrival
+        summary[traveler][:travel_rec] = t  # 
+      end
     end
-
+    return summary
   end
 
 

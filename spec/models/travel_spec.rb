@@ -178,7 +178,7 @@ describe Travel do
       @travel.other_travelers = 'Santa Claus'
       @member.save
       @travel.save
-      puts Travel.current_visitors
+    #  puts Travel.current_visitors
       Travel.current_visitors.should_not be_empty
       visitors = Travel.current_visitors[0][:names]
       visitors.should match 'Santa Claus'
@@ -197,7 +197,7 @@ describe Travel do
       @travel.save
       current_visitors = Travel.current_visitors
       current_visitors.should_not be_empty
-      current_visitors[0][:names].should =~ /Grandma/
+      current_visitors.map{|c| c[:names]}.include?('Grandma').should == true
     end
 
     it 'includes phone number of member "on leave" coming to the field' do
@@ -360,4 +360,118 @@ describe Travel do
       @travel.traveler_array.should == [@travel.member.id, @travel.member.spouse.id]
     end
   end
+  
+  describe 'current_travel_status_hash finds on- off-field status of each person' do
+
+    before(:each) do 
+      @travel.date = Date.today
+      @member = @travel.member
+      @prior_departure = Factory.build(:travel, :member=>@member, :date => Date.yesterday, 
+          :arrival => false)
+      @prior_arrival = Factory.build(:travel, :member=>@member, :date => Date.yesterday, 
+          :arrival => true)
+    end
+    
+    it 'shows arrival as true when latest travel of member is true' do
+      @travel.arrival = true
+      @travel.save
+      # Create OLDER record which should be ignored in favor of newer one
+      @prior_departure.save
+  #    puts Travel.current_travel_status_hash
+      Travel.current_travel_status_hash[@member.id][:arrival].should == @travel.arrival
+    end
+
+    it 'shows arrival as false when latest travel of member is true' do
+      @travel.arrival = false
+      @travel.save
+      # Create OLDER record which should be ignored in favor of newer one
+      @prior_arrival.save
+  #    puts Travel.current_travel_status_hash
+      Travel.current_travel_status_hash[@member.id][:arrival].should == @travel.arrival
+    end
+
+    it 'shows date of latest travel' do
+      @travel.arrival = false
+      @travel.save
+      # Create OLDER record which should be ignored in favor of newer one
+      @prior_arrival.save
+   #   puts Travel.current_travel_status_hash
+      Travel.current_travel_status_hash[@member.id][:date].should == @travel.date
+    end
+
+    describe 'when using with_spouse field' do
+
+      before(:each) do
+        create_spouse(@travel.member)
+        @spouse = @travel.member.spouse
+      end
+
+      it 'arrival is true when arrived as spouse' do
+        @travel.with_spouse = true
+        @travel.arrival = true
+        @travel.save
+        # Create OLDER record which should be ignored in favor of newer one
+        @prior_departure.with_spouse = true
+        @prior_departure.save
+   #     puts Travel.current_travel_status_hash
+        Travel.current_travel_status_hash[@spouse.id][:arrival].should == @travel.arrival
+      end
+
+      it 'arrival is true when arrived as spouse and later member departs alone' do
+        @travel.with_spouse = false  # Primary member is traveling alone
+        @travel.arrival = false  # departing, leaving spouse in country
+        @travel.save
+        # Create OLDER record with couple arriving together
+        @prior_arrival.with_spouse = true
+        @prior_arrival.save
+  #      puts Travel.current_travel_status_hash
+        Travel.current_travel_status_hash[@spouse.id][:arrival].should == true
+      end
+    end # when using spouse field
+
+    describe 'when using other_travelers field' do
+      
+      before(:each) do
+        @travel.other_travelers = 'Santa & Mrs. Claus'
+      end
+      
+      it 'arrival is true when arrived with member and later member departs alone' do
+        @travel.other_travelers = nil  # Primary member is traveling alone
+        @travel.arrival = false  # departing, leaving spouse in country
+        @travel.save
+        # Create OLDER record with couple arriving together
+        @prior_arrival.other_travelers = 'Santa & Mrs. Claus'
+        @prior_arrival.save
+  #      puts Travel.current_travel_status_hash
+        Travel.current_travel_status_hash['Santa Claus'][:arrival].should == true
+        Travel.current_travel_status_hash['Mrs. Claus'][:arrival].should == true
+        Travel.current_travel_status_hash[@member.id][:arrival].should == false
+      end
+      
+      it 'arrival is true when visitor arrived along with a member' do
+        @travel.arrival = true
+        @travel.save
+        @prior_departure.other_travelers = 'Santa & Mrs. Claus'
+        @prior_departure.save
+   #     puts Travel.current_travel_status_hash
+        Travel.current_travel_status_hash['Santa Claus'][:arrival].should == true
+        Travel.current_travel_status_hash['Mrs. Claus'][:arrival].should == true
+        Travel.current_travel_status_hash[@member.id][:arrival].should == true
+      end
+      
+      it 'visitors in group maintain their separate arrival and departure statuses' do
+        @travel.other_travelers = 'Person 2; Person 3'
+        @travel.arrival = false  # departing, leaving spouse in country
+        @travel.save
+        @prior_arrival.other_travelers = 'Person 1; Person 2; Person 3'
+        @prior_arrival.save
+  #      puts Travel.current_travel_status_hash
+        Travel.current_travel_status_hash['Person 1'][:arrival].should == true
+        Travel.current_travel_status_hash['Person 1'][:date].should == @prior_arrival.date
+        Travel.current_travel_status_hash['Person 2'][:arrival].should == false
+        Travel.current_travel_status_hash['Person 2'][:date].should == @travel.date
+      end
+      
+    end # when using other_travelers field
+  end # current_travel_status_hash
 end
