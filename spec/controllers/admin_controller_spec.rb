@@ -402,10 +402,10 @@ describe AdminController do
       it 'are reviewed' do
         member = Factory(:member)
         Factory(:contact, :member=>member)
-        Factory(:travel, :member=>member)
+        travel = Factory(:travel, :member=>member)
         get :review_travel_reminders
         response.should render_template('review_travel_reminders')
-        assigns[:travels].should == Travel.pending
+        assigns[:travels][0].should == travel
       end
 
       it 'are emailed' do
@@ -436,10 +436,22 @@ describe AdminController do
         member = Factory(:member)
         Factory(:contact, :member=>member)
         travel = Factory(:travel, :member=>member, :reminder_sent=>Date.today-1.week)
-        lambda {post :send_travel_reminders}.   # should send one email to each of two families 
+        lambda {post :send_travel_reminders}.  
            should_not change(ActionMailer::Base.deliveries, :length)
       end
       
+      it 'does not review travel records which do not have member_id' do
+        travel = Factory(:travel, :member=>nil, :other_travelers => 'Santa Claus')
+        get :review_travel_reminders
+        assigns[:travels].count.should == 0
+      end
+
+      it 'does not try to send travel records which do not have member_id' do
+        travel = Factory(:travel, :member=>nil, :other_travelers => 'Santa Claus')
+        lambda {post :send_travel_reminders}.   
+           should_not change(ActionMailer::Base.deliveries, :length)
+      end
+
     end # travel reminders
     
     describe 'Travel updates' do
