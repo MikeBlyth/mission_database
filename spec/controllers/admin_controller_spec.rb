@@ -466,9 +466,22 @@ describe AdminController do
         assigns[:travel_updates].should == [@travel]
       end
 
+      it 'are not reviewed if in past' do
+        @travel.update_attributes(:date=>Date.today - 10)
+        get :review_travel_updates
+        response.should render_template('travel_updates')
+        assigns[:travel_updates].should == []
+      end
+
       it 'are emailed' do
         lambda {put :send_travel_updates}.
           should change(ActionMailer::Base.deliveries, :length).by(1)
+      end
+
+      it 'are not emailed if in the past' do
+        @travel.update_attributes(:date=>Date.today - 10)
+        put :send_travel_updates
+        assigns[:travel_updates].should == []
       end
 
       it 'contain travel information' do

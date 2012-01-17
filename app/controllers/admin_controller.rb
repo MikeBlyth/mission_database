@@ -71,7 +71,7 @@ class AdminController < ActionController::Base
 
   def review_travel_updates
     @title = 'Travel updates'
-    @travel_updates = Travel.recently_updated.includes(:member)
+    @travel_updates = Travel.recently_updated.includes(:member).where('DATE >= ?', Date.today)
     render :template=>'notifier/travel_updates' 
   end  
 
@@ -80,10 +80,10 @@ class AdminController < ActionController::Base
     if recipients.empty?
       flash[:notice] = "No recipients defined in settings 'Travel Update Recipients.'"
     else
-      @travel_updates = Travel.recently_updated.includes(:member)
+      @travel_updates = Travel.recently_updated.includes(:member).where('DATE >= ?', Date.today)
       @notice = Notifier.travel_updates(recipients, @travel_updates)
       @notice.deliver
-#puts "Notice=#{@notice}"
+  #puts "Notice=#{@notice}"
       flash[:notice] = "Sent #{recipients.length} notices."
     end
     AppLog.create(:severity=>'info', :code=>'Notice.travel_updates', 
