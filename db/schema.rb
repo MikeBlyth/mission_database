@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110611203047) do
+ActiveRecord::Schema.define(:version => 20120117102246) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -278,17 +278,17 @@ ActiveRecord::Schema.define(:version => 20110611203047) do
     t.integer  "total_passengers"
     t.date     "confirmed"
     t.string   "other_travelers"
-    t.boolean  "with_spouse"
-    t.boolean  "with_children"
-    t.boolean  "arrival"
+    t.boolean  "with_spouse",      :default => false
+    t.boolean  "with_children",    :default => false
+    t.boolean  "arrival",          :default => false
     t.time     "time"
     t.time     "return_time"
     t.string   "driver_accom"
     t.string   "comments"
-    t.boolean  "term_passage"
-    t.boolean  "personal"
-    t.boolean  "ministry_related"
-    t.boolean  "own_arrangements"
+    t.boolean  "term_passage",     :default => false
+    t.boolean  "personal",         :default => false
+    t.boolean  "ministry_related", :default => false
+    t.boolean  "own_arrangements", :default => false
     t.date     "reminder_sent"
   end
 
