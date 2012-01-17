@@ -210,7 +210,7 @@ class Travel < ActiveRecord::Base
                    :contacts => contacts
                    }
     end
-    return visitors
+    return visitors.sort {|a, b| a[:arrival_date] <=> b[:arrival_date]}
   end 
 
   # Use member field, with_spouse, and other_travelers to generate an array of all travelers 

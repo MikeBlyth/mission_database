@@ -148,5 +148,12 @@ describe MembersController do
       Member.find(id_2).status_id.should == 5
     end
   end
-          
+
+  describe 'location status' do
+    
+    it 'shows on-field member who is out of country' do
+      # pending development of this form!
+    end
+  end # describe 'location status'
+     
 end
