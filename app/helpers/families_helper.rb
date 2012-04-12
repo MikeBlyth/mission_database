@@ -17,8 +17,9 @@ module FamiliesHelper
   # Returns family data in a formatted hash like
   # :couple => 'Blyth, Mike & Barb', :children=> 'Lisa, Jonathan, Sara', :phone=> '0803-555-5555\n0803-666-6666',
   #   :email => 'mike.blyth@sim.org\nmjblyth@gmail.com'.
+  # Private data will be masked unless show_private is true
   # Perhaps would be better to make phone & email arrays?
-  def family_data_formatted(f)
+  def family_data_formatted(f, show_private=false)
     formatted = {}
     head = f.head
     wife = f.wife
@@ -30,12 +31,13 @@ module FamiliesHelper
     # Get the contact record for head, using primary contact type e.g. "on field"
     contact_head = head.primary_contact
     if contact_head   # If there is a valid contact for family head
-      phones[0] = format_phone(contact_head.phone_1) || '---'
+      phones[0] = contact_head.phone_private ? '---' : format_phone(contact_head.phone_1) || '---'
       emails[0] = contact_head.email_1 || '---'
       if wife # if there IS a wife
         contact_wife = wife.primary_contact
         if contact_wife # if wife has a valid contact record
           phones[1] = format_phone(contact_wife.phone_1) if contact_wife.phone_1 &&
+              ! contact_wife.phone_private &&
               contact_wife.phone_1 != contact_head.phone_1
           emails[1] = contact_wife.email_1 if contact_wife.email_1 &&
               contact_wife.email_1 != contact_head.email_1
