@@ -502,11 +502,18 @@ class Member < ActiveRecord::Base
     return nil
   end
   
+  def today_in_date_range(start_date, end_date)
+    inrange = Range.new(start_date || Date.yesterday, end_date || Date.tomorrow, 1).include? Date.today 
+#puts "** #{start_date} to #{end_date}: #{inrange}"
+    return inrange
+  end
+
   def temp_location
-    if !temporary_location.blank? && temporary_location_from_date <= Date.today &&
-                                     temporary_location_until_date >= Date.today
-      return "temporary location: #{temporary_location}, #{temporary_location_from_date.to_s(:short)} to " +
-             " #{temporary_location_until_date.to_s(:short)}"
+    if !temporary_location.blank? && 
+        today_in_date_range(temporary_location_from_date, temporary_location_until_date)
+      from_formatted  = temporary_location_from_date ?  temporary_location_from_date.to_s(:short) : 'unknown'  
+      until_formatted = temporary_location_until_date ? temporary_location_until_date.to_s(:short) : 'unknown'  
+      return "temporary location: #{temporary_location}, #{from_formatted} to #{until_formatted}"
     else
       return nil
     end         

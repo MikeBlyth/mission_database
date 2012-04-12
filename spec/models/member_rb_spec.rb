@@ -800,6 +800,59 @@ describe Member do
       
   end # finds members by name
 
+  describe 'temp_location function' do
+    before(:each) do
+      @temploc = 'French Riviera'
+      @member = Factory.build(:member, :temporary_location => @temploc, 
+        :temporary_location_from_date => Date.today - 1.day, 
+        :temporary_location_until_date => Date.today + 1.day
+        )
+    end
+    
+    it 'returns nil before travel' do
+      @member.temporary_location_from_date = Date.tomorrow
+      @member.temp_location.should == nil
+    end
+
+    it 'returns nil after travel' do
+      @member.temporary_location_from_date = Date.today - 10.days
+      @member.temporary_location_until_date = Date.today - 5.days
+      @member.temp_location.should == nil
+    end
+
+    it 'returns value if start date is blank and end is in the future' do
+      @member.temporary_location_from_date = nil
+      @member.temp_location.should match @temploc
+    end
+
+    it 'returns value if start date is in past and end is nil' do
+      @member.temporary_location_until_date = nil
+      @member.temp_location.should match @temploc
+    end
+
+    it 'returns value if start and end dates are both nil' do
+      @member.temporary_location_from_date = nil
+      @member.temporary_location_until_date = nil
+      @member.temp_location.should match @temploc
+    end
+
+    describe 'when current' do
+
+      it 'location is identified' do
+        @member.temp_location.should match @temploc
+      end
+
+      it 'gives correct starting date' do
+        @member.temp_location.should match (Date.today - 1.day).to_s(:short)
+      end
+
+      it 'gives correct ending date' do
+        @member.temp_location.should match (Date.today + 1.day).to_s(:short)
+      end
+    end # when current
+    
+  end
+  
   describe 'travel helpers' do
     before(:each) do
       @member = Factory(:member)
@@ -1148,6 +1201,6 @@ describe Member do
       Member.those_in_country.include?(@member).should be_false
      
     end
-  end 
+  end # those_in_country
 end
 
