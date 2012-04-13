@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110516135320
+# Schema version: 20120117102246
 #
 # Table name: families
 #
@@ -18,13 +18,6 @@
 #  sim_id                :string(255)
 #  summary_sent          :date
 #
-# Definitions of filters like those_active, those_on_field etc. are found in helper/filter_by_status_helper.rb
-# These include
-# * those_on_field
-# * those_active_sim
-# * those_active
-# * those_on_field_or_active
-# * those_with_status(*targets)
 
 class Family < ActiveRecord::Base
   include NameHelper

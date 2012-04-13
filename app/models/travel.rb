@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110516135320
+# Schema version: 20120117102246
 #
 # Table name: travels
 #
@@ -32,38 +32,7 @@
 #  reminder_sent    :date
 #
 
-# == Schema Information
-# Schema version: 20110413013605
-#
-# Table name: travels
-#
-#  id               :integer         not null, primary key
-#  date             :date
-#  purpose          :string(255)
-#  return_date      :date
-#  flight           :string(255)
-#  member_id        :integer
-#  created_at       :datetime
-#  updated_at       :datetime
-#  origin           :string(255)
-#  destination      :string(255)
-#  guesthouse       :string(255)
-#  baggage          :integer
-#  total_passengers :integer
-#  confirmed        :date
-#  other_travelers  :string(255)
-#  with_spouse      :boolean
-#  with_children    :boolean
-#  arrival          :boolean
-#  time             :time
-#  return_time      :time
-#  driver_accom     :string(255)
-#  comments         :string(255)
-#  term_passage     :boolean
-#  personal         :boolean
-#  ministry_related :boolean
-#  own_arrangements :boolean
-#
+
 require 'application_helper'
 
 class Travel < ActiveRecord::Base
@@ -184,8 +153,8 @@ class Travel < ActiveRecord::Base
   def self.current_visitors
     # travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
     visitor_list = self.current_travel_status_hash.delete_if { |traveler, hash| 
-        traveler.class == Fixnum && Member.find(traveler).on_field ||
-        hash[:arrival] == false
+        traveler.class == Fixnum && Member.find(traveler).on_field ||  # traveler is a member with on_field status
+        ! hash[:arrival]  # status is departed
         }
     visitors = []
     visitor_list.each do |traveler, hash|
