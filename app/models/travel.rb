@@ -38,7 +38,7 @@ require 'application_helper'
 class Travel < ActiveRecord::Base
   extend ApplicationHelper
    
-  belongs_to :member
+  has_and_belongs_to_many :members
   has_one :field_term, :foreign_key => :beginning_travel_id
   has_one :field_term, :foreign_key => :ending_travel_id
   validates_presence_of :date

@@ -38,7 +38,7 @@ class Member < ActiveRecord::Base
   attr_accessor :previous_spouse  # to help with cross-linking when changing/deleting spouse
   
   has_many :contacts, :dependent => :destroy 
-  has_many :travels, :dependent => :destroy 
+  has_and_belongs_to_many :travels #, :dependent => :destroy 
   has_many :field_terms,  :dependent => :destroy 
   has_one  :health_data, :dependent => :destroy
   has_one  :personnel_data, :dependent => :destroy
