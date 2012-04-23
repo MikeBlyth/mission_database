@@ -1,4 +1,60 @@
+<script>
+$(function() {
+$( "#tabs" ).tabs();
+});
+</script>
+
+- @head = @record.head
+
+<div >
+
+<div id="tabs">
+<ul>
+<li><a href="#tabs-1">Head</a></li>
+<li><a href="#tabs-2">Wife</a></li>
+<li><a href="#tabs-3">Children</a></li>
+<li><a href="#tabs-4">Family</a></li>
+</ul>
+<div id="tabs-1">
 %h4 Information for the individual or <em>head</em> of family
+= @head.last_name + ' is great!'
+%p 
+  %table.new_family
+    %tr
+      %td
+        = label :record, :last_name,"", :class=>'required'
+        %br
+        = text_field :record, :last_name, :class=> "last_name-input"
+      %td
+        = label :record, :first_name,"", :class=>'required'
+        %br
+        = text_field :record, :first_name, :class=> "first_name-input"
+      %td
+        = label :record, :middle_name
+        %br
+        = text_field :record, :middle_name, :class=> "middle_name-input"
+      %td
+        = label :record, :short_name
+        %br
+        = text_field :record, :short_name, :class=> "short_name-input"
+    %tr
+    %td
+      %label 
+        = radio_button_tag 'gender', 'male'
+        = 'Male'
+      %label 
+        = radio_button_tag 'gender', 'female'
+        = 'Female'
+    %tr
+      %td
+        = label_tag :head_name, "Full name of individual", :class=>'required'
+        %br
+        = text_field_tag :head_name,"", :class=> "name-input"
+        %br
+        %p.description Must be unique
+</div>
+<div id="tabs-2">
+%h4 Information for the wife
 %p 
   %table.new_family
     %tr
@@ -26,11 +82,15 @@
         %br
         %p.description Must be unique
     %tr
-    %td
-      %hr
-    %tr
-      %td
-        %h4 Information for individual or <em>entire family</em>
+ 
+</div>
+<div id="tabs-3">
+%h4 Information for the children
+</div>
+<div id="tabs-4">
+%h4 Information for the family
+%p 
+  %table.new_family
     %tr
       %td
         = label :record, :name, 'Name to identify family', :class=>'required'
@@ -51,19 +111,7 @@
         = label :record, :residence_location, "Location"
         %br
         = select(:record, :residence_location, location_choices(@record[:residence_location_id]), {:include_blank => true })    
-    - unless @record.new_record?
-      %tr
-        %td
-          = label :record, :head, "Head of family"
-          %br
-          - head_choices = options_from_collection_for_select(Member.where("last_name=(?)", @record.last_name).select('id, name').order('name'), :id, :name, @record[:head_id])
-          = select(:record, :head, head_choices)    
-  - unless @record.new_record?
-    .add_family_members
-      %h5 Add family members
-      %p 
-        = link_to 'Add child', new_member_path(:type=>'child', :family => @record), :class=>'big-link'
-        - if @record.head.is_single?
-          = link_to 'Add spouse', new_member_path(:type=>'spouse', :family => @record.id), :class=>'big-link'
-
+</div>
+</div>
+	
 
