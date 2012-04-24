@@ -5,9 +5,11 @@ $( "#tabs" ).tabs();
 </script>
 
 - @head = @record.head
+- @head_contact = @head.primary_contact
 - @wife = @record.head.spouse
 - @head_pers = @head.personnel_data
 - @wife_pers = @wife.personnel_data if @wife
+- @wife_contact = @wife.primary_contact if @wife
 
 
 <div >
@@ -80,6 +82,59 @@ $( "#tabs" ).tabs();
         = text_field :head, :name, :class=> "name-input"
         %br
         %p.description Must be unique
+    %tr
+      %td
+        = label_tag :head_ministry, "Ministry"
+        %br
+        - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
+        = select(:head, :ministry, choices, {:include_blank => true })    
+      %td
+        = label_tag :head_work_location, "Ministry location"
+        %br
+        - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
+        = select(:head, :work_location, choices, {:include_blank => true })    
+      %td
+        = label_tag :head_pers_date_active, "Date active with SIM"
+        %br
+        = text_field :head_pers,  :date_active, :class => 'active_date-input date_picker '
+      %td
+        = label_tag :head_pers_est_end_of_service, "Est. end of service"
+        %br
+        = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
+    %tr
+      %td
+        = label_tag :head_phone_1, "Phone on field"
+        %br
+        = text_field :head_contact, :phone_1
+      %td
+        = label_tag :head_email_1, "Email 1"
+        %br
+        = text_field :head_contact, :email_1
+      %td
+        = label_tag :head_temporary_location, "Temporary location"
+        %br
+        = text_field :head, :temporary_location
+    %tr
+      %td
+        = label_tag :head_phone_2, "Phone 2"
+        %br
+        = text_field :head_contact, :phone_2
+      %td
+        = label_tag :head_email_2, "Email 2"
+        %br
+        = text_field :head_contact, :email_2
+      %td
+        %table
+          %tr
+            %td
+              = label_tag :head_temporary_location_from_date, "From"
+              %br
+              = text_field :head,  :temporary_location_from_date, :class => 'active_date-input date_picker '
+            %td
+              = label_tag :head_temporary_location_until_date, "Until"
+              %br
+              = text_field :head,  :temporary_location_until_date, :class => 'active_date-input date_picker '
+      
 </div>
 <div id="tabs-2">
 %h4 Information for the wife
