@@ -10,6 +10,7 @@ $( "#tabs" ).tabs();
 - @head_pers = @head.personnel_data
 - @wife_pers = @wife.personnel_data if @wife
 - @wife_contact = @wife.primary_contact if @wife
+- @children = @head.children << Member.new(:last_name=>@head.last_name, :child=>true)
 
 
 <div >
@@ -245,50 +246,84 @@ $( "#tabs" ).tabs();
                 = form.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
         
   </div>
-<div id="tabs-3">
-%h4 Information for the children
-</div>
-<div id="tabs-4">
-%h4 Information for the family
-= form_for :record do |form|
-  %table.new_family
-    %tr
-      %td
-        = form.label :name, 'Name to identify family', :class=>'required'
-        %br
-        = form.text_field :name, :class=> "name-input"
-        %br
-        %p.description Must be unique. Can be same as name of head of family or a customized family name like "Hill, Jack & Jill"
-      %td
-        = form.label :sim_id, 'SIM ID', :class=>'required'
-        %br
-        = form.text_field :sim_id, :class => 'sim_id-input'
-      %td
-        = form.label :residence_location, "Residence location"
-        %br
-        = form.select(:residence_location, location_choices(@record[:residence_location_id]), {:include_blank => true })    
-    %tr
-      %td(colspan='4')
-        %p Updating the items below will cause the values for the individual (and spouse, if any) to be updated also.
-    %tr    
-      %td
-        = label_tag :family_date_active, "Date active with SIM"
-        %br
-        = text_field :family,  :date_active, :class => 'active_date-input date_picker '
-      %td
-        = label_tag :family_est_end_of_service, "Est. end of service"
-        %br
-        = text_field :family,  :est_end_of_service, :class => 'active_date-input date_picker '
-      %td
-        = label_tag :family_employment_status, "Employment"
-        %br
-        - status_choices = options_from_collection_for_select(EmploymentStatus.select('id, description').order('description'), :id, :description, @head[:employment_status_id])
-        = select(:family, :status, status_choices, {:include_blank => true })    
-      %td
-        = form.label :status, "Term status"
-        %br
-        - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
-        = form.select(:status, status_choices, {:include_blank => true })    
-</div>
+#tabs-3
+  %h4 Information for the children
+  %table.children
+    %th.idx ID
+    %th.name First name
+    %th.name Middle name
+    %th.birth_date Birthdate
+    %th.sex Sex
+    %th.school Schooling
+    %th.grade Grade
+    %th.status Status
+    - @children.each do |child|
+      %tr
+        = form_for child do |form|
+          %td 
+            = child.id
+          %td 
+            = form.text_field :first_name, :class => 'first_name-input'
+          %td 
+            = form.text_field :middle_name, :class => 'first_name-input'
+          %td 
+            = form.text_field :birth_date, :class => 'active_date-input date_picker_smaller '
+          %td
+            %label
+              M
+              = form.radio_button(:sex,'M')
+            %label
+              | F
+              = form.radio_button(:sex,'F')
+          %td 
+            = form.text_field  :school, :class=>'school-input'
+          %td 
+            = form.text_field :school_grade, :class=>'grade-input'
+          %td 
+            = form.text_field :employment_status, :class=>'employment_status-input'
+      
+
+#tabs-4
+  %h4 Information for the family
+  = form_for :record do |form|
+    %table.new_family
+      %tr
+        %td
+          = form.label :name, 'Name to identify family', :class=>'required'
+          %br
+          = form.text_field :name, :class=> "name-input"
+          %br
+          %p.description Must be unique. Can be same as name of head of family or a customized family name like "Hill, Jack & Jill"
+        %td
+          = form.label :sim_id, 'SIM ID', :class=>'required'
+          %br
+          = form.text_field :sim_id, :class => 'sim_id-input'
+        %td
+          = form.label :residence_location, "Residence location"
+          %br
+          = form.select(:residence_location, location_choices(@record[:residence_location_id]), {:include_blank => true })    
+      %tr
+        %td(colspan='4')
+          %p Updating the items below will cause the values for the individual (and spouse, if any) to be updated also.
+      %tr    
+        %td
+          = label_tag :family_date_active, "Date active with SIM"
+          %br
+          = text_field :family,  :date_active, :class => 'active_date-input date_picker '
+        %td
+          = label_tag :family_est_end_of_service, "Est. end of service"
+          %br
+          = text_field :family,  :est_end_of_service, :class => 'active_date-input date_picker '
+        %td
+          = label_tag :family_employment_status, "Employment"
+          %br
+          - status_choices = options_from_collection_for_select(EmploymentStatus.select('id, description').order('description'), :id, :description, @head[:employment_status_id])
+          = select(:family, :status, status_choices, {:include_blank => true })    
+        %td
+          = form.label :status, "Term status"
+          %br
+          - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
+          = form.select(:status, status_choices, {:include_blank => true })    
+
 	
 

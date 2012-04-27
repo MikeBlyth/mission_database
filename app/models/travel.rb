@@ -1,7 +1,7 @@
 # == Schema Information
-# Schema version: 20120117102246
+# Schema version: 20120427123138
 #
-# Table name: travels (Default false on several fields, not shown by annotate)
+# Table name: travels
 #
 #  id               :integer         not null, primary key
 #  date             :date

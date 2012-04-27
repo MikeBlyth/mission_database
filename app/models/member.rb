@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120117102246
+# Schema version: 20120427123138
 #
 # Table name: members
 #
@@ -26,6 +26,8 @@
 #  temporary_location            :string(255)
 #  temporary_location_from_date  :date
 #  temporary_location_until_date :date
+#  school                        :text
+#  school_grade                  :integer
 #
 
 
@@ -269,10 +271,10 @@ class Member < ActiveRecord::Base
   end
   
   # Make array of children. This version uses age rather than child attribute as criterion
-  def children
-    age_cutoff = 19
+  def children(include_grown=false)
+    age_cutoff = include_grown ? 999 : 19  # 
     birthdate_cutoff = Date::today() - age_cutoff.years
-    family.members.where("birth_date > ?", birthdate_cutoff)
+    family.members.where("birth_date > ? AND child", birthdate_cutoff)
   end
 
   # Dependent is true for family head, spouse, and children. False for others

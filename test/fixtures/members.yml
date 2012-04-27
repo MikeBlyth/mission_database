@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20120427123138
 #
 # Table name: members
 #
@@ -26,6 +26,8 @@
 #  temporary_location            :string(255)
 #  temporary_location_from_date  :date
 #  temporary_location_until_date :date
+#  school                        :text
+#  school_grade                  :integer
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

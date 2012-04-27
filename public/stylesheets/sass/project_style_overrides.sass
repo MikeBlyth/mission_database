@@ -26,7 +26,8 @@ div.statuses-view
 .active-scaffold 
   input.text-input, select
     font-size: 1em 
-    font-family: "Verdana" 
+    font-family: Verdana, Arial
+    font-weight: normal
                            
 .longitude-input, .latitude-input, .code-input, .flight-input,
 .total_passengers-input, .baggage-input, .time-input
@@ -38,6 +39,9 @@ div.statuses-view
 .origin-input, .destination-input, .guesthouse-input,
 .driver_accom-input
   width: 100px 
+  
+.date_picker_smaller
+  width: 80px  
 
 .first_name-input, .last_name-input, .middle_name-input,
 .short_name-input, .temporary_location-input
@@ -280,3 +284,31 @@ div.crosstab
     text-align: left
   tr.total
     background: #FFF
+    
+table.children
+  table-layout: fixed 
+  width: 500px
+  .first_name-input
+    width: 90px
+  .school-input
+    width: 70px
+  .grade-input
+    width: 50px
+  .employment_status-input
+    width: 100px
+  th
+    background: #CDC
+  th.idx
+    width: 30px
+  th.name
+    width: 100px
+  th.birth_date
+    width: 90px
+  th.sex
+    width: 80px
+  th.school
+    width: 80px
+  th.grade
+    width: 60px  
+  th.status
+    width: 100px

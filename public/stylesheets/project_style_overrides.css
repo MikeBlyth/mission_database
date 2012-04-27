@@ -20,7 +20,8 @@ div.statuses-view {
 
 .active-scaffold input.text-input, .active-scaffold select {
   font-size: 1em;
-  font-family: "Verdana"; }
+  font-family: Verdana, Arial;
+  font-weight: normal; }
 
 .longitude-input, .latitude-input, .code-input, .flight-input,
 .total_passengers-input, .baggage-input, .time-input {
@@ -32,6 +33,9 @@ div.statuses-view {
 .origin-input, .destination-input, .guesthouse-input,
 .driver_accom-input {
   width: 100px; }
+
+.date_picker_smaller {
+  width: 80px; }
 
 .first_name-input, .last_name-input, .middle_name-input,
 .short_name-input, .temporary_location-input {
@@ -266,3 +270,31 @@ div.crosstab td.row_label {
   text-align: left; }
 div.crosstab tr.total {
   background: white; }
+
+table.children {
+  table-layout: fixed;
+  width: 500px; }
+  table.children .first_name-input {
+    width: 90px; }
+  table.children .school-input {
+    width: 70px; }
+  table.children .grade-input {
+    width: 50px; }
+  table.children .employment_status-input {
+    width: 100px; }
+  table.children th {
+    background: #ccddcc; }
+  table.children th.idx {
+    width: 30px; }
+  table.children th.name {
+    width: 100px; }
+  table.children th.birth_date {
+    width: 90px; }
+  table.children th.sex {
+    width: 80px; }
+  table.children th.school {
+    width: 80px; }
+  table.children th.grade {
+    width: 60px; }
+  table.children th.status {
+    width: 100px; }
