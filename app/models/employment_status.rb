@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110518071651
+# Schema version: 20120427150752
 #
 # Table name: employment_statuses
 #
@@ -12,6 +12,7 @@
 #  umbrella    :boolean
 #  org_member  :boolean         default(TRUE)
 #  current_use :boolean         default(TRUE)
+#  child       :boolean
 #
 
 class EmploymentStatus < ActiveRecord::Base

@@ -103,6 +103,11 @@ $( "#tabs" ).tabs();
         = label_tag :head_pers_est_end_of_service, "Est. end of service"
         %br
         = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
+      %td
+        = label_tag :head_pers_employment_status, "Employment status"
+        %br
+        - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
+        = select(:head_pers, :employment_status, choices, {:include_blank => true })    
     %tr
       %td
         = label_tag :head_phone_1, "Phone on field"
@@ -211,6 +216,11 @@ $( "#tabs" ).tabs();
           = label_tag :wife_pers_est_end_of_service, "Est. end of service"
           %br
           = text_field :wife_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
+        %td
+          = label_tag :wife_pers_employment_status, "Employment status"
+          %br
+          - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @wife_pers[:employment_status_id])
+          = select(:wife_pers, :employment_status, choices, {:include_blank => true })    
       %tr
         %td
           = label_tag :wife_phone_1, "Phone on field"
@@ -280,7 +290,8 @@ $( "#tabs" ).tabs();
           %td 
             = form.text_field :school_grade, :class=>'grade-input'
           %td 
-            = form.text_field :employment_status, :class=>'employment_status-input'
+            - status_choices = options_from_collection_for_select(EmploymentStatus.where('child').select('id, description').order('description'), :id, :description, child[:employment_status_id])
+            = select(:family, :status, status_choices, {:include_blank => true })    
       
 
 #tabs-4

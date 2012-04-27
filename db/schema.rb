@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120427123138) do
+ActiveRecord::Schema.define(:version => 20120427150752) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(:version => 20120427123138) do
     t.boolean  "umbrella",    :default => false
     t.boolean  "org_member",  :default => true
     t.boolean  "current_use", :default => true
+    t.boolean  "child"
   end
 
   add_index "employment_statuses", ["code"], :name => "index_employment_status_codes_on_code", :unique => true
