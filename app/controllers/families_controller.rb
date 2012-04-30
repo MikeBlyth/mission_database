@@ -30,14 +30,26 @@ class FamiliesController < ApplicationController
   
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
-  def update_save(params={})
-    puts params || "No params!"
-    raise
+  def update
+    puts "==============================================================="
+    puts "Params=#{params}, id=#{params[:id]}"
+    puts "==============================================================="
+    @record = Family.find(params[:id])
     if @record
       @record.previous_residence_location = @record.residence_location 
       @record.previous_status = @record.status
     end  
-    super(params)
+    
+    @head = @record.head
+    @wife = @record.wife
+    puts "==============================================================="
+    puts params[:head]
+    puts "==============================================================="
+    @head.update_attributes(params[:head])
+    @wife.update_attributes(params[:wife]) if @wife
+    puts @head
+    puts @wife
+#    super(params)
   end    
 
   def do_create

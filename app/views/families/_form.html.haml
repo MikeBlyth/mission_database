@@ -61,16 +61,16 @@ $( "#tabs" ).tabs();
               = member.text_field  :birth_date, :class => 'birth_date-input date_picker '
           %td
             .country
-              = member.label :country_name
+              = member.label :country_id
               %br
               - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
-              = member.select(:country, choices, {:include_blank => true })    
+              = member.select(:country_id, choices, {:include_blank => true })    
           %td
             .education
-              = label :head_pers, :education
+              = label :head_pers, :education_id
               %br
               - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
-              = select(:head_pers, :education, choices, {:include_blank => true })    
+              = select(:head_pers, :education_id, choices, {:include_blank => true })    
           %td
             .qualifications
               = label :head_pers, :qualifications
@@ -86,15 +86,15 @@ $( "#tabs" ).tabs();
             %p.description Must be unique
         %tr
           %td
-            = member.label :ministry, "Ministry"
+            = member.label :ministry_id, "Ministry"
             %br
             - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
-            = member.select(:ministry, choices, {:include_blank => true })    
+            = member.select(:ministry_id, choices, {:include_blank => true })    
           %td
-            = member.label :work_location, "Ministry location"
+            = member.label :work_location_id, "Ministry location"
             %br
             - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
-            = member.select(:work_location, choices, {:include_blank => true })    
+            = member.select(:work_location_id, choices, {:include_blank => true })    
           %td
             = label_tag :head_pers_date_active, "Date active with SIM"
             %br
@@ -104,17 +104,17 @@ $( "#tabs" ).tabs();
             %br
             = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
           %td
-            = label_tag :head_pers_employment_status, "Employment status"
+            = label_tag :head_pers_employment_status_id, "Employment status"
             %br
             - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
-            = select(:head_pers, :employment_status, choices, {:include_blank => true })    
+            = select(:head_pers, :employment_status_id, choices, {:include_blank => true })    
         %tr
           %td
-            = label_tag :head_phone_1, "Phone on field"
+            = label :head_contact, :phone_1, "Phone on field"
             %br
             = text_field :head_contact, :phone_1
           %td
-            = label_tag :head_email_1, "Email 1"
+            = label :head_contact, :email_1, "Email 1"
             %br
             = text_field :head_contact, :email_1
           %td
@@ -123,11 +123,11 @@ $( "#tabs" ).tabs();
             = member.text_field :temporary_location
         %tr
           %td
-            = label_tag :head_phone_2, "Phone 2"
+            = label :head_contact, :phone_2, "Phone 2"
             %br
             = text_field :head_contact, :phone_2
           %td
-            = label_tag :head_email_2, "Email 2"
+            = label :head_contact, :email_2, "Email 2"
             %br
             = text_field :head_contact, :email_2
           %td
@@ -175,16 +175,16 @@ $( "#tabs" ).tabs();
                   = member.text_field  :birth_date, :class => 'birth_date-input date_picker '
               %td
                 .country
-                  = member.label :country_name
+                  = member.label :country_id
                   %br
                   - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @wife[:country_id])
-                  = member.select(:country, choices, {:include_blank => true })    
+                  = member.select(:country_id, choices, {:include_blank => true })    
               %td
                 .education
                   = label :wife_pers, :education
                   %br
                   - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @wife_pers[:education_id])
-                  = select(:wife_pers, :education, choices, {:include_blank => true })    
+                  = select(:wife_pers, :education_id, choices, {:include_blank => true })    
               %td
                 .qualifications
                   = label :wife_pers, :qualifications
@@ -203,12 +203,12 @@ $( "#tabs" ).tabs();
                 = member.label :ministry, "Ministry"
                 %br
                 - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @wife[:ministry_id])
-                = member.select(:ministry, choices, {:include_blank => true })    
+                = member.select(:ministry_id, choices, {:include_blank => true })    
               %td
-                = member.label :work_location, "Ministry location"
+                = member.label :work_location_id, "Ministry location"
                 %br
                 - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @wife[:work_location_id])
-                = member.select(:work_location, choices, {:include_blank => true })    
+                = member.select(:work_location_id, choices, {:include_blank => true })    
               %td
                 = label_tag :wife_pers_date_active, "Date active with SIM"
                 %br
@@ -218,10 +218,10 @@ $( "#tabs" ).tabs();
                 %br
                 = text_field :wife_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
               %td
-                = label_tag :wife_pers_employment_status, "Employment status"
+                = label_tag :wife_pers_employment_status_id, "Employment status"
                 %br
                 - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @wife_pers[:employment_status_id])
-                = select(:wife_pers, :employment_status, choices, {:include_blank => true })    
+                = select(:wife_pers, :employment_status_id, choices, {:include_blank => true })    
             %tr
               %td
                 = label_tag :wife_phone_1, "Phone on field"
