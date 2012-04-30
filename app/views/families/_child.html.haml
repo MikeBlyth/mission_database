@@ -1,0 +1,27 @@
+%tr
+  = form_for child do |form|
+    %td 
+      = child.id
+    %td 
+      = form.text_field :first_name, :class => 'first_name-input', :name=>"child_#{child.id}[first_name]", :id=>"child_#{child.id}_first_name"
+    %td 
+      = form.text_field :middle_name, :class => 'first_name-input', :name=>"child_#{child.id}[middle_name]", :id=>"child_#{child.id}_middle_name"
+    %td 
+      = form.text_field :birth_date, :class => 'active_date-input date_picker_smaller ', :name=>"child_#{child.id}[birth_date]", :id=>"child_#{child.id}_birth_date"
+    %td
+      %label
+        M
+        = form.radio_button :sex,'M', :name=>"child_#{child.id}[sex]", :id=>"child_#{child.id}_sex"
+      %label
+        | F
+        = form.radio_button :sex,'F', :name=>"child_#{child.id}[sex]", :id=>"child_#{child.id}_sex"
+    %td 
+      = form.text_field  :school, :class=>'school-input', :name=>"child_#{child.id}[school]", :id=>"child_#{child.id}_school"
+    %td 
+      = form.text_field :school_grade, :class=>'grade-input', :name=>"child_#{child.id}[school_grade]", :id=>"child_#{child.id}_school_grade"
+    %td 
+      - status_choices = options_from_collection_for_select(EmploymentStatus.where('child').select('id, description').order('description'), :id, :description, (child.personnel_data.employment_status_id if child.personnel_data))
+      = form.select(:status, status_choices, {:include_blank => true} , :name=>"child_#{child.id}[employment_status]", :id=>"child_#{child.id}_employment_status") 
+      
+
+

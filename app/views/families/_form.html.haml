@@ -267,33 +267,8 @@ $( "#tabs" ).tabs();
     %th.school Schooling
     %th.grade Grade
     %th.status Status
-    - @children.each do |child|
-      %tr
-        = form_for child do |form|
-          %td 
-            = child.id
-          %td 
-            = form.text_field :first_name, :class => 'first_name-input'
-          %td 
-            = form.text_field :middle_name, :class => 'first_name-input'
-          %td 
-            = form.text_field :birth_date, :class => 'active_date-input date_picker_smaller '
-          %td
-            %label
-              M
-              = form.radio_button(:sex,'M')
-            %label
-              | F
-              = form.radio_button(:sex,'F')
-          %td 
-            = form.text_field  :school, :class=>'school-input'
-          %td 
-            = form.text_field :school_grade, :class=>'grade-input'
-          %td 
-            - status_choices = options_from_collection_for_select(EmploymentStatus.where('child').select('id, description').order('description'), :id, :description, child[:employment_status_id])
-            = select(:family, :status, status_choices, {:include_blank => true })    
-      
-
+    = render(:partial => "child", :collection => @children)
+    
 #tabs-4
   %h4 Information for the family
   = form_for :record do |form|
