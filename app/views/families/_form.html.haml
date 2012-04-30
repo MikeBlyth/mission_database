@@ -23,271 +23,270 @@ $( "#tabs" ).tabs();
 <li><a href="#tabs-3">Children</a></li>
 <li><a href="#tabs-4">Family</a></li>
 </ul>
-<div id="tabs-1">
-%h4 Information for the individual or <em>head</em> of family
-  
-= form_for :head do |form|
-  %table.new_family
-    %tr
-      %td
-        = form.label :last_name,"", :class=>'required'
-        %br
-        = form.text_field :last_name, :class=> "last_name-input"
-      %td
-        = form.label :first_name,"", :class=>'required'
-        %br
-        = form.text_field :first_name, :class=> "first_name-input"
-      %td
-        = form.label :middle_name
-        %br
-        = form.text_field :middle_name, :class=> "middle_name-input"
-      %td
-        = form.label :short_name
-        %br
-        = form.text_field :short_name, :class=> "short_name-input"
-    %tr
-      %td
-        %label
-          = form.radio_button(:sex,'M')
-          Male
-        %br
-        %label
-          = form.radio_button(:sex,'F')
-          Female
-      %td
-        .birth_date        
-          = form.label :birth_date, :class => 'birth_date-input'
-          %br
-          = form.text_field  :birth_date, :class => 'birth_date-input date_picker '
-      %td
-        .country
-          = form.label :country_name
-          %br
-          - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
-          = form.select(:country, choices, {:include_blank => true })    
-      %td
-        .education
-          = label :head_pers, :education
-          %br
-          - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
-          = select(:head_pers, :education, choices, {:include_blank => true })    
-      %td
-        .qualifications
-          = label :head_pers, :qualifications
-          %br
-          = text_field :head_pers, :qualifications, :class=> 'qualifications-input text-input'
-      
-    %tr
-      %td
-        = form.label :name, "Full name of individual", :class=>'required'
-        %br
-        = form.text_field :name, :class=> "name-input"
-        %br
-        %p.description Must be unique
-    %tr
-      %td
-        = form.label :ministry, "Ministry"
-        %br
-        - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
-        = form.select(:ministry, choices, {:include_blank => true })    
-      %td
-        = form.label :work_location, "Ministry location"
-        %br
-        - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
-        = form.select(:work_location, choices, {:include_blank => true })    
-      %td
-        = label_tag :head_pers_date_active, "Date active with SIM"
-        %br
-        = text_field :head_pers,  :date_active, :class => 'active_date-input date_picker '
-      %td
-        = label_tag :head_pers_est_end_of_service, "Est. end of service"
-        %br
-        = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
-      %td
-        = label_tag :head_pers_employment_status, "Employment status"
-        %br
-        - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
-        = select(:head_pers, :employment_status, choices, {:include_blank => true })    
-    %tr
-      %td
-        = label_tag :head_phone_1, "Phone on field"
-        %br
-        = text_field :head_contact, :phone_1
-      %td
-        = label_tag :head_email_1, "Email 1"
-        %br
-        = text_field :head_contact, :email_1
-      %td
-        = form.label :temporary_location, "Temporary location"
-        %br
-        = form.text_field :temporary_location
-    %tr
-      %td
-        = label_tag :head_phone_2, "Phone 2"
-        %br
-        = text_field :head_contact, :phone_2
-      %td
-        = label_tag :head_email_2, "Email 2"
-        %br
-        = text_field :head_contact, :email_2
-      %td
-        %table
-          %tr
-            %td
-              = form.label :temporary_location_from_date, "From"
+= form_for :record do |main_form|
+  #tabs-1
+    %h4 Information for the individual or <em>head</em> of family
+    = fields_for :head do |member|
+      %table.new_family
+        %tr
+          %td
+            = member.label :last_name,"", :class=>'required'
+            %br
+            = member.text_field :last_name, :class=> "last_name-input"
+          %td
+            = member.label :first_name,"", :class=>'required'
+            %br
+            = member.text_field :first_name, :class=> "first_name-input"
+          %td
+            = member.label :middle_name
+            %br
+            = member.text_field :middle_name, :class=> "middle_name-input"
+          %td
+            = member.label :short_name
+            %br
+            = member.text_field :short_name, :class=> "short_name-input"
+        %tr
+          %td
+            %label
+              = member.radio_button(:sex,'M')
+              Male
+            %br
+            %label
+              = member.radio_button(:sex,'F')
+              Female
+          %td
+            .birth_date        
+              = member.label :birth_date, :class => 'birth_date-input'
               %br
-              = form.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
-            %td
-              = form.label :temporary_location_until_date, "Until"
+              = member.text_field  :birth_date, :class => 'birth_date-input date_picker '
+          %td
+            .country
+              = member.label :country_name
               %br
-              = form.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
+              - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
+              = member.select(:country, choices, {:include_blank => true })    
+          %td
+            .education
+              = label :head_pers, :education
+              %br
+              - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
+              = select(:head_pers, :education, choices, {:include_blank => true })    
+          %td
+            .qualifications
+              = label :head_pers, :qualifications
+              %br
+              = text_field :head_pers, :qualifications, :class=> 'qualifications-input text-input'
+          
+        %tr
+          %td
+            = member.label :name, "Full name of individual", :class=>'required'
+            %br
+            = member.text_field :name, :class=> "name-input"
+            %br
+            %p.description Must be unique
+        %tr
+          %td
+            = member.label :ministry, "Ministry"
+            %br
+            - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
+            = member.select(:ministry, choices, {:include_blank => true })    
+          %td
+            = member.label :work_location, "Ministry location"
+            %br
+            - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
+            = member.select(:work_location, choices, {:include_blank => true })    
+          %td
+            = label_tag :head_pers_date_active, "Date active with SIM"
+            %br
+            = text_field :head_pers,  :date_active, :class => 'active_date-input date_picker '
+          %td
+            = label_tag :head_pers_est_end_of_service, "Est. end of service"
+            %br
+            = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
+          %td
+            = label_tag :head_pers_employment_status, "Employment status"
+            %br
+            - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
+            = select(:head_pers, :employment_status, choices, {:include_blank => true })    
+        %tr
+          %td
+            = label_tag :head_phone_1, "Phone on field"
+            %br
+            = text_field :head_contact, :phone_1
+          %td
+            = label_tag :head_email_1, "Email 1"
+            %br
+            = text_field :head_contact, :email_1
+          %td
+            = member.label :temporary_location, "Temporary location"
+            %br
+            = member.text_field :temporary_location
+        %tr
+          %td
+            = label_tag :head_phone_2, "Phone 2"
+            %br
+            = text_field :head_contact, :phone_2
+          %td
+            = label_tag :head_email_2, "Email 2"
+            %br
+            = text_field :head_contact, :email_2
+          %td
+            %table
+              %tr
+                %td
+                  = member.label :temporary_location_from_date, "From"
+                  %br
+                  = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
+                %td
+                  = member.label :temporary_location_until_date, "Until"
+                  %br
+                  = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
       
-</div>
-- if @wife
-  <div id="tabs-2">
-  %h4 Information for the wife
-  = form_for :wife do |form|
-    %table.new_family
-      %tr
-        %td
-          = form.label :last_name,"", :class=>'required'
-          %br
-          = form.text_field :last_name, :class=> "last_name-input"
-        %td
-          = form.label :first_name,"", :class=>'required'
-          %br
-          = form.text_field :first_name, :class=> "first_name-input"
-        %td
-          = form.label :middle_name
-          %br
-          = form.text_field :middle_name, :class=> "middle_name-input"
-        %td
-          = form.label :short_name
-          %br
-          = form.text_field :short_name, :class=> "short_name-input"
-      %tr
-        %td
-        %td
-          .birth_date        
-            = form.label :birth_date, :class => 'birth_date-input'
-            %br
-            = form.text_field  :birth_date, :class => 'birth_date-input date_picker '
-        %td
-          .country
-            = form.label :country_name
-            %br
-            - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @wife[:country_id])
-            = form.select(:country, choices, {:include_blank => true })    
-        %td
-          .education
-            = label :wife_pers, :education
-            %br
-            - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @wife_pers[:education_id])
-            = select(:wife_pers, :education, choices, {:include_blank => true })    
-        %td
-          .qualifications
-            = label :wife_pers, :qualifications
-            %br
-            = text_field :wife_pers, :qualifications, :class=> 'qualifications-input text-input'
-        
-      %tr
-        %td
-          = form.label :name, "Full name of individual", :class=>'required'
-          %br
-          = form.text_field :name, :class=> "name-input"
-          %br
-          %p.description Must be unique
-      %tr
-        %td
-          = form.label :ministry, "Ministry"
-          %br
-          - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @wife[:ministry_id])
-          = form.select(:ministry, choices, {:include_blank => true })    
-        %td
-          = form.label :work_location, "Ministry location"
-          %br
-          - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @wife[:work_location_id])
-          = form.select(:work_location, choices, {:include_blank => true })    
-        %td
-          = label_tag :wife_pers_date_active, "Date active with SIM"
-          %br
-          = text_field :wife_pers,  :date_active, :class => 'active_date-input date_picker '
-        %td
-          = label_tag :wife_pers_est_end_of_service, "Est. end of service"
-          %br
-          = text_field :wife_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
-        %td
-          = label_tag :wife_pers_employment_status, "Employment status"
-          %br
-          - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @wife_pers[:employment_status_id])
-          = select(:wife_pers, :employment_status, choices, {:include_blank => true })    
-      %tr
-        %td
-          = label_tag :wife_phone_1, "Phone on field"
-          %br
-          = text_field :wife_contact, :phone_1
-        %td
-          = label_tag :wife_email_1, "Email 1"
-          %br
-          = text_field :wife_contact, :email_1
-        %td
-          = form.label :temporary_location, "Temporary location"
-          %br
-          = form.text_field :temporary_location
-      %tr
-        %td
-          = label_tag :wife_phone_2, "Phone 2"
-          %br
-          = text_field :wife_contact, :phone_2
-        %td
-          = label_tag :wife_email_2, "Email 2"
-          %br
-          = text_field :wife_contact, :email_2
-        %td
-          %table
+
+  - if @wife
+    #tabs-2
+      = fields_for :wife do |member|
+        %h4 Information for the individual or <em>head</em> of family
+        = fields_for :wife do |member|
+          %table.new_family
             %tr
               %td
-                = form.label :temporary_location_from_date, "From"
+                = member.label :last_name,"", :class=>'required'
                 %br
-                = form.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
+                = member.text_field :last_name, :class=> "last_name-input"
               %td
-                = form.label :temporary_location_until_date, "Until"
+                = member.label :first_name,"", :class=>'required'
                 %br
-                = form.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
-        
-  </div>
-#tabs-3
-  %h4 Information for the children
-  %table.children
-    %th.idx ID
-    %th.name First name
-    %th.name Middle name
-    %th.birth_date Birthdate
-    %th.sex Sex
-    %th.school Schooling
-    %th.grade Grade
-    %th.status Status
-    = render(:partial => "child", :collection => @children)
-    
-#tabs-4
-  %h4 Information for the family
-  = form_for :record do |form|
+                = member.text_field :first_name, :class=> "first_name-input"
+              %td
+                = member.label :middle_name
+                %br
+                = member.text_field :middle_name, :class=> "middle_name-input"
+              %td
+                = member.label :short_name
+                %br
+                = member.text_field :short_name, :class=> "short_name-input"
+            %tr
+              %td
+              %td
+                .birth_date        
+                  = member.label :birth_date, :class => 'birth_date-input'
+                  %br
+                  = member.text_field  :birth_date, :class => 'birth_date-input date_picker '
+              %td
+                .country
+                  = member.label :country_name
+                  %br
+                  - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @wife[:country_id])
+                  = member.select(:country, choices, {:include_blank => true })    
+              %td
+                .education
+                  = label :wife_pers, :education
+                  %br
+                  - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @wife_pers[:education_id])
+                  = select(:wife_pers, :education, choices, {:include_blank => true })    
+              %td
+                .qualifications
+                  = label :wife_pers, :qualifications
+                  %br
+                  = text_field :wife_pers, :qualifications, :class=> 'qualifications-input text-input'
+              
+            %tr
+              %td
+                = member.label :name, "Full name of individual", :class=>'required'
+                %br
+                = member.text_field :name, :class=> "name-input"
+                %br
+                %p.description Must be unique
+            %tr
+              %td
+                = member.label :ministry, "Ministry"
+                %br
+                - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @wife[:ministry_id])
+                = member.select(:ministry, choices, {:include_blank => true })    
+              %td
+                = member.label :work_location, "Ministry location"
+                %br
+                - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @wife[:work_location_id])
+                = member.select(:work_location, choices, {:include_blank => true })    
+              %td
+                = label_tag :wife_pers_date_active, "Date active with SIM"
+                %br
+                = text_field :wife_pers,  :date_active, :class => 'active_date-input date_picker '
+              %td
+                = label_tag :wife_pers_est_end_of_service, "Est. end of service"
+                %br
+                = text_field :wife_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
+              %td
+                = label_tag :wife_pers_employment_status, "Employment status"
+                %br
+                - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @wife_pers[:employment_status_id])
+                = select(:wife_pers, :employment_status, choices, {:include_blank => true })    
+            %tr
+              %td
+                = label_tag :wife_phone_1, "Phone on field"
+                %br
+                = text_field :wife_contact, :phone_1
+              %td
+                = label_tag :wife_email_1, "Email 1"
+                %br
+                = text_field :wife_contact, :email_1
+              %td
+                = member.label :temporary_location, "Temporary location"
+                %br
+                = member.text_field :temporary_location
+            %tr
+              %td
+                = label_tag :wife_phone_2, "Phone 2"
+                %br
+                = text_field :wife_contact, :phone_2
+              %td
+                = label_tag :wife_email_2, "Email 2"
+                %br
+                = text_field :wife_contact, :email_2
+              %td
+                %table
+                  %tr
+                    %td
+                      = member.label :temporary_location_from_date, "From"
+                      %br
+                      = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
+                    %td
+                      = member.label :temporary_location_until_date, "Until"
+                      %br
+                      = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
+              
+  #tabs-3
+    %h4 Information for the children
+    %table.children
+      %th.idx ID
+      %th.name First name
+      %th.name Middle name
+      %th.birth_date Birthdate
+      %th.sex Sex
+      %th.school Schooling
+      %th.grade Grade
+      %th.status Status
+      = render(:partial => "child", :collection => @children)
+      
+  #tabs-4
+    %h4 Information for the family
     %table.new_family
       %tr
         %td
-          = form.label :name, 'Name to identify family', :class=>'required'
+          = main_form.label :name, 'Name to identify family', :class=>'required'
           %br
-          = form.text_field :name, :class=> "name-input"
+          = main_form.text_field :name, :class=> "name-input"
           %br
           %p.description Must be unique. Can be same as name of head of family or a customized family name like "Hill, Jack & Jill"
         %td
-          = form.label :sim_id, 'SIM ID', :class=>'required'
+          = main_form.label :sim_id, 'SIM ID', :class=>'required'
           %br
-          = form.text_field :sim_id, :class => 'sim_id-input'
+          = main_form.text_field :sim_id, :class => 'sim_id-input'
         %td
-          = form.label :residence_location, "Residence location"
+          = main_form.label :residence_location, "Residence location"
           %br
-          = form.select(:residence_location, location_choices(@record[:residence_location_id]), {:include_blank => true })    
+          = main_form.select(:residence_location, location_choices(@record[:residence_location_id]), {:include_blank => true })    
       %tr
         %td(colspan='4')
           %p Updating the items below will cause the values for the individual (and spouse, if any) to be updated also.
@@ -306,10 +305,10 @@ $( "#tabs" ).tabs();
           - status_choices = options_from_collection_for_select(EmploymentStatus.select('id, description').order('description'), :id, :description, @head[:employment_status_id])
           = select(:family, :status, status_choices, {:include_blank => true })    
         %td
-          = form.label :status, "Term status"
+          = main_form.label :status, "Term status"
           %br
           - status_choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
-          = form.select(:status, status_choices, {:include_blank => true })    
+          = main_form.select(:status, status_choices, {:include_blank => true })    
 
 	
 
