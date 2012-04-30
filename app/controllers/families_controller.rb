@@ -51,7 +51,10 @@ class FamiliesController < ApplicationController
     @head.primary_contact.update_attributes(params[:head_contact])
     @wife.personnel_data.update_attributes(params[:wife_pers]) if @wife
     @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife
-    
+    # Update the children
+    params[:member].each do |id, child_data|
+      Member.find(id).update_attributes(child_data)
+    end
 #    super(params)
   end    
 

@@ -10,7 +10,7 @@ $( "#tabs" ).tabs();
 - @head_pers = @head.personnel_data
 - @wife_pers = @wife.personnel_data if @wife
 - @wife_contact = @wife.primary_contact if @wife
-- @children = @head.children << Member.new(:last_name=>@head.last_name, :child=>true)
+- @children = @head.children # << Member.new(:last_name=>@head.last_name, :child=>true)
 
 
 <div >
@@ -267,8 +267,35 @@ $( "#tabs" ).tabs();
       %th.school Schooling
       %th.grade Grade
       %th.status Status
-      = render(:partial => "child", :collection => @children)
-      
+      - @children.each do |child|
+        = fields_for child, :index=>child.id do |child_form|
+          %tr
+            %td 
+              = child_form.text_field :id
+            %td 
+              = child_form.text_field :first_name, :class => 'first_name-input'
+            %td 
+              = child_form.text_field :middle_name, :class => 'first_name-input'
+            %td 
+              = child_form.text_field :birth_date, :class => 'active_date-input date_picker_smaller '
+            %td
+              %label
+                M
+                = child_form.radio_button :sex,'M'
+              %label
+                | F
+                = child_form.radio_button :sex,'F'
+            %td 
+              = child_form.text_field  :school, :class=>'school-input'
+            %td 
+              = child_form.text_field :school_grade, :class=>'grade-input'
+            %td 
+              - status_choices = options_from_collection_for_select(EmploymentStatus.where('child').select('id, description').order('description'), :id, :description, (child.personnel_data.employment_status_id if child.personnel_data))
+              = child_form.fields_for :personnel_data do |child_pers|
+                = child_pers.label :name
+                = child_pers.select(:employment_status_id, status_choices, {:include_blank => true} )
+              
+        
   #tabs-4
     %h4 Information for the family
     %table.new_family
