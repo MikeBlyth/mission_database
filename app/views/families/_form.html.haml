@@ -117,7 +117,7 @@ $( "#tabs" ).tabs();
             = label :head_contact, :email_1, "Email 1"
             %br
             = text_field :head_contact, :email_1
-          %td
+          %td{:colspan=>'2'}
             = member.label :temporary_location, "Temporary location"
             %br
             = member.text_field :temporary_location, :class=>'temporary_location-input'
@@ -131,7 +131,7 @@ $( "#tabs" ).tabs();
             %br
             = text_field :head_contact, :email_2
           %td
-            = member.label :temporary_location_from_date, "From"
+            = member.label :temporary_location_from_date, "Temp. loc. start date"
             %br
             = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
           %td
@@ -231,7 +231,7 @@ $( "#tabs" ).tabs();
                 = label_tag :wife_email_1, "Email 1"
                 %br
                 = text_field :wife_contact, :email_1
-              %td
+              %td{:colspan=>'2'}
                 = member.label :temporary_location, "Temporary location"
                 %br
                 = member.text_field :temporary_location, :class=>'temporary_location-input'
@@ -245,7 +245,7 @@ $( "#tabs" ).tabs();
                 %br
                 = text_field :wife_contact, :email_2
               %td
-                = member.label :temporary_location_from_date, "From"
+                = member.label :temporary_location_from_date, "Temp. loc. start date"
                 %br
                 = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
               %td

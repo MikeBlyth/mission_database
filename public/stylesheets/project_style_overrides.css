@@ -31,7 +31,7 @@ div.statuses-view {
 .start_date-input, .end_date-input, .est_start_date-input, .sex-input,
 .est_end_date-input, .return_date-input, .confirmed-input,
 .origin-input, .destination-input, .guesthouse-input,
-.temporary_location-input, .driver_accom-input {
+.driver_accom-input {
   width: 100px; }
 
 .date_picker_smaller {
@@ -46,7 +46,7 @@ div.statuses-view {
   width: 180px; }
 
 .status-input,
-.ministry_comment-input, .location-input,
+.ministry_comment-input, .temporary_location-input, .location-input,
 .education-input, .ministry_comments {
   width: 270px; }
 
