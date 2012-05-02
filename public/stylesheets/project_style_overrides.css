@@ -30,15 +30,15 @@ div.statuses-view {
 .state-input, .date-input, .datepicker, .date_picker, .birth_date-input, .date_active-input,
 .start_date-input, .end_date-input, .est_start_date-input, .sex-input,
 .est_end_date-input, .return_date-input, .confirmed-input,
-.origin-input, .destination-input, .guesthouse-input,
-.driver_accom-input {
+.origin-input, .destination-input, .guesthouse-input, .phone,
+.qualifications-input, .temporary_location-input, .driver_accom-input {
   width: 100px; }
 
 .date_picker_smaller {
   width: 80px; }
 
 .first_name-input, .last_name-input, .middle_name-input,
-.short_name-input, .temporary_location-input {
+.short_name-input {
   width: 150px; }
 
 .name-input, .family-input, .spouse-input {
@@ -108,7 +108,7 @@ label.required {
   color: black; }
 
 table.new_family {
-  width: 400px; }
+  width: 600px; }
   table.new_family tbody {
     vertical-align: top; }
   table.new_family td {

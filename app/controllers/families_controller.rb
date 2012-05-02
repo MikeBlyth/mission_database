@@ -53,8 +53,13 @@ class FamiliesController < ApplicationController
     @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife
     # Update the children
     params[:member].each do |id, child_data|
-      Member.find(id).update_attributes(child_data)
+      this_child = Member.find(id)
+      this_child_personnel_data = child_data.delete(:personnel_data)
+      this_child.update_attributes(child_data)
+      this_child.personnel_data.update_attributes(this_child_personnel_data)
     end
+    @record.update_attributes(params[:record])  # Actual fields in Family record
+    
 #    super(params)
   end    
 
