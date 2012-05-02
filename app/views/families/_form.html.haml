@@ -60,41 +60,30 @@ $( "#tabs" ).tabs();
               = member.label :country_id
               %br
               - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
-              = member.select(:country_id, choices, {:include_blank => true })    
+              = member.select(:country_id, choices, {:include_blank => true }, :class=>'wide-input')    
           %td
             .education
               = label :head_pers, :education_id
               %br
               - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
-              = select(:head_pers, :education_id, choices, {:include_blank => true })    
+              = select(:head_pers, :education_id, choices, {:include_blank => true }, :class=>'medium-input')    
           %td
             .qualifications
               = label :head_pers, :qualifications
               %br
-              = text_field :head_pers, :qualifications, :class=> 'qualifications-input text-input'
+              = text_field :head_pers, :qualifications, :class=> 'medium-input'
           
         %tr
           %td
             = member.label :name, "Full name of individual", :class=>'required'
             %br
-            = member.text_field :name, :class=> "last_name-input"
+            = member.text_field :name, :class=> "name-input"
             %br
             %p.description Must be unique
-        %tr
-          %td
-            = member.label :ministry_id, "Ministry"
-            %br
-            - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
-            = member.select(:ministry_id, choices, {:include_blank => true })    
-          %td
-            = member.label :work_location_id, "Ministry location"
-            %br
-            - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
-            = member.select(:work_location_id, choices, {:include_blank => true })    
           %td
             = label_tag :head_pers_date_active, "Date active with SIM"
             %br
-            = text_field :head_pers,  :date_active, :class => 'active_date-input date_picker '
+            = text_field :head_pers,  :date_active, :class => 'date_active-input date_picker '
           %td
             = label_tag :head_pers_est_end_of_service, "Est. end of service"
             %br
@@ -103,40 +92,52 @@ $( "#tabs" ).tabs();
             = label_tag :head_pers_employment_status_id, "Employment status"
             %br
             - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
-            = select(:head_pers, :employment_status_id, choices, {:include_blank => true })    
+            = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+        %tr
+          %td
+            = member.label :ministry_id, "Ministry"
+            %br
+            - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
+            = member.select(:ministry_id, choices, {:include_blank => true }, :class=>'wide-input')    
+          %td
+            = member.label :work_location_id, "Ministry location"
+            %br
+            - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
+            = member.select(:work_location_id, choices, {:include_blank => true }, :class=>'ministry_location-input')    
+            %td{:colspan=>'2'}
+              = member.label :ministry_comment, "Ministry comments"
+              %br
+              = member.text_field :ministry_comment, :class=>'ministry_comments'   
         %tr
           %td
             = label :head_contact, :phone_1, "Phone on field"
             %br
-            = text_field :head_contact, :phone_1, :class=>:phone
-          %td{:colspan=>'2'}
+            = text_field :head_contact, :phone_1, :class=>'phone-input'
+          %td
             = label :head_contact, :email_1, "Email 1"
             %br
             = text_field :head_contact, :email_1
           %td
             = member.label :temporary_location, "Temporary location"
             %br
-            = member.text_field :temporary_location, :class=>'temp_location-input'
+            = member.text_field :temporary_location, :class=>'temporary_location-input'
         %tr
           %td
             = label :head_contact, :phone_2, "Phone 2"
             %br
-            = text_field :head_contact, :phone_2, :class=>:phone
-          %td{:colspan=>'2'}
+            = text_field :head_contact, :phone_2, :class=>'phone-input'
+          %td
             = label :head_contact, :email_2, "Email 2"
             %br
             = text_field :head_contact, :email_2
           %td
-            %table
-              %tr
-                %td
-                  = member.label :temporary_location_from_date, "From"
-                  %br
-                  = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
-                %td
-                  = member.label :temporary_location_until_date, "Until"
-                  %br
-                  = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
+            = member.label :temporary_location_from_date, "From"
+            %br
+            = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
+          %td
+            = member.label :temporary_location_until_date, "Until"
+            %br
+            = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
       
 
   - if @wife
@@ -173,18 +174,18 @@ $( "#tabs" ).tabs();
                   = member.label :country_id
                   %br
                   - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @wife[:country_id])
-                  = member.select(:country_id, choices, {:include_blank => true })    
+                  = member.select(:country_id, choices, {:include_blank => true }, :class=>'country-input')    
               %td
                 .education
                   = label :wife_pers, :education
                   %br
                   - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @wife_pers[:education_id])
-                  = select(:wife_pers, :education_id, choices, {:include_blank => true })    
+                  = select(:wife_pers, :education_id, choices, {:include_blank => true }, :class=>'medium-input')    
               %td
                 .qualifications
                   = label :wife_pers, :qualifications
                   %br
-                  = text_field :wife_pers, :qualifications, :class=> 'qualifications-input text-input'
+                  = text_field :wife_pers, :qualifications, :class=> 'medium-input'
               
             %tr
               %td
@@ -193,17 +194,6 @@ $( "#tabs" ).tabs();
                 = member.text_field :name, :class=> "name-input"
                 %br
                 %p.description Must be unique
-            %tr
-              %td
-                = member.label :ministry, "Ministry"
-                %br
-                - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @wife[:ministry_id])
-                = member.select(:ministry_id, choices, {:include_blank => true })    
-              %td
-                = member.label :work_location_id, "Ministry location"
-                %br
-                - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @wife[:work_location_id])
-                = member.select(:work_location_id, choices, {:include_blank => true })    
               %td
                 = label_tag :wife_pers_date_active, "Date active with SIM"
                 %br
@@ -216,12 +206,27 @@ $( "#tabs" ).tabs();
                 = label_tag :wife_pers_employment_status_id, "Employment status"
                 %br
                 - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @wife_pers[:employment_status_id])
-                = select(:wife_pers, :employment_status_id, choices, {:include_blank => true })    
+                = select(:wife_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+            %tr
+              %td
+                = member.label :ministry, "Ministry"
+                %br
+                - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @wife[:ministry_id])
+                = member.select(:ministry_id, choices, {:include_blank => true }, :class=> 'ministry-input')    
+              %td
+                = member.label :work_location_id, "Ministry location"
+                %br
+                - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @wife[:work_location_id])
+                = member.select(:work_location_id, choices, {:include_blank => true }, :class=>'ministry_location-input')    
+              %td{:colspan=>'2'}
+                = member.label :ministry_comment, "Ministry comments"
+                %br
+                = member.text_field :ministry_comment, :class=>'ministry_comments'    
             %tr
               %td
                 = label_tag :wife_phone_1, "Phone on field"
                 %br
-                = text_field :wife_contact, :phone_1
+                = text_field :wife_contact, :phone_1, :class=> 'phone-input'
               %td
                 = label_tag :wife_email_1, "Email 1"
                 %br
@@ -229,27 +234,24 @@ $( "#tabs" ).tabs();
               %td
                 = member.label :temporary_location, "Temporary location"
                 %br
-                = member.text_field :temporary_location
+                = member.text_field :temporary_location, :class=>'temporary_location-input'
             %tr
               %td
                 = label_tag :wife_phone_2, "Phone 2"
                 %br
-                = text_field :wife_contact, :phone_2
+                = text_field :wife_contact, :phone_2, :class=> 'phone-input'
               %td
                 = label_tag :wife_email_2, "Email 2"
                 %br
                 = text_field :wife_contact, :email_2
               %td
-                %table
-                  %tr
-                    %td
-                      = member.label :temporary_location_from_date, "From"
-                      %br
-                      = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
-                    %td
-                      = member.label :temporary_location_until_date, "Until"
-                      %br
-                      = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
+                = member.label :temporary_location_from_date, "From"
+                %br
+                = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
+              %td
+                = member.label :temporary_location_until_date, "Until"
+                %br
+                = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
               
   #tabs-3
     %h4 Information for the children
