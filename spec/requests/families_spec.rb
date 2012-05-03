@@ -19,7 +19,7 @@ include SimTestHelper
 
     it "editing family should change all values correctly" do
       @family = factory_family_full :couple=>true, :child=>true
-      birth_date = Date.new(2000,1,1)
+      birth_date = Date.new(1980,1,1)
       temp_loc_from = Date.new(2011,1,1)
       temp_loc_until = Date.new(2011,1,10)
       date_active = Date.new(2000,2,1)
@@ -28,6 +28,7 @@ include SimTestHelper
       est_field_term_start = Date.new(2000,5,4)
       est_field_term_end = Date.new(2004,5,4)
       visit edit_family_path(@family)
+
       within("#tabs-head") do
         fill_in "First name", :with => "Samuel"
         fill_in "Middle name", :with => "Jonah"
@@ -50,8 +51,30 @@ include SimTestHelper
         fill_in "head_temporary_location_until_date", :with => temp_loc_until.strftime("%F")
       end # Within head tab
 
+      within("#tabs-wife") do
+        fill_in "First name", :with => "Bellana"
+        fill_in "Middle name", :with => "Maria"
+        fill_in "Short name", :with => "Bell"
+        fill_in "Birth date", :with => birth_date.strftime("%F")
+        select "Afg", :from=>'Country'
+        select "Educ"
+        fill_in "Qualifications", :with=> "Very qualified"
+
+        fill_in "Full name", :with=>"Newman, Alfred A."
+        fill_in "Date active", :with => date_active.strftime("%F")
+        fill_in "Est. end of service", :with => (date_active+365.days).strftime("%F")
+        select 'Career'
+        select 'Ministry'
+        select 'Site', :from=>'Ministry location'
+        fill_in 'Ministry comment', :with=> "ministry comment"
+        fill_in 'Temporary location', :with=> "out of town"
+        fill_in "wife_temporary_location_from_date", :with => temp_loc_from.strftime("%F")
+        fill_in "wife_temporary_location_until_date", :with => temp_loc_until.strftime("%F")
+      end # Within head tab
+
       click_button "Update"
 
+      # Check head data
       m = @family.head.reload
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
@@ -62,6 +85,28 @@ include SimTestHelper
       m.personnel_data.education.description.should =~ /Educ/
       m.personnel_data.qualifications.should == "Very qualified"
       m.name.should == "Newman, Alfred E."
+      m.personnel_data.date_active.should == date_active
+      m.personnel_data.est_end_of_service.should == date_active+365.days
+      m.ministry.description.should =~ /Min/
+      m.ministry_comment.should ==   "ministry comment"    
+      m.residence_location.description.should =~ /Site/
+      m.work_location.description.should  =~ /Site/
+      m.temporary_location.should == 'out of town'
+      m.temporary_location_from_date.should == temp_loc_from
+      m.temporary_location_until_date.should == temp_loc_until
+      m.personnel_data.employment_status.description.should =~ /Career/
+
+      # Check spouse data
+      m = @family.wife.reload
+      m.first_name.should == 'Bellana'
+      m.middle_name.should == 'Maria'
+      m.short_name.should == 'Bell'
+      m.sex.should == 'F'
+      m.birth_date.should == birth_date
+      m.country.name.should =~ /Afghanistan/
+      m.personnel_data.education.description.should =~ /Educ/
+      m.personnel_data.qualifications.should == "Very qualified"
+      m.name.should == "Newman, Alfred A."
       m.personnel_data.date_active.should == date_active
       m.personnel_data.est_end_of_service.should == date_active+365.days
       m.ministry.description.should =~ /Min/

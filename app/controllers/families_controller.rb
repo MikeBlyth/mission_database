@@ -46,14 +46,19 @@ class FamiliesController < ApplicationController
 #    puts params[:head]
 #    puts "==============================================================="
     unless @head.update_attributes(params[:head])
-      puts 'Error!' 
+      puts 'Error with head!' 
       puts @head.errors
     end
-    @wife.update_attributes(params[:wife]) if @wife
+    if @wife
+      unless @wife.update_attributes(params[:wife])
+        puts 'Error with wife!' 
+        puts @wife.errors
+      end
+      @wife.personnel_data.update_attributes(params[:wife_pers]) 
+      @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife.primary_contact
+    end
     @head.personnel_data.update_attributes(params[:head_pers])
     @head.primary_contact.update_attributes(params[:head_contact]) if @head.primary_contact
-    @wife.personnel_data.update_attributes(params[:wife_pers]) if @wife && @wife.primary_contact
-    @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife && @wife.primary_contact
     # Update the children
     if params[:member]
       params[:member].each do |id, child_data|
