@@ -33,9 +33,9 @@ class FamiliesController < ApplicationController
   #   (Family.rb update_member_locations and update_member_status update all the family members
   #   if the _family_ location or status has been changed)
   def update
-    puts "==============================================================="
-    puts "Params=#{params}, id=#{params[:id]}"
-    puts "==============================================================="
+#    puts "==============================================================="
+#    puts "Params=#{params}, id=#{params[:id]}"
+#    puts "==============================================================="
     @record = Family.find(params[:id])
     if @record
       @record.previous_residence_location = @record.residence_location 
@@ -67,7 +67,10 @@ class FamiliesController < ApplicationController
         this_child = Member.find(id)
         this_child_personnel_data = child_data.delete(:personnel_data)
         this_child.update_attributes(child_data)
-        this_child.personnel_data.update_attributes(this_child_personnel_data)
+        unless this_child.personnel_data.update_attributes(this_child_personnel_data)
+          puts 'Error with child!'
+          puts this_child.personnel_data.errors 
+        end
       end
     end
     @record.update_attributes(params[:record])  # Actual fields in Family record

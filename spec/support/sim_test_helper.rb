@@ -125,7 +125,7 @@ module SimTestHelper
     end
     if params[:child]
       child = Factory(:child, :family=>family, :country=>head.country)
-      Factory(:personnel_data, :member=>child)
+#      Factory(:personnel_data, :member=>child)
     end
     return family
   end

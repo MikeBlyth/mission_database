@@ -8,7 +8,6 @@ include SimTestHelper
 
     before(:each) do
       integration_test_sign_in(:admin=>true)
-      @family = Factory(:family)
       seed_tables
     end  
 
@@ -19,8 +18,10 @@ include SimTestHelper
 
     it "editing family should change all values correctly" do
       @family = factory_family_bare :couple=>true, :child=>true
+      Factory(:employment_status, :description=>"MK dependent", :child=>true)
 #      y @family.head
       birth_date = Date.new(1980,1,1)
+      child_birth_date = Date.new(2000,12,31)
       temp_loc_from = Date.new(2011,1,1)
       temp_loc_until = Date.new(2011,1,10)
       date_active = Date.new(2000,2,1)
@@ -95,8 +96,17 @@ include SimTestHelper
         select 'Site', :from=>'Residence location'
       end  
 
+
+
       within ("#tabs-children") do
-        fill_in "first_name-input", :with=>"Shelly"
+        child_id = @family.children.first.id.to_s
+        fill_in "member_#{child_id}_first_name", :with => "Andromeda"
+        fill_in "member_#{child_id}_middle_name", :with => "Jo"
+        fill_in "member_#{child_id}_birth_date", :with => child_birth_date.strftime("%F")
+        select "Female", :from=>"member_#{child_id}_sex"
+        fill_in "member_#{child_id}_school", :with => "Homeschool"
+        fill_in "member_#{child_id}_school_grade", :with => "7"
+        select "MK dependent", :from=>"member_#{child_id}_personnel_data_employment_status_id"
       end
 
       click_button "Update"
@@ -162,6 +172,14 @@ include SimTestHelper
       f.residence_location.description.should =~ /Site/
 
       # Check child data
+      c = f.children.first.reload
+      c.first_name.should == 'Andromeda'
+      c.middle_name.should == 'Jo'
+      c.sex.should == 'F'
+      c.birth_date.should == child_birth_date
+      c.school.should == 'Homeschool'
+      c.school_grade.should == 7
+      c.personnel_data.employment_status.description.should == "MK dependent"
       
     end # editing family should change all values correctly
 
