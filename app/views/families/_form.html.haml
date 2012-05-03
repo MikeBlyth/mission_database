@@ -93,6 +93,11 @@ $( "#tabs" ).tabs();
             %br
             - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
             = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+            %td
+              = label_tag :head_status_id, "Field status"
+              %br
+              - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @head[:status_id])
+              = member.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
         %tr
           %td
             = member.label :ministry_id, "Ministry"
@@ -207,6 +212,11 @@ $( "#tabs" ).tabs();
                 %br
                 - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @wife_pers[:employment_status_id])
                 = select(:wife_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+              %td
+                = label_tag :wife_status_id, "Field status"
+                %br
+                - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @wife[:status_id])
+                = member.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
             %tr
               %td
                 = member.label :ministry, "Ministry"

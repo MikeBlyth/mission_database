@@ -48,8 +48,9 @@ include SimTestHelper
         fill_in "Full name", :with=>"Newman, Alfred E."
         fill_in "Date active", :with => date_active.strftime("%F")
         fill_in "Est. end of service", :with => (date_active+365.days).strftime("%F")
-        select 'Career'
-        select 'Ministry'
+        select 'Career'    # employment status
+        select 'Ministry'  # ministry description
+        select 'On field'  # default status
         select 'Site', :from=>'Ministry location'
         fill_in 'Ministry comment', :with=> "ministry comment"
         fill_in 'Temporary location', :with=> "out of town"
@@ -76,6 +77,7 @@ include SimTestHelper
         fill_in "Est. end of service", :with => (date_active+365.days).strftime("%F")
         select 'Career'
         select 'Ministry'
+        select 'On field'  # default status
         select 'Site', :from=>'Ministry location'
         fill_in 'Ministry comment', :with=> "ministry comment"
         fill_in 'Temporary location', :with=> "out of town"
@@ -117,6 +119,7 @@ include SimTestHelper
       m.temporary_location_from_date.should == temp_loc_from
       m.temporary_location_until_date.should == temp_loc_until
       m.personnel_data.employment_status.description.should =~ /Career/
+      m.status.description.should =~ /field/
       m.primary_contact.phone_1.should == phone_1
       m.primary_contact.phone_2.should == phone_2
       m.primary_contact.email_1.should == email_1
@@ -142,6 +145,7 @@ include SimTestHelper
       m.temporary_location.should == 'out of town'
       m.temporary_location_from_date.should == temp_loc_from
       m.temporary_location_until_date.should == temp_loc_until
+      m.status.description.should =~ /field/
       m.personnel_data.employment_status.description.should =~ /Career/
       m.primary_contact.phone_1.should == phone_1
       m.primary_contact.phone_2.should == phone_2
