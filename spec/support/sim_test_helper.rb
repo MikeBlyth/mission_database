@@ -114,6 +114,22 @@ module SimTestHelper
     return family
   end
 
+  def factory_family_bare(params={})
+    head = factory_member_basic
+    family = head.family
+    Factory(:contact, :member=>head)
+    if params[:couple]
+      spouse = Factory(:member, :family=>family, :spouse=>head, :sex=>'F')
+      Factory(:contact, :member=>spouse)
+      head.spouse = spouse
+    end
+    if params[:child]
+      child = Factory(:child, :family=>family, :country=>head.country)
+      Factory(:personnel_data, :member=>child)
+    end
+    return family
+  end
+
   def factory_member_create(params={})
     number = rand(1000000)
     params[:last_name] ||= "Johnson #{number}"

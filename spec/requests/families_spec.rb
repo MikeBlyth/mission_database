@@ -18,7 +18,8 @@ include SimTestHelper
 #    end
 
     it "editing family should change all values correctly" do
-      @family = factory_family_full :couple=>true, :child=>true
+      @family = factory_family_bare :couple=>true, :child=>true
+#      y @family.head
       birth_date = Date.new(1980,1,1)
       temp_loc_from = Date.new(2011,1,1)
       temp_loc_until = Date.new(2011,1,10)
@@ -84,12 +85,19 @@ include SimTestHelper
         fill_in "Phone 2", :with => phone_2
         fill_in "Email 1", :with => email_1
         fill_in "Email 2", :with => email_2
-      end # Within head tab
+      end # Within wife tab
+
+      within("#tabs-family") do
+        fill_in "record_name", :with => "Newman, Alfred Q."
+        fill_in "SIM ID", :with => '01234'
+        select 'Site', :from=>'Residence location'
+      end  
 
       click_button "Update"
 
+      f = @family.reload
       # Check head data
-      m = @family.head.reload
+      m = f.head.reload
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
       m.short_name.should == 'Sam'
@@ -103,7 +111,7 @@ include SimTestHelper
       m.personnel_data.est_end_of_service.should == date_active+365.days
       m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    
-      m.residence_location.description.should =~ /Site/
+      m.residence_location.description.should =~ /Site/  # because Family residence location was updated
       m.work_location.description.should  =~ /Site/
       m.temporary_location.should == 'out of town'
       m.temporary_location_from_date.should == temp_loc_from
@@ -115,7 +123,7 @@ include SimTestHelper
       m.primary_contact.email_2.should == email_2
       
       # Check spouse data
-      m = @family.wife.reload
+      m = f.wife.reload
       m.first_name.should == 'Bellana'
       m.middle_name.should == 'Maria'
       m.short_name.should == 'Bell'
@@ -129,7 +137,7 @@ include SimTestHelper
       m.personnel_data.est_end_of_service.should == date_active+365.days
       m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    
-      m.residence_location.description.should =~ /Site/
+      m.residence_location.description.should =~ /Site/  # because Family residence location was updated
       m.work_location.description.should  =~ /Site/
       m.temporary_location.should == 'out of town'
       m.temporary_location_from_date.should == temp_loc_from
@@ -139,6 +147,11 @@ include SimTestHelper
       m.primary_contact.phone_2.should == phone_2
       m.primary_contact.email_1.should == email_1
       m.primary_contact.email_2.should == email_2
+
+      # Check family data
+      f.name.should == "Newman, Alfred Q."
+      f.sim_id.should == '01234'
+#      f.residence_location.description.should =~ /Site/
     end # editing family should change all values correctly
 
   end # describe by Admin

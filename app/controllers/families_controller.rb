@@ -30,6 +30,8 @@ class FamiliesController < ApplicationController
   
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
+  #   (Family.rb update_member_locations and update_member_status update all the family members
+  #   if the _family_ location or status has been changed)
   def update
     puts "==============================================================="
     puts "Params=#{params}, id=#{params[:id]}"
