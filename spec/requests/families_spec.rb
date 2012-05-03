@@ -95,6 +95,10 @@ include SimTestHelper
         select 'Site', :from=>'Residence location'
       end  
 
+      within ("#tabs-children") do
+        fill_in "first_name-input", :with=>"Shelly"
+      end
+
       click_button "Update"
 
       f = @family.reload
@@ -155,7 +159,10 @@ include SimTestHelper
       # Check family data
       f.name.should == "Newman, Alfred Q."
       f.sim_id.should == '01234'
-#      f.residence_location.description.should =~ /Site/
+      f.residence_location.description.should =~ /Site/
+
+      # Check child data
+      
     end # editing family should change all values correctly
 
   end # describe by Admin
