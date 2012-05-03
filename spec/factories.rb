@@ -60,6 +60,7 @@ FactoryGirl.define do
     sequence(:code) {|n| "#{n}"}
     sequence(:name) {|n| "Afghanistan #{n}" }
     nationality 'Afghan'
+    include_in_selection true
   end
   
   factory :country_unspecified, :parent => :country do
@@ -133,7 +134,7 @@ FactoryGirl.define do
   end
 
   factory :field_term_current, :parent => :field_term do
-    start_date Date.today - 6.months
+    start_date Date.today - 180 #days
     est_start_date Date.today - 180 #days
     end_date nil
     est_end_date nil
