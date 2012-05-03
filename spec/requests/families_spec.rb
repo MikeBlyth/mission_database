@@ -27,6 +27,11 @@ include SimTestHelper
       field_term_end = Date.new(2004,4,4)
       est_field_term_start = Date.new(2000,5,4)
       est_field_term_end = Date.new(2004,5,4)
+      phone_1 = '+2348887771111'
+      phone_2 = '+2348887772222'
+      email_1 = 'firstmail@test.com'
+      email_2 = 'secondmail@test.com'
+
       visit edit_family_path(@family)
 
       within("#tabs-head") do
@@ -49,6 +54,11 @@ include SimTestHelper
         fill_in 'Temporary location', :with=> "out of town"
         fill_in "head_temporary_location_from_date", :with => temp_loc_from.strftime("%F")
         fill_in "head_temporary_location_until_date", :with => temp_loc_until.strftime("%F")
+        fill_in "Phone on field", :with => phone_1
+        fill_in "Phone 2", :with => phone_2
+        fill_in "Email 1", :with => email_1
+        fill_in "Email 2", :with => email_2
+        
       end # Within head tab
 
       within("#tabs-wife") do
@@ -70,6 +80,10 @@ include SimTestHelper
         fill_in 'Temporary location', :with=> "out of town"
         fill_in "wife_temporary_location_from_date", :with => temp_loc_from.strftime("%F")
         fill_in "wife_temporary_location_until_date", :with => temp_loc_until.strftime("%F")
+        fill_in "Phone on field", :with => phone_1
+        fill_in "Phone 2", :with => phone_2
+        fill_in "Email 1", :with => email_1
+        fill_in "Email 2", :with => email_2
       end # Within head tab
 
       click_button "Update"
@@ -95,7 +109,11 @@ include SimTestHelper
       m.temporary_location_from_date.should == temp_loc_from
       m.temporary_location_until_date.should == temp_loc_until
       m.personnel_data.employment_status.description.should =~ /Career/
-
+      m.primary_contact.phone_1.should == phone_1
+      m.primary_contact.phone_2.should == phone_2
+      m.primary_contact.email_1.should == email_1
+      m.primary_contact.email_2.should == email_2
+      
       # Check spouse data
       m = @family.wife.reload
       m.first_name.should == 'Bellana'
@@ -117,6 +135,10 @@ include SimTestHelper
       m.temporary_location_from_date.should == temp_loc_from
       m.temporary_location_until_date.should == temp_loc_until
       m.personnel_data.employment_status.description.should =~ /Career/
+      m.primary_contact.phone_1.should == phone_1
+      m.primary_contact.phone_2.should == phone_2
+      m.primary_contact.email_1.should == email_1
+      m.primary_contact.email_2.should == email_2
     end # editing family should change all values correctly
 
   end # describe by Admin
