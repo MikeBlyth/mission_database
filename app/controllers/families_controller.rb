@@ -48,19 +48,21 @@ class FamiliesController < ApplicationController
     @head.update_attributes(params[:head])
     @wife.update_attributes(params[:wife]) if @wife
     @head.personnel_data.update_attributes(params[:head_pers])
-    @head.primary_contact.update_attributes(params[:head_contact])
-    @wife.personnel_data.update_attributes(params[:wife_pers]) if @wife
-    @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife
+    @head.primary_contact.update_attributes(params[:head_contact]) if @head.primary_contact
+    @wife.personnel_data.update_attributes(params[:wife_pers]) if @wife && @wife.primary_contact
+    @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife && @wife.primary_contact
     # Update the children
-    params[:member].each do |id, child_data|
-      this_child = Member.find(id)
-      this_child_personnel_data = child_data.delete(:personnel_data)
-      this_child.update_attributes(child_data)
-      this_child.personnel_data.update_attributes(this_child_personnel_data)
+    if params[:member]
+      params[:member].each do |id, child_data|
+        this_child = Member.find(id)
+        this_child_personnel_data = child_data.delete(:personnel_data)
+        this_child.update_attributes(child_data)
+        this_child.personnel_data.update_attributes(this_child_personnel_data)
+      end
     end
     @record.update_attributes(params[:record])  # Actual fields in Family record
-    
-#    super(params)
+    params = {:record=>{}}
+    redirect_to families_path
   end    
 
   def do_create

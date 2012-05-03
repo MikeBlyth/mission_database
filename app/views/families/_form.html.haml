@@ -17,14 +17,14 @@ $( "#tabs" ).tabs();
 
 <div id="tabs">
 <ul>
-<li><a href="#tabs-1">Head</a></li>
+<li><a href="#tabs-head">Head</a></li>
 - if @wife
-  <li><a href="#tabs-2">Wife</a></li>
-<li><a href="#tabs-3">Children</a></li>
-<li><a href="#tabs-4">Family</a></li>
+  <li><a href="#tabs-wife">Wife</a></li>
+<li><a href="#tabs-children">Children</a></li>
+<li><a href="#tabs-family">Family</a></li>
 </ul>
 = form_for :record do |main_form|
-  #tabs-1
+  #tabs-head
     %h4 Information for the individual or <em>head</em> of family
     = fields_for :head do |member|
       %table.new_family
@@ -141,7 +141,7 @@ $( "#tabs" ).tabs();
       
 
   - if @wife
-    #tabs-2
+    #tabs-wife
       = fields_for :wife do |member|
         %h4 Information for the individual or <em>head</em> of family
         = fields_for :wife do |member|
@@ -253,7 +253,7 @@ $( "#tabs" ).tabs();
                 %br
                 = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
               
-  #tabs-3
+  #tabs-family
     %h4 Information for the children
     %table.children
       %th.idx ID
@@ -287,7 +287,7 @@ $( "#tabs" ).tabs();
                 = child_pers.select(:employment_status_id, status_choices, {:include_blank => true} )
               
         
-  #tabs-4
+  #tabs-family
     %h4 Information for the family
     %table.new_family
       %tr

@@ -215,6 +215,8 @@ FactoryGirl.define do
       birth_date "1 Jan 2000"
       sequence(:first_name) {|n| "Child_#{n}" }
       child true
+      school "Hillcrest"
+      school_grade 7
     end
   
   factory :ministry do
