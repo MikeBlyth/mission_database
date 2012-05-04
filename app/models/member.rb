@@ -57,6 +57,7 @@ class Member < ActiveRecord::Base
   validates_uniqueness_of :spouse_id, :allow_blank=>true
   validate :valid_spouse
   validates_uniqueness_of :name
+  validate  :valid_birth_date #,  :less_than => Date.today+1.day
 
   after_initialize :inherit_from_family
   before_validation :set_indexed_name_if_empty
@@ -318,6 +319,12 @@ class Member < ActiveRecord::Base
       spouse.spouse_id && (spouse.spouse_id != self.id)
     errors.add(:spouse, "must un-marry existing spouse first") if
       @previous_spouse && (@previous_spouse.spouse_id == self.id) && (spouse != @previous_spouse)
+  end
+
+  def valid_birth_date
+    if birth_date.to_date > Date.today + 1.day
+      errors.add(:birth_date, "Birth date can't be in future!") 
+    end
   end
 
   def country_name

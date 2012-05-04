@@ -49,21 +49,18 @@ class FamiliesController < ApplicationController
 
     @head = @family.head
     @wife = @family.wife
-#    puts "==============================================================="
-#    puts params[:head]
-#    puts "==============================================================="
+    @errors = {}
     if @head
       unless @head.update_attributes(params[:head])
-        puts 'Error with head!' 
-        puts @head.errors
+        @errors[:head] = @head.errors 
       end
       @head.personnel_data.update_attributes(params[:head_pers])
       @head.primary_contact.update_attributes(params[:head_contact]) if @head.primary_contact
     end
     if @wife
       unless @wife.update_attributes(params[:wife])
-        puts 'Error with wife!' 
-        puts @wife.errors
+        @errors[:wife] = @wife.errors
+puts "********************* #{@family.errors}***********************"
       end
       @wife.personnel_data.update_attributes(params[:wife_pers]) 
       @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife.primary_contact
@@ -75,15 +72,24 @@ class FamiliesController < ApplicationController
         this_child_personnel_data = child_data.delete(:personnel_data)
         this_child.update_attributes(child_data)
         unless this_child.personnel_data.update_attributes(this_child_personnel_data)
-          puts 'Error with child!'
-          puts this_child.personnel_data.errors 
+          
         end
       end
     end
-    @family.update_attributes(params[:record])  # Actual fields in Family record
+    unless @family.update_attributes(params[:record])  # Actual fields in Family record
+      @errors[:family] = @family.errors
+    end
+    20.times {puts}
+    puts @family.errors
+    puts @errors
     update_members_status_and_location(@family)
     params = {:record=>{}}
-    redirect_to families_path
+    if @errors.empty?
+      redirect_to families_path
+    else
+      @family.errors[:base] = @errors
+      render :edit and return
+    end      
   end    
 
   # If a (residence_)location or status have been specified for the family, then
