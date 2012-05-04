@@ -79,15 +79,12 @@ puts "********************* #{@family.errors}***********************"
     unless @family.update_attributes(params[:record])  # Actual fields in Family record
       @errors[:family] = @family.errors
     end
-    20.times {puts}
-    puts @family.errors
-    puts @errors
     update_members_status_and_location(@family)
     params = {:record=>{}}
     if @errors.empty?
       redirect_to families_path
     else
-      @family.errors[:base] = @errors
+#      @family.errors.merge! @errors
       render :edit and return
     end      
   end    

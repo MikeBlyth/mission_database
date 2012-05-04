@@ -1,12 +1,14 @@
-- if object.errors.any? 
+- if @errors.any? 
   #error_explanation
     %h2 
-      = "Problem(s) prohibited this #{object.class.to_s.underscore.humanize.downcase} from being saved:"
+      = "Problem(s) prohibited this family from being saved:"
     %ul
-      - object.errors[:base][0].each do |field, field_errs| 
+      - @errors.each do |person, field_errs| 
         %li
-          = "#{field.upcase}:"
+          = "#{person.upcase}:"
           %ul
-            - field_errs.each do |fd, msg|
-              %li= "#{fd}: #{msg}"
+            - field_errs.each do |field, msg|
+              %li= "#{field}: #{msg}"
+                
+                
 

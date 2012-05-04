@@ -2,7 +2,7 @@
   %h1 Edit Family 
   = form_for(@family) do |f| 
     - @record = @family
-    = render 'error_messages', :object => f.object
+    = render 'error_messages', :object => @errors
     = render 'form' , :formobject=>f
     .actions
     = f.submit 

@@ -322,6 +322,7 @@ class Member < ActiveRecord::Base
   end
 
   def valid_birth_date
+    return if birth_date.blank?
     if birth_date.to_date > Date.today + 1.day
       errors.add(:birth_date, "Birth date can't be in future!") 
     end
