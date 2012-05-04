@@ -645,6 +645,8 @@ describe Member do
       @husband.spouse = @wife
       @wife.spouse = @husband
       @member = Factory.stub(:member, :first_name=>'Member', :last_name=>'Last', :family => @family)
+      @dep_mk = Factory.stub(:employment_status, :code=>'mk_dependent')
+      @adult_mk = Factory.stub(:employment_status, :code=>'adult_mk')
     end
     
     it "is true for head of family" do
@@ -657,11 +659,13 @@ describe Member do
     
     it "is true for child" do
       @member.child = true
+      @member.personnel_data = Factory.build(:personnel_data, :employment_status=>@dep_mk)
       @member.dependent.should be_true
     end
     
     it "is false for non-child non-spouse" do
       @member.child = false
+      @member.personnel_data = Factory.build(:personnel_data, :employment_status=>@adult_mk)
       @member.dependent.should be_false
     end
     

@@ -152,17 +152,23 @@ describe FamiliesController do
       @new_location = Factory(:location, :description=>"New Location")
       @original_status = Factory(:status, :description=>"Original status")
       @new_status = Factory(:status, :description=>"New status")
+      @career_status = Factory(:employment_status)
       @member = Factory(:member)
       @family = Factory(:family,:residence_location=>@original_location, 
               :head=>@member, :status=>@original_status)
       @member.update_attribute(:family, @family)
+      @member.personnel_data.update_attributes(:employment_status=>@career_status)
       @spouse = Factory(:member, :family=>@family, :last_name=>@family.last_name, :spouse=>@member, :child=>false,
               :sex=>@member.other_sex)
+      @spouse.personnel_data.update_attributes(:employment_status=>@career_status)
+      @dep_mk = Factory(:employment_status, :code=>'mk_dependent')
       @child = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>true, :spouse=>nil)
+      @child.personnel_data.update_attributes(:employment_status => @dep_mk)
     end
     
     it "single member (head) location should change when family location is changed" do
-      new_attributes = {'residence_location' => @new_location.id.to_s} 
+      new_attributes = {'residence_location_id' => @new_location.id} 
+puts "new_attributes= #{new_attributes}, @orig = #{@original_location.id}, @fam = #{@family.residence_location_id}"
       @member.update_attribute(:spouse, nil)
       put :update, :id => @family.id, :record => new_attributes
       @family.reload.residence_location_id.should == @new_location.id
@@ -170,7 +176,7 @@ describe FamiliesController do
     end
     
     it "single member (head) status should change when family status is changed" do
-      new_attributes = {'status' => @new_status.id.to_s} 
+      new_attributes = {'status_id' => @new_status.id} 
       @member.update_attribute(:spouse, nil)
       put :update, :id => @family.id, :record => new_attributes
       @family.reload.status.should == @new_status
@@ -178,7 +184,7 @@ describe FamiliesController do
     end
     
     it "spouse's & child's location should change when family location is changed" do
-      new_attributes = {'residence_location' => @new_location.id.to_s} 
+      new_attributes = {'residence_location_id' => @new_location.id} 
       put :update, :id => @family.id, :record => new_attributes
       @family.reload.residence_location_id.should == @new_location.id
       @member.reload.residence_location.should == @new_location
@@ -187,7 +193,7 @@ describe FamiliesController do
     end
     
     it "location should not change when family location is not changed" do
-      same_attributes = {'residence_location' => @original_location.id.to_s} 
+      same_attributes = {'residence_location_id' => @original_location.id} 
       @member.update_attribute(:residence_location, @new_location) # customize one of the members' location
       put :update, :id => @family.id, :record => same_attributes # update family, but don't change location
       @family.reload.residence_location_id.should == @original_location.id
@@ -198,8 +204,9 @@ describe FamiliesController do
 
     it "location of non-dependents should not change when family location is changed" do
     # That is, only head, kids & spouse should change, no other. 
-      new_attributes = {'residence_location' => @new_location.id.to_s} 
+      new_attributes = {'residence_location_id' => @new_location.id} 
       @other_member = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>false, :spouse=>nil)
+      @other_member.personnel_data.update_attributes(:employment_status=>@career_status)
       put :update, :id => @family.id, :record => new_attributes
       @family.reload.residence_location_id.should == @new_location.id
       @other_member.reload.residence_location.should == @original_location
@@ -208,15 +215,16 @@ describe FamiliesController do
 
     it "status of non-dependents should not change when family location is changed" do
     # That is, only head, kids & spouse should change, no other. 
-      new_attributes = {'status' => @new_status.id.to_s} 
+      new_attributes = {'status_id' => @new_status.id} 
       @other_member = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>false, :spouse=>nil)
+      @other_member.personnel_data.update_attributes(:employment_status=>@career_status)
       put :update, :id => @family.id, :record => new_attributes
       @other_member.reload.status.should ==@original_status
       @member.reload.status.should == @new_status
     end
 
     it "status should change when family status is changed" do
-      new_attributes = {'status' => @new_status.id.to_s} 
+      new_attributes = {'status_id' => @new_status.id} 
       put :update, :id => @family.id, :record => new_attributes
       @family.reload.status_id.should == @new_status.id
       @member.reload.status.should == @new_status
@@ -224,7 +232,7 @@ describe FamiliesController do
     end
     
     it "status should not change when family status is not changed" do
-      same_attributes = {'status' => @original_status.id.to_s} 
+      same_attributes = {'status_id' => @original_status.id} 
       @member.update_attribute(:status, @new_status) # customize one of the members' status
       put :update, :id => @family.id, :record => same_attributes
       @family.reload.status_id.should == @original_status.id
@@ -241,6 +249,8 @@ describe FamiliesController do
       @family = Factory(:family,:residence_location=>@original_location, 
               :head=>@member, :status=>@original_status)
       @member.update_attribute(:family, @family)
+      @career_status = Factory(:employment_status)
+      @dep_mk = Factory(:employment_status, :code=>'mk_dependent')
     end      
     
     it "exists" do
@@ -257,12 +267,18 @@ describe FamiliesController do
                             :child=>true, :birth_date=>Date.today-10.years)
       @husband =  Member.create(:first_name=>'Husband', :sex=>'M', :family=>@family)
       @husband.marry(@wife)                     
+      @husband.personnel_data.update_attributes(:employment_status=>@career_status)
+      @wife.personnel_data.update_attributes(:employment_status=>@career_status)
+      @child.personnel_data.update_attributes(:employment_status=>@dep_mk)
+      @baby.personnel_data.update_attributes(:employment_status=>@dep_mk)
       names = members_column(@family).split(Settings.family.member_names_delimiter)
       names.should == ["Husband", "Wife", "Kid", "Baby"] 
     end 
 
     it "does not include non-dependent kids" do
       big_kid = Member.create(:family=>@family, :first_name=>'Big', :child=>false)
+      big_kid.personnel_data.update_attributes(:employment_status=>@career_status)
+      @family.head.personnel_data.update_attributes(:employment_status=>@career_status)
       @family.members.include?(big_kid).should be_true
       members_column(@family).should_not =~ /Big/ if Settings.family.member_names_dependent_only
     end

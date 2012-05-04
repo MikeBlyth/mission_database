@@ -77,6 +77,7 @@ class AdminController < ActionController::Base
 
   def send_travel_updates
     recipients=email_addresses(SiteSetting[:travel_update_recipients])
+puts "Settings = #{SiteSetting[:travel_update_recipients]}"
     if recipients.empty?
       flash[:notice] = "No recipients defined in settings 'Travel Update Recipients.'"
     else
@@ -86,6 +87,7 @@ class AdminController < ActionController::Base
   #puts "Notice=#{@notice}"
       flash[:notice] = "Sent #{recipients.length} notices."
     end
+puts "R=#{recipients}, T=#{@travel_updates}"
     AppLog.create(:severity=>'info', :code=>'Notice.travel_updates', 
       :description => "#{@travel_updates.length} updated travels, sent to #{recipients.length} recipients")
     redirect_to travels_path

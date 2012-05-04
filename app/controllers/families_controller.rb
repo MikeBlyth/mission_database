@@ -36,20 +36,36 @@ class FamiliesController < ApplicationController
 #    puts "==============================================================="
 #    puts "Params=#{params}, id=#{params[:id]}"
 #    puts "==============================================================="
-    @record = Family.find(params[:id])
-    if @record
-      @record.previous_residence_location = @record.residence_location 
-      @record.previous_status = @record.status
-    end  
-    
-    @head = @record.head
-    @wife = @record.wife
+    @family = Family.find(params[:id])
+#    if @family
+#      @family.previous_residence_location = @family.residence_location 
+#      @family.previous_status = @family.status
+#    end  
+
+    # Delete :status_id and :residence_location_id if they have not changed, because
+    #   changed ones only will be propagated to the dependent family members.    
+puts params[:record]
+    if params[:record][:status_id] == @family.status_id
+      params[:record].delete :status_id
+    end
+puts params[:record]
+    if params[:record][:residence_location_id] == @family.residence_location_id
+      params[:record].delete :residence_location_id
+    end
+puts params[:record]
+
+    @head = @family.head
+    @wife = @family.wife
 #    puts "==============================================================="
 #    puts params[:head]
 #    puts "==============================================================="
-    unless @head.update_attributes(params[:head])
-      puts 'Error with head!' 
-      puts @head.errors
+    if @head
+      unless @head.update_attributes(params[:head])
+        puts 'Error with head!' 
+        puts @head.errors
+      end
+      @head.personnel_data.update_attributes(params[:head_pers])
+      @head.primary_contact.update_attributes(params[:head_contact]) if @head.primary_contact
     end
     if @wife
       unless @wife.update_attributes(params[:wife])
@@ -59,8 +75,6 @@ class FamiliesController < ApplicationController
       @wife.personnel_data.update_attributes(params[:wife_pers]) 
       @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife.primary_contact
     end
-    @head.personnel_data.update_attributes(params[:head_pers])
-    @head.primary_contact.update_attributes(params[:head_contact]) if @head.primary_contact
     # Update the children
     if params[:member]
       params[:member].each do |id, child_data|
@@ -73,11 +87,29 @@ class FamiliesController < ApplicationController
         end
       end
     end
-    @record.update_attributes(params[:record])  # Actual fields in Family record
+puts params[:record]
+    @family.update_attributes(params[:record])  # Actual fields in Family record
+    update_members_status_and_location(@family)
     params = {:record=>{}}
     redirect_to families_path
   end    
 
+  # If a (residence_)location or status have been specified for the family, then
+  # apply them to each of the members. 
+  def update_members_status_and_location(family)
+    updates = {}
+    if params[:record][:residence_location_id]
+      updates[:residence_location_id] = params[:record][:residence_location_id]
+    end
+    if params[:record][:status_id]
+      updates[:status_id] = params[:record][:status_id]
+    end
+    unless updates.empty?
+      puts "Updating dependents with #{updates}"
+      family.dependents.each {|m| m.update_attributes(updates)}
+    end
+  end
+  
   def do_create
     super
     if !@record.valid?
