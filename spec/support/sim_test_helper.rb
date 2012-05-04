@@ -230,7 +230,6 @@ module SimTestHelper
  
   def seed_tables
     @country = Country.first || Factory.create(:country) 
-puts "**************** #{@country.include_in_selection}"
     @status = Factory.create(:status)
     @state = Factory.create(:state)
     @city = Factory.create(:city)

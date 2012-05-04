@@ -28,7 +28,6 @@ class SmsController < ApplicationController
     else  
       AppLog.create(:code => "SMS.rejected", :description=>"from #{from}: #{body}")
       render :text => "Refused", :status => 403, :content_type => Mime::TEXT.to_s
-puts "refused"
     end
   end 
   
@@ -52,7 +51,7 @@ puts "refused"
     dest = num.gsub('+', '')  # Clickatell may not like '+' prefix
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     uri = clickatell_base_uri + "?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
-puts "getting #{uri}" if Rails.env.to_s == 'test'
+# puts "getting #{uri}" if Rails.env.to_s == 'test'
     reply =  HTTParty::get uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
     AppLog.create(:code => "SMS.sent.clickatell", 
       :description=>"to #{dest}: #{body[0..30]}, resp=#{reply}")

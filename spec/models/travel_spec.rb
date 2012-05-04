@@ -439,7 +439,7 @@ describe Travel do
         @travel.with_spouse = true  # spouse is traveling alone
         @travel.arrival = false  # departing, leaving spouse in country
         @travel.save
-        puts Travel.current_travel_status_hash
+#        puts Travel.current_travel_status_hash
         Travel.current_travel_status_hash[@spouse.id][:arrival].should == false
       end
     end # when using spouse field

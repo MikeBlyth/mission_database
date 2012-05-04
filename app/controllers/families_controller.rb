@@ -37,22 +37,15 @@ class FamiliesController < ApplicationController
 #    puts "Params=#{params}, id=#{params[:id]}"
 #    puts "==============================================================="
     @family = Family.find(params[:id])
-#    if @family
-#      @family.previous_residence_location = @family.residence_location 
-#      @family.previous_status = @family.status
-#    end  
 
     # Delete :status_id and :residence_location_id if they have not changed, because
     #   changed ones only will be propagated to the dependent family members.    
-puts params[:record]
     if params[:record][:status_id] == @family.status_id
       params[:record].delete :status_id
     end
-puts params[:record]
     if params[:record][:residence_location_id] == @family.residence_location_id
       params[:record].delete :residence_location_id
     end
-puts params[:record]
 
     @head = @family.head
     @wife = @family.wife
@@ -87,7 +80,6 @@ puts params[:record]
         end
       end
     end
-puts params[:record]
     @family.update_attributes(params[:record])  # Actual fields in Family record
     update_members_status_and_location(@family)
     params = {:record=>{}}
@@ -105,7 +97,7 @@ puts params[:record]
       updates[:status_id] = params[:record][:status_id]
     end
     unless updates.empty?
-      puts "Updating dependents with #{updates}"
+#      puts "Updating dependents with #{updates}"
       family.dependents.each {|m| m.update_attributes(updates)}
     end
   end

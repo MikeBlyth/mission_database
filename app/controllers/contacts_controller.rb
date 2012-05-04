@@ -36,7 +36,6 @@ class ContactsController < ApplicationController
   # it belongs to no member at all.
   def do_new
     super
-puts "Do New"
     @record.is_primary = (@record.member && @record.member.contacts.where(:is_primary=>true).empty?) ||
                           @record.member.nil?
   end

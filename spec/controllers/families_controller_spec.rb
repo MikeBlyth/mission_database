@@ -168,7 +168,6 @@ describe FamiliesController do
     
     it "single member (head) location should change when family location is changed" do
       new_attributes = {'residence_location_id' => @new_location.id} 
-puts "new_attributes= #{new_attributes}, @orig = #{@original_location.id}, @fam = #{@family.residence_location_id}"
       @member.update_attribute(:spouse, nil)
       put :update, :id => @family.id, :record => new_attributes
       @family.reload.residence_location_id.should == @new_location.id
