@@ -60,7 +60,6 @@ class FamiliesController < ApplicationController
     if @wife
       unless @wife.update_attributes(params[:wife])
         @errors[:wife] = @wife.errors
-puts "********************* #{@family.errors}***********************"
       end
       @wife.personnel_data.update_attributes(params[:wife_pers]) 
       @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife.primary_contact
@@ -72,7 +71,7 @@ puts "********************* #{@family.errors}***********************"
         this_child_personnel_data = child_data.delete(:personnel_data)
         this_child.update_attributes(child_data)
         unless this_child.personnel_data.update_attributes(this_child_personnel_data)
-          
+          @errors["child #{child_data[:first_name]}"] = @this_child.errors
         end
       end
     end
@@ -85,7 +84,9 @@ puts "********************* #{@family.errors}***********************"
       redirect_to families_path
     else
 #      @family.errors.merge! @errors
-      render :edit and return
+      flash[:error] = @errors
+      @error_records = {:head=>{:name=>'Funny name!'}}
+      render :form_messages and return
     end      
   end    
 
