@@ -85,8 +85,9 @@ class FamiliesController < ApplicationController
     else
 #      @family.errors.merge! @errors
       flash[:error] = @errors
-      @error_records = {:head=>{:name=>'Funny name!'}}
-      render :form_messages and return
+      @error_records = [@head]
+      @record = @family
+      render :on_update_err, :locals => {:xhr => true}
     end      
   end    
 

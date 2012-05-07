@@ -22,11 +22,6 @@ $( "#tabs" ).tabs();
 <li><a href="#tabs-children">Children</a></li>
 <li><a href="#tabs-family">Family</a></li>
 </ul>
-%h4
-  Testing errors
-= debug(@error_records)
-%p= active_scaffold_error_messages_for @error_records, :object_name => 'Test'
-
 = form_for :record do |main_form|
   #tabs-head
     %h4 Information for the individual or <em>head</em> of family
