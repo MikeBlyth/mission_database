@@ -49,17 +49,17 @@ class FamiliesController < ApplicationController
 
     @head = @family.head
     @wife = @family.wife
-    @errors = {}
+    @error_records = []  # These are the model records that had errors when updated
     if @head
       unless @head.update_attributes(params[:head])
-        @errors[:head] = @head.errors 
+        @error_records << @head      
       end
       @head.personnel_data.update_attributes(params[:head_pers])
       @head.primary_contact.update_attributes(params[:head_contact]) if @head.primary_contact
     end
     if @wife
       unless @wife.update_attributes(params[:wife])
-        @errors[:wife] = @wife.errors
+        @error_records << @wife
       end
       @wife.personnel_data.update_attributes(params[:wife_pers]) 
       @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife.primary_contact
@@ -71,21 +71,17 @@ class FamiliesController < ApplicationController
         this_child_personnel_data = child_data.delete(:personnel_data)
         this_child.update_attributes(child_data)
         unless this_child.personnel_data.update_attributes(this_child_personnel_data)
-          @errors["child #{child_data[:first_name]}"] = @this_child.errors
+          @error_records << this_child
         end
       end
     end
     unless @family.update_attributes(params[:record])  # Actual fields in Family record
-      @errors[:family] = @family.errors
+        @error_records << @family
     end
     update_members_status_and_location(@family)
-    params = {:record=>{}}
-    if @errors.empty?
+    if @error_records.empty?
       redirect_to families_path
     else
-#      @family.errors.merge! @errors
-      flash[:error] = @errors
-      @error_records = [@head]
       @record = @family
       render :on_update_err, :locals => {:xhr => true}
     end      
