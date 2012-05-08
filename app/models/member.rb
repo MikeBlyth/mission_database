@@ -282,7 +282,10 @@ class Member < ActiveRecord::Base
   # (which would be grown children with child=false)
   def dependent
       return (self.status.nil? || self.status.code != 'deceased') && 
-           ( (self == family.head) || self.spouse || self.personnel_data.employment_status.code == 'mk_dependent')
+           ( (self == family.head) || self.spouse || 
+             (self.personnel_data.employment_status && 
+             self.personnel_data.employment_status.code == 'mk_dependent')
+           )
 #      return (self.status.nil? || self.status.code != 'deceased') && 
 #           ( (self == family.head) || self.spouse || self.child)
   end  

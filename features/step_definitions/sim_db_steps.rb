@@ -299,6 +299,30 @@ Then /^I should see a valid form for updating a family$/ do
   find_field("Location").value.should == @family.residence_location_id.to_s
 end
 
+Then /^I should see a valid tabbed form for updating a family$/ do
+# save_and_open_page( )
+#puts "@family.status_id=#{@family.status_id}, status=#{@family.status}"
+##  page.should have_content Regexp.new("(Update|Edit|) .*#{@family.last_name}")
+  find_field("head_last_name").value.should == @family.head.last_name
+  find_field("record_name").value.should == @family.name
+#  find_field("Last name").value.should == @family.last_name
+#  find_field("First name").value.should == @family.first_name
+  find_field("record_sim_id").value.should == @family.sim_id.to_s
+  find_field("record_residence_location_id").value.should == @family.residence_location_id.to_s
+end
+
+When /^I update family with errors$/ do
+  visit edit_family_path @family
+  fill_in("head_birth_date", :with=> '2299-01-01')
+  click_link_or_button 'Update'
+end
+
+Then /^I should see family update error messages$/ do
+  page.should have_selector('#errorExplanation h2')
+end
+
+
+
 When /^I fill in a form for a new family$/ do
   seed_tables
   @family = Factory.build(:family)   # Not yet saved to database

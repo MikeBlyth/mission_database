@@ -17,6 +17,7 @@ class FamiliesController < ApplicationController
     config.columns[:residence_location].inplace_edit = true
 #    config.update.link = false  # Do not include a link to "Edit" on each line
 #    config.delete.link = false  # Do not include a link to "Delete" on each line
+#    config.show.link = false  # Do not include a link to "Show" on each line
     config.columns[:members].associated_limit = nil    # show all members, no limit to how many
     config.columns[:residence_location].form_ui = :select 
     config.columns[:status].form_ui = :select
@@ -28,6 +29,13 @@ class FamiliesController < ApplicationController
     config.delete.link.confirm = "\n"+"*" * 60 + "\nAre you sure you want to delete this family and all its members??!!\n" + "*" * 60
   end
   
+  def update_and_check(record, update_params, error_recs)
+    return unless record   # ignore empty records
+    unless record.update_attributes(update_params)
+      error_recs << record
+    end
+  end
+
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
   #   (Family.rb update_member_locations and update_member_status update all the family members
@@ -51,33 +59,26 @@ class FamiliesController < ApplicationController
     @wife = @family.wife
     @error_records = []  # These are the model records that had errors when updated
     if @head
-      unless @head.update_attributes(params[:head])
-        @error_records << @head      
-      end
-      @head.personnel_data.update_attributes(params[:head_pers])
-      @head.primary_contact.update_attributes(params[:head_contact]) if @head.primary_contact
+      update_and_check(@head, params[:head], @error_records)
+      update_and_check(@head.personnel_data, params[:head_pers], @error_records)
+      update_and_check(@head.primary_contact, params[:head_contact], @error_records)
     end
     if @wife
-      unless @wife.update_attributes(params[:wife])
-        @error_records << @wife
-      end
-      @wife.personnel_data.update_attributes(params[:wife_pers]) 
-      @wife.primary_contact.update_attributes(params[:wife_contact]) if @wife.primary_contact
+      update_and_check(@wife, params[:wife], @error_records)
+      update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
+      update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
     end
     # Update the children
-    if params[:member]
+    if params[:member]  # for now, this is how children are listed (:member)
       params[:member].each do |id, child_data|
         this_child = Member.find(id)
         this_child_personnel_data = child_data.delete(:personnel_data)
-        this_child.update_attributes(child_data)
-        unless this_child.personnel_data.update_attributes(this_child_personnel_data)
-          @error_records << this_child
-        end
+        update_and_check(this_child, child_data, @error_records)
+        update_and_check(this_child.personnel_data, this_child_personnel_data, @error_records)
       end
     end
-    unless @family.update_attributes(params[:record])  # Actual fields in Family record
-        @error_records << @family
-    end
+    update_and_check(@family, params[:record], @error_records)
+    # May need to update data for family members, based on changes in corresponding fields for family
     update_members_status_and_location(@family)
     if @error_records.empty?
       redirect_to families_path

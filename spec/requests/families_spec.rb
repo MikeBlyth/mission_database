@@ -22,6 +22,45 @@ include SimTestHelper
 #      click_button "Update"
 #    end
 
+    it "should show error messages" do
+      @family = factory_family_bare :couple=>false, :child=>false
+      birth_date = Date.new(2080,1,1)
+      visit edit_family_path(@family)
+      fill_in "Birth date", :with => birth_date.strftime("%F")
+      click_button "Update"
+#      puts page.driver.body
+#     puts page.find('#errorExplanation h2').to_s
+      page.should have_selector('li', :content=>"Birth date can't be in future!")
+      page.should have_selector('#tabs-head')  # Because we're still on edit page
+    end
+
+    it "should accept OK input without errors" do
+      @family = factory_family_bare :couple=>false, :child=>false
+      birth_date = Date.new(1980,1,1)
+      visit edit_family_path(@family)
+      fill_in "Birth date", :with => birth_date.strftime("%F")
+      click_button "Update"
+      page.should have_no_content "Birth date can't be in future!"
+      page.should have_no_selector('#tabs-head')  # Because we're no longer on edit page
+    end
+
+    it "should catch error in children's data" do
+      @family = factory_family_bare :couple=>false, :child=>true
+      Factory(:employment_status, :description=>"MK dependent", :child=>true)
+      birth_date = Date.new(2080,1,1)
+      visit edit_family_path(@family)
+      within ("#tabs-children") do
+        child_id = @family.children.first.id.to_s
+        fill_in "member_#{child_id}_birth_date", :with => birth_date.strftime("%F")
+        select "MK dependent", :from=>"member_#{child_id}_personnel_data_employment_status_id"
+      end      
+      click_button "Update"
+#      puts page.driver.body
+#     puts page.find('#errorExplanation h2').to_s
+      page.should have_selector('li', :content=>"Birth date can't be in future!")
+      page.should have_selector('#tabs-head')  # Because we're still on edit page
+    end
+
     it "editing family should change all values correctly" do
       @family = factory_family_bare :couple=>true, :child=>true
       Factory(:employment_status, :description=>"MK dependent", :child=>true)
@@ -114,8 +153,10 @@ include SimTestHelper
         fill_in "member_#{child_id}_school_grade", :with => "7"
         select "MK dependent", :from=>"member_#{child_id}_personnel_data_employment_status_id"
       end
-
       click_button "Update"
+
+      page.should have_selector('h2', :content=>'Families')
+      page.should have_no_selector('#errorExplanation')
 
       f = @family.reload
       # Check head data
@@ -186,7 +227,6 @@ include SimTestHelper
       c.school.should == 'Homeschool'
       c.school_grade.should == 7
       c.personnel_data.employment_status.description.should == "MK dependent"
-      
     end # editing family should change all values correctly
 
   end # describe by Admin
