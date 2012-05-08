@@ -92,7 +92,7 @@ class FamiliesController < ApplicationController
        ].each {|key| params.delete key}
       respond_to do |format|
         format.js {render :on_update_err, :locals => {:xhr => true}}
-        format.html {render :on_update_err, :locals => {:xhr => false}}
+        format.html 
       end
     end      
   end    
