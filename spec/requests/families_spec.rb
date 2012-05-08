@@ -16,6 +16,12 @@ include SimTestHelper
 #      click_link "Active only"
 #    end
 
+#    it "does not attach params to update button on error" do
+#      @family = factory_family_bare :couple=>true, :child=>true
+#      visit edit_family_path(@family)
+#      click_button "Update"
+#    end
+
     it "editing family should change all values correctly" do
       @family = factory_family_bare :couple=>true, :child=>true
       Factory(:employment_status, :description=>"MK dependent", :child=>true)

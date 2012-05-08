@@ -83,10 +83,17 @@ class FamiliesController < ApplicationController
       redirect_to families_path
     else
       @record = @family
+      # Need to remove these from params so that they don't get stuck onto form URL parameters.
+      # (Symptom of the problem is that a field can't be changed after an error)
       [:head, :head_pers, :head_contact,
-       :wife, :wife_pers, :wife_contact].each {|key| params.delete key}
-      params = {}        
-      render :on_update_err, :locals => {:xhr => true}
+       :wife, :wife_pers, :wife_contact,
+       :record, :family, :member,
+       :authenticity_token
+       ].each {|key| params.delete key}
+      respond_to do |format|
+        format.js {render :on_update_err, :locals => {:xhr => true}}
+        format.html {render :on_update_err, :locals => {:xhr => false}}
+      end
     end      
   end    
 
