@@ -83,6 +83,7 @@ class FamiliesController < ApplicationController
       redirect_to families_path
     else
       @record = @family
+      params = {}  # Otherwise some will get copied as URL parameters
       render :on_update_err, :locals => {:xhr => true}
     end      
   end    
