@@ -23,7 +23,6 @@ $( "#tabs" ).tabs();
 <li><a href="#tabs-family">Family</a></li>
 </ul>
 = form_for :record do |main_form|
-  = params.to_s
   #tabs-head
     %h4 Information for the individual or <em>head</em> of family
     = fields_for :head do |member|

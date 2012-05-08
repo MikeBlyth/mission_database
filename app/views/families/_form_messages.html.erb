@@ -1,0 +1,8 @@
+<%= render :partial => 'messages' %>
+
+<% unless @record.nil? %>
+    <% records = @error_records || Array(@record)
+       records.each do |record| %>
+         <%= active_scaffold_error_messages_for record, :object_name => "#{record.class.model_name.human.downcase}#{record.new_record? ? '' : ": #{record.to_label}"}" %>
+    <% end   %>
+<% end %>
