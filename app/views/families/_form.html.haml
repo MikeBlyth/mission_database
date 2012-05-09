@@ -265,7 +265,6 @@ $( "#tabs" ).tabs();
   #tabs-children
     %h4 Information for the children
     %table.children
-      %th.idx ID
       %th.name First name
       %th.name Middle name
       %th.birth_date Birthdate
@@ -276,8 +275,6 @@ $( "#tabs" ).tabs();
       - @children.each do |child|
         = fields_for child, :index=>child.id do |child_form|
           %tr
-            %td 
-              = child_form.text_field :id
             %td 
               = child_form.text_field :first_name, :class => 'first_name-input'
             %td 

@@ -67,7 +67,7 @@ include SimTestHelper
     it "should have blank line for new child" do
       @family = factory_family_bare :couple=>false, :child=>false
       visit edit_family_path(@family)
-      page.should have_selector('child_1_first_name')
+      page.should have_selector('#member_1000000001_first_name')
     end
           
     it "editing family should change all values correctly" do

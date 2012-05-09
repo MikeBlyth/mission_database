@@ -38,12 +38,23 @@ class FamiliesController < ApplicationController
     end
   end
 
+  def new_children(parent, count=1)
+    new_kids = []
+    for i in 1..count do
+      m = Member.new(:last_name => parent.last_name, :first_name => '', 
+                  :family => parent.family)
+      m.id = 1000000000+i
+      new_kids << m
+    end
+    return new_kids
+  end
+
   # Fix up some stuff since we're using a customized form, not AS
   def do_edit
     super
     @head = @record.head
     @wife = @record.wife
-    @children = @head.children 
+    @children = @head.children + new_children(@head,1)
   end
     
 
@@ -82,6 +93,8 @@ class FamiliesController < ApplicationController
     # Update the children
     if params[:member]  # for now, this is how children are listed (:member)
       params[:member].each do |id, child_data|
+#puts "\nid=#{id}, data=#{child_data}"
+        next if id.to_i > 1000000000
         this_child = Member.find(id)
         this_child_personnel_data = child_data.delete(:personnel_data)
         update_and_check(this_child, child_data, @error_records)
@@ -95,7 +108,7 @@ class FamiliesController < ApplicationController
       redirect_to families_path
     else
       @record = @family
-      @children = @head.children 
+      @children = @head.children + new_children(@head,1)
       # Need to remove these from params so that they don't get stuck onto form URL parameters.
       # (Symptom of the problem is that a field can't be changed after an error)
       [:head, :head_pers, :head_contact,
