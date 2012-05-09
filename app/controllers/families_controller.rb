@@ -29,12 +29,23 @@ class FamiliesController < ApplicationController
     config.delete.link.confirm = "\n"+"*" * 60 + "\nAre you sure you want to delete this family and all its members??!!\n" + "*" * 60
   end
   
+  # Update a "record" with paramater hash "update_params". If there are errors, add "record" to
+  # the list "error_recs". This will be used by the built-in error-message-creator
   def update_and_check(record, update_params, error_recs)
     return unless record   # ignore empty records
     unless record.update_attributes(update_params)
       error_recs << record
     end
   end
+
+  # Fix up some stuff since we're using a customized form, not AS
+  def do_edit
+    super
+    @head = @record.head
+    @wife = @record.wife
+    @children = @head.children 
+  end
+    
 
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
@@ -84,6 +95,7 @@ class FamiliesController < ApplicationController
       redirect_to families_path
     else
       @record = @family
+      @children = @head.children 
       # Need to remove these from params so that they don't get stuck onto form URL parameters.
       # (Symptom of the problem is that a field can't be changed after an error)
       [:head, :head_pers, :head_contact,

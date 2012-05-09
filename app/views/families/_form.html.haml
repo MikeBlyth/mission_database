@@ -3,14 +3,14 @@ $(function() {
 $( "#tabs" ).tabs();
 });
 </script>
-
-- @head = @record.head
+-# For some reason only @record is available. Other instance variables must have disappeared
+-# because of the way we're sort of intercepting ActiveScaffold halfway through the process.
+-# So everything needs to be set up in the @record.
 - @head_contact = @head.primary_contact
-- @wife = @record.head.spouse
 - @head_pers = @head.personnel_data
 - @wife_pers = @wife.personnel_data if @wife
 - @wife_contact = @wife.primary_contact if @wife
-- @children = @head.children # << Member.new(:last_name=>@head.last_name, :child=>true)
+-# @children = @head.children # << Member.new(:last_name=>@head.last_name, :child=>true)
 
 <div >
 
