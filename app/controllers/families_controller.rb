@@ -54,7 +54,7 @@ class FamiliesController < ApplicationController
     super
     @head = @record.head
     @wife = @record.wife
-    @children = @head.children + new_children(@head,1)
+    @children = (@head.children + new_children(@head,1)) if @head
   end
     
 

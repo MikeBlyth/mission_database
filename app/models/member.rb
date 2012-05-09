@@ -273,9 +273,7 @@ class Member < ActiveRecord::Base
   
   # Make array of children. This version uses age rather than child attribute as criterion
   def children(include_grown=false)
-    age_cutoff = include_grown ? 999 : 19  # 
-    birthdate_cutoff = Date::today() - age_cutoff.years
-    family.members.where("birth_date > ? AND child", birthdate_cutoff)
+    family.children(include_grown)  
   end
 
   # Dependent is true for family head, spouse, and children. False for others

@@ -98,9 +98,17 @@ class Family < ActiveRecord::Base
   end
 
   # Array of children as Member objects, sorted
-  def children
-    self.members.where(:child=>true).order("birth_date ASC")
+#  def children
+#    self.members.where(:child=>true).order("birth_date ASC")
+#    self.head.children
+#  end
+
+  def children(include_grown=false)
+    age_cutoff = include_grown ? 999 : 19  # 
+    birthdate_cutoff = Date::today() - age_cutoff.years
+    self.members.where("birth_date > ? AND child", birthdate_cutoff).order("birth_date ASC")
   end
+
   
   # Array of children's first names sorted oldest to youngest
   def children_names
