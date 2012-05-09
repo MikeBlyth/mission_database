@@ -11,16 +11,10 @@ include SimTestHelper
       seed_tables
     end  
 
-#    it 'avoids "ambiguous status_id" bug' do
-#      visit families_path
-#      click_link "Active only"
-#    end
-
-#    it "does not attach params to update button on error" do
-#      @family = factory_family_bare :couple=>true, :child=>true
-#      visit edit_family_path(@family)
-#      click_button "Update"
-#    end
+    it 'avoids "ambiguous status_id" bug' do
+      visit families_path
+      click_link "Active only"
+    end
 
     it "should show error messages" do
       @family = factory_family_bare :couple=>false, :child=>false
@@ -61,6 +55,21 @@ include SimTestHelper
       page.should have_selector('#tabs-head')  # Because we're still on edit page
     end
 
+    it "should catch error in email" do
+      @family = factory_family_bare :couple=>false, :child=>false
+      visit edit_family_path(@family)
+      fill_in "Email 1", :with=>'bad email'
+      click_button "Update"
+      page.should have_selector('li', :content=>"Email 1 is invalid")
+      page.should have_selector('#tabs-head')  # Because we're still on edit page
+    end
+
+    it "should have blank line for new child" do
+      @family = factory_family_bare :couple=>false, :child=>false
+      visit edit_family_path(@family)
+      page.should have_selector('child_1_first_name')
+    end
+          
     it "editing family should change all values correctly" do
       @family = factory_family_bare :couple=>true, :child=>true
       Factory(:employment_status, :description=>"MK dependent", :child=>true)
