@@ -117,6 +117,22 @@ class Family < ActiveRecord::Base
     return names
   end
   
+  # Takes a param hash for new member record and creates a child in this family
+  def add_child(params)
+#puts "**** add_child: params=#{params}, \nself=#{self.attributes}"
+    pers_data = params.delete(:personnel_data)
+    child = Member.new({:last_name=>self.last_name, :family=>self, 
+                            :child=>true,
+                            :country=>self.head.country,
+                            :residence_location=>self.residence_location}.merge params)
+    if child.save
+      child.personnel_data.update_attributes(pers_data)
+    end
+    return child
+  end                            
+                            
+    
+  
   # Husband of family as Member object, nil if single
   def husband
     return nil if self.head.nil? || self.head.spouse.nil?

@@ -68,7 +68,17 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
-  def those_umbrella
+  def add_to_family(child)
+    child.id = nil
+    child.last_name=self.last_name
+    child.family=self
+    child.child=true
+    child.country=self.head.country
+    child.residence_location=self.residence_location
+    return child.save
+  end                            
+
+def those_umbrella
     # This one is here because the definition is different between member and family classes
     umbrella_status = EmploymentStatus.find_by_code('umbrella').id
     self.joins(:personnel_data).where("employment_status_id = ?", umbrella_status)

@@ -93,12 +93,17 @@ class FamiliesController < ApplicationController
     # Update the children
     if params[:member]  # for now, this is how children are listed (:member)
       params[:member].each do |id, child_data|
-#puts "\nid=#{id}, data=#{child_data}"
-        next if id.to_i > 1000000000
-        this_child = Member.find(id)
-        this_child_personnel_data = child_data.delete(:personnel_data)
-        update_and_check(this_child, child_data, @error_records)
-        update_and_check(this_child.personnel_data, this_child_personnel_data, @error_records)
+        if id.to_i > 1000000000 
+          if !child_data[:first_name].empty?
+            new_child = @family.add_child child_data
+            @error_records << new_child unless new_child.errors.empty?
+          end
+        else
+          this_child = Member.find(id)
+          this_child_personnel_data = child_data.delete(:personnel_data)
+          update_and_check(this_child, child_data, @error_records)
+          update_and_check(this_child.personnel_data, this_child_personnel_data, @error_records)
+        end
       end
     end
     update_and_check(@family, params[:record], @error_records)

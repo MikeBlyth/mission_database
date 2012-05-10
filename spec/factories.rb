@@ -178,12 +178,15 @@ FactoryGirl.define do
     sequence(:first_name) {|n| "Person_#{n}" }
     family { |a| a.association :family }
     sex 'M'
-    after_build { |m| m.inherit_from_family}
+    after_build do
+       |m| m.inherit_from_family
+       m.family.update_attributes(:head=>m)
+    end
     after_stub do |m| 
       m.last_name ||= m.family.last_name
       m.status ||= m.family.status
       m.residence_location ||= m.family.residence_location
-      m.family.head = m if m.family.head.nil?
+      m.family.head = m if m.family.head.nil?  # This doesn't work anyway
     end
   end
 

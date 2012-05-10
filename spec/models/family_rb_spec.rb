@@ -141,6 +141,35 @@ describe Family do
     end
   end
 
+  describe 'add child' do
+    before(:each) do
+      @country = Factory.build(:country)
+      @residence = Factory.build(:location)
+      @head = Factory.build(:member, :country=>@country)
+      @family = @head.family
+      @family.residence_location=@residence
+      @family.head = @head
+      @new_child = {:first_name=>'Jack', :middle_name=>'J.', :sex=>'M', :birth_date=>Date.today-1}
+    end
+    
+    it 'saves new child w right parameters' do
+      child = @family.add_child(@new_child)
+      child.errors.should be_empty
+      child.last_name.should == @family.last_name
+      child.first_name.should == @new_child[:first_name]
+      child.middle_name.should == @new_child[:middle_name]
+      child.sex.should == @new_child[:sex]
+      child.birth_date.should == @new_child[:birth_date]
+      child.residence_location.should == @family.residence_location
+      child.country.should == @head.country
+    end
 
+    it 'returns child with errors' do
+      @new_child[:birth_date] = Date.today + 100   # future birth dates are not allowed
+      child = @family.add_child(@new_child)
+      child.errors[:birth_date][0].should =~ /future/
+    end
+    
+  end # Add child
 end
 

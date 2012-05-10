@@ -245,8 +245,7 @@ describe FamiliesController do
     include FamiliesHelper
     before(:each) do
       @member = Factory(:member)
-      @family = Factory(:family,:residence_location=>@original_location, 
-              :head=>@member, :status=>@original_status)
+      @family = Factory(:family, :head=>@member)
       @member.update_attribute(:family, @family)
       @career_status = Factory(:employment_status)
       @dep_mk = Factory(:employment_status, :code=>'mk_dependent')
@@ -283,5 +282,11 @@ describe FamiliesController do
     end
 
   end    
-  
+
+  describe 'updating a family' do
+    before (:each) do
+    end
+      
+  end # updating a family
+    
 end

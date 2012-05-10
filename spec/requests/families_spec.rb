@@ -68,6 +68,34 @@ include SimTestHelper
       @family = factory_family_bare :couple=>false, :child=>false
       visit edit_family_path(@family)
       page.should have_selector('#member_1000000001_first_name')
+      fill_in 'member_1000000001_first_name', :with=>'Junior'
+    end
+
+    it "should add new child" do
+      Factory(:employment_status, :description=>"MK dependent", :code=>"mk_dependent", :child=>true)
+      @family = factory_family_bare :couple=>false, :child=>false
+      visit edit_family_path(@family)
+      page.should have_selector('#member_1000000001_first_name')
+      fill_in 'member_1000000001_first_name', :with=>'Junior'
+      fill_in 'member_1000000001_first_name', :with=>'Junior'
+      fill_in 'member_1000000001_middle_name', :with=>'Z.'
+      select 'Male', :from=> 'member_1000000001_sex'
+      fill_in 'member_1000000001_birth_date', :with=>Date.today.strftime("%F")
+      fill_in 'member_1000000001_school', :with=>'Hillcrest'
+      fill_in 'member_1000000001_school_grade', :with=>'7'
+      select('MK dependent')      
+      click_button "Update"
+
+
+      m = @family.children.last
+      m.first_name.should == 'Junior'
+      m.middle_name.should == 'Z.'
+      m.sex.should == 'M'
+      m.birth_date.should == Date.today
+      m.school.should == 'Hillcrest'
+      m.school_grade.should == 7
+      m.employment_status_code.should == 'mk_dependent'
+      m.last_name.should == @family.last_name
     end
           
     it "editing family should change all values correctly" do
@@ -149,8 +177,6 @@ include SimTestHelper
         fill_in "SIM ID", :with => '01234'
         select 'Site', :from=>'Residence location'
       end  
-
-
 
       within ("#tabs-children") do
         child_id = @family.children.first.id.to_s
