@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'sim_test_helper'
 
 def seed_statuses
   Status.create(:description => 'On the field', :code => 'on_field', :active => true, :on_field => true,
@@ -15,6 +16,7 @@ end
 
 
 describe FamiliesController do
+include SimTestHelper
   
   before(:each) do
   end
@@ -285,8 +287,14 @@ describe FamiliesController do
 
   describe 'updating a family' do
     before (:each) do
+      test_sign_in(Factory.stub(:user, :admin=>true))
+      @head=factory_member_basic
+      @family = @head.family
     end
       
+    it 'x' do
+        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
+    end  
   end # updating a family
     
 end

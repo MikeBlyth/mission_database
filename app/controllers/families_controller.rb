@@ -64,7 +64,7 @@ class FamiliesController < ApplicationController
   #   if the _family_ location or status has been changed)
   def update
 #    puts "==============================================================="
-#    puts "Params=#{params}, id=#{params[:id]}"
+    puts "Params=#{params}, id=#{params[:id]}"
 #    puts "==============================================================="
     @family = Family.find(params[:id])
 

@@ -180,13 +180,15 @@ FactoryGirl.define do
     sex 'M'
     after_build do
        |m| m.inherit_from_family
-       m.family.update_attributes(:head=>m)
+#       m.family.update_attributes(:head=>m) # This causes crash in a couple of cucumber tests
+#             since I don't know why, I'll avoid using it. So need to do this manually after 
+#             creating a member.
     end
     after_stub do |m| 
       m.last_name ||= m.family.last_name
       m.status ||= m.family.status
       m.residence_location ||= m.family.residence_location
-      m.family.head = m if m.family.head.nil?  # This doesn't work anyway
+      m.family.head = m if m.family.head.nil?  # This doesn't work either
     end
   end
 

@@ -80,7 +80,8 @@ module SimTestHelper
     return f.id
   end
 
-  def factory_member_basic(params={})
+  # One member
+  def factory_member_basic(params={})    # Not using params! Fix if needed.
     family = Factory(:family)
     head = Factory(:member, :family=>family)
     family.update_attribute(:head, head)
@@ -95,6 +96,8 @@ module SimTestHelper
     return member
   end
 
+  # Family with personnel_data, health_data, contact, field_term
+  # Single by default, add :couple=>true and/or :child=>true if needed
   def factory_family_full(params={})
     head = factory_member_basic
     family = head.family
@@ -114,6 +117,7 @@ module SimTestHelper
     return family
   end
 
+  # Same as factory_family_full but no associated records except as created automatically
   def factory_family_bare(params={})
     head = factory_member_basic
     family = head.family
