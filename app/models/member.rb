@@ -391,13 +391,18 @@ def those_umbrella
 #   end
 
   def marry(new_spouse)
-    return nil if new_spouse.nil?
-    return nil if new_spouse.sex == self.sex
-    return nil if self.spouse || new_spouse.spouse  # can't marry if either is already married
-    return nil if (self.age_years || 99) < 16 || (new_spouse.age_years || 99) < 16
+puts "**** Marrying"
+#    return nil if new_spouse.nil?
+#    return nil if new_spouse.sex == self.sex
+#    return nil if self.spouse || new_spouse.spouse  # can't marry if either is already married
+#    return nil if (self.age_years || 99) < 16 || (new_spouse.age_years || 99) < 16
+    new_spouse.family_id ||= self.family.id   # may be blank in newly-created record
     # Now, with all that out of the way
-    self.spouse = new_spouse
-    cross_link_spouses
+    Member.transaction do
+      new_spouse.save! if new_spouse.new_record?
+      self.spouse = new_spouse
+      cross_link_spouses
+    end
     return self.sex == "M" ? self : new_spouse   # for what it's worth, return the husband's object
   end
 
@@ -406,14 +411,18 @@ def those_umbrella
                 :sex => 'F',
                 :family=>self.family, :status=>self.status, :country=>self.country,
                 :residence_location=>self.residence_location}
-    woman = Member.create(defaults.merge(params))
-    woman.personnel_data.employment_status=self.employment_status
-    if self.marry(woman)
-      return spouse
-    else
-      woman.destroy
-      return nil
+    woman = Member.new(defaults.merge(params))
+    Member.transaction do
+      woman.save!
+      puts "****woman_id=#{woman.id}, self.id=#{self.id}, self.spouse=#{self.spouse_id}"
+      raise unless self.marry(woman)
     end
+    
+    if woman.spouse
+      woman.personnel_data.update_attributes(:employment_status=>self.employment_status)
+    end
+
+    return woman 
   end  
 
 
@@ -649,30 +658,32 @@ private
   # Update spouse's record if a spouse is defined. 
   def cross_link_spouses
     # Make sure the spouse links back to self...
-    if spouse_id # 
+puts "**** cross_link, self_id=#{self.id}, spouse_id=#{self.spouse_id}"
+    if spouse_id # if spouse is an existing member in the database
       if !spouse  # i.e. if spouse not found in db, db is corrupted
         spouse_id = nil
         return nil
       end 
-      if spouse.spouse_id != self.id # spouse is not linked back to member
+puts "****5"
+      if spouse.spouse_id != self.id # spouse is not already linked back to member
         #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
         # Register error if same sex
-        if spouse.sex == self.sex
-          self.update_attribute(:spouse_id, nil)
-          self.errors.add[:spouse, "Spouse can't be same sex"]    
-          return nil
-        end  
         spouse.spouse_id = self.id  # my spouse is married to me
+puts "****7"
         if self.male?
           husband = self
           wife = spouse
-      else
+        else 
           wife = self
           husband = spouse
         end
         wife.family_id = husband.family_id
+puts "****8"
         begin
+          puts "woman_id=#{spouse.id}, self.id=#{self.id}, self.spouse=#{self.spouse_id}"
+          puts "saving spouse"
           spouse.save!
+          puts "saving self"
           self.save!
 #          rescue 
 #     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"

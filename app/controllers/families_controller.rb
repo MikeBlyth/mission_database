@@ -49,7 +49,7 @@ class FamiliesController < ApplicationController
     return new_kids
   end
 
-  # Fix up some stuff since we're using a customized form, not AS
+  # When creating the Edit form, fix up some stuff since we're using a customized form, not AS
   def do_edit
     super
     @head = @record.head
@@ -85,8 +85,12 @@ class FamiliesController < ApplicationController
       update_and_check(@head.primary_contact, params[:head_contact], @error_records)
     end
     if !params[:wife].empty?
-      create_wife unless @wife # Need to create one 
-      update_and_check(@wife, params[:wife], @error_records)
+      if @wife
+        update_and_check(@wife, params[:wife], @error_records)
+      else
+        @head.create_wife unless @wife # Need to create one 
+        
+      end
       update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
       update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
     end  
