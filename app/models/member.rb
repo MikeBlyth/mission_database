@@ -358,6 +358,7 @@ def those_umbrella
    end
 
    def male_female
+     return nil if self.sex.nil?
      return :female if self.sex.upcase == 'F'
      return :male if self.sex.upcase == 'M'
    end
@@ -399,6 +400,21 @@ def those_umbrella
     cross_link_spouses
     return self.sex == "M" ? self : new_spouse   # for what it's worth, return the husband's object
   end
+
+  def create_wife(params={})
+    defaults = {:first_name=>'(Mrs.)', :last_name=>self.last_name, :name=>"#{self.last_name}, (Mrs.)", 
+                :sex => 'F',
+                :family=>self.family, :status=>self.status, :country=>self.country,
+                :residence_location=>self.residence_location}
+    woman = Member.create(defaults.merge(params))
+    woman.personnel_data.employment_status=self.employment_status
+    if self.marry(woman)
+      return spouse
+    else
+      woman.destroy
+      return nil
+    end
+  end  
 
 
   # Possible Spouses: Return from members table a list of all the
@@ -632,7 +648,6 @@ private
  
   # Update spouse's record if a spouse is defined. 
   def cross_link_spouses
-#    puts "**** Crosslinking: spouse_id=#{spouse_id}, @prev_spouse=#{@previous_spouse}, status=#{status.code if status}: "
     # Make sure the spouse links back to self...
     if spouse_id # 
       if !spouse  # i.e. if spouse not found in db, db is corrupted
@@ -651,7 +666,7 @@ private
         if self.male?
           husband = self
           wife = spouse
-        else
+      else
           wife = self
           husband = spouse
         end
@@ -659,11 +674,11 @@ private
         begin
           spouse.save!
           self.save!
-          rescue 
-     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
-           logger.error "***Unable to find or update spouse (record id #{spouse_id})"
-           puts "***Unable to find or update spouse (record id #{spouse_id}), error #{spouse.errors}"
-           nil
+#          rescue 
+#     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
+#           logger.error "***Unable to find or update spouse (record id = #{spouse_id})"
+#           puts "***Unable to find or update spouse (record id #{spouse_id || 'nil'}), errors #{spouse.errors}"
+#           nil
         end # rescue block    
         return husband
       end # if spouse.spouse_id != self.id

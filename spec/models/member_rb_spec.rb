@@ -362,6 +362,35 @@ describe Member do
     end
     
   end # describe marrying  
+  
+  describe 'create wife' do
+    before(:each) do
+    end
+    
+    it 'creates a wife for a man' do
+      @head = factory_member_create
+      wife = @head.create_wife
+      @head.spouse.should == wife
+      wife.last_name.should == @head.last_name
+      wife.family.should == @head.family
+      wife.sex.should == 'F'
+      wife.first_name.should == '(Mrs.)'
+      wife.status.should == @head.status
+      wife.residence_location.should == @head.residence_location
+      wife.employment_status.should == @head.employment_status
+    end
+    
+    it 'does not create a wife for a woman' do
+      @head=factory_member_basic
+      @head.update_attributes(:sex => 'F')
+      @head.create_wife.should == nil
+    end
+    
+    it 'uses specified parameters for wife' do
+      @head=factory_member_basic
+      @head.create_wife({:first_name=>'Mary'}).first_name.should == 'Mary'
+    end
+  end # Create wife
 
   describe "primary_contact" do
     before(:each) do

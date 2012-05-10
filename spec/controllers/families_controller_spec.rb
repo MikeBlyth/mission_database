@@ -323,8 +323,15 @@ include SimTestHelper
     it 'adds child' do
       updates = {:member=>{10000000001.to_s=>{:first_name=>'Zinger'} } }
       lambda {put :update, @params.merge(updates)}.should change(Member, :count).by(1)
-      puts Member.last.attributes
       @family.reload.children.first.first_name.should == 'Zinger'
+    end            
+    
+    it 'adds wife' do
+      updates = {:wife=>{:first_name=>'Grace', :sex=>'F', :last_name=>@head.last_name} }
+      lambda {put :update, @params.merge(updates)}.should change(Member, :count).by(1)
+      Member.last.first_name.should == 'Grace'
+      @family.wife.should_not == nil
+      @family.wife.first_name.should == 'Grace'
     end            
     
   end # updating a family

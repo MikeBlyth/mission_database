@@ -57,7 +57,6 @@ class FamiliesController < ApplicationController
     @children = (@head.children + new_children(@head,1)) if @head
   end
     
-
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
   #   (Family.rb update_member_locations and update_member_status update all the family members
@@ -85,20 +84,19 @@ class FamiliesController < ApplicationController
       update_and_check(@head.personnel_data, params[:head_pers], @error_records)
       update_and_check(@head.primary_contact, params[:head_contact], @error_records)
     end
-    if @wife
+    if !params[:wife].empty?
+      create_wife unless @wife # Need to create one 
       update_and_check(@wife, params[:wife], @error_records)
       update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
       update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
-    end
+    end  
     # Update the children
     if params[:member]  # for now, this is how children are listed (:member)
       params[:member].each do |id, child_data|
         if id.to_i > 1000000000 
- puts "**** child_data=#{child_data}"
           if !child_data[:first_name].empty?
             new_child = @family.add_child child_data
             @error_records << new_child unless new_child.errors.empty?
-puts   new_child.errors          
           end
         else
           this_child = Member.find(id)
