@@ -285,16 +285,48 @@ include SimTestHelper
 
   end    
 
-  describe 'updating a family' do
+  describe 'updating a family from combined form' do
     before (:each) do
       test_sign_in(Factory.stub(:user, :admin=>true))
       @head=factory_member_basic
       @family = @head.family
+      @params = {:id=>@family.id, :record=>{}}
     end
       
-    it 'x' do
-        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
+    it 'updates the head' do
+#        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
+      updates = {:head=>{:first_name=>'Gordon'}}
+      put :update, @params.merge(updates)
+      @head.reload.first_name.should == 'Gordon'
     end  
+    
+    it 'updates the wife' do
+      wife = create_spouse(@head)
+      updates = {:wife=>{:first_name=>'Grace'}}
+      put :update, @params.merge(updates)
+      wife.reload.first_name.should == 'Grace'
+    end  
+    
+    it 'updates a child' do
+      child = @family.add_child(:first_name=>'Junior')
+      updates = {:member=>{child.id.to_s=>{:first_name=>'Junior'} } }
+      put :update, @params.merge(updates)
+      child.reload.first_name.should == 'Junior'
+    end  
+    
+    it 'updates family' do
+      updates = {:record=>{:first_name=>'Grace'}}
+      put :update, @params.merge(updates)
+      @family.reload.first_name.should == 'Grace'
+    end      
+
+    it 'adds child' do
+      updates = {:member=>{10000000001.to_s=>{:first_name=>'Zinger'} } }
+      lambda {put :update, @params.merge(updates)}.should change(Member, :count).by(1)
+      puts Member.last.attributes
+      @family.reload.children.first.first_name.should == 'Zinger'
+    end            
+    
   end # updating a family
     
 end

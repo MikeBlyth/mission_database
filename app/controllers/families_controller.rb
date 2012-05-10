@@ -94,9 +94,11 @@ class FamiliesController < ApplicationController
     if params[:member]  # for now, this is how children are listed (:member)
       params[:member].each do |id, child_data|
         if id.to_i > 1000000000 
+ puts "**** child_data=#{child_data}"
           if !child_data[:first_name].empty?
             new_child = @family.add_child child_data
             @error_records << new_child unless new_child.errors.empty?
+puts   new_child.errors          
           end
         else
           this_child = Member.find(id)

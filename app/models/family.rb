@@ -106,7 +106,8 @@ class Family < ActiveRecord::Base
   def children(include_grown=false)
     age_cutoff = include_grown ? 999 : 19  # 
     birthdate_cutoff = Date::today() - age_cutoff.years
-    self.members.where("birth_date > ? AND child", birthdate_cutoff).order("birth_date ASC")
+    self.members.where("(birth_date IS ? OR birth_date > ?) AND child", nil, birthdate_cutoff).
+      order("birth_date ASC")
   end
 
   
