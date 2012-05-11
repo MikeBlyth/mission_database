@@ -13,10 +13,9 @@ def construct_member(params={})
 end
 
 def create_spouse(params={})
-  @spouse_name = params[:first_name] || "Sally"
-  @spouse = construct_member(:first_name=>@spouse_name, :sex=>"F", :spouse => @head)
-#puts "spouse created, #{@spouse.attributes}, #{@spouse.errors}"
-  @family.reload
+  @head.create_wife(:first_name=>(params[:first_name] || "Sally"))
+  @spouse = @head.spouse
+  @spouse.should_not be_nil
 end
 
 def create_children(names=['Child'],params={})
@@ -191,7 +190,9 @@ Then /^I should see the editing form for the family head$/ do
   # This is one way to check to see if the right value in a dropdown-box is selected.
   page.should have_xpath "//select[@id='record_family_id']/option[@selected='selected'][@value = #{@head.family_id}]"
   find_field("Sex").value.should == @head.sex
+puts "**** @spouse.attributes=#{@spouse.attributes}"
   find_field("record[spouse]").value.should == @spouse.id.to_s
+
   page.should have_content @spouse.first_name
   find_field("Country").value.should == @head.country.name
 #puts "Emp in form=#{find_field("Employment status").value}"

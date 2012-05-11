@@ -40,6 +40,8 @@ module MembersHelper
     # Generate the select input ourselves
     result = "<select id='record_spouse' name='record[spouse]' class='spouse-input'>" + 
              "<option class='spouse-input' value=''>--None--</option>"
+puts "**** record.attributes=#{record.attributes}"
+
     record.possible_spouses.each do |p|
       if record.spouse_id == p.id
         selected = "selected='selected'"
