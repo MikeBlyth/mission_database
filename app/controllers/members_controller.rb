@@ -132,15 +132,15 @@ class MembersController < ApplicationController
     super
   end    
   
-  def update_save(params={})
-    @record.previous_spouse = @record.spouse if @record
-    super(params)
-  end    
+#  def update_save(params={})
+#    @record.previous_spouse = @record.spouse if @record
+#    super(params)
+#  end    
   
   # Override the ActiveScaffold method so that we can pass errors in flash
   def do_destroy
     @record = find_if_allowed(params[:id], :delete)
-    @record.previous_spouse = @record.spouse
+#    @record.previous_spouse = @record.spouse
     begin
       self.successful = @record.destroy
     rescue

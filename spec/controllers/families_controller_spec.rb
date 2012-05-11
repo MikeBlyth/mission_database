@@ -290,6 +290,7 @@ include SimTestHelper
       test_sign_in(Factory.stub(:user, :admin=>true))
       @head=factory_member_basic
       @family = @head.family
+      @family.head = @head
       @params = {:id=>@family.id, :record=>{}}
     end
       
@@ -327,10 +328,11 @@ include SimTestHelper
     end            
     
     it 'adds wife' do
-      updates = {:wife=>{:first_name=>'Grace', :sex=>'F', :last_name=>@head.last_name} }
+      updates = {:wife=>{:first_name=>'Grace', :sex=>'F'} }
       lambda {put :update, @params.merge(updates)}.should change(Member, :count).by(1)
       Member.last.first_name.should == 'Grace'
-      @family.wife.should_not == nil
+      @head.reload.spouse.should_not be_nil
+      @family.reload.wife.should_not == nil
       @family.wife.first_name.should == 'Grace'
     end            
     

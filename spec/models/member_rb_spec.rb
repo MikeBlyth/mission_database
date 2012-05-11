@@ -322,7 +322,8 @@ describe Member do
     it 'does not create a wife for a woman' do
       @head=factory_member_basic
       @head.update_attributes(:sex => 'F')
-      @head.create_wife.should == nil
+      @head.create_wife.spouse.should == nil
+      @head.errors[:spouse].first.should =~ /same sex/
     end
     
     it 'uses specified parameters for wife' do

@@ -39,7 +39,7 @@ class Member < ActiveRecord::Base
   attr_protected :spouse_id  # any marriage stuff should be done through methods
 
   # ToDo: This can probably be refactored to use the built-in changed_attributes of the model
-  attr_accessor :previous_spouse  # to help with cross-linking when changing/deleting spouse
+#  attr_accessor :previous_spouse  # to help with cross-linking when changing/deleting spouse
   
   has_many :contacts, :dependent => :destroy 
   has_many :travels, :dependent => :destroy 
@@ -411,8 +411,7 @@ def those_umbrella
   def marry(new_spouse)
 #puts "**** marry: new_spouse #{new_spouse.attributes}.errors=#{new_spouse.errors}"
     return unless valid_spouse?(new_spouse)
-    new_spouse.family_id ||= self.family.id   # may be blank in newly-created record
-    # Now, with all that out of the way
+    new_spouse.family = self.family   # may be blank in newly-created record
     Member.transaction do
       new_spouse.save! if new_spouse.new_record?
       self.update_attributes(:spouse => new_spouse)
@@ -431,16 +430,13 @@ def those_umbrella
                 :family=>self.family, :status=>self.status, :country=>self.country,
                 :residence_location=>self.residence_location}
     woman = Member.new(defaults.merge(params))
-    Member.transaction do
-      woman.save!
-      puts "****woman_id=#{woman.id}, self.id=#{self.id}, self.spouse=#{self.spouse_id}"
-      raise unless self.marry(woman)
-    end
-    
-    if woman.spouse
+    prev_spouse = self.spouse   # save in case we need to restore it if marry fails
+    if self.marry woman
       woman.personnel_data.update_attributes(:employment_status=>self.employment_status)
+    else
+      woman.spouse = nil
+      self.spouse = prev_spouse # could be non-nil 
     end
-
     return woman 
   end  
 
@@ -663,57 +659,62 @@ private
   def unlink_spouses_if_indicated
     # Unlink spouses if member is deceased
     if spouse_id && status_id && status.code=='deceased'
-      spouse.update_attribute(:spouse_id, nil) if my_spouse_links_to_me
+      if my_spouse_links_to_me
+        # spouse.update_attributes(:spouse_id=>nil)  # for some reason this doesn't work, so use following
+        spouse.reload
+        spouse.spouse_id = nil
+        spouse.save! 
+      end
       self.spouse_id = nil  # This method unlink_spouse is a before_save callback, so new nil value will be saved
       return
     end       
     # If we've just removed spouse, we need to unlink the spouse, too
-    if spouse_id.nil? && @previous_spouse
-      @previous_spouse.update_attribute(:spouse, nil)
-      return 
-    end
+#    if spouse_id.nil? && @previous_spouse
+#      @previous_spouse.update_attribute(:spouse, nil)
+#      return 
+#    end
   end
  
   # Update spouse's record if a spouse is defined. 
-  def cross_link_spouses
-    # Make sure the spouse links back to self...
-puts "**** cross_link, self_id=#{self.id}, spouse_id=#{self.spouse_id}"
-    if spouse_id # if spouse is an existing member in the database
-      if !spouse  # i.e. if spouse not found in db, db is corrupted
-        spouse_id = nil
-        return nil
-      end 
-puts "****5"
-      if spouse.spouse_id != self.id # spouse is not already linked back to member
-        #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
-        # Register error if same sex
-        spouse.spouse_id = self.id  # my spouse is married to me
-puts "****7"
-        if self.male?
-          husband = self
-          wife = spouse
-        else 
-          wife = self
-          husband = spouse
-        end
-        wife.family_id = husband.family_id
-puts "****8"
-        begin
-          puts "woman_id=#{spouse.id}, self.id=#{self.id}, self.spouse=#{self.spouse_id}"
-          puts "saving spouse"
-          spouse.save!
-          puts "saving self"
-          self.save!
-#          rescue 
-#     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
-#           logger.error "***Unable to find or update spouse (record id = #{spouse_id})"
-#           puts "***Unable to find or update spouse (record id #{spouse_id || 'nil'}), errors #{spouse.errors}"
-#           nil
-        end # rescue block    
-        return husband
-      end # if spouse.spouse_id != self.id
-    end # if spouse_id  
-  end # cross_link_spouses
+#  def cross_link_spouses
+#    # Make sure the spouse links back to self...
+#puts "**** cross_link, self_id=#{self.id}, spouse_id=#{self.spouse_id}"
+#    if spouse_id # if spouse is an existing member in the database
+#      if !spouse  # i.e. if spouse not found in db, db is corrupted
+#        spouse_id = nil
+#        return nil
+#      end 
+#puts "****5"
+#      if spouse.spouse_id != self.id # spouse is not already linked back to member
+#        #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
+#        # Register error if same sex
+#        spouse.spouse_id = self.id  # my spouse is married to me
+#puts "****7"
+#        if self.male?
+#          husband = self
+#          wife = spouse
+#        else 
+#          wife = self
+#          husband = spouse
+#        end
+#        wife.family_id = husband.family_id
+#puts "****8"
+#        begin
+#          puts "woman_id=#{spouse.id}, self.id=#{self.id}, self.spouse=#{self.spouse_id}"
+#          puts "saving spouse"
+#          spouse.save!
+#          puts "saving self"
+#          self.save!
+##          rescue 
+##     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
+##           logger.error "***Unable to find or update spouse (record id = #{spouse_id})"
+##           puts "***Unable to find or update spouse (record id #{spouse_id || 'nil'}), errors #{spouse.errors}"
+##           nil
+#        end # rescue block    
+#        return husband
+#      end # if spouse.spouse_id != self.id
+#    end # if spouse_id  
+#  end # cross_link_spouses
 
   
   # return a string in days, weeks, months, or years, whatever makes sense for the age, from

@@ -83,7 +83,7 @@ module SimTestHelper
   # One member
   def factory_member_basic(params={})    # Not using params! Fix if needed.
     family = Factory(:family)
-    head = Factory(:member, :family=>family)
+    head = Factory(:member, {:family=>family}.merge(params))
     family.update_attribute(:head, head)
     return head
   end    
@@ -123,13 +123,13 @@ module SimTestHelper
     family = head.family
     Factory(:contact, :member=>head)
     if params[:couple]
-      spouse = Factory(:member, :family=>family, :spouse=>head, :sex=>'F')
+      spouse = factory_member_basic(:sex=>'F')
+      head.marry spouse
       Factory(:contact, :member=>spouse)
-      head.spouse = spouse
     end
     if params[:child]
       child = Factory(:child, :family=>family, :country=>head.country)
-#      Factory(:personnel_data, :member=>child)
+      child.stub(:dependent).and_return(true)
     end
     return family
   end

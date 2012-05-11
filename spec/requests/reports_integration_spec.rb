@@ -70,8 +70,7 @@ describe "Report" do
 
     it "reports outgoing travel of on-field spouse" do
       @travel.update_attributes(:return_date=>Date.today+5.days, :with_spouse=>true)
-      spouse = Member.create(@member.attributes.merge({:spouse=>@member, :first_name=>'Sally',
-           :sex=>@member.other_sex, :name=>"#{@member.last_name}, Sally"}))
+      @member.create_wife({:first_name=>'Sally', :name=>"#{@member.last_name}, Sally"})
       visit reports_path # whereis_report_path
       click_link "whereis-detailed-pdf"
       pdf_to_text

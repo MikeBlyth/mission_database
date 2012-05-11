@@ -38,6 +38,9 @@ class FamiliesController < ApplicationController
     end
   end
 
+  # Return new records for 'count' children of 'parent'. Records are not saved.
+  # This is used for to create the edit and update form where children are listed,
+  # so that there will be space to add new ones.
   def new_children(parent, count=1)
     new_kids = []
     for i in 1..count do
@@ -63,7 +66,7 @@ class FamiliesController < ApplicationController
   #   if the _family_ location or status has been changed)
   def update
 #    puts "==============================================================="
-    puts "Params=#{params}, id=#{params[:id]}"
+#    puts "Params=#{params}, id=#{params[:id]}"
 #    puts "==============================================================="
     @family = Family.find(params[:id])
 
@@ -84,13 +87,9 @@ class FamiliesController < ApplicationController
       update_and_check(@head.personnel_data, params[:head_pers], @error_records)
       update_and_check(@head.primary_contact, params[:head_contact], @error_records)
     end
-    if !params[:wife].empty?
-      if @wife
-        update_and_check(@wife, params[:wife], @error_records)
-      else
-        @head.create_wife unless @wife # Need to create one 
-        
-      end
+    if not (params[:wife].blank?)  # use 'blank' as it is true for '', {}, [], and nil
+      @wife ||= @head.create_wife # Need to create one if it doesn't exist
+      update_and_check(@wife, params[:wife], @error_records)
       update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
       update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
     end  
