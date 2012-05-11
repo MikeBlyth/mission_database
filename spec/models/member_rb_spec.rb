@@ -243,120 +243,59 @@ describe Member do
 
   describe "marrying: " do
     before(:each) do
-      @family = Factory(:family)
-      @head = Factory(:member, :family=>@family)
-      @family.update_attribute(:head, @head)
-      @man = @family.head
-      @man.update_attributes(:sex=>'M', :birth_date=>Date.new(1980,1,1))
-      @woman = Factory(:member, :sex=>"F", :birth_date=>Date.new(1980,1,1))
+#      @family = Factory(:family)
+      @man = Factory.build(:member, :birth_date=>Date.new(1980,1,1))
+#      @family.update_attribute(:head, @man)
+      @woman = Factory.build(:member, :sex=>"F", :birth_date=>Date.new(1980,1,1))
     end
 
-    describe "by setting spouse_id" do
+    it "can marry single person of opposite sex (with marry method)" do
+      @man.marry(@woman).should == @man # since successful marriage returns husband's object
+      @woman.spouse.should == @man
+      @man.spouse.should == @woman
+    end       
 
-      it "can marry single person of opposite sex by setting spouse_id" do
-        @man.update_attributes(:spouse_id=>@woman.id) # The 'marriage'
-        @woman.reload  # since the database copy has been linked to spouse, but not local copy
-        @woman.spouse.should == @man
-        @man.spouse.should == @woman
-      end
-
-      it "cannot marry married person" do
-        # Set up a married couple
-        married_man = Factory(:member, :sex=>"M")
-        married_woman = Factory(:member, :sex=>"F")
-        married_woman.marry(married_man).should == married_man # This is just normal, valid, marriage to set up test
-        # Single should not be able to marry married person
-        @man.update_attributes(:spouse_id=>married_woman.id) # attempted 'marriage'
-        @man.errors[:spouse].should include "proposed spouse is already married"
-      end
-
-      it "cannot marry single person of same sex" do
-        @man.update_attribute(:sex, "F")
-        another_woman = @man  # just a way of getting a woman without creating a new database record
-        @woman.update_attributes(:spouse_id=>another_woman.id) # The 'marriage'
-        @woman.errors[:spouse].should include "spouse can't be same sex" 
-      end
+    it "cannot marry married person" do
+      @man.spouse = Factory.build(:member, :sex=>'F')
+      @man.marry(@woman).should be_nil
+      @man.errors[:spouse].first.should =~ /already married/
+      @woman.marry(@man).should be_nil
+      @woman.errors[:spouse].first.should =~ /already married/
+    end
       
-      it "cannot marry underage person" do
-        @woman.update_attributes(:birth_date=> Date.yesterday)
-        @man.update_attributes(:spouse_id=>@woman.id) # The 'marriage'
-        @man.errors[:spouse].should include "spouse not old enough to be married" 
-      end
- 
-    end # by setting spouse_id
+    it "cannot marry single person of same sex" do
+      @man.sex = "F"
+      @woman.marry(@man).should be_nil
+    end
     
-    describe "by using 'marry' method" do
-          
-      it "can marry single person of opposite sex (with marry method)" do
-        @man.marry(@woman).should == @man # since successful marriage returns husband's object
-        @woman.spouse.should == @man
-        @man.spouse.should == @woman
-      end       
-
-      it "cannot marry married person" do
-        # Set up a married couple
-        married_man = Factory(:member, :sex=>"M")
-        married_wife = Factory(:member, :sex=>"F")
-        married_wife.marry(married_man).should == married_man # This is just normal, valid, marriage to set up test
-        # Single should not be able to marry married person
-        @woman.marry(married_man).should be_nil
-        married_man.marry(@woman).should be_nil
-        married_man.spouse.should == married_wife  # making sure it wasn't changed or dropped along the way
-        @woman.spouse.should be_nil
-      end
-        
-      it "cannot marry single person of same sex" do
-        @man.update_attribute(:sex, "F")
-        another_woman = @man  # just a way of getting a woman without creating a new database record
-        @woman.marry(another_woman).should be_nil
-        @woman.spouse.should be_nil
-        another_woman.spouse.should be_nil
-      end
-      
-      it "cannot marry underage person" do
-        @woman.update_attributes(:birth_date=> Date.yesterday)
-        @man.marry(@woman).should be_nil
-      end
+    it "cannot marry underage person" do
+      @woman.birth_date= Date.yesterday
+      @man.marry(@woman).should be_nil
+      @man.errors[:spouse].first.should =~ /(not old enough) | (too young)/
+      @woman.marry(@man).should be_nil
+      @woman.errors[:spouse].first.should =~ /(not old enough) | (too young)/
     end
+
+    it "handles a error during saving a spouse" do
+      @woman.first_name = nil
+      @man.marry(@woman).should be_nil
+      @woman.errors[:first_name].should_not be_empty
+    end        
 
     it "does not delete a still-married member" do
-      @man.marry(@woman)
+      @man.family = Factory.build(:family)
+      @man.save
+      @man.marry(@woman).should_not be_nil
       lambda {@woman.destroy}.should_not change(Member, :count)
       @man.spouse.should == @woman
-      @woman.errors.should_not be_empty
+      @woman.errors[:delete].should_not be_empty
     end
     
-    it "de-links spouse when its own spouse is set to nil" do
-      # The member itself can't detect that the spouse has been changed, so the controller must
-      # set the previous_spouse when this happens
-      @man.marry(@woman)
-      @man.previous_spouse = @woman   # This must be done by controller in real life
-      @man.update_attributes(:spouse=>nil)
-      @woman.spouse.should be_nil
-    end      
-
-    it "does not update spouse when prev spouse still links to it" do
-      # I.e., can't change A's spouse from B to C if B still thinks he's married to A 
-      # The member itself can't detect that the spouse has been changed, so the controller must
-      # set the previous_spouse when this happens
-      @man.marry(@woman)
-      new_wife = Factory(:member, :sex=>'F')
-      @man.previous_spouse = @woman   # This must be done by controller in real life
-      @man.update_attributes(:spouse=>new_wife)
-      @woman.spouse.should == @man  # still
-      @man.errors.should_not be_empty
-    end      
-
-    it "handles missing spouse by resetting spouse_id" do
-      @man.update_attribute(:spouse_id, 99999) # Note that this bypasses validation
-      @man.reload.spouse.should == nil
-    end
-
     it "unlinks spouse when a member is deceased" do
       deceased_status = Factory(:status, :code=>'deceased')
       @man.marry(@woman)
       @man.status = deceased_status
-      @man.save
+      @man.save!
       @man.reload.spouse.should be_nil
       @woman.reload.spouse.should be_nil
     end

@@ -36,6 +36,8 @@ class Member < ActiveRecord::Base
   include ApplicationHelper
   include FilterByStatusHelper
   
+  attr_protected :spouse_id  # any marriage stuff should be done through methods
+
   # ToDo: This can probably be refactored to use the built-in changed_attributes of the model
   attr_accessor :previous_spouse  # to help with cross-linking when changing/deleting spouse
   
@@ -55,7 +57,7 @@ class Member < ActiveRecord::Base
   belongs_to :status
   validates_presence_of :last_name, :first_name, :name, :family
   validates_uniqueness_of :spouse_id, :allow_blank=>true
-  validate :valid_spouse
+#  validate :valid_spouse
   validates_uniqueness_of :name
   validate  :valid_birth_date #,  :less_than => Date.today+1.day
 
@@ -64,7 +66,7 @@ class Member < ActiveRecord::Base
   before_create :build_personnel_data
   before_create :build_health_data
   before_save   :unlink_spouses_if_indicated
-  after_save  :cross_link_spouses
+#  after_save  :cross_link_spouses
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
@@ -317,18 +319,18 @@ def those_umbrella
         family_id # && Family.exists?(family_id)
   end
 
-  # Validate spouse based on opposite sex, age, single ...
-  def valid_spouse
-    return if self.spouse.nil? 
-    errors.add(:spouse, "spouse can't be same sex") if
-      self.sex == spouse.sex
-    errors.add(:spouse, "spouse not old enough to be married") if
-      (spouse.age_years || 99)< 16
-    errors.add(:spouse, "proposed spouse is already married") if
-      spouse.spouse_id && (spouse.spouse_id != self.id)
-    errors.add(:spouse, "must un-marry existing spouse first") if
-      @previous_spouse && (@previous_spouse.spouse_id == self.id) && (spouse != @previous_spouse)
-  end
+#  # Validate spouse based on opposite sex, age, single ...
+#  def valid_spouse
+#    return if self.spouse.nil? 
+#    errors.add(:spouse, "spouse can't be same sex") if
+#      self.sex == spouse.sex
+#    errors.add(:spouse, "spouse not old enough to be married") if
+#      (spouse.age_years || 99)< 16
+#    errors.add(:spouse, "proposed spouse is already married") if
+#      spouse.spouse_id && (spouse.spouse_id != self.id)
+#    errors.add(:spouse, "must un-marry existing spouse first") if
+#      @previous_spouse && (@previous_spouse.spouse_id == self.id) && (spouse != @previous_spouse)
+#  end
 
   def valid_birth_date
     return if birth_date.blank?
@@ -390,20 +392,37 @@ def those_umbrella
 #     self.spouse_id = myspouse.id if myspouse
 #   end
 
+  # Validate spouse based on opposite sex, age, single ...
+  def valid_spouse?(proposed_spouse)
+    if proposed_spouse.nil? 
+      errors.add(:spouse, "Internal error: proposed spouse does not exist")
+      return false
+    end
+    errors.add(:spouse, "proposed spouse can't be same sex") if
+      proposed_spouse.sex == self.sex
+    errors.add(:spouse, "one or both spouses is not old enough to be married") if
+      (proposed_spouse.age_years || 99)< 16 ||
+      (self.age_years || 99)< 16 
+    errors.add(:spouse, "one or both proposed spouses is already married") if
+      self.spouse || proposed_spouse.spouse
+    return errors.empty?  
+  end
+
   def marry(new_spouse)
-puts "**** Marrying"
-#    return nil if new_spouse.nil?
-#    return nil if new_spouse.sex == self.sex
-#    return nil if self.spouse || new_spouse.spouse  # can't marry if either is already married
-#    return nil if (self.age_years || 99) < 16 || (new_spouse.age_years || 99) < 16
+#puts "**** marry: new_spouse #{new_spouse.attributes}.errors=#{new_spouse.errors}"
+    return unless valid_spouse?(new_spouse)
     new_spouse.family_id ||= self.family.id   # may be blank in newly-created record
     # Now, with all that out of the way
     Member.transaction do
       new_spouse.save! if new_spouse.new_record?
-      self.spouse = new_spouse
-      cross_link_spouses
+      self.update_attributes(:spouse => new_spouse)
+      new_spouse.update_attributes(:spouse => self)
     end
     return self.sex == "M" ? self : new_spouse   # for what it's worth, return the husband's object
+  rescue
+    logger.error "Error trying to marry #{self} (#{self.errors}) and #{new_spouse} (#{new_spouse.errors})"
+    puts "***Unable to find or update spouse (record id #{spouse_id || 'nil'}), errors #{new_spouse.errors}"
+    return nil
   end
 
   def create_wife(params={})
