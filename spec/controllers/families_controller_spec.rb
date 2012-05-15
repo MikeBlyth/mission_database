@@ -71,6 +71,7 @@ include SimTestHelper
     end  
 
     it 'creates a "family head" member' do
+pending 'new add-family controller'
       lambda{post :create, @params}.should change(Member, :count).by(1)  
       family = Family.last
       family.should_not be_nil
@@ -78,12 +79,14 @@ include SimTestHelper
     end
 
     it 'family head member belongs to family' do
+pending 'new add-family controller'
       lambda{post :create, @params}.should change(Member, :count).by(1)  
       family = Family.last
       family.head.family.should == family
     end
 
     it 'family head inherits family info' do
+pending 'new add-family controller'
       status = Factory(:status)
       location = Factory(:location)
       lambda do

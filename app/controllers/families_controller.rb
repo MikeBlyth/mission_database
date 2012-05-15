@@ -72,7 +72,7 @@ class FamiliesController < ApplicationController
 
     # Delete :status_id and :residence_location_id if they have not changed, because
     #   changed ones only will be propagated to the dependent family members.    
-    if params[:record][:status_id] == @family.status_id
+    if params[:record][:status_id] == @family.status_id  # i.e. it's unchanged
       params[:record].delete :status_id
     end
     if params[:record][:residence_location_id] == @family.residence_location_id
@@ -81,12 +81,13 @@ class FamiliesController < ApplicationController
 
     @head = @family.head
     @wife = @family.wife
-    @error_records = []  # These are the model records that had errors when updated
+    @error_records = []  # Keep list of the model records that had errors when updated
     if @head
       update_and_check(@head, params[:head], @error_records)
       update_and_check(@head.personnel_data, params[:head_pers], @error_records)
       update_and_check(@head.primary_contact, params[:head_contact], @error_records)
     end
+    # If there ARE parameters defining wife, then create or update wife
     if not (params[:wife].blank?)  # use 'blank' as it is true for '', {}, [], and nil
       @wife ||= @head.create_wife # Need to create one if it doesn't exist
       update_and_check(@wife, params[:wife], @error_records)
@@ -96,14 +97,14 @@ class FamiliesController < ApplicationController
     # Update the children
     if params[:member]  # for now, this is how children are listed (:member)
       params[:member].each do |id, child_data|
-        if id.to_i > 1000000000 
-          if !child_data[:first_name].empty?
-            new_child = @family.add_child child_data
+        if id.to_i > 1000000000  # i.e. if this is definition of a new child
+          if !child_data[:first_name].empty?  # and has data (as opposed to being just the blank line being returned
+            new_child = @family.add_child child_data  # create the new child
             @error_records << new_child unless new_child.errors.empty?
           end
         else
           this_child = Member.find(id)
-          this_child_personnel_data = child_data.delete(:personnel_data)
+          this_child_personnel_data = child_data.delete(:personnel_data)  # to be updated separately
           update_and_check(this_child, child_data, @error_records)
           update_and_check(this_child.personnel_data, this_child_personnel_data, @error_records)
         end
@@ -112,18 +113,19 @@ class FamiliesController < ApplicationController
     update_and_check(@family, params[:record], @error_records)
     # May need to update data for family members, based on changes in corresponding fields for family
     update_members_status_and_location(@family)
+
     if @error_records.empty?
       redirect_to families_path
-    else
+    else  # send back to user to try again
       @record = @family
       @children = @head.children + new_children(@head,1)
       # Need to remove these from params so that they don't get stuck onto form URL parameters.
       # (Symptom of the problem is that a field can't be changed after an error)
       [:head, :head_pers, :head_contact,
-       :wife, :wife_pers, :wife_contact,
-       :record, :family, :member,
-       :authenticity_token
-       ].each {|key| params.delete key}
+        :wife, :wife_pers, :wife_contact,
+        :record, :family, :member,
+        :authenticity_token
+      ].each {|key| params.delete key}
       respond_to do |format|
         format.js {render :on_update_err, :locals => {:xhr => true}}
         format.html {render :update}
@@ -142,56 +144,49 @@ class FamiliesController < ApplicationController
       updates[:status_id] = params[:record][:status_id]
     end
     unless updates.empty?
-#      puts "Updating dependents with #{updates}"
       family.dependents.each {|m| m.update_attributes(updates)}
     end
   end
   
-  def do_create
-    super
-    if !@record.valid?
-      puts "Invalid new family -- errors: #{@record.errors}"
-        render :action => "create" 
-      return
-    end
-    create_family_head(@record)
-  end    
-  
-   # Creating a new family ==> Need to create the member record for head
-  def create_family_head(record)
-    head = Member.create(:name=>record.name, :last_name=>record.last_name, 
-            :first_name=>record.first_name, 
-            :middle_name => record.middle_name,
-            :status_id=>record.status_id, 
-            :residence_location_id=>record.residence_location_id, 
-            :family_id =>record.id, :sex=>'M')
-    if ! head.valid?
-      errors.add(:head, "Unable to create head of family")
-      raise ActiveRecord::Rollback
-    end   
-    record.update_attributes(:head => head)  # Record newly-created member as the head of family
+#  def do_create
+#    super
+##    if !@record.valid?
+##      puts "Invalid new family -- errors: #{@record.errors}"
+##        render :action => "create" 
+##      return
+##    end
+#    create_family_head(@record)
+#  end    
+#  
+#   # Creating a new family ==> Need to create the member record for head
+#  def create_family_head(record)
+#    head = Member.create(:name=>record.name, :last_name=>record.last_name, 
+#            :first_name=>record.first_name, 
+#            :middle_name => record.middle_name,
+#            :status_id=>record.status_id, 
+#            :residence_location_id=>record.residence_location_id, 
+#            :family_id =>record.id, :sex=>'M')
+#    if ! head.valid?
+#      errors.add(:head, "Unable to create head of family")
+#      raise ActiveRecord::Rollback
+#    end   
+#    record.update_attributes(:head => head)  # Record newly-created member as the head of family
 
-  end
-
-  def add_family_member
-    record = Member.new(:last_name=>'NewMember', :first_name=>'Guess')
-    params[:record] = {:last_name=>'NewMember', :first_name=>'Guess'}
-    redirect_to new_member_path
-  end
+#  end
 
 # Generate a filter string for use in Family.where(conditions_for_collection)...
   def conditions_for_collection
     Status.filter_condition_for_group('families',session[:filter])
   end   # conditions_for_collection
 
-  def create_respond_to_html 
-#puts "create_respond_to_html: @record=#{@record}, valid=#{@record.valid?}, path=#{edit_member_path @record.head}"
-   redirect_to edit_member_path @record.head if @record.valid?
-  end  
+#  def create_respond_to_html 
+##puts "create_respond_to_html: @record=#{@record}, valid=#{@record.valid?}, path=#{edit_member_path @record.head}"
+#   redirect_to edit_member_path @record.head if @record.valid?
+#  end  
 
-  def create_respond_to_js
-   redirect_to edit_member_path @record.head if @record.valid?
-  end  
+#  def create_respond_to_js
+#   redirect_to edit_member_path @record.head if @record.valid?
+#  end  
 
 end
 
