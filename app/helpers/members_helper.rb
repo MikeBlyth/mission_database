@@ -40,7 +40,6 @@ module MembersHelper
     # Generate the select input ourselves
     result = "<select id='record_spouse' name='record[spouse]' class='spouse-input'>" + 
              "<option class='spouse-input' value=''>--None--</option>"
-puts "**** record.attributes=#{record.attributes}"
 
     record.possible_spouses.each do |p|
       if record.spouse_id == p.id
@@ -51,12 +50,9 @@ puts "**** record.attributes=#{record.attributes}"
       result << "<option class='spouse-input' value='#{p.id}' #{selected}>#{p.to_label}</option>"
     end
     result << "<option class='spouse-input' value=''>--Other--</option></select>"
-#puts "********#{result}"
     # Mismatched spouses?
     # ! This logic should go in controller, but we need to find ActiveScaffold callback
     # !   in order to place it there.
-#puts "**** MembersHelper spouse_form_column: record.name=#{record.name}, spouse_id=#{record.spouse_id}"
-#puts "* --- spouse=#{record.spouse.attributes if record.spouse.respond_to? :attributes}"
     if !record.new_record? && record.spouse_id && record.spouse && record.spouse.spouse_id != record.id
       my_name = record.full_name_short
       spouse_name = record.spouse.full_name_short

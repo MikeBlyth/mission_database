@@ -123,7 +123,7 @@ class Family < ActiveRecord::Base
   def add_child(params)
 #puts "**** add_child: params=#{params}, \nself=#{self.attributes}"
     pers_data = params.delete(:personnel_data)
-    child = Member.new({:last_name=>self.last_name, :family=>self, 
+    child = Member.new({:last_name=>self.head.last_name, :family=>self, 
                             :child=>true,
                             :country=>self.head.country,
                             :residence_location=>self.residence_location}.merge params)

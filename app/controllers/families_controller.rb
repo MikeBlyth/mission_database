@@ -169,6 +169,7 @@ class FamiliesController < ApplicationController
       params[:member].each do |id, child_data|
         if !child_data[:first_name].empty?  # and has data (as opposed to being just the blank line being returned
           new_child = @family.add_child child_data  # create the new child
+          new_child.id = id
           @children << new_child
           @error_records << new_child unless new_child.errors.empty?
         end # adding one child

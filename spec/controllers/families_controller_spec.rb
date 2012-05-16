@@ -63,6 +63,25 @@ include SimTestHelper
 
   end # describe "authentication before controller access"
 
+  describe 'make new, empty family' do
+      before(:each) do
+        @user = Factory(:user, :admin=>true)
+        test_sign_in(@user)
+      end
+    
+    it 'should make all required elements for new-family form' do
+      get :new
+      assigns[:head].should_not be_nil
+      assigns[:wife].should_not be_nil
+      assigns[:head].personnel_data.should_not be_nil
+      assigns[:wife].personnel_data.should_not be_nil
+      assigns[:children].should_not be_nil
+      puts assigns[:children][0].attributes
+      
+    end
+
+  end
+
   describe 'create new family from form' do
       before(:each) do
           @user = Factory.build(:user, :admin=>true)
