@@ -128,7 +128,7 @@ describe IncomingMailsController do
         residence_location = Factory(:location, :description=>'Rayfield')
         work_location = Factory(:location, :description=>'Spring of Life')
         member.update_attributes(:birth_date => Date.new(1980,6,15),
-                     :residence_location=>residence_location,
+#*                     :residence_location=>residence_location,
                      :work_location=>work_location,
                      :temporary_location => 'Miango Resort Hotel',
                      :temporary_location_from_date => Date.today - 10.days,

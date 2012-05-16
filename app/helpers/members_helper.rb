@@ -20,13 +20,12 @@ module MembersHelper
     end  
   end
 
-  def residence_location_form_column(record, params)
-    result = "<select id='record_residence_location' name='record[residence_location]' class='residence_location-input'>"
-    result << location_choices(@record[:residence_location_id])
-    result << "</select>"
-    return raw(result) 
-
-  end
+#*  def residence_location_form_column(record, params)
+#*    result = "<select id='record_residence_location' name='record[residence_location]' class='residence_location-input'>"
+#*    result << location_choices(@record[:residence_location_id])
+#*    result << "</select>"
+#*    return raw(result) 
+#*  end
 
   def work_location_form_column(record, params)
     result = "<select id='record_work_location' name='record[work_location]' class='work_location-input'>"

@@ -266,28 +266,28 @@ include SimTestHelper
       @child.reload.residence_location.should == @new_location
     end
     
-    it "location should not change when family location is not changed" do
-      same_attributes = {'residence_location_id' => @original_location.id} 
-      @member.update_attribute(:residence_location, @new_location) # customize one of the members' location
-      put :update, :id => @family.id, :record => same_attributes # update family, but don't change location
-      @family.reload.residence_location_id.should == @original_location.id
-      @member.reload.residence_location.should == @new_location
-      @spouse.reload.residence_location.should == @original_location
-      @child.reload.residence_location.should == @original_location
-    end
+#    it "location should not change when family location is not changed" do
+#      same_attributes = {'residence_location_id' => @original_location.id} 
+#      @member.update_attribute(:residence_location, @new_location) # customize one of the members' location
+#      put :update, :id => @family.id, :record => same_attributes # update family, but don't change location
+#      @family.reload.residence_location_id.should == @original_location.id
+#      @member.reload.residence_location.should == @new_location
+#      @spouse.reload.residence_location.should == @original_location
+#      @child.reload.residence_location.should == @original_location
+#    end
 
-    it "location of non-dependents should not change when family location is changed" do
-    # That is, only head, kids & spouse should change, no other. 
-      new_attributes = {'residence_location_id' => @new_location.id} 
-      @other_member = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>false, :spouse=>nil)
-      @other_member.personnel_data.update_attributes(:employment_status=>@career_status)
-      put :update, :id => @family.id, :record => new_attributes
-      @family.reload.residence_location_id.should == @new_location.id
-      @other_member.reload.residence_location.should == @original_location
-      @member.reload.residence_location.should == @new_location
-    end
+#    it "location of non-dependents should not change when family location is changed" do
+#    # That is, only head, kids & spouse should change, no other. 
+#      new_attributes = {'residence_location_id' => @new_location.id} 
+#      @other_member = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>false, :spouse=>nil)
+#      @other_member.personnel_data.update_attributes(:employment_status=>@career_status)
+#      put :update, :id => @family.id, :record => new_attributes
+#      @family.reload.residence_location_id.should == @new_location.id
+#      @other_member.reload.residence_location.should == @original_location
+#      @member.reload.residence_location.should == @new_location
+#    end
 
-    it "status of non-dependents should not change when family location is changed" do
+    it "status of non-dependents should not change when family status is changed" do
     # That is, only head, kids & spouse should change, no other. 
       new_attributes = {'status_id' => @new_status.id} 
       @other_member = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>false, :spouse=>nil)

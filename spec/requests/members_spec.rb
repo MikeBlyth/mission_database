@@ -49,7 +49,7 @@ include SimTestHelper
 #        select_second_option(:record_status_id)
 #        select_second_option(:ministry_id)
         fill_in 'Ministry comment', :with=> "ministry comment"
-        select 'Site', :from=>'record_residence_location'
+#*        select 'Site', :from=>'record_residence_location'
         select 'Site', :from=>'record_work_location'
         fill_in 'Temporary location', :with=> "out of town"
         fill_in "record[temporary_location_from_date]", :with => "2011-01-01"
@@ -81,7 +81,7 @@ include SimTestHelper
       m.status.description.should =~ /On field/
       m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    
-      m.residence_location.description.should =~ /Site/
+#*      m.residence_location.description.should =~ /Site/
       m.work_location.description.should  =~ /Site/
       m.temporary_location.should == 'out of town'
       m.temporary_location_from_date.should == Date.new(2011,1,1)
@@ -132,7 +132,7 @@ include SimTestHelper
       select 'On field', :from=>'record[status]'
       select 'Ministry', :from=>'record[ministry]'
       fill_in 'Ministry comment', :with=> "ministry comment"
-      select 'Site', :from=>'record_residence_location'
+#*      select 'Site', :from=>'record_residence_location'
       select 'Site', :from=>'record_work_location'
       fill_in 'Temporary location', :with=> "out of town"
       fill_in "record[temporary_location_from_date]", :with => temp_loc_from.strftime("%F")
@@ -174,7 +174,7 @@ include SimTestHelper
       m.status.description.should =~ /On field/
       m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    
-      m.residence_location.description.should =~ /Site/
+#*      m.residence_location.description.should =~ /Site/
       m.work_location.description.should  =~ /Site/
       m.temporary_location.should == 'out of town'
       m.temporary_location_from_date.should == temp_loc_from

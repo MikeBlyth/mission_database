@@ -8,9 +8,9 @@ include ReportsHelper
 
 
   def fix_missing_locations(member)
-    if member.residence_location_id.nil? || member.residence_location.nil?
-      member.residence_location_id = UNSPECIFIED    
-    end  
+#*    if member.residence_location_id.nil? || member.residence_location.nil?
+#*      member.residence_location_id = UNSPECIFIED    
+#*    end  
     if member.work_location_id.nil? || member.work_location.nil?
       member.work_location_id = UNSPECIFIED    
     end  

@@ -40,7 +40,7 @@ describe AdminController do
         @member.status = Factory(:status)
         @member.country = Factory(:country)
         @member.work_location = Factory(:location)
-        @member.residence_location = Factory(:location)
+#*        @member.residence_location = Factory(:location)
         @member.spouse = Factory(:member, :sex=>@member.other_sex)
         @member.ministry = Factory(:ministry)
         @member.save
@@ -49,7 +49,7 @@ describe AdminController do
         @member.status.should_not be_nil
         @member.country.should_not be_nil
         @member.work_location.should_not be_nil
-        @member.residence_location.should_not be_nil
+#*        @member.residence_location.should_not be_nil
         @member.spouse.should_not be_nil
         @member.ministry.should_not be_nil
       end  
@@ -101,12 +101,12 @@ describe AdminController do
 
       it "does not complain about family with valid associations" do
         @object.status = Factory(:status)
-        @object.residence_location = Factory(:location)
+#*        @object.residence_location = Factory(:location)
         @object.save
         controller.clean_families(true).should =~ /no errors/
         @object.reload
         @object.status.should_not be_nil
-        @object.residence_location.should_not be_nil
+#*        @object.residence_location.should_not be_nil
       end  
 
       it "does not change _id when fix is set to false" do

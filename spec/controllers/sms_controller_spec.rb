@@ -96,7 +96,7 @@ describe SmsController do
           work_location = Factory(:location, :description=>'Spring of Life')
           @member = Factory(:member, :last_name=>@last_name,
                        :birth_date => Date.new(1980,6,15),
-                       :residence_location=>residence_location,
+#*                       :residence_location=>residence_location,
                        :work_location=>work_location,
                        :temporary_location => 'Miango Resort Hotel',
                        :temporary_location_from_date => Date.today - 10.days,

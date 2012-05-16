@@ -187,7 +187,7 @@ FactoryGirl.define do
     after_stub do |m| 
       m.last_name ||= m.family.last_name
       m.status ||= m.family.status
-      m.residence_location ||= m.family.residence_location
+#      m.residence_location ||= m.family.residence_location
       m.family.head = m if m.family.head.nil?  # This doesn't work either
     end
   end

@@ -141,7 +141,7 @@ module SimTestHelper
     params[:name] ||= "Johnson #{number}, Gerald"
     params[:sex] ||= 'M'
     params[:status_id] = create_associated_details(:status, params[:status_id], true)
-    params[:residence_location_id] = create_associated_details(:location, params[:residence_location_id], true)
+#*    params[:residence_location_id] = create_associated_details(:location, params[:residence_location_id], true)
     params[:work_location_id] = create_associated_details(:location, params[:work_location_id], true)
     params[:ministry_id] = create_associated_details(:ministry, params[:ministry_id], true)
     if params[:family] 
@@ -157,7 +157,7 @@ module SimTestHelper
                         )
       member = Factory(:member, :family=>family, :last_name=>family.last_name,
           :first_name=>family.first_name, :name=>family.name, :status=>family.status,
-          :residence_location=>family.residence_location)
+          )
       family.update_attribute(:head, member)
     end
 
@@ -174,7 +174,7 @@ module SimTestHelper
             :birth_date => params[:birth_date] || '1980-01-01',
             :country => params[:country] || Country.first || Factory(:country),
             :status => params[:status] || Status.first || Factory(:status),
-            :residence_location => location,
+#*            :residence_location => location,
             :work_location => location,
             :ministry => Ministry.first || Factory(:ministry),
             :education => Education.first || Factory(:education),

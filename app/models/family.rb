@@ -126,7 +126,9 @@ class Family < ActiveRecord::Base
     child = Member.new({:last_name=>self.head.last_name, :family=>self, 
                             :child=>true,
                             :country=>self.head.country,
-                            :residence_location=>self.residence_location}.merge params)
+#*                            :residence_location=>self.residence_location
+                            }.merge params
+                            )
     if child.save
       child.personnel_data.update_attributes(pers_data)
     end

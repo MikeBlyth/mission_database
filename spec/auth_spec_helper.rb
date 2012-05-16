@@ -32,6 +32,10 @@ module AuthSpecHelper
     #
     get :new
     response.should_not redirect_to(signin_path)
+    if object.class == Family  # A little kludge since Family edit needs a real family head
+      object.head_id = Factory(:member).id
+      object.save
+    end
     get :edit, :id => object.id
     response.should_not redirect_to(signin_path)
     get :show, :id => object.id

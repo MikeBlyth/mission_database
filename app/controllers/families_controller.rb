@@ -55,6 +55,7 @@ class FamiliesController < ApplicationController
   # When creating the Edit form, fix up some stuff since we're using a customized form, not AS
   def do_edit
     super
+# puts "**** @record.attributes=#{@record.attributes}"
     @head = @record.head
     @wife = @record.wife 
     if @wife.nil? && @head.male?
@@ -88,9 +89,9 @@ class FamiliesController < ApplicationController
     if params[:record][:status_id] == @family.status_id  # i.e. it's unchanged
       params[:record].delete :status_id
     end
-    if params[:record][:residence_location_id] == @family.residence_location_id
-      params[:record].delete :residence_location_id
-    end
+#*    if params[:record][:residence_location_id] == @family.residence_location_id
+#*      params[:record].delete :residence_location_id
+#*    end
 
     @head = @family.head
     @wife = @family.wife
@@ -204,9 +205,9 @@ class FamiliesController < ApplicationController
   # apply them to each of the members. 
   def update_members_status_and_location(family)
     updates = {}
-    if params[:record][:residence_location_id]
-      updates[:residence_location_id] = params[:record][:residence_location_id]
-    end
+#*    if params[:record][:residence_location_id]
+#*      updates[:residence_location_id] = params[:record][:residence_location_id]
+#*    end
     if params[:record][:status_id]
       updates[:status_id] = params[:record][:status_id]
     end

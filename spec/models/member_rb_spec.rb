@@ -128,11 +128,10 @@ describe Member do
       new_status = Factory(:status)
       city=Factory(:city)
       new_location = Factory(:location)
-      @member.update_attributes(:status=>new_status, :residence_location=>new_location, :last_name=>new_last_name)
+      @member.update_attributes(:status=>new_status, :last_name=>new_last_name)
       retrieved = Member.find(@member.id)  # re-read record from DB or at least cache
       retrieved.last_name.should == new_last_name
       retrieved.status.should == new_status
-      retrieved.residence_location.should == new_location
     end
   end # inheritance
 
@@ -389,9 +388,8 @@ describe Member do
     
     it "reports location of member with no status" do
       @residence = Factory(:location)
-      @head.update_attributes(:status=>nil, :residence_location=> @residence)
+      @head.family.update_attributes(:status=>nil, :residence_location=> @residence)
       @head.reload.current_location.should =~ Regexp.new(@residence.description)
-      @head.status.should be_nil
     end
 
     describe "visiting_field?" do
@@ -426,12 +424,12 @@ describe Member do
     describe 'residence_location' do
 
       it 'is shown as "?" if empty' do
-        @head.residence_location = nil
+        @head.family.residence_location = nil
         @head.current_location.should == '?'
       end
       
       it 'is shown as description if not empty' do
-        @head.residence_location = Factory.build(:location)
+        @head.family.residence_location = Factory.build(:location)
         @head.current_location.should == @head.residence_location.description
       end
       
@@ -445,14 +443,14 @@ describe Member do
       end
       
       it 'is not shown if empty and :missing=>'' is used' do
-        @head.residence_location = Factory.build(:location)
+        @head.family.residence_location = Factory.build(:location)
         @head.work_location = nil
         @head.current_location(:missing=>'').should == @head.residence_location.description  # '?' for the residence_location
       end
       
       it 'is not shown at all if same as residence_location' do
         @head.work_location = Factory.build(:location)
-        @head.residence_location = @head.work_location
+        @head.family.residence_location = @head.work_location
         @head.current_location.should == @head.residence_location.description
       end
       

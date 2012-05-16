@@ -52,7 +52,7 @@ class Member < ActiveRecord::Base
   belongs_to :bloodtype 
   belongs_to :education
   belongs_to :ministry
-  belongs_to :residence_location, :class_name => "Location"#, :foreign_key => "residence_location_id"
+#*  belongs_to :residence_location, :class_name => "Location"#, :foreign_key => "residence_location_id"
   belongs_to :work_location, :class_name => "Location"#, :foreign_key => "work_location_id"
   belongs_to :status
   validates_presence_of :last_name, :first_name, :name, :family
@@ -70,6 +70,10 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
+  def residence_location
+    return self.family.residence_location
+  end
+
   def add_to_family(child)
     child.id = nil
     child.last_name=self.last_name
@@ -307,7 +311,7 @@ def those_umbrella
 #                  family_id && Family.find_by_id(family_id) # must belong to existing family
     self.last_name ||= family.last_name
     self.status ||= family.status
-    self.residence_location ||= family.residence_location
+#*    self.residence_location ||= family.residence_location
   end
 
   # Valid record must be linked to an existing family
@@ -428,7 +432,8 @@ def those_umbrella
     defaults = {:first_name=>'(Mrs.)', :last_name=>self.last_name, :name=>"#{self.last_name}, (Mrs.)", 
                 :sex => 'F',
                 :family=>self.family, :status=>self.status, :country=>self.country,
-                :residence_location=>self.residence_location}
+#*                :residence_location=>self.residence_location
+                }
     woman = Member.new(defaults.merge(params))
     prev_spouse = self.spouse   # save in case we need to restore it if marry fails
     if self.marry woman
@@ -488,7 +493,7 @@ def those_umbrella
 
   def current_location_hash(options={})
     answer = {
-        :residence => description_or_blank(residence_location, options[:missing] || '?'),
+        :residence => description_or_blank(self.residence_location, options[:missing] || '?'),
         :work => description_or_blank(work_location, options[:missing] || nil),
         :travel => travel_location,
         :temp => temp_location
@@ -502,7 +507,7 @@ def those_umbrella
   #   :missing = what to supply if residence or work location is missing or is 'unspecified'
   def current_location(options={})
     cur_loc_hash = current_location_hash(options)
-    answer = cur_loc_hash[:residence]
+    answer = cur_loc_hash[:residence] || ''
     answer += " (#{cur_loc_hash[:work]})" if !cur_loc_hash[:work].blank? && (cur_loc_hash[:work] != cur_loc_hash[:residence])
     answer += " (#{cur_loc_hash[:travel]})" if cur_loc_hash[:travel]
     answer += " (#{cur_loc_hash[:temp]})" if cur_loc_hash[:temp]

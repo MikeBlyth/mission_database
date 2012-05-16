@@ -33,13 +33,7 @@ describe Location do
       end.should_not change(Location, :count)
     end
       
-    it "does not destroy if there is existing member w residence" do
-      @member = Factory.create(:member, :residence_location=>@location, :family=>Factory.stub(:family))
-      lambda do
-        @location.destroy
-      end.should_not change(Location, :count)
-    end
-      
+     
     it "does not destroy if there is existing member w work location" do
       @member = Factory.create(:member, :work_location=>@location, :family=>Factory.stub(:family))
       lambda do
