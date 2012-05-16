@@ -62,7 +62,6 @@ class FamiliesController < ApplicationController
     
   def do_new
     super
-puts "**** @record.attributes=#{@record.attributes}"
     @head = Member.new(:personnel_data=>PersonnelData.new)
     @wife = Member.new(:personnel_data=>PersonnelData.new)
     @children = new_children(@head,5)
@@ -131,7 +130,7 @@ puts "**** @record.attributes=#{@record.attributes}"
       @record = @family
       @children = @head.children + new_children(@head,1)
       # Need to remove these from params so that they don't get stuck onto form URL parameters.
-      # (Symptom of the problem is that a field can't be changed after an error)
+      # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
       [:head, :head_pers, :head_contact,
         :wife, :wife_pers, :wife_contact,
         :record, :family, :member,
@@ -152,24 +151,25 @@ puts "**** @record.attributes=#{@record.attributes}"
     @head = Member.new(:family=>@family)
     update_and_check(@family, params[:record], @error_records)
     update_and_check(@head, params[:head], @error_records)
-    @family.update_attributes(:head=>@head)
+    @family.update_attributes(:head=>@head)   # Set family head
     update_and_check(@head.personnel_data, params[:head_pers], @error_records)
     update_and_check(@head.primary_contact, params[:head_contact], @error_records)
 
     # If there ARE parameters defining wife, then create wife
-    if not (params[:wife].blank?)  # use 'blank' as it is true for '', {}, [], and nil
-#      @wife = Member.new(:family=>@family) # Need to create one if it doesn't exist
-      @wife ||= @head.create_wife # Need to create one if it doesn't exist
+    if params[:wife] && !params[:wife][:first_name].blank?
+      @wife = @head.create_wife 
       update_and_check(@wife, params[:wife], @error_records)
       update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
       update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
 #puts "**** @error_records=#{@error_records}"
     end  
     # Add children
+    @children = []
     if params[:member]  # for now, this is how children are listed (:member)
       params[:member].each do |id, child_data|
         if !child_data[:first_name].empty?  # and has data (as opposed to being just the blank line being returned
           new_child = @family.add_child child_data  # create the new child
+          @children << new_child
           @error_records << new_child unless new_child.errors.empty?
         end # adding one child
       end # adding children
@@ -178,9 +178,20 @@ puts "**** @record.attributes=#{@record.attributes}"
     if @error_records.empty?
       redirect_to families_path
     else  # send back to user to try again
+      # Need to remove these from params so that they don't get stuck onto form URL parameters.
+      # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
+      [:head, :head_pers, :head_contact,
+        :wife, :wife_pers, :wife_contact,
+        :record, :family, :member,
+        :authenticity_token
+      ].each {|key| params.delete key}
       @family.destroy  # remove the database entry for family and members
+      @head.personnel_data = PersonnelData.new
+      @wife ||= Member.new(:family=>@family)
+      @wife.personnel_data = PersonnelData.new
+      @record = @family
       respond_to do |format|
-        format.html {render :new}
+        format.html {render :create}
       end
     end    
   end 

@@ -28,17 +28,18 @@ describe Family do
 #      it { should validate_uniqueness_of(:sim_id) }
 #    end
 
-    it "is not valid without a first name" do
-      @family.first_name = ''
-      @family.should_not be_valid
-      @family.errors[:first_name].should_not be_nil
-    end
+# Uncomment if it becomes important for families to have first and last names, not just "name"
+#    it "is not valid without a first name" do
+#      @family.first_name = ''
+#      @family.should_not be_valid
+#      @family.errors[:first_name].should_not be_nil
+#    end
 
-    it "is not valid without a last name" do
-      @family.last_name = ''
-      @family.should_not be_valid
-      @family.errors[:last_name].should_not be_nil
-    end
+#    it "is not valid without a last name" do
+#      @family.last_name = ''
+#      @family.should_not be_valid
+#      @family.errors[:last_name].should_not be_nil
+#    end
 
     it "is invalid with duplicate name" do
       @family.save

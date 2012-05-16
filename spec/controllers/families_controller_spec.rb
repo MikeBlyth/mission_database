@@ -148,7 +148,7 @@ include SimTestHelper
 
       it 'returns to "create" form' do
         post :create, @params
-        response.should render_template("new")
+        response.should render_template("create")
       end
       
     end # when unsuccessful
