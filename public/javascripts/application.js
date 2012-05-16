@@ -15,10 +15,16 @@
           source: "autocomplete/country.js"
           });
       });
+    });
 
     $(function() {
-      $('h4').live('click', function() {
-        alert("Checked!")
+      $('#show_wife').live('click', function() {
+        if ($(this).is(':checked')) {
+          $('.wife_hidden').css('display','block')
+          }
+        else {
+          $('.wife_hidden').css('display','none')
+        }  
       });
     });
     

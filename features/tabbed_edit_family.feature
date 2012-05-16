@@ -25,37 +25,37 @@ Feature: Forms for creating and updating families
     When I update family with errors
     Then I should see family update error messages
     
-  @new
-  Scenario: I should not see a link to show wife tab wife already exists
-    Given that detail tables (like Countries) exist
-    And a family with a "Wife" and "Big Kid" and "Baby"
-    And that I am signed in as an administrator
-    When I select "update family"
-    Then I should not see link for showing wife
-    
-  @new
-  Scenario: I should see a link to show wife tab when member is unmarried
-    Given that detail tables (like Countries) exist
-    And a one-person family
-    And that I am signed in as an administrator
-    When I select "update family"
-    Then I should see link for showing wife
+#  @new
+#  Scenario: I should not see a link to show wife tab if wife already exists
+#    Given that detail tables (like Countries) exist
+#    And a family with a "Wife" and "Big Kid" and "Baby"
+#    And that I am signed in as an administrator
+#    When I select "update family"
+#    Then I should not see link for showing wife
+#    
+#  @new
+#  Scenario: I should see a link to show wife tab when male member is unmarried
+#    Given that detail tables (like Countries) exist
+#    And a one-person family
+#    And that I am signed in as an administrator
+#    When I select "update family"
+#    Then I should see link for showing wife
 
-  @new
-  Scenario: I should get a form to add spouse from family edit form
-    Given that I am signed in as an administrator
-    And a one-person family
-    When I select "update family"
-#    And I check "show_wife"
-    Then "tabs-wife" should not be visible
-    
-  @new
-  Scenario: I should get a form to add spouse from family edit form
-    Given that I am signed in as an administrator
-    And a family with a "Wife" and "Big Kid" and "Baby"
-    When I select "update family"
-#    And I check "show_wife"
-    Then tabs-wife for wife should be visible
+#  @new
+#  Scenario: I should get a form to add spouse from family edit form
+#    Given that I am signed in as an administrator
+#    And a one-person family
+#    When I select "update family"
+##    And I check "show_wife"
+#    Then "tabs-wife" should not be visible
+#    
+#  @new
+#  Scenario: I should get a form to add spouse from family edit form
+#    Given that I am signed in as an administrator
+#    And a family with a "Wife" and "Big Kid" and "Baby"
+#    When I select "update family"
+##    And I check "show_wife"
+#    Then tabs-wife for wife should be visible
     
   @pending
   Scenario: I should be able to add child from family edit form

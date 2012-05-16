@@ -101,7 +101,7 @@ class FamiliesController < ApplicationController
       update_and_check(@head.primary_contact, params[:head_contact], @error_records)
     end
     # If there ARE parameters defining wife, then create or update wife
-    if params[:wife].any? && !params[:wife][:first_name].blank?
+    if params[:wife] && !params[:wife][:first_name].blank?
       @wife ||= @head.create_wife # Need to create one if it doesn't exist
       update_and_check(@wife, params[:wife], @error_records)
       update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
