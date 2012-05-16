@@ -1,0 +1,9 @@
+.active-scaffold
+  %h1 New Family 
+  = form_for(@family) do |f| 
+    = render 'error_messages', :object => @error_records
+    = render 'form' , :formobject=>f
+    .actions
+    = f.submit 
+    = link_to "Cancel", users_path, :class=>"as_cancel"
+    

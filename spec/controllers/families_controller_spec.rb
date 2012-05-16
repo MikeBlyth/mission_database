@@ -63,47 +63,98 @@ include SimTestHelper
 
   end # describe "authentication before controller access"
 
-  describe 'new_family also creates family head' do
-    before(:each) do
-        @user = Factory.build(:user, :admin=>true)
-        test_sign_in(@user)
-      @params={:record=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"}}
-    end  
+  describe 'create new family from form' do
+      before(:each) do
+          @user = Factory.build(:user, :admin=>true)
+          test_sign_in(@user)
+          @params={:record=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"},
+                   :head=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"}
+                   }
+      end  
 
-    it 'creates a "family head" member' do
-pending 'new add-family controller'
-      lambda{post :create, @params}.should change(Member, :count).by(1)  
-      family = Family.last
-      family.should_not be_nil
-      family.head.should_not be_nil
-    end
+    describe 'when successful' do
 
-    it 'family head member belongs to family' do
-pending 'new add-family controller'
-      lambda{post :create, @params}.should change(Member, :count).by(1)  
-      family = Family.last
-      family.head.family.should == family
-    end
-
-    it 'family head inherits family info' do
-pending 'new add-family controller'
-      status = Factory(:status)
-      location = Factory(:location)
-      lambda do
-        @params[:record].merge!({:status=>status.id.to_s, :residence_location=>location.id.to_s})
+      it 'Creates the new family record with minimal information' do
         post :create, @params
-       end.should change(Member, :count).by(1)  
-      family = Family.last
-      head = family.head.reload
-      head.status.should == status
-      head.residence_location.should == location
-      head.name.should == family.name
-      head.last_name.should == family.last_name
-      head.first_name.should == family.first_name
-      head.middle_name.should == family.middle_name
-    end
+        family = Family.first
+        family.last_name.should == @params[:record][:last_name]
+        family.first_name.should == @params[:record][:first_name]
+        head = family.head
+        head.should_not be_nil
+        head.last_name.should == 'Last'
+        head.first_name.should == 'First'
+        head.family.should == family
+      end
 
-  end # 'new_family also creates family head'
+      it 'adds wife when her data is given' do
+        @params[:wife] = {:last_name=>"Last", :first_name=>"Mary", :name=>"MaryName"}
+        post :create, @params
+        family = Family.first
+        family.wife.should_not be_nil
+        family.wife.first_name.should == 'Mary'
+      end
+
+      it 'adds children when data is given' do
+        @params[:member] = {10000000001.to_s=>{:first_name=>'Zinger'},
+                            10000000002.to_s=>{:first_name=>'Zapper'},
+                            } 
+        post :create, @params
+        family = Family.first
+        family.children.count.should == 2
+        family.children_names.should include('Zinger')
+        family.children_names.should include('Zapper')
+      end
+
+      it 'should have no error messages' do
+        post :create, @params
+        assigns[:error_records].should == []
+      end
+
+      it 'redirects to families listing' do
+        post :create, @params
+  #puts "**** assigns[:error_records]=#{assigns[:error_records]}"
+        response.should redirect_to(:action=>'index')
+      end
+        
+    end # when successful
+    
+    describe 'handles errors' do
+      
+      it 'in child' do
+        @params[:member] = {10000000001.to_s=>{:first_name=>'Zinger', :birth_date=>(Date.today + 2).strftime("%F")}
+                            } 
+        lambda{post :create, @params}.should_not change(Member, :count)
+#puts "**** assigns[:error_records][0].errors=#{assigns[:error_records][0].errors}"
+        assigns[:error_records].should_not == []
+      end
+    end # handles errors
+
+    describe 'when unsuccessful' do
+      before(:each) do
+        @params={:record=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"},
+                 :head=>{:last_name=>nil, :first_name=>"First", :name=>"AllName"},
+                 :wife=>{:last_name=>"Last", :first_name=>"Mary", :name=>"MaryName"},
+                 :member=>{10000000001.to_s=>{:first_name=>'Zinger'} } 
+                 }
+      end  
+
+      it 'does not save family' do
+        lambda{post :create, @params}.should_not change(Family, :count)
+      end
+        
+      it 'does not save members' do
+        lambda{post :create, @params}.should_not change(Member, :count)
+      end
+
+      it 'returns to "create" form' do
+        post :create, @params
+        response.should render_template("new")
+      end
+      
+    end # when unsuccessful
+
+  end # create new family from form
+
 
   # These should probably be put into the family MODEL spec
   # TODO: Remove duplication between this and Member controller spec, including seed_statuses

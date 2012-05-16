@@ -60,6 +60,8 @@ class FamiliesController < ApplicationController
     @children = (@head.children + new_children(@head,1)) if @head
   end
     
+
+
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
   #   (Family.rb update_member_locations and update_member_status update all the family members
@@ -131,7 +133,50 @@ class FamiliesController < ApplicationController
         format.html {render :update}
       end
     end      
-  end    
+  end   
+  
+  def create
+ #   puts "Families_controller#create"
+#    puts "Params=#{params}, id=#{params[:id]}"
+    @error_records = []  # Keep list of the model records that had errors when updated
+    @family = Family.new
+    @head = Member.new(:family=>@family)
+    update_and_check(@family, params[:record], @error_records)
+    update_and_check(@head, params[:head], @error_records)
+    @family.update_attributes(:head=>@head)
+    update_and_check(@head.personnel_data, params[:head_pers], @error_records)
+    update_and_check(@head.primary_contact, params[:head_contact], @error_records)
+
+    # If there ARE parameters defining wife, then create wife
+    if not (params[:wife].blank?)  # use 'blank' as it is true for '', {}, [], and nil
+#      @wife = Member.new(:family=>@family) # Need to create one if it doesn't exist
+      @wife ||= @head.create_wife # Need to create one if it doesn't exist
+      update_and_check(@wife, params[:wife], @error_records)
+      update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
+      update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
+#puts "**** @error_records=#{@error_records}"
+      # NB @wife is not 'married' to head yet, nor has been checked that marriage will work
+    end  
+    # Add children
+    if params[:member]  # for now, this is how children are listed (:member)
+      params[:member].each do |id, child_data|
+        if !child_data[:first_name].empty?  # and has data (as opposed to being just the blank line being returned
+          new_child = @family.add_child child_data  # create the new child
+          @error_records << new_child unless new_child.errors.empty?
+        end # adding one child
+      end # adding children
+    end # if any children are specified
+#puts "**** @error_records=#{@error_records}"
+    if @error_records.empty?
+      redirect_to families_path
+    else  # send back to user to try again
+      @family.destroy  # remove the database entry for family and members
+      respond_to do |format|
+  #      format.js {render :on_update_err, :locals => {:xhr => true}}
+        format.html {render :new}
+      end
+    end    
+  end 
 
   # If a (residence_)location or status have been specified for the family, then
   # apply them to each of the members. 
