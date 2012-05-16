@@ -56,8 +56,11 @@ class FamiliesController < ApplicationController
   def do_edit
     super
     @head = @record.head
-    @wife = @record.wife
-    @children = (@head.children + new_children(@head,1)) if @head
+    @wife = @record.wife 
+    if @wife.nil? && @head.male?
+      @wife = Member.new(:last_name=>@head.last_name, :personnel_data=>PersonnelData.new)
+    end
+    @children = (@head.children(true) + new_children(@head,1)) if @head  # (true) means include grown children
   end
     
   def do_new
@@ -98,7 +101,7 @@ class FamiliesController < ApplicationController
       update_and_check(@head.primary_contact, params[:head_contact], @error_records)
     end
     # If there ARE parameters defining wife, then create or update wife
-    if not (params[:wife].blank?)  # use 'blank' as it is true for '', {}, [], and nil
+    if params[:wife].any? && !params[:wife][:first_name].blank?
       @wife ||= @head.create_wife # Need to create one if it doesn't exist
       update_and_check(@wife, params[:wife], @error_records)
       update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)

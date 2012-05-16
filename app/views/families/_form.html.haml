@@ -6,8 +6,10 @@ $( "#tabs" ).tabs();
 -# Set up some convenience variables
 - @head_contact = @head.primary_contact
 - @head_pers = @head.personnel_data
-- @wife_pers = @wife.personnel_data if @wife
-- @wife_contact = @wife.primary_contact if @wife
+- if @wife
+  - @wife_pers = @wife.personnel_data 
+  - @wife_contact = @wife.primary_contact 
+  - wifeclass = @wife.first_name.blank? ? 'wife_hidden' : 'wife_visible'
 
 <div >
 
@@ -15,7 +17,7 @@ $( "#tabs" ).tabs();
 <ul>
 <li><a href="#tabs-head">Head</a></li>
 - if @wife
-  <li><a href="#tabs-wife">Wife</a></li>
+  <li id='wife-tab' class="#{wifeclass}"><a href="#tabs-wife">Wife</a></li>
 <li><a href="#tabs-children">Children</a></li>
 <li><a href="#tabs-family">Family</a></li>
 </ul>
@@ -139,12 +141,16 @@ $( "#tabs" ).tabs();
             = member.label :temporary_location_until_date, "Until"
             %br
             = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
+          - if @wife    
+            %td
+              = label_tag :show_wife, "Show tab for wife"
+              = check_box_tag(:show_wife)  
       
 
   - if @wife
-    #tabs-wife
+    #tabs-wife(class=wifeclass)
       = fields_for :wife do |member|
-        %h4 Information for the individual or <em>head</em> of family
+        %h4 Information for the wife (leave blank if single)
         = fields_for :wife do |member|
           %table.new_family
             %tr

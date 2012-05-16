@@ -15,6 +15,13 @@
           source: "autocomplete/country.js"
           });
       });
+
+    $(function() {
+      $('h4').live('click', function() {
+        alert("Checked!")
+      });
+    });
+    
       
 // ******************* MEMBER NAME MANIPULATION ON CREATE/UPDATE FORM
 // **********************************************************************************      

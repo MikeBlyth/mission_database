@@ -378,6 +378,29 @@ Then /^I should see a button for adding a child$/ do
   page.should have_link "Add child" 
 end
 
+Then /^I should not see link for showing wife$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see link for showing wife$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+#Then /^Tab for wife should be visible$/ do
+#  page.should have_css('#tabs-wife', :visible=>false)
+#  page.should have_selector(:xpath, '//div[@id="tabs-wife"]', :visible=>false)
+#end
+
+Then /^"([^\"]+)" should not be visible$/ do |text|
+  paths = [
+    "//*[@class='hidden']/*[contains(.,'#{text}')]",
+    "//*[@class='invisible']/*[contains(.,'#{text}')]",
+    "//*[@style='display: none;']/*[contains(.,'#{text}')]"
+  ]
+  xpath = paths.join '|'
+  page.should have_xpath(xpath)
+end
+
 Given /^that I am updating a family$/ do
   seed_tables
   construct_family
