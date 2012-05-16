@@ -159,7 +159,7 @@ class AdminController < ActionController::Base
   def clean_members(fix=false)
     before_report 'Members'
     Member.all.each do |m|
-      check_and_fix_link(m, :residence_location, m.name)
+  #*    check_and_fix_link(m, :residence_location, m.name)
       check_and_fix_link(m, :work_location, m.name)
       check_and_fix_link(m, :family, m.name)
       check_and_fix_link(m, :status, m.name)

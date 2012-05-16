@@ -13,7 +13,7 @@ class ReportsController < ApplicationController
   end
 
   def statistics_1
-    @members = Member.those_active_sim.includes(:personnel_data, :country, :residence_location, :work_location, :status)
+    @members = Member.those_active_sim.includes(:personnel_data, :country, :work_location, :status)
     countries = Freq.new(@members,{:rows=>'country', :title=>"Active SIM Nigeria Members by Country of Origin", :sort=>:alphabetical})
     ministries = Freq.new(@members,{:rows=>'ministry', :title=>"Active SIM Nigeria Members by Ministry"})
     locations = Freq.new(@members,{:rows=>'residence_location', :title=>"Active SIM Nigeria Members by Residence"})

@@ -29,7 +29,7 @@
         %td.label Temporary location
         %td= @record.temporary_location
         %td.label dates
-        %td= "#{@record.temporary_location_from_date.to_s(:short)} to #{@record.temporary_location_until_date.to_s(:short)}"
+        %td= "#{@record.temporary_location_from_date.to_s()} to #{@record.temporary_location_until_date.to_s()}"
     %tr
       - if can? :read, HealthData
         %td.label Allergies
