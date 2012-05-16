@@ -1,4 +1,6 @@
-- if @errors.any? 
+%h3 Error Section
+- if (@errors || []).any? 
+  = debug(@errors)
   #error_explanation
     %h2 
       = "Problem(s) prohibited this family from being saved:"

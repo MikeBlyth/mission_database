@@ -60,6 +60,15 @@ class FamiliesController < ApplicationController
     @children = (@head.children + new_children(@head,1)) if @head
   end
     
+  def do_new
+    super
+puts "**** @record.attributes=#{@record.attributes}"
+    @head = Member.new(:personnel_data=>PersonnelData.new)
+    @wife = Member.new(:personnel_data=>PersonnelData.new)
+    @children = new_children(@head,5)
+    @error_records = []
+  end
+    
 
 
   # Intercept record after it's been found by AS update process, before it's been changed, and
@@ -155,7 +164,6 @@ class FamiliesController < ApplicationController
       update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
       update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
 #puts "**** @error_records=#{@error_records}"
-      # NB @wife is not 'married' to head yet, nor has been checked that marriage will work
     end  
     # Add children
     if params[:member]  # for now, this is how children are listed (:member)
@@ -166,13 +174,12 @@ class FamiliesController < ApplicationController
         end # adding one child
       end # adding children
     end # if any children are specified
-#puts "**** @error_records=#{@error_records}"
+
     if @error_records.empty?
       redirect_to families_path
     else  # send back to user to try again
       @family.destroy  # remove the database entry for family and members
       respond_to do |format|
-  #      format.js {render :on_update_err, :locals => {:xhr => true}}
         format.html {render :new}
       end
     end    
