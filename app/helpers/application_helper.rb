@@ -134,6 +134,11 @@ class String
     return raw.gsub(/\A0/,Settings.contacts.local_country_code).gsub(/-|\.| /,'')
   end
 
+  def trunc(len=15)
+    short = self[0..len-1]
+    short += '...' if self > short
+    return short
+  end
 end
 
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on

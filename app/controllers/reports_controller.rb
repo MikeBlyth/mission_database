@@ -348,7 +348,7 @@ private
     data = {} 
     selected.each do |trip|
       data[trip.date.day] ||= {:text=>''}
-      data[trip.date.day][:text] << prefixes[trip.arrival?] + trip.member.full_name_short + "\n" 
+      data[trip.date.day][:text] << prefixes[trip.arrival?] + trip.traveler_name.trunc(18) + "\n" 
     end
     return data
   end # travel_calendar_data
