@@ -112,7 +112,6 @@ module SimTestHelper
     add_details(spouse) if head.spouse
     if params[:child]
       child = Factory(:child, :family=>family, :country=>head.country)
-      Factory(:personnel_data, :member=>child)
     end
     return family
   end

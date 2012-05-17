@@ -24,7 +24,7 @@ include SimTestHelper
       click_button "Update"
 #      puts page.driver.body
 #     puts page.find('#errorExplanation h2').to_s
-      page.should have_selector('li', :content=>"Birth date can't be in future!")
+      page.should have_content("Birth date can't be in future!")
       page.should have_selector('#tabs-head')  # Because we're still on edit page
     end
 
@@ -178,7 +178,8 @@ include SimTestHelper
         fill_in "record_name", :with => "Newman, Alfred Q."
         fill_in "SIM ID", :with => '01234'
         select 'Site', :from=>'Residence location'
-      end  
+      end   
+
 
       within ("#tabs-children") do
         child_id = @family.children.first.id.to_s
@@ -275,4 +276,42 @@ include SimTestHelper
     end # editing family should change all values correctly
 
   end # describe by Admin
+  
+  describe 'tabbed form' do
+    before(:each) do
+      integration_test_sign_in(:admin=>true)
+      @family = factory_family_full :couple=>true, :child=>true
+      @family.update_attributes(:status=>Status.first)
+      @head = @family.head
+      @wife = @family.wife
+      @wife.primary_contact.update_attributes(:email_1=>'wife@x.com')
+      @wife.personnel_data.update_attributes(:qualifications => 'VXDK')
+      @child = @family.children[0]
+      @child_status = Factory(:employment_status, :child=>true)
+      @child.reload.personnel_data.reload.employment_status = @child_status
+      @child.personnel_data.save!
+    end  
+    
+    it 'shows data from all associated records' do
+      @wife.should_not be_nil
+@child.personnel_data.employment_status_id.should == @child_status.id
+@child.reload
+@child.personnel_data.employment_status_id.should == @child_status.id
+      visit edit_family_path(@family)
+# save_and_open_page
+      page.find('#head_last_name').value.should == @head.last_name
+      page.find('#head_contact_email_1').value.should == @head.primary_contact.email_1
+      page.find('#head_pers_qualifications').value.should == @head.personnel_data.qualifications
+      page.find('#wife_last_name').value.should == @wife.last_name
+      page.find('#wife_contact_email_1').value.should == @wife.primary_contact.email_1
+      page.find('#wife_pers_qualifications').value.should == @wife.personnel_data.qualifications
+      page.find('.school-input').value.should == @child.school
+      child_status_id = "#member_#{@child.id}_personnel_data_employment_status_id"
+      page.find(child_status_id).value.should == @child_status.id.to_s 
+      page.find('#record_status_id').value.should == @family.status_id.to_s
+      
+    end            
+
+  end # tabbed form
+
 end # describe Families

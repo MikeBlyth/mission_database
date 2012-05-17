@@ -206,7 +206,6 @@ FactoryGirl.define do
       short_name 'Shorty'
       birth_date '1980-01-01'
       status { |a| a.association :status }
-      residence_location { |a| a.association :location }
       work_location { |a| a.association :location }
       country { |a| a.association :country }
       ministry { |a| a.association :ministry } 

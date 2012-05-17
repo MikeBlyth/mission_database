@@ -55,11 +55,14 @@ class FamiliesController < ApplicationController
   # When creating the Edit form, fix up some stuff since we're using a customized form, not AS
   def do_edit
     super
-# puts "**** @record.attributes=#{@record.attributes}"
+#puts "**** @record.attributes=#{@record.attributes}"
+#puts "**** @record.head=#{@record.head}"
     @head = @record.head
     @head_contact = @head.primary_contact
     @wife = @record.wife 
     @wife_contact = @wife.primary_contact if @wife
+    @head_pers = @head.personnel_data
+    @wife_pers = @wife.personnel_data if @wife
     if @wife.nil? && @head.male?
       @wife = Member.new(:last_name=>@head.last_name, :personnel_data=>PersonnelData.new)
     end
