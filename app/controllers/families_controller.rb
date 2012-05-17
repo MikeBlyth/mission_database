@@ -70,6 +70,8 @@ class FamiliesController < ApplicationController
     super
     @head = Member.new(:personnel_data=>PersonnelData.new)
     @wife = Member.new(:personnel_data=>PersonnelData.new)
+    @head_pers = @head.personnel_data
+    @wife_pers = @wife.personnel_data
     @children = new_children(@head,5)
     @error_records = []
   end
@@ -78,8 +80,10 @@ class FamiliesController < ApplicationController
     update_and_check(member, member_params, error_recs)
     pers_rec = member.personnel_data || PersonnelData.new
     update_and_check(pers_rec, pers_params, error_recs)
+#puts "**** pers_rec.attributes=#{pers_rec.attributes}"
     contact_rec = member.primary_contact || member.contacts.new
     update_and_check(contact_rec, contact_params, error_recs)
+    return [member, pers_rec, contact_rec]
   end   
 
   # Need to remove these from params so that they don't get stuck onto form URL parameters.
@@ -114,7 +118,8 @@ class FamiliesController < ApplicationController
     @wife = @family.wife
     @error_records = []  # Keep list of the model records that had errors when updated
     if @head
-      update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
+      @head, @head_pers, @head_contact = 
+        update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
     end
     # If there ARE parameters defining wife, then create or update wife
     if params[:wife] && !params[:wife][:first_name].blank?
@@ -160,14 +165,19 @@ class FamiliesController < ApplicationController
     @error_records = []  # Keep list of the model records that had errors when updated
     @family = Family.new
     @head = Member.new(:family=>@family)
+    @wife_contact = Contact.new
+    @wife_pers = PersonnelData.new
     update_and_check(@family, params[:record], @error_records)
-    update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
+      @head, @head_pers, @head_contact = 
+        update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
+#puts "**** @head_pers.attributes=#{@head_pers.attributes}"
     @family.update_attributes(:head=>@head)   # Set family head
 
     # If there ARE parameters defining wife, then create wife
     if params[:wife] && !params[:wife][:first_name].blank?
       @wife = @head.create_wife 
-      update_one_member(@wife, params[:wife], @wife_pers, params[:wife_pers], @wife_contact, params[:wife_contact], @error_records)
+      @wife, @wife_pers, @wife_contact = 
+        update_one_member(@wife, params[:wife], @wife_pers, params[:wife_pers], @wife_contact, params[:wife_contact], @error_records)
     end  
     # Add children
     @children = []
@@ -189,6 +199,10 @@ class FamiliesController < ApplicationController
       # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
       remove_unneeded_keys(params)
       @family.destroy  # remove the database entry for family and members
+      @head.destroy
+      @wife.destroy if @wife
+      @children.each {|c| c.destroy} if @children
+      @children = (@children || []) + new_children(@head,5-@children.count)
       @head.personnel_data = PersonnelData.new
       @wife ||= Member.new(:family=>@family)
       @wife.personnel_data = PersonnelData.new

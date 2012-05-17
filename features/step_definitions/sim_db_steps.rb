@@ -347,7 +347,7 @@ Then /^the database should contain the new family$/ do
 end
 
 Then /^I should see a valid form for a new family$/ do
-#save_and_open_page( )
+save_and_open_page( )
   page.should have_content "Create Family"
   find_field("record[last_name]").value.blank?.should be true
   find_field("First name").value.blank?.should be true
@@ -405,9 +405,6 @@ Given /^that I am updating a family$/ do
   seed_tables
   construct_family
   add_details(@head)
-  @family.update_attributes(:residence_location=>@location, :status=>@status)
-  @head.status_id.should == @status.id
-  @head.residence_location_id.should == @location.id
   visit edit_family_path :id=>@family.id
 end
 
