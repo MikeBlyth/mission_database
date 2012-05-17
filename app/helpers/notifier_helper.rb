@@ -191,7 +191,7 @@ MEMBERINFO
       s << "#{m.short}: #{missing.join('; ')}" unless missing.empty?
     end
     if family.head.personnel_data.est_end_of_service.blank? &&
-       family.head.employment_status.org_member
+       family.head.org_member
       s << "Note: please estimate or guess when you plan to leave #{Settings.site.org}\nif it is within the next five years"
     end
     return s

@@ -238,6 +238,29 @@ describe Member do
       @member.name_optional_last.should == 'Kate S. Smith'
     end
     
+    describe "'short' method (short or first name)" do
+      
+      it 'returns short_name when it exists' do
+        @member.short.should == @member.short_name  # it's Katie by default in this testing
+      end
+      
+      it 'returns first_name when short_name is nil' do
+        @member.short_name = nil
+        @member.short.should == @member.first_name
+      end
+      
+      it 'returns first_name when short_name is empty string' do
+        @member.short_name = ''
+        @member.short.should == @member.first_name
+      end
+      
+      it 'returns first_name when short_name is blanks' do
+        @member.short_name = '  '
+        @member.short.should == @member.first_name
+      end
+    end # short method (short or first name)
+      
+    
   end
 
   describe "marrying: " do
