@@ -4,11 +4,9 @@ $( "#tabs" ).tabs();
 });
 </script>
 -# Set up some convenience variables
-- @head_contact = @head.primary_contact
 - @head_pers = @head.personnel_data
 - if @wife
   - @wife_pers = @wife.personnel_data 
-  - @wife_contact = @wife.primary_contact 
   - wifeclass = @wife.first_name.blank? ? 'wife_hidden' : 'wife_visible'
 
 <div >

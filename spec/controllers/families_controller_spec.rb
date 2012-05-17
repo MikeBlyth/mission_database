@@ -76,7 +76,7 @@ include SimTestHelper
       assigns[:head].personnel_data.should_not be_nil
       assigns[:wife].personnel_data.should_not be_nil
       assigns[:children].should_not be_nil
-      puts assigns[:children][0].attributes
+#      puts assigns[:children][0].attributes
       
     end
 
@@ -134,7 +134,32 @@ include SimTestHelper
   #puts "**** assigns[:error_records]=#{assigns[:error_records]}"
         response.should redirect_to(:action=>'index')
       end
-        
+
+      it 'adds phone numbers and email for head' do
+        @params[:head_contact] = {:phone_1 => '+2348088888888', :phone_2 => '0802 222 2222',
+                                  :email_1 => 'x@y.com', :email_2 => 'cat@dog.com'}
+        post :create, @params
+        head = family = Family.first.head
+        head.primary_contact.should_not be_nil
+        head.primary_contact.phone_1.should == '+2348088888888'
+        head.primary_contact.phone_2.should == '+2348022222222'
+        head.primary_contact.email_1.should == 'x@y.com'
+        head.primary_contact.email_2.should == 'cat@dog.com'
+      end
+                
+      it 'adds phone numbers and email for head' do
+        @params[:wife] = {:first_name=>'Sally', :last_name=>'Jones'}
+        @params[:wife_contact] = {:phone_1 => '+2348088888888', :phone_2 => '0802 222 2222',
+                                  :email_1 => 'x@y.com', :email_2 => 'cat@dog.com'}
+        post :create, @params
+        wife = family = Family.first.wife
+        wife.primary_contact.should_not be_nil
+        wife.primary_contact.phone_1.should == '+2348088888888'
+        wife.primary_contact.phone_2.should == '+2348022222222'
+        wife.primary_contact.email_1.should == 'x@y.com'
+        wife.primary_contact.email_2.should == 'cat@dog.com'
+      end
+                
     end # when successful
     
     describe 'handles errors' do

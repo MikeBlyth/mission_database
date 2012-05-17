@@ -56,7 +56,7 @@ describe AdminController do
 
       it "removes invalid association" do
         @member.save
-        %w(status country work_location residence_location spouse ministry).each do |link|
+        %w(status country work_location spouse ministry).each do |link|
           @member.update_attribute(link+"_id", 999)
           controller.clean_members(true).should_not =~ /no errors/
           @member.reload.send(link+"_id").should be_nil

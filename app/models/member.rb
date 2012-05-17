@@ -597,6 +597,12 @@ class Member < ActiveRecord::Base
     return primary
   end
 
+  def create_contact(options={})
+    defaults = {:contact_type_id => Settings.contacts.primary_contact_type_code}
+    self.contacts.create(defaults.merge(options))
+  end
+    
+
   # Email address in member's primary contact record. Return one only with email_1 having priority.
   def email
     self.primary_contact ? (primary_contact.email_1 || primary_contact.email_2) : nil

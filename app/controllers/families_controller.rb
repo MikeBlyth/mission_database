@@ -57,7 +57,9 @@ class FamiliesController < ApplicationController
     super
 # puts "**** @record.attributes=#{@record.attributes}"
     @head = @record.head
+    @head_contact = @head.primary_contact
     @wife = @record.wife 
+    @wife_contact = @wife.primary_contact if @wife
     if @wife.nil? && @head.male?
       @wife = Member.new(:last_name=>@head.last_name, :personnel_data=>PersonnelData.new)
     end
@@ -72,7 +74,23 @@ class FamiliesController < ApplicationController
     @error_records = []
   end
     
+  def update_one_member(member, member_params, pers_rec, pers_params, contact_rec, contact_params, error_recs)
+    update_and_check(member, member_params, error_recs)
+    pers_rec = member.personnel_data || PersonnelData.new
+    update_and_check(pers_rec, pers_params, error_recs)
+    contact_rec = member.primary_contact || member.contacts.new
+    update_and_check(contact_rec, contact_params, error_recs)
+  end   
 
+  # Need to remove these from params so that they don't get stuck onto form URL parameters.
+  # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
+  def remove_unneeded_keys(params)
+      [:head, :head_pers, :head_contact,
+        :wife, :wife_pers, :wife_contact,
+        :record, :family, :member,
+        :authenticity_token
+      ].each {|key| params.delete key}
+  end
 
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
@@ -83,7 +101,6 @@ class FamiliesController < ApplicationController
 #    puts "Params=#{params}, id=#{params[:id]}"
 #    puts "==============================================================="
     @family = Family.find(params[:id])
-
     # Delete :status_id and :residence_location_id if they have not changed, because
     #   changed ones only will be propagated to the dependent family members.    
     if params[:record][:status_id] == @family.status_id  # i.e. it's unchanged
@@ -97,16 +114,12 @@ class FamiliesController < ApplicationController
     @wife = @family.wife
     @error_records = []  # Keep list of the model records that had errors when updated
     if @head
-      update_and_check(@head, params[:head], @error_records)
-      update_and_check(@head.personnel_data, params[:head_pers], @error_records)
-      update_and_check(@head.primary_contact, params[:head_contact], @error_records)
+      update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
     end
     # If there ARE parameters defining wife, then create or update wife
     if params[:wife] && !params[:wife][:first_name].blank?
       @wife ||= @head.create_wife # Need to create one if it doesn't exist
-      update_and_check(@wife, params[:wife], @error_records)
-      update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
-      update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
+      update_one_member(@wife, params[:wife], @wife_pers, params[:wife_pers], @wife_contact, params[:wife_contact], @error_records)
     end  
     # Update the children
     if params[:member]  # for now, this is how children are listed (:member)
@@ -133,13 +146,7 @@ class FamiliesController < ApplicationController
     else  # send back to user to try again
       @record = @family
       @children = @head.children + new_children(@head,1)
-      # Need to remove these from params so that they don't get stuck onto form URL parameters.
-      # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
-      [:head, :head_pers, :head_contact,
-        :wife, :wife_pers, :wife_contact,
-        :record, :family, :member,
-        :authenticity_token
-      ].each {|key| params.delete key}
+      remove_unneeded_keys(params)
       respond_to do |format|
         format.js {render :on_update_err, :locals => {:xhr => true}}
         format.html {render :update}
@@ -154,18 +161,13 @@ class FamiliesController < ApplicationController
     @family = Family.new
     @head = Member.new(:family=>@family)
     update_and_check(@family, params[:record], @error_records)
-    update_and_check(@head, params[:head], @error_records)
+    update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
     @family.update_attributes(:head=>@head)   # Set family head
-    update_and_check(@head.personnel_data, params[:head_pers], @error_records)
-    update_and_check(@head.primary_contact, params[:head_contact], @error_records)
 
     # If there ARE parameters defining wife, then create wife
     if params[:wife] && !params[:wife][:first_name].blank?
       @wife = @head.create_wife 
-      update_and_check(@wife, params[:wife], @error_records)
-      update_and_check(@wife.personnel_data, params[:wife_pers], @error_records)
-      update_and_check(@wife.primary_contact, params[:wife_contact], @error_records)
-#puts "**** @error_records=#{@error_records}"
+      update_one_member(@wife, params[:wife], @wife_pers, params[:wife_pers], @wife_contact, params[:wife_contact], @error_records)
     end  
     # Add children
     @children = []
@@ -185,11 +187,7 @@ class FamiliesController < ApplicationController
     else  # send back to user to try again
       # Need to remove these from params so that they don't get stuck onto form URL parameters.
       # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
-      [:head, :head_pers, :head_contact,
-        :wife, :wife_pers, :wife_contact,
-        :record, :family, :member,
-        :authenticity_token
-      ].each {|key| params.delete key}
+      remove_unneeded_keys(params)
       @family.destroy  # remove the database entry for family and members
       @head.personnel_data = PersonnelData.new
       @wife ||= Member.new(:family=>@family)
@@ -216,32 +214,6 @@ class FamiliesController < ApplicationController
     end
   end
   
-#  def do_create
-#    super
-##    if !@record.valid?
-##      puts "Invalid new family -- errors: #{@record.errors}"
-##        render :action => "create" 
-##      return
-##    end
-#    create_family_head(@record)
-#  end    
-#  
-#   # Creating a new family ==> Need to create the member record for head
-#  def create_family_head(record)
-#    head = Member.create(:name=>record.name, :last_name=>record.last_name, 
-#            :first_name=>record.first_name, 
-#            :middle_name => record.middle_name,
-#            :status_id=>record.status_id, 
-#            :residence_location_id=>record.residence_location_id, 
-#            :family_id =>record.id, :sex=>'M')
-#    if ! head.valid?
-#      errors.add(:head, "Unable to create head of family")
-#      raise ActiveRecord::Rollback
-#    end   
-#    record.update_attributes(:head => head)  # Record newly-created member as the head of family
-
-#  end
-
 # Generate a filter string for use in Family.where(conditions_for_collection)...
   def conditions_for_collection
     Status.filter_condition_for_group('families',session[:filter])
