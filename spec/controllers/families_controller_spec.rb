@@ -275,7 +275,7 @@ include SimTestHelper
     end
     
     it "single member (head) status should change when family status is changed" do
-      new_attributes = {'status_id' => @new_status.id} 
+      new_attributes = {'status_id' => @new_status.id.to_s} 
       @member.update_attribute(:spouse, nil)
       put :update, :id => @family.id, :record => new_attributes
       @family.reload.status.should == @new_status

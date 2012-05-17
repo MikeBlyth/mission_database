@@ -312,4 +312,9 @@ $( "#tabs" ).tabs();
           = main_form.label :residence_location_id, "Residence location"
           %br
           = main_form.select(:residence_location_id, location_choices(@record[:residence_location_id]), {:include_blank => true })    
+        %td
+          = main_form.label :status_id, "Status"
+          %br
+          - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
+          = main_form.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
 

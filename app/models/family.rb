@@ -39,7 +39,7 @@ class Family < ActiveRecord::Base
 
  # after_create :create_family_head_member
   after_save   :update_member_locations
-  after_save   :update_member_statuses
+  before_save   :update_member_statuses
 
   def to_label
     "* #{name}"
@@ -66,11 +66,9 @@ class Family < ActiveRecord::Base
   # This means that one can individualize locations of members, but individualized values will
   # be overwritten when the family status is changed again.
   def update_member_statuses
-#    if self.status != @previous_status
-#      self.members.where("spouse_id > 0 OR child OR id = ?", self.head_id).each {|m| m.update_attribute(:status, self.status)}
-# #      self.members.joins(:family).where('spouse_id > 0 OR child OR members.id = families.head_id').
-# #        update_all("members.status_id = #{self.status_id}")
-#    end  
+    if self.changed_attributes.has_key?('status_id')
+      self.dependents.each {|m| m.update_attribute(:status, self.status)}
+    end  
   end
 
   def dependents

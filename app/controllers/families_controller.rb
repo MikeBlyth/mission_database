@@ -101,18 +101,13 @@ class FamiliesController < ApplicationController
   #   (Family.rb update_member_locations and update_member_status update all the family members
   #   if the _family_ location or status has been changed)
   def update
-#    puts "==============================================================="
-#    puts "Params=#{params}, id=#{params[:id]}"
-#    puts "==============================================================="
+#    puts "\n**** Params=#{params}, id=#{params[:id]}"
     @family = Family.find(params[:id])
     # Delete :status_id and :residence_location_id if they have not changed, because
     #   changed ones only will be propagated to the dependent family members.    
-    if params[:record][:status_id] == @family.status_id  # i.e. it's unchanged
+    if params[:record][:status_id].to_s == @family.status_id.to_s  # i.e. it's unchanged
       params[:record].delete :status_id
     end
-#*    if params[:record][:residence_location_id] == @family.residence_location_id
-#*      params[:record].delete :residence_location_id
-#*    end
 
     @head = @family.head
     @wife = @family.wife
@@ -217,9 +212,6 @@ class FamiliesController < ApplicationController
   # apply them to each of the members. 
   def update_members_status_and_location(family)
     updates = {}
-#*    if params[:record][:residence_location_id]
-#*      updates[:residence_location_id] = params[:record][:residence_location_id]
-#*    end
     if params[:record][:status_id]
       updates[:status_id] = params[:record][:status_id]
     end
