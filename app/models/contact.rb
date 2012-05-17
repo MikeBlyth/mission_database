@@ -48,7 +48,12 @@ class Contact < ActiveRecord::Base
     return self.where("contacts.updated_at > ?", Date.today - since.days).includes(:member)
   end
 
+  # This lets us sort contacts according to the name of the member
   def <=>(other)
+    # All contacts should belong to a member, but in case there are orphans, check first for nil
+    return 0 if self.member.nil? && other.member.nil?
+    return 1 if other.member.nil?
+    return -1 if self.member.nil?
     self.member.name <=> other.member.name
   end
 
