@@ -63,6 +63,8 @@ class FamiliesController < ApplicationController
     @wife_contact = @wife.primary_contact if @wife
     @head_pers = @head.personnel_data
     @wife_pers = @wife.personnel_data if @wife
+    @current_term = @head.most_recent_term || FieldTerm.new(:member=>@head)
+    @next_term = @head.pending_term || FieldTerm.new(:member=>@head)
     if @wife.nil? && @head.male?
       @wife = Member.new(:last_name=>@head.last_name, :personnel_data=>PersonnelData.new)
     end
@@ -76,7 +78,8 @@ class FamiliesController < ApplicationController
     @head_pers = @head.personnel_data
     @wife_pers = @wife.personnel_data
     @children = new_children(@head,5)
-    @error_records = []
+    @current_term = FieldTerm.new(:member=>@head)
+    @next_term = FieldTerm.new(:member=>@head)
   end
     
   def update_one_member(member, member_params, pers_rec, pers_params, contact_rec, contact_params, error_recs)
@@ -99,18 +102,29 @@ class FamiliesController < ApplicationController
       ].each {|key| params.delete key}
   end
 
+  def update_field_terms(params)
+puts "**** update_field_terms w params=#{params}"
+    if params[:id]
+      FieldTerm.find(params[:id]).update_attributes(params)
+    end
+  end
+
   # Intercept record after it's been found by AS update process, before it's been changed, and
   #   save the existing residence_location and status so Family model can deal with any changes
   #   (Family.rb update_member_locations and update_member_status update all the family members
   #   if the _family_ location or status has been changed)
   def update
-#    puts "\n**** Params=#{params}, id=#{params[:id]}"
+    puts "\n**** Params=#{params}, id=#{params[:id]}"
     @family = Family.find(params[:id])
     # Delete :status_id and :residence_location_id if they have not changed, because
     #   changed ones only will be propagated to the dependent family members.    
     if params[:record][:status_id].to_s == @family.status_id.to_s  # i.e. it's unchanged
       params[:record].delete :status_id
     end
+####
+update_field_terms(params[:current_term])
+update_field_terms(params[:next_term])
+
 
     @head = @family.head
     @wife = @family.wife

@@ -5,10 +5,6 @@ $( "#tabs" ).tabs();
 </script>
 -# Set up some convenience variables
 - @head_pers ||= PersonnelData.new
-- @current_term = FieldTerm.new(:end_date=>Date.today+50, :end_estimated=>true)
-- @current_term.id = 50
-- @next_term = FieldTerm.new(:start_date=>Date.today+250)
-- @next_term.id = 60
 - if @wife
   - @wife_pers ||= PersonnelData.new
   - wifeclass = @wife.first_name.blank? ? 'wife_hidden' : 'wife_visible'

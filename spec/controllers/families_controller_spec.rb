@@ -434,6 +434,23 @@ include SimTestHelper
       @family.wife.first_name.should == 'Grace'
     end            
     
+    describe 'updates field term dates' do
+      before(:each) do
+        @current_term = @head.field_terms.create(:end_date=>Date.today+50, :end_estimated=>true)
+        @next_term = @head.field_terms.create(:start_date=>Date.today+250)
+      end
+      
+      it 'when new dates are given' do
+        date_1 = Date.today+2
+        date_2 = Date.today+100
+        updates = {:current_term=>{:end_date=>date_1.strftime("%F"), :id=>@current_term.id},
+                   :next_term=>{:start_date=>date_2.strftime("%F"), :id=>@next_term.id} }
+        put :update, @params.merge(updates)
+        @current_term.reload.end_date.should == date_1           
+        @next_term.reload.start_date.should == date_2
+      end
+    end #     'updates field term dates'
+           
   end # updating a family
     
 end
