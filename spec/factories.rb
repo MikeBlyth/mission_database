@@ -135,16 +135,12 @@ FactoryGirl.define do
 
   factory :field_term_current, :parent => :field_term do
     start_date Date.today - 180 #days
-    est_start_date Date.today - 180 #days
     end_date nil
-    est_end_date nil
   end
 
   factory :field_term_future, :parent => :field_term do
-    start_date nil
-    est_start_date Date.today + 180 #days
+    start_date Date.today + 180
     end_date nil
-    est_end_date nil  
   end
 
   factory :health_data do

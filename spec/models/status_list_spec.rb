@@ -55,21 +55,6 @@ describe StatusList do
       @status_list[@member.id].status.should == @status_field
     end
 
-    it 'changes status to "on field" on estimated start of new term' do
-      new_term = Factory(:field_term, :est_start_date=>Date.tomorrow,
-                        :start_date => nil, :member=>@member)
-      @status_list[@member.id].status.should == @status_home_assignment
-      @status_list.advance
-      @status_list[@member.id].status.should == @status_field
-    end
-
-    it 'does not change to "on field" based on est_start date if start_date is later' do
-      new_term = Factory(:field_term, :est_start_date=>Date.tomorrow, :start_date=>Date.today+10.days, :member=>@member)
-      @status_list[@member.id].status.should == @status_home_assignment
-      @status_list.advance
-      @status_list[@member.id].status.should == @status_home_assignment
-    end
-
     # This would apply to overlapping (incorrect) field terms, or when est_start_date != start_date,
     # or if a travel record has already had the effect of changing the status to home assignment
     it 'leaves "home assignment" unchanged on end of term' do
@@ -83,15 +68,6 @@ describe StatusList do
       @member.update_attribute(:status, @status_field)  # start with member on the field
       @status_list = StatusList.new  # have to reset to get the new value installed
       new_term = Factory(:field_term, :end_date=>Date.tomorrow, :member=>@member)
-      @status_list[@member.id].status.should == @status_field
-      @status_list.advance
-      @status_list[@member.id].status.should == @status_home_assignment
-    end
-
-    it 'changes status to "home assignment" at estimated end of term' do
-      @member.update_attribute(:status, @status_field)  # start with member on the field
-      @status_list = StatusList.new  # have to reset to get the new value installed
-      new_term = Factory(:field_term, :end_date => nil, :est_end_date=>Date.tomorrow, :member=>@member)
       @status_list[@member.id].status.should == @status_field
       @status_list.advance
       @status_list[@member.id].status.should == @status_home_assignment

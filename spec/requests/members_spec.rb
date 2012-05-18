@@ -150,8 +150,6 @@ include SimTestHelper
       within("div##{ft_div}") do # Field term subform
         fill_in 'Start date', :with => field_term_start.strftime("%F")
         fill_in 'End date', :with => field_term_end.strftime("%F")
-        fill_in 'Est start date', :with => est_field_term_start.strftime("%F")
-        fill_in 'Est end date', :with => est_field_term_end.strftime("%F")
         select 'Ministry', :from=>'Ministry'
         select 'Site'#, :from=>'record_primary_work_location'
         select 'Career'
@@ -191,8 +189,6 @@ include SimTestHelper
       f.start_date.should == field_term_start
       f.end_date.should == field_term_end
       f.ministry.description.should =~ /Min/
-      f.est_start_date.should == est_field_term_start
-      f.est_end_date.should == est_field_term_end
       f.employment_status.description.should =~ /Career/
       f.primary_work_location.description.should  =~ /Site/
     end

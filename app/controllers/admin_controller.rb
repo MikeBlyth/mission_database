@@ -205,7 +205,7 @@ class AdminController < ActionController::Base
 
   def clean_field_terms(fix=false)
     before_report 'Field Terms'
-    empty_terms = FieldTerm.where(:start_date=>nil, :end_date=>nil, :est_start_date=>nil, :est_end_date=>nil)
+    empty_terms = FieldTerm.where(:start_date=>nil, :end_date=>nil)
     @report << "There are #{empty_terms.count} 'empty' field term records (no dates) to be deleted.\n\n" unless
       empty_terms.empty?
     empty_terms.delete_all if fix

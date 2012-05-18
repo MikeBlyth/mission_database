@@ -249,11 +249,11 @@ class Travel < ActiveRecord::Base
     match_index = terms.find_index do |f| 
       if arrival
         # ... has starting date "near" the travel date
-        (f.best_start_date - self.date).abs < max_difference
+        (f.start_date - self.date).abs < max_difference
       else
         # ... starts before travel and is open-ended or has an end_date "near" the travel date.
-        f.best_start_date < self.date && 
-          (f.best_end_date.nil? || (f.best_end_date - self.date).abs < max_difference)
+        f.start_date < self.date && 
+          (f.end_date.nil? || (f.end_date - self.date).abs < max_difference)
       end
     end
     match_index ? terms[match_index] : nil       

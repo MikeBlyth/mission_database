@@ -119,10 +119,10 @@ SUMMARYHEADER
     p = m.personnel_data
 info = <<"FIELDINFO"
 Current Term
-  Start or projected start: #{f.start_date || f.est_start_date || MISSING}      
-  End or projected end: #{f.end_date || f.est_end_date || MISSING}     
+  Start or projected start: #{f.start_date || MISSING}      
+  End or projected end: #{f.end_date || MISSING}     
 Next Term
-  Projected start: #{pending.est_start_date || pending.start_date || ''}
+  Projected start: #{pending.start_date || ''}
 Date Active with #{Settings.site.parent_org}: #{p.date_active || MISSING}
 Projected end of #{Settings.site.org} service: #{p.est_end_of_service || MISSING}
 FIELDINFO
@@ -170,11 +170,11 @@ MEMBERINFO
           required_data << [p.date_active, "date active with #{Settings.site.parent_org}"] 
         # For those on field
         if m.status && m.status.on_field && f.end_date.blank?
-          required_data << [f.est_end_date, 'estimated end of current term']
+          required_data << [nil, 'estimated end of current term']
         end
         # On home assignment      
         if m.status && m.status.code == 'home_assignment' && 
-              (pending.start_date.blank? && pending.est_start_date.blank?)  # on furlough but no start-of-next-term
+              (pending.start_date.blank?)  # on furlough but no start-of-next-term
           required_data << [nil, 'estimated start of next term'] # nil 'cause we already know it's missing
         end               
       end

@@ -35,57 +35,10 @@ describe FieldTerm do
     
   end
 
-  describe 'gives best_start_date as start_date or, if absent, est_start_date' do
-
-    it 'uses start_date if est_start_date not present' do
-     term = Factory.stub(:field_term, :start_date=>Date.today, :est_start_date=>nil)
-     term.best_start_date.should == Date.today
-    end
-
-    it 'uses start_date if est_start_date is different' do
-     term = Factory.stub(:field_term, :start_date=>Date.today, :est_start_date=>Date.tomorrow)
-     term.best_start_date.should == Date.today
-    end
-
-    it 'uses est_start_date if start_date is not present' do
-     term = Factory.stub(:field_term, :start_date=>nil, :est_start_date=>Date.tomorrow)
-     term.best_start_date.should == Date.tomorrow
-    end
-
-    it 'is nil if neither start_date nor est_start_date is present' do
-     term = Factory.stub(:field_term, :start_date=>nil, :est_start_date=>nil)
-     term.best_start_date.should be_nil
-    end
-  end # gives best_start_date
-
-  describe 'gives best_end_date as end_date or, if absent, est_end_date' do
-
-    it 'uses end_date if est_end_date not present' do
-     term = Factory.stub(:field_term, :end_date=>Date.today, :est_end_date=>nil)
-     term.best_end_date.should == Date.today
-    end
-
-    it 'uses end_date if est_end_date is different' do
-     term = Factory.stub(:field_term, :end_date=>Date.today, :est_end_date=>Date.tomorrow)
-     term.best_end_date.should == Date.today
-    end
-
-    it 'uses est_end_date if end_date is not present' do
-     term = Factory.stub(:field_term, :end_date=>nil, :est_end_date=>Date.tomorrow)
-     term.best_end_date.should == Date.tomorrow
-    end
-
-    it 'is nil if neither end_date nor est_end_date is present' do
-     term = Factory.stub(:field_term, :end_date=>nil, :est_end_date=>nil)
-     term.best_end_date.should be_nil
-    end
-  end # gives best_end_date
-
   describe 'identifies current, past and future terms' do
     before(:each) do
       @future_1 = Factory.stub(:field_term, :start_date=>Date.today+2.days, :end_date=>nil)
-      @future_2 = Factory.stub(:field_term, :start_date=>nil, :est_start_date=>Date.today+2.days, 
-                               :end_date=>Date.tomorrow + 1.year)
+      @future_2 = Factory.stub(:field_term, :start_date=>Date.today+2.days, :end_date=>Date.tomorrow + 1.year)
       @current_1 = Factory.stub(:field_term, :start_date=>Date.today-2.days, :end_date=>nil)
       @current_2 = Factory.stub(:field_term, :start_date=>Date.today-2.days, :end_date=>Date.tomorrow + 1.year)
       @current_3 = Factory.stub(:field_term, :start_date=>nil, :end_date=>Date.tomorrow + 1.year)
@@ -120,14 +73,10 @@ describe FieldTerm do
     a = FieldTerm.new(:start_date => today)
     b = FieldTerm.new(:start_date => long_ago)
     (a <=> b).should == 1
-    b.est_start_date = long_ago
+    b.end_date = long_ago
     b.start_date = nil
     (a <=> b).should == 1
     b.end_date = long_ago
-    b.est_start_date = nil
-    (a <=> b).should == 1
-    b.end_date = nil
-    b.est_end_date = long_ago
     (a <=> b).should == 1
     a.start_date = nil
     a.end_date = today        

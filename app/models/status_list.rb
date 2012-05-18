@@ -16,12 +16,11 @@ class StatusList < Hash
   
   def advance
     @date += 1
-    transitions = FieldTerm.where("start_date = ? OR end_date = ? OR est_start_date = ? or est_end_date = ?",  
-            @date, @date, @date, @date)
+    transitions = FieldTerm.where("start_date = ? OR end_date = ?", @date, @date)
     transitions.each do |t|
       next unless self[t.member_id]  #******************** CHANGE!
-      start_date = t.start_date || t.est_start_date
-      end_date = t.end_date || t.est_end_date
+      start_date = t.start_date
+      end_date = t.end_date
       if start_date == @date 
         self[t.member_id].status = Status.where("on_field").first
       elsif end_date == @date

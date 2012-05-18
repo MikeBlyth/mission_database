@@ -254,7 +254,7 @@ class Member < ActiveRecord::Base
   
   # Use organization guidelines to estimate length of HA based on how long current term is/was
   def estimate_home_assignment_duration(term_start, term_finish)
-    term_duration = most_recent_term.best_end_date - most_recent_term.best_start_date 
+    term_duration = most_recent_term.end_date - most_recent_term.start_date 
     est_ha_duration = (term_duration-365)/3
     return est_ha_duration
   end
@@ -264,15 +264,15 @@ class Member < ActiveRecord::Base
   #  return [nil, nil] unless current_term
     start = ending = eot_status = end_estimated = nil
     if pending_term
-      if pending_term.best_start_date
-        ending = pending_term.best_start_date - 1
+      if pending_term.start_date
+        ending = pending_term.start_date - 1
       end
     end        
     if most_recent_term
-      best_end_date = most_recent_term.best_end_date
-      best_start_date = most_recent_term.best_start_date
-      if best_end_date
-        start = best_end_date + 1
+      end_date = most_recent_term.end_date
+      start_date = most_recent_term.start_date
+      if end_date
+        start = end_date + 1
         if self.personnel_data.est_end_of_service  # Is there an estimated end-of-service/retirement date?
           if start > self.personnel_data.est_end_of_service - 360  # consider retiring if within a year of date
             eot_status = 'final'
@@ -280,8 +280,8 @@ class Member < ActiveRecord::Base
           end
         end
         # If end of HA not specified, estimate it using org. formula for HA duration
-        if ending.nil? && most_recent_term.best_start_date
-          ending = start + estimate_home_assignment_duration(best_start_date, best_end_date)
+        if ending.nil? && most_recent_term.start_date
+          ending = start + estimate_home_assignment_duration(start_date, end_date)
           end_estimated = '(est)'
         end
       end
