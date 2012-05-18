@@ -283,6 +283,8 @@ include SimTestHelper
       @family = factory_family_full :couple=>true, :child=>true
       @family.update_attributes(:status=>Status.first)
       @head = @family.head
+      @current_term = @head.field_terms.create(:end_date=>Date.today+50, :end_estimated=>true)
+      @next_term = @head.field_terms.create(:start_date=>Date.today+250)
       @wife = @family.wife
       @wife.primary_contact.update_attributes(:email_1=>'wife@x.com')
       @wife.personnel_data.update_attributes(:qualifications => 'VXDK')
@@ -294,11 +296,7 @@ include SimTestHelper
     
     it 'shows data from all associated records' do
       @wife.should_not be_nil
-@child.personnel_data.employment_status_id.should == @child_status.id
-@child.reload
-@child.personnel_data.employment_status_id.should == @child_status.id
       visit edit_family_path(@family)
-# save_and_open_page
       page.find('#head_last_name').value.should == @head.last_name
       page.find('#head_contact_email_1').value.should == @head.primary_contact.email_1
       page.find('#head_pers_qualifications').value.should == @head.personnel_data.qualifications
@@ -309,7 +307,9 @@ include SimTestHelper
       child_status_id = "#member_#{@child.id}_personnel_data_employment_status_id"
       page.find(child_status_id).value.should == @child_status.id.to_s 
       page.find('#record_status_id').value.should == @family.status_id.to_s
-      
+      page.find('#current_term_end_date').value.should == @current_term.end_date.to_s
+      page.find('#next_term_start_date').value.should == @next_term.start_date.to_s
+      page.find("#current_term_end_estimated").should be_checked
     end            
 
   end # tabbed form
