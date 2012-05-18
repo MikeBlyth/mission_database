@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110611203047
+# Schema version: 20120518075102
 #
 # Table name: field_terms
 #
@@ -10,12 +10,12 @@
 #  ministry_id              :integer
 #  start_date               :date
 #  end_date                 :date
-#  est_start_date           :date
-#  est_end_date             :date
 #  created_at               :datetime
 #  updated_at               :datetime
 #  beginning_travel_id      :integer
 #  ending_travel_id         :integer
+#  end_estimated            :boolean
+#  start_estimated          :boolean
 #
 
 class FieldTerm < ActiveRecord::Base

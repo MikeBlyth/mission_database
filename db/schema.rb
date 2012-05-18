@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120427150752) do
+ActiveRecord::Schema.define(:version => 20120518075102) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -143,12 +143,12 @@ ActiveRecord::Schema.define(:version => 20120427150752) do
     t.integer  "ministry_id"
     t.date     "start_date"
     t.date     "end_date"
-    t.date     "est_start_date"
-    t.date     "est_end_date"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "beginning_travel_id"
     t.integer  "ending_travel_id"
+    t.boolean  "end_estimated"
+    t.boolean  "start_estimated"
   end
 
   create_table "health_data", :force => true do |t|
