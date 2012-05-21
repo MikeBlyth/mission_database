@@ -33,6 +33,19 @@ module ApplicationHelper
       end
     end
 
+  # Compare a string date with the date in object.method 
+  # Return true if the string represents the same date in any "to_s" format
+  def same_date(object, new_date_string, method, format=:default)
+    return new_date_string.empty? if (object.nil? || (object.send method).nil? )
+#puts "**** new_date_string=#{new_date_string}"
+#puts "****(object.send method).to_s(format) =#{(object.send method).to_s(format)}"
+    existing_date = object.send method
+    return true if new_date_string == (existing_date).to_s(format)
+    # even if it didn't match default, check if it matches other formats
+    Date::DATE_FORMATS.each {|f| return true if new_date_string ==  existing_date.to_s(f[0])}
+    return false
+  end
+
     def opposite_sex(s)
       return :male if s == :female
       return :female if s == :male

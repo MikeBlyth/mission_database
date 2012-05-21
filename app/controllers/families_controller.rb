@@ -102,11 +102,24 @@ class FamiliesController < ApplicationController
       ].each {|key| params.delete key}
   end
 
-  def update_field_terms(params)
-puts "**** update_field_terms w params=#{params}"
-    if params[:id]
-      FieldTerm.find(params[:id]).update_attributes(params)
+  def update_field_terms(family, params)
+    return if params.nil? || (params[:end_date].blank? && params[:start_date].blank?)
+    id = params.delete('id')
+    wife = family.wife
+    head = family.head
+    if params[:end_date]
+      which_date = :end_date
+      head_term = head.most_recent_term || head.field_terms.new
+      wife_term = (wife.most_recent_term || wife.field_terms.new) if wife
+    else  
+      which_date = :start_date
+      head_term = head.pending_term || head.field_terms.new
+      wife_term = (wife.pending_term || wife.field_terms.new) if wife
     end
+#    current_end_date = head.most_recent_term ? head.most_recent_term.end_date : nil
+    return if same_date(head_term, params[which_date], which_date)
+    head_term.update_attributes params
+    wife_term.update_attributes params if wife
   end
 
   # Intercept record after it's been found by AS update process, before it's been changed, and
@@ -114,17 +127,13 @@ puts "**** update_field_terms w params=#{params}"
   #   (Family.rb update_member_locations and update_member_status update all the family members
   #   if the _family_ location or status has been changed)
   def update
-    puts "\n**** Params=#{params}, id=#{params[:id]}"
+#    puts "\n**** Params=#{params}, id=#{params[:id]}"
     @family = Family.find(params[:id])
     # Delete :status_id and :residence_location_id if they have not changed, because
     #   changed ones only will be propagated to the dependent family members.    
     if params[:record][:status_id].to_s == @family.status_id.to_s  # i.e. it's unchanged
       params[:record].delete :status_id
     end
-####
-update_field_terms(params[:current_term])
-update_field_terms(params[:next_term])
-
 
     @head = @family.head
     @wife = @family.wife
@@ -155,8 +164,15 @@ update_field_terms(params[:next_term])
       end
     end
     update_and_check(@family, params[:record], @error_records)
+
     # May need to update data for family members, based on changes in corresponding fields for family
-    update_members_status_and_location(@family)
+    update_members_status(@family)
+
+    # Apply to head and spouse any changes to current_term.end_date or next_term.start_date
+    #  from Family tab. These _override_ any changes made on the head or wife pages
+    update_field_terms(@family, params[:current_term])
+    update_field_terms(@family, params[:next_term])
+
 
     if @error_records.empty?
       redirect_to families_path
@@ -227,7 +243,7 @@ update_field_terms(params[:next_term])
 
   # If a (residence_)location or status have been specified for the family, then
   # apply them to each of the members. 
-  def update_members_status_and_location(family)
+  def update_members_status(family)
     updates = {}
     if params[:record][:status_id]
       updates[:status_id] = params[:record][:status_id]

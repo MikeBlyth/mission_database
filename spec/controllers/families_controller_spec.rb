@@ -436,21 +436,104 @@ include SimTestHelper
     
     describe 'updates field term dates' do
       before(:each) do
-        @current_term = @head.field_terms.create(:end_date=>Date.today+50, :end_estimated=>true)
-        @next_term = @head.field_terms.create(:start_date=>Date.today+250)
+        @date_1_orig = Date.today+50
+        @date_2_orig = Date.today+250
+        @date_1 = Date.today+2
+        @date_2 = Date.today+100
+        @current_term = @head.field_terms.create(:end_date=>@date_1_orig, :end_estimated=>true)
+        @next_term = @head.field_terms.create(:start_date=>@date_2_orig)
       end
       
       it 'when new dates are given' do
-        date_1 = Date.today+2
-        date_2 = Date.today+100
-        updates = {:current_term=>{:end_date=>date_1.strftime("%F"), :id=>@current_term.id},
-                   :next_term=>{:start_date=>date_2.strftime("%F"), :id=>@next_term.id} }
+        updates = {:current_term=>{:end_date=>@date_1.strftime("%F"), :id=>@current_term.id},
+                   :next_term=>{:start_date=>@date_2.strftime("%F"), :id=>@next_term.id} }
         put :update, @params.merge(updates)
-        @current_term.reload.end_date.should == date_1           
-        @next_term.reload.start_date.should == date_2
+        @current_term.reload.end_date.should == @date_1           
+        @next_term.reload.start_date.should == @date_2
       end
+
+      it 'of wife as well' do
+        updates = {:current_term=>{:end_date=>@date_1.strftime("%F"), :id=>@current_term.id},
+                   :next_term=>{:start_date=>@date_2.strftime("%F"), :id=>@next_term.id} }
+        @wife = @head.create_wife
+        @wife.field_terms.create(:end_date=>Date.today+50, :end_estimated=>true)
+        @wife.field_terms.create(:start_date=>Date.today+250)
+        put :update, @params.merge(updates)
+        @wife.reload.most_recent_term.end_date.should == @date_1           
+        @wife.pending_term.start_date.should == @date_2
+      end
+      
+      it 'creates field_term records if needed for head and wife' do
+        @head.field_terms.destroy_all
+        @wife = @head.create_wife
+        updates = {:current_term=>{:end_date=>@date_1.strftime("%F")},
+                   :next_term=>{:start_date=>@date_2.strftime("%F")} }
+        put :update, @params.merge(updates)
+        @head.reload.most_recent_term.end_date.should == @date_1           
+        @head.pending_term.start_date.should == @date_2
+        @wife.reload.most_recent_term.end_date.should == @date_1           
+        @wife.pending_term.start_date.should == @date_2
+      end
+      
+      it 'does not update field_term record if new dates are blank' do
+        updates = {:current_term=>{:end_date=>"", :id=>@current_term.id},
+                   :next_term=>{:start_date=>"", :id=>@next_term.id} }
+        put :update, @params.merge(updates)
+        @head.reload.most_recent_term.end_date.should == @date_1_orig           
+        @head.pending_term.start_date.should == @date_2_orig
+      end
+        
+      it 'does not update field_term record if form did not change dates' do
+        # Update params are the same 
+        @wife = @head.create_wife
+        updates = {:current_term=>{:end_date=>@date_1_orig.strftime("%F")},
+                   :next_term=>{:start_date=>@date_2_orig.strftime("%F")} }
+        put :update, @params.merge(updates)
+        @wife.field_terms.should be_empty # because the head's term dates were not changed by the form
+      end
+          
+        
     end #     'updates field term dates'
            
   end # updating a family
+
+  describe 'same_date' do
+    before(:each) do
+      @date_1 = Date.new(1999,1,1)
+      @date_2 = @date_1+1
+      @date_1_str = @date_1.to_s(:default)
+      @date_2_str = @date_2.to_s(:default)
+    end
     
+    it 'is false when object does not exist and new date exists' do
+      term=nil
+      controller.same_date(term, @date_1_str, :end_date).should be_false
+    end
+    it 'is false when object.method does not exist and new date exists' do
+      term=FieldTerm.new
+      controller.same_date(term, @date_1_str, :end_date).should be_false
+    end
+    it 'is true when object.method does not exist and new date is blank' do
+      term=FieldTerm.new
+      controller.same_date(term, '', :end_date).should be_true
+    end
+    it 'is true when object does not exist and new date is blank' do
+      term=nil
+      controller.same_date(term, '', :end_date).should be_true
+    end
+    it 'is false when object.method exists but is different from new date' do
+      term=FieldTerm.new(:end_date=>@date_2)
+      controller.same_date(term, @date_1_str, :end_date).should be_false
+    end      
+    it 'is true when object.method exists and is same as new date' do
+      term=FieldTerm.new(:end_date=>@date_1)
+      controller.same_date(term, @date_1_str, :end_date).should be_true
+    end      
+    it 'is true when date is same though format is different' do
+      term=FieldTerm.new(:end_date=>@date_1)
+      controller.same_date(term, @date_1.to_s(:int_long), :end_date).should be_true
+      controller.same_date(term, @date_1.to_s(:us_long), :end_date).should be_true
+    end      
+
+  end 
 end
