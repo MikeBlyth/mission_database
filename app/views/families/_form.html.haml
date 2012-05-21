@@ -5,6 +5,7 @@ $( "#tabs" ).tabs();
 </script>
 -# Set up some convenience variables
 - @head_pers ||= PersonnelData.new
+- wifeclass = ''
 - if @wife
   - @wife_pers ||= PersonnelData.new
   - wifeclass = @wife.first_name.blank? ? 'wife_hidden' : 'wife_visible'
@@ -139,7 +140,7 @@ $( "#tabs" ).tabs();
             = member.label :temporary_location_until_date, "Until"
             %br
             = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
-          - if @wife    
+          - if @wife && wifeclass == 'wife_hidden'   
             %td
               = label_tag :show_wife, "Show tab for wife"
               = check_box_tag(:show_wife)  
@@ -328,7 +329,7 @@ $( "#tabs" ).tabs();
           = label :current_term, :end_estimated, 'End date is estimated?', :title=>'Check if end-term date date is estimated or approximate'
       %tr
         %td
-          = label_tag :next_term_start_date, 'Estimated starting date for next term'
+          = label_tag :next_term_start_date, raw('Estimated starting date for <strong>next</strong> term')
         %td
           = hidden_field :next_term, :id
           = text_field :next_term, :start_date, :class => 'active_date-input date_picker ' 
