@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120518075102) do
+ActiveRecord::Schema.define(:version => 20120522135023) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -217,6 +217,18 @@ ActiveRecord::Schema.define(:version => 20120518075102) do
 
   add_index "ministries", ["code"], :name => "index_ministry_codes_on_code", :unique => true
   add_index "ministries", ["description"], :name => "index_ministry_codes_on_description", :unique => true
+
+  create_table "pers_tasks", :force => true do |t|
+    t.string   "task"
+    t.boolean  "pipeline"
+    t.boolean  "orientation"
+    t.boolean  "start_of_term"
+    t.boolean  "end_of_term"
+    t.boolean  "end_of_service"
+    t.boolean  "alert"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "personnel_data", :force => true do |t|
     t.integer  "member_id"
