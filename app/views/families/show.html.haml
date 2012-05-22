@@ -1,0 +1,17 @@
+%p#notice= notice
+
+.active-scaffold
+  %div(class='show-view family-view view' id="show_family_#{@record.id}") 
+    %h4= "Family of #{@record.casual_name}"
+    %p Click on a name to edit that person's information.
+
+    #family_members(style='margin-left: 10px')
+      -  @record.members.each do  |m| 
+        %p 
+          = link_to 'Edit', edit_member_path(m), {:remote=>"true", :position=>"after", :class=>"edit as_action"}
+          = m.to_label + " (#{m.sex})" 
+          = m.primary_contact.phone_1
+
+    = link_to 'Close', families_path, {:class=> 'as_cancel close'}
+
+

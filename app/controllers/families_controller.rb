@@ -17,7 +17,7 @@ class FamiliesController < ApplicationController
     config.columns[:residence_location].inplace_edit = true
 #    config.update.link = false  # Do not include a link to "Edit" on each line
 #    config.delete.link = false  # Do not include a link to "Delete" on each line
-#    config.show.link = false  # Do not include a link to "Show" on each line
+    config.show.link = false  # Do not include a link to "Show" on each line
     config.columns[:members].associated_limit = nil    # show all members, no limit to how many
     config.columns[:residence_location].form_ui = :select 
     config.columns[:status].form_ui = :select
