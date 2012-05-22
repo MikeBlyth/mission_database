@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120522135023) do
+ActiveRecord::Schema.define(:version => 20120522145318) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(:version => 20120522135023) do
     t.boolean  "name_override",         :default => false
     t.string   "sim_id"
     t.date     "summary_sent"
+    t.string   "tasks"
   end
 
   create_table "field_terms", :force => true do |t|
