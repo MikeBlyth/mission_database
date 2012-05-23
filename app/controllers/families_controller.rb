@@ -131,6 +131,7 @@ class FamiliesController < ApplicationController
   # the :tasks hash represent the tasks with checked boxes. From this, generate a string like
   # '1,3' with the ids of those tasks.
   def task_ids(params)
+    return '' if params[:tasks].nil?
     params[:tasks].keep_if {|key, value| value == '1'}.keys.map {|v| v[5,12]}.join(',')
   end
 
@@ -192,6 +193,7 @@ class FamiliesController < ApplicationController
     else  # send back to user to try again
       @record = @family
       @children = @head.children + new_children(@head,1)
+      @pers_tasks = PersTask.tasks_w_finished_marked(@record.tasks)
       remove_unneeded_keys(params)
       respond_to do |format|
         format.js {render :on_update_err, :locals => {:xhr => true}}

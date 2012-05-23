@@ -534,6 +534,42 @@ include SimTestHelper
       controller.same_date(term, @date_1.to_s(:int_long), :end_date).should be_true
       controller.same_date(term, @date_1.to_s(:us_long), :end_date).should be_true
     end      
-
   end 
+
+  describe 'Personnel Tasks' do
+    before (:each) do
+      test_sign_in(Factory.stub(:user, :admin=>true))
+      @head=factory_member_basic
+      @family = @head.family
+      @family.head = @head
+      @params = {:id=>@family.id, :record=>{}}
+    end
+      
+    it 'updates completed personnel tasks from input form' do
+      updates = {:tasks=>{'task_17'=>'1', 'task_63'=>'1', 'task_99'=>'0'}}
+      put :update, @params.merge(updates)
+      @family.reload.tasks.should =~ /17/
+      @family.tasks.should =~ /63/
+      @family.tasks.should_not =~ /99/
+    end
+
+    # When sending an existing record to be rendered on a form, the controller should
+    # set up @pers_tasks, a hash of the personnel tasks organized by type (pipeline, end-of-term, etc.)
+    # Within the @pers_tasks hash, those tasks whose ids are listed in family.tasks (e.g., '1,7')
+    # should be marked as 'finished', so they will be checked on the rendered form.
+    it 'sets up @pers_tasks for editing existing record' do
+      @task_pipeline_1 = PersTask.create(:task=>'pipeline_1', :pipeline=>true)
+      @task_pipeline_2 = PersTask.create(:task=>'pipeline_2', :pipeline=>true)
+      @task_orientation_1 = PersTask.create(:task=>'orientation_1', :orientation=>true)
+      @task_orientation_2 = PersTask.create(:task=>'orientation_2', :orientation=>true)
+      @family.update_attributes(:tasks=>"#{@task_pipeline_1.id}, #{@task_pipeline_2.id}")
+      get :edit, @params
+      assigns[:pers_tasks][0][:tasks][0].finished.should be_true
+      assigns[:pers_tasks][0][:tasks][1].finished.should be_true
+      assigns[:pers_tasks][1][:tasks][0].finished.should be_false
+      assigns[:pers_tasks][1][:tasks][1].finished.should be_false
+    end
+      
+  end
+
 end

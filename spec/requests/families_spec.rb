@@ -297,7 +297,7 @@ include SimTestHelper
     it 'shows data from all associated records' do
       @wife.should_not be_nil
       visit edit_family_path(@family)
- save_and_open_page
+# save_and_open_page
       page.find('#head_last_name').value.should == @head.last_name
       page.find('#head_contact_email_1').value.should == @head.primary_contact.email_1
       page.find('#head_pers_qualifications').value.should == @head.personnel_data.qualifications
