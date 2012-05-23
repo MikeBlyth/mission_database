@@ -39,7 +39,7 @@ defaults: &defaults
   email:
     travel: jos.travel@sim.org
     personnel: jos.perasst@sim.org
-  pers_task_types: [:pipeline, :orientation, :start_term, :end_term, :end_service]
+  pers_task_types: [:pipeline, :orientation, :start_of_term, :end_of_term, :end_of_service]
 development:
   <<: *defaults
   screen:
