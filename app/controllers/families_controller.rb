@@ -71,6 +71,7 @@ class FamiliesController < ApplicationController
       @wife = Member.new(:last_name=>@head.last_name, :personnel_data=>PersonnelData.new)
     end
     @children = (@head.children(true) + new_children(@head,1)) if @head  # (true) means include grown children
+    @pers_tasks = PersTask.tasks_w_finished_marked(@record.tasks)
   end
     
   def do_new
@@ -82,7 +83,7 @@ class FamiliesController < ApplicationController
     @children = new_children(@head,5)
     @current_term = FieldTerm.new(:member=>@head)
     @next_term = FieldTerm.new(:member=>@head)
-    @pers_tasks = PersTaskArray.new(PersTask.all).tasks_hash
+    @pers_tasks = PersTask.tasks_w_finished_marked('')
   end
     
   def update_one_member(member, member_params, pers_rec, pers_params, contact_rec, contact_params, error_recs)
@@ -123,6 +124,14 @@ class FamiliesController < ApplicationController
     return if same_date(head_term, params[which_date], which_date)
     head_term.update_attributes params
     wife_term.update_attributes params if wife
+  end
+  
+  # Make string with id numbers of tasks whose boxes were checked on the form
+  # Params includes { ... :tasks=>{'task_1'=>'1', 'task_3'=>'1'} ... } etc. where the members of
+  # the :tasks hash represent the tasks with checked boxes. From this, generate a string like
+  # '1,3' with the ids of those tasks.
+  def task_ids(params)
+    params[:tasks].keep_if {|key, value| value == '1'}.keys.map {|v| v[5,12]}.join(',')
   end
 
   # Intercept record after it's been found by AS update process, before it's been changed, and
@@ -166,6 +175,7 @@ class FamiliesController < ApplicationController
         end
       end
     end
+    @family.tasks = task_ids(params)
     update_and_check(@family, params[:record], @error_records)
 
     # May need to update data for family members, based on changes in corresponding fields for family

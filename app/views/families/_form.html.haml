@@ -344,6 +344,10 @@ $( "#tabs" ).tabs();
             = "#{task_type[:type].to_s.humanize}: "
             - task_type[:tasks].each do |task|
               %td
-                %input{:id=>"task_#{task.id}", :type=>"checkbox", :value=>"1", :name=>"tasks[task_#{task.id}]", :checked=>"#{'checked' if task.finished}"}
+                -# There has to be a cleaner way to put in these checkboxes ... try it when I have time!
+                - if task.finished
+                  %input{:id=>"task_#{task.id}", :type=>"checkbox", :value=>"1", :name=>"tasks[task_#{task.id}]", :checked=>"checked"}
+                - else
+                  %input{:id=>"task_#{task.id}", :type=>"checkbox", :value=>"1", :name=>"tasks[task_#{task.id}]"}
                 = label_tag("task_#{task.id}", task.task)
 
