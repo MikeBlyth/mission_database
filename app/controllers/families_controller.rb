@@ -1,3 +1,5 @@
+require 'pers_task.rb'  # because PersTaskArray is defined there, not in pers_task_array.rb
+
 class FamiliesController < ApplicationController
   helper :name_column
   before_filter :authenticate #, :only => [:edit, :update]
@@ -80,6 +82,7 @@ class FamiliesController < ApplicationController
     @children = new_children(@head,5)
     @current_term = FieldTerm.new(:member=>@head)
     @next_term = FieldTerm.new(:member=>@head)
+    @pers_tasks = PersTaskArray.new(PersTask.all).tasks_hash
   end
     
   def update_one_member(member, member_params, pers_rec, pers_params, contact_rec, contact_params, error_recs)

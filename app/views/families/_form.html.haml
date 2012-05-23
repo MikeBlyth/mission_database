@@ -19,6 +19,7 @@ $( "#tabs" ).tabs();
   <li id='wife-tab' class="#{wifeclass}"><a href="#tabs-wife">Wife</a></li>
 <li><a href="#tabs-children">Children</a></li>
 <li><a href="#tabs-family">Family</a></li>
+<li><a href="#tabs-tasks">Tasks</a></li>
 </ul>
 = form_for :record do |main_form|
   #tabs-head
@@ -333,4 +334,17 @@ $( "#tabs" ).tabs();
         %td
           = hidden_field :next_term, :id
           = text_field :next_term, :start_date, :class => 'active_date-input date_picker ' 
+  #tabs-tasks
+    %h4 Personnel Tasks
+    -#= fields_for tasks, :index=>child.id do |child_form|
+    %table
+      - @pers_tasks.each do |task_type|
+        %tr
+          %td
+            = "#{task_type[:type].to_s.humanize}: "
+            - task_type[:tasks].each do |task|
+              %td
+                -# fields_for :task do |task_form|
+                = check_box_tag("task_#{task.id}".to_sym)
+                = label_tag("task_#{task.id}", task.task)
 
