@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   include SessionsHelper  # sign in, sign out, current user, etc.
-  require 'view_helpers.rb'
+
   ActiveScaffold.set_defaults do |config| 
     config.ignore_columns.add [:created_at, :updated_at, :lock_version]
   end
@@ -58,21 +58,6 @@ class ApplicationController < ActionController::Base
     redirect_to(travels_path)
   end
 
-module ActiveScaffold
-  module Helpers
-    # All extra helpers that should be included in the View.
-    # Also a dumping ground for uncategorized helpers.
-    module ViewHelpers
-      def column_show_add_new(column, associated, record)
-   raise
-        false if column == 'x' # :personnel_data
-      end
-
-      def self.authorized_for_create?
-        false # or some test for current user
-      end
-    end
-  end
-end  
+  
   
 end
