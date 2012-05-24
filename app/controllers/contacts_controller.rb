@@ -11,7 +11,7 @@ class ContactsController < ApplicationController
     :email_1, :email_2, :email_private,
     :skype, :skype_private,
     :facebook, :blog, :other_website, :photos]
-    list.columns = [:member, :contact_type, :is_primary, :contact_name, :address, :phone_1, :email_1]
+    list.columns = [:member, :contact_type, :is_primary, :contact_name, :address, :phone_1, :phone_2, :email_1]
     config.columns[:member].actions_for_association_links = [:show]
     config.columns[:contact_type].actions_for_association_links = [:show]
     update.columns.exclude :member

@@ -86,6 +86,9 @@ div.statuses-view {
   font-style: bold;
   font-size: 1.2em; }
 
+.contact_form {
+  max-width: 700px; }
+
 .family_info p {
   padding-top: 0.3em; }
 
