@@ -1,0 +1,137 @@
+.active-scaffold
+  .new_travel
+    = form_for :record, :url => { :action => "create" } do |form| 
+      .col_1
+        .passengers
+          %h5 Travelers
+          .traveler_names
+            = render 'shared/error_messages', :object => @record
+            = form.label :member,"Persons in this database:", :class=>'required'
+            %br
+            = form.collection_select(:member_id, 
+              Member.select("last_name, first_name, middle_name, short_name, name, id").order("name"), 
+              :id, :name, {}, :multiple=>true)    
+            %p You can select multiple travelers if they all have exactly the same |
+              trip details. Be sure to review the results. |
+          .spouse_kids
+            %table
+              %tr
+                %td
+                  .with_spouse      
+                    = form.check_box :with_spouse, :class => 'with_spouse-input'
+                    = form.label :with_spouse
+                %td
+                  .with_children      
+                    = form.check_box :with_children, :class => 'with_children-input'
+                    = form.label :with_children
+          .other_travelers
+            = form.label :other_travelers, "Travelers not listed above (separate with \";\")"
+            %br
+            = form.text_field :other_travelers, :class => 'other_travelers-input'
+          .total_passengers       
+            %table
+              %tr
+                %td
+                  = form.label :total_passengers
+                  %br
+                  = form.text_field :total_passengers, :class => 'total_passengers-input'
+                %td
+                  %p If selecting multiple members, enter "1" since each member will have his own |
+                    trip generated. |
+      .col_2
+        .date_route
+          %h5 Trip Information
+          %table
+            %tr
+              %td
+                .travel_date        
+                  = form.label :date, :class=>'required'
+                  %br
+                  = form.text_field :date, :class => 'date-input datepicker '
+              %td
+                .travel_time        
+                  = form.label :time
+                  %br
+                  = form.text_field :time, :class => 'time-input'
+            %tr
+              %td
+                .return_date        
+                  = form.label :return_date
+                  %br
+                  = form.text_field :return_date, :class => 'datepicker date-input '
+              %td
+                .return_time        
+                  = form.label :return_time
+                  %br
+                  = form.text_field :return_time, :class => 'return_time-input time-input'
+            %tr
+              %td
+                .origin        
+                  = form.label :origin
+                  %br
+                  = form.text_field :origin, :class => 'origin-input'
+              %td
+                .destination        
+                  = form.label :destination
+                  %br
+                  = form.text_field :destination, :class => 'destination-input'
+            %tr
+              %td
+                .flight        
+                  = form.label :flight
+                  %br
+                  = form.text_field :flight, :class => 'flight-input'
+              %td
+                .arrival        
+                  = form.check_box :arrival, :class => 'arrival-input'
+                  = form.label :arrival
+        .travel_category
+          .term_passage        
+            %h5 Purpose/Type of Trip
+            = form.check_box :term_passage, :class => 'term_passage-input'
+            = form.label :term_passage
+          .personal        
+            = form.check_box :personal, :class => 'personal-input'
+            = form.label :personal
+          .ministry_related       
+            = form.check_box :ministry_related, :class => 'ministry_related-input'
+            = form.label :ministry_related
+          .purpose        
+            = form.label :purpose, "Optional description: vacation, medical, conf., etc."
+            %br
+            = form.text_field :purpose, :class => 'purpose-input'
+      .col_3
+        .travel_other
+          %h5 Other Arrangements
+          .own_arrangements        
+            = form.check_box :own_arrangements, :class => 'own_arrangements_related-input'
+            = form.label :own_arrangements, "Will make own arrangements"
+          %table
+            %tr
+              %td
+                .guesthouse       
+                  = form.label :guesthouse
+                  %br
+                  = form.text_field :guesthouse, :class => 'guesthouse-input'
+              %td
+                .driver_accom       
+                  = form.label :driver_accom
+                  %br
+                  = form.text_field :driver_accom, :class => 'driver_accom-input'
+            %tr
+              %td
+                .baggage       
+                  = form.label :baggage
+                  %br
+                  = form.text_field :baggage, :class => 'baggage-input'
+              %td
+                .confirmed      
+                  = form.label :confirmed, "Date confirmed"
+                  %br
+                  = form.text_field :confirmed, :class => 'confirmed-input datepicker'
+          .comments       
+            = form.label :comments
+            %br
+            = form.text_field :comments, :class => 'comments-input'
+    
+ 

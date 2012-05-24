@@ -234,9 +234,8 @@ class Travel < ActiveRecord::Base
     return summary
   end
 
-
   def to_label
-    "#{date.to_s} #{flight}"
+    "#{self.travelers}--#{date.to_s} #{flight}".html_safe
   end
 
   def to_s
