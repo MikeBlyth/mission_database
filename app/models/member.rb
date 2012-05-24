@@ -70,6 +70,14 @@ class Member < ActiveRecord::Base
   before_destroy :check_if_family_head
   before_destroy :check_if_spouse
  
+def column_show_add_new(column, associated, record)
+  false # if column == :personnel_data
+end
+
+def self.authorized_for_create?
+  false # or some test for current user
+end
+
   def residence_location
     return self.family.residence_location
   end
