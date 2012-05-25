@@ -112,6 +112,42 @@ module ApplicationHelper
     return commands
   end
   
+  # Update a "record" with paramater hash "update_params". If there are errors, add "record" to
+  # the list "error_recs". This will be used by the built-in error-message-creator
+  def update_and_check(record, update_params, error_recs)
+    return unless record   # ignore empty records
+    unless record.update_attributes(update_params)
+      error_recs << record
+    end
+  end
+
+  # Use input from the combined form to update member w personnel_data, primary contact, health data
+  # Creates primary contact (and personnel_data) if needed
+  # Save any error-generating records in error_recs
+  # Return the updated records since they'll be used to fill the forms if they need to be sent back
+  #   to the user because of errors.
+  def update_one_member(member, member_params, pers_params, contact_params, health_params, error_recs)
+    update_and_check(member, member_params, error_recs)
+    pers_rec = member.personnel_data || PersonnelData.new
+    update_and_check(pers_rec, pers_params, error_recs)
+#puts "**** pers_rec.attributes=#{pers_rec.attributes}"
+    contact_rec = member.primary_contact || member.contacts.new
+    update_and_check(contact_rec, contact_params, error_recs)
+    health_rec = member.health_data
+    update_and_check(health_rec, health_params, error_recs)
+    return [member, pers_rec, contact_rec, health_rec]
+  end   
+
+  # Need to remove these from params being sent back (for user to fix errors) 
+  #   so that they don't get stuck onto form URL parameters.
+  # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
+  def remove_unneeded_keys(params)
+      [:head, :head_pers, :head_contact,
+        :wife, :wife_pers, :wife_contact,
+        :record, :family, :member,
+        :authenticity_token
+      ].each {|key| params.delete key}
+  end
 
 end  # ApplicationHelper module
 

@@ -5,6 +5,7 @@ class MembersController < ApplicationController
   load_and_authorize_resource
 
   include AuthenticationHelper
+  include ApplicationHelper
 
   before_filter :authenticate #, :only => [:edit, :update]
 
@@ -47,7 +48,6 @@ class MembersController < ApplicationController
     config.columns[:status].form_ui = :select 
     config.columns[:status].inplace_edit = true
     config.columns[:child].inplace_edit = true
-#*    config.columns[:residence_location].inplace_edit = true
     config.columns[:work_location].inplace_edit = true
 #    config.columns[:field_terms].collapsed = true
     config.columns[:field_terms].associated_limit = 2
@@ -56,7 +56,6 @@ class MembersController < ApplicationController
     config.columns[:travels].associated_limit = 2
 #    config.columns[:contacts].collapsed = true
     config.columns[:family].actions_for_association_links = [:list]
-
     
    config.actions.exclude :search
    config.actions.add :field_search
@@ -75,56 +74,55 @@ class MembersController < ApplicationController
     params
   end
 
-  def do_create
-#puts "**** do_create, params=#{params}"
-#puts "\n**** do_create before super, record=#{params[:record]}"
-    super
-#puts "\n**** do_create after super, record=#{params[:record]}"
-    # Update the health_data and personnel_data. Unfortunately, I don't remember why this has to
-    # be done manually rather than being handled by ActiveScaffold ... if I ever figured out why.
-    health_data = convert_keys_to_id(params[:record][:health_data], :bloodtype)
-    personnel_data = convert_keys_to_id(params[:record][:personnel_data], 
-        :education, :employment_status)
-    @record.create_health_data unless @record.health_data
-    @record.create_personnel_data unless @record.personnel_data
-    @record.health_data.update_attributes(health_data) unless health_data.empty?
-    @record.personnel_data.update_attributes(personnel_data) unless personnel_data.empty?
-  end  
+  def update_field_terms(params)
+    return if params.nil? || (params[:end_date].blank? && params[:start_date].blank?)
+    id = params.delete('id')
+    FieldTerm.find(id).update_attributes(params)
+  end
   
-  def do_update
-#    puts "Members controller do_update: params=#{params}"
+  def do_edit
     super
+#puts "**** @record.attributes=#{@record.attributes}"
+#puts "**** @record.head=#{@record.head}"
+    @head = @record
+    @head_contact = @head.primary_contact
+    @head_pers = @head.personnel_data
+    @current_term = @head.most_recent_term || FieldTerm.new(:member=>@head)
+    @next_term = @head.pending_term || FieldTerm.new(:member=>@head)
+    @head_health = @head.health_data
   end
 
-  def do_new
-#puts "**** do_new, params=#{params}"
-    @contacts = Contact.new(:contact_type => ContactType.first)
-    super
-    if params[:family]
-      family = Family.find_by_id(params[:family])
-      head = family.head
-      if params[:type] == 'spouse'
-        @record = Member.new( :family => family,
-                              :last_name=> family.last_name, 
-                              :sex => head.other_sex,
-                              :spouse => head,
-                              :country_id => head.country_id,
-                              :status => head.status,
-                              :residence_location => head.residence_location )
-        @headline = "Add Spouse for #{head.full_name}"
-      elsif params[:type] == 'child'
-        @record = Member.new( :family => family,
-                              :last_name=> family.last_name, 
-                              :child => true,
-                              :country_id => head.country_id,
-                              :status => head.status,
-                              :residence_location => head.residence_location )
-        @headline = "Add Child for #{head.full_name}"
-      end  
-
-    end
+  # add "_id" to the key in hash (AS update seems to not require the _id but we do)
+  def add_id_to_key(hash,key)
+    hash[key+"_id"] = hash[key]
+    hash.delete key
   end
+    
+  def update
+#    puts "\n**** Params=#{params}, id=#{params[:id]}"
+    @head = Member.find(params[:id])
+    add_id_to_key(params[:record][:health_data], 'bloodtype')
+    @error_records = []  # Keep list of the model records that had errors when updated
+      @head, @head_pers, @head_contact, @health_data = 
+        update_one_member(@head, params[:head], params[:head_pers], params[:head_contact],
+           params[:record][:health_data], @error_records)
+    # Apply to head and spouse any changes to current_term.end_date or next_term.start_date
+    #  from Family tab. These _override_ any changes made on the head or wife pages
+    update_field_terms(params[:current_term])
+    update_field_terms(params[:next_term])
 
+    if @error_records.empty?
+      redirect_to members_path
+    else  # send back to user to try again
+      @record = @head
+      remove_unneeded_keys(params)
+      respond_to do |format|
+        format.js {render :on_update_err, :locals => {:xhr => true}}
+        format.html {render :update}
+      end
+    end      
+  end   
+  
   def do_show
     super
   end    

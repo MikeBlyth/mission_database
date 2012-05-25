@@ -31,15 +31,6 @@ class FamiliesController < ApplicationController
     config.delete.link.confirm = "\n"+"*" * 60 + "\nAre you sure you want to delete this family and all its members??!!\n" + "*" * 60
   end
   
-  # Update a "record" with paramater hash "update_params". If there are errors, add "record" to
-  # the list "error_recs". This will be used by the built-in error-message-creator
-  def update_and_check(record, update_params, error_recs)
-    return unless record   # ignore empty records
-    unless record.update_attributes(update_params)
-      error_recs << record
-    end
-  end
-
   # Return new records for 'count' children of 'parent'. Records are not saved.
   # This is used for to create the edit and update form where children are listed,
   # so that there will be space to add new ones.
@@ -86,26 +77,6 @@ class FamiliesController < ApplicationController
     @pers_tasks = PersTask.tasks_w_finished_marked('')
   end
     
-  def update_one_member(member, member_params, pers_rec, pers_params, contact_rec, contact_params, error_recs)
-    update_and_check(member, member_params, error_recs)
-    pers_rec = member.personnel_data || PersonnelData.new
-    update_and_check(pers_rec, pers_params, error_recs)
-#puts "**** pers_rec.attributes=#{pers_rec.attributes}"
-    contact_rec = member.primary_contact || member.contacts.new
-    update_and_check(contact_rec, contact_params, error_recs)
-    return [member, pers_rec, contact_rec]
-  end   
-
-  # Need to remove these from params so that they don't get stuck onto form URL parameters.
-  # (Symptom of the problem is that a field can't be changed after an error, get "URL too Long" error)
-  def remove_unneeded_keys(params)
-      [:head, :head_pers, :head_contact,
-        :wife, :wife_pers, :wife_contact,
-        :record, :family, :member,
-        :authenticity_token
-      ].each {|key| params.delete key}
-  end
-
   def update_field_terms(family, params)
     return if params.nil? || (params[:end_date].blank? && params[:start_date].blank?)
     id = params.delete('id')
@@ -153,12 +124,12 @@ class FamiliesController < ApplicationController
     @error_records = []  # Keep list of the model records that had errors when updated
     if @head
       @head, @head_pers, @head_contact = 
-        update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
+        update_one_member(@head, params[:head], params[:head_pers], params[:head_contact], nil, @error_records)
     end
     # If there ARE parameters defining wife, then create or update wife
     if params[:wife] && !params[:wife][:first_name].blank?
       @wife ||= @head.create_wife # Need to create one if it doesn't exist
-      update_one_member(@wife, params[:wife], @wife_pers, params[:wife_pers], @wife_contact, params[:wife_contact], @error_records)
+      update_one_member(@wife, params[:wife], params[:wife_pers], params[:wife_contact], nil, @error_records)
     end  
     # Update the children
     if params[:member]  # for now, this is how children are listed (:member)

@@ -11,12 +11,9 @@ $( "#tabs" ).tabs();
 <div id="tabs">
 <ul>
 <li><a href="#tabs-member">Member</a></li>
-<li><a href="#tabs-contacts">Contacts</a></li>
-<li><a href="#tabs-terms">Terms</a></li>
-<li><a href="#tabs-travel">Travel</a></li>
 <li><a href="#tabs-health">Health</a></li>
 </ul>
-= form_for :record do |member|
+= form_for :head do |member|
   #tabs-member
     %table.new_family
       %tr
@@ -134,21 +131,6 @@ $( "#tabs" ).tabs();
           = member.label :temporary_location_until_date, "Until"
           %br
           = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
-  #tabs-contacts
-    - column = columns.find {|c| c.label == 'Contacts'}
-    - renders_as = column_renders_as(column) 
-    %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
-      = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
-  #tabs-terms
-    - column = columns.find {|c| c.label == 'Field terms'}
-    - renders_as = column_renders_as(column) 
-    %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
-      = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
-  #tabs-travel
-    - column = columns.find {|c| c.label == 'Travels'}
-    - renders_as = column_renders_as(column) 
-    %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
-      = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
   #tabs-health
     - column = columns.find {|c| c.label == 'Health data'}
     - renders_as = column_renders_as(column) 
