@@ -391,6 +391,10 @@ end
      return self.male_female == :female
    end
      
+   def child?
+     return self.child
+   end
+
    def other_sex
      case self.sex
        when 'M', 'm' then 'F'

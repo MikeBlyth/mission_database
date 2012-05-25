@@ -280,15 +280,17 @@ div.crosstab td.row_label {
 div.crosstab tr.total {
   background: white; }
 
+.school-input {
+  width: 70px; }
+
+.grade-input {
+  width: 50px; }
+
 table.children {
   table-layout: fixed;
   width: 500px; }
   table.children .first_name-input {
     width: 90px; }
-  table.children .school-input {
-    width: 70px; }
-  table.children .grade-input {
-    width: 50px; }
   table.children .employment_status-input {
     width: 100px; }
   table.children th {
