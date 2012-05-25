@@ -147,7 +147,7 @@ include SimTestHelper
         head.primary_contact.email_2.should == 'cat@dog.com'
       end
                 
-      it 'adds phone numbers and email for head' do
+      it 'adds phone numbers and email for wife' do
         @params[:wife] = {:first_name=>'Sally', :last_name=>'Jones'}
         @params[:wife_contact] = {:phone_1 => '+2348088888888', :phone_2 => '0802 222 2222',
                                   :email_1 => 'x@y.com', :email_2 => 'cat@dog.com'}
@@ -291,27 +291,6 @@ include SimTestHelper
       @child.reload.residence_location.should == @new_location
     end
     
-#    it "location should not change when family location is not changed" do
-#      same_attributes = {'residence_location_id' => @original_location.id} 
-#      @member.update_attribute(:residence_location, @new_location) # customize one of the members' location
-#      put :update, :id => @family.id, :record => same_attributes # update family, but don't change location
-#      @family.reload.residence_location_id.should == @original_location.id
-#      @member.reload.residence_location.should == @new_location
-#      @spouse.reload.residence_location.should == @original_location
-#      @child.reload.residence_location.should == @original_location
-#    end
-
-#    it "location of non-dependents should not change when family location is changed" do
-#    # That is, only head, kids & spouse should change, no other. 
-#      new_attributes = {'residence_location_id' => @new_location.id} 
-#      @other_member = Factory(:member, :family=>@family, :last_name=>@family.last_name, :child=>false, :spouse=>nil)
-#      @other_member.personnel_data.update_attributes(:employment_status=>@career_status)
-#      put :update, :id => @family.id, :record => new_attributes
-#      @family.reload.residence_location_id.should == @new_location.id
-#      @other_member.reload.residence_location.should == @original_location
-#      @member.reload.residence_location.should == @new_location
-#    end
-
     it "status of non-dependents should not change when family status is changed" do
     # That is, only head, kids & spouse should change, no other. 
       new_attributes = {'status_id' => @new_status.id} 
@@ -433,6 +412,19 @@ include SimTestHelper
       @family.reload.wife.should_not == nil
       @family.wife.first_name.should == 'Grace'
     end            
+ 
+     it 'updates the head personnel data' do
+      updates = {:head_pers=>{:qualifications=>'Wonderful'}}
+      put :update, @params.merge(updates)
+      @head.reload.personnel_data.qualifications.should == 'Wonderful'
+    end  
+    
+     it 'updates the wife personnel data' do
+      wife = create_spouse(@head)
+      updates = {:wife=>{:first_name=>'Grace'}, :wife_pers=>{:qualifications=>'Wonderful'}}
+      put :update, @params.merge(updates)
+      wife.reload.personnel_data.qualifications.should == 'Wonderful'
+    end  
     
     describe 'updates field term dates' do
       before(:each) do

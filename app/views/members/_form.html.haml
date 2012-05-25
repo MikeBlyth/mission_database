@@ -11,6 +11,7 @@ $( "#tabs" ).tabs();
 <div id="tabs">
 <ul>
 <li><a href="#tabs-member">Member</a></li>
+<li><a href="#tabs-personnel">Personnel</a></li>
 <li><a href="#tabs-health">Health</a></li>
 </ul>
 = form_for :head do |member|
@@ -49,18 +50,6 @@ $( "#tabs" ).tabs();
             %br
             - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
             = member.select(:country_id, choices, {:include_blank => true }, :class=>'wide-input')    
-        %td
-          .education
-            = label :head_pers, :education_id
-            %br
-            - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
-            = select(:head_pers, :education_id, choices, {:include_blank => true }, :class=>'medium-input')    
-        %td
-          .qualifications
-            = label :head_pers, :qualifications
-            %br
-            = text_field :head_pers, :qualifications, :class=> 'medium-input'
-        
       %tr
         %td
           = member.label :name, "Full name of individual", :class=>'required'
@@ -68,19 +57,6 @@ $( "#tabs" ).tabs();
           = member.text_field :name, :class=> "name-input"
           %br
           %p.description Must be unique
-        %td
-          = label_tag :head_pers_date_active, "Date active with SIM"
-          %br
-          = text_field :head_pers,  :date_active, :class => 'date_active-input date_picker '
-        %td
-          = label_tag :head_pers_est_end_of_service, "Est. end of service"
-          %br
-          = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
-        %td
-          = label_tag :head_pers_employment_status_id, "Employment status"
-          %br
-          - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
-          = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
           %td
             = label_tag :head_status_id, "Field status"
             %br
@@ -97,10 +73,10 @@ $( "#tabs" ).tabs();
           %br
           - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
           = member.select(:work_location_id, choices, {:include_blank => true }, :class=>'ministry_location-input')    
-          %td{:colspan=>'2'}
-            = member.label :ministry_comment, "Ministry comments"
-            %br
-            = member.text_field :ministry_comment, :class=>'ministry_comments'   
+        %td{:colspan=>'2'}
+          = member.label :ministry_comment, "Ministry comments"
+          %br
+          = member.text_field :ministry_comment, :class=>'ministry_comments'   
       %tr
         %td
           = label :head_contact, :phone_1, "Phone on field"
@@ -131,6 +107,40 @@ $( "#tabs" ).tabs();
           = member.label :temporary_location_until_date, "Until"
           %br
           = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
+  #tabs-personnel
+    %table.new_family
+      %tr
+        %td
+          = label_tag :head_pers_date_active, "Date active with SIM"
+          %br
+          = text_field :head_pers,  :date_active, :class => 'date_active-input date_picker '
+        %td
+          = label_tag :head_pers_est_end_of_service, "Est. end of service"
+          %br
+          = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
+        %td
+          = label_tag :head_pers_employment_status_id, "Employment status"
+          %br
+          - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
+          = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+      %tr
+        %td
+          .education
+            = label :head_pers, :education_id
+            %br
+            - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
+            = select(:head_pers, :education_id, choices, {:include_blank => true }, :class=>'medium-input')    
+        %td
+          .qualifications
+            = label :head_pers, :qualifications
+            %br
+            = text_field :head_pers, :qualifications, :class=> 'medium-input'
+      %tr
+        %td{:colspan=>'3'}
+          = label_tag :head_pers_comments, "Personnel comments"
+          %br
+          = text_area :head_pers,  :comments, :cols=>60, :rows=>5
+        
   #tabs-health
     - column = columns.find {|c| c.label == 'Health data'}
     - renders_as = column_renders_as(column) 

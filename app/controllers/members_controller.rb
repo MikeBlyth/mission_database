@@ -74,10 +74,11 @@ class MembersController < ApplicationController
     params
   end
 
-  def update_field_terms(params)
+  def update_field_terms(member, params)
     return if params.nil? || (params[:end_date].blank? && params[:start_date].blank?)
     id = params.delete('id')
-    FieldTerm.find(id).update_attributes(params)
+    field_term = id.nil? ? member.field_terms.new : FieldTerm.find(id) 
+    field_term.update_attributes(params)
   end
   
   def do_edit
@@ -94,12 +95,13 @@ class MembersController < ApplicationController
 
   # add "_id" to the key in hash (AS update seems to not require the _id but we do)
   def add_id_to_key(hash,key)
+    return unless hash && key && hash[key]
     hash[key+"_id"] = hash[key]
     hash.delete key
   end
     
   def update
-#    puts "\n**** Params=#{params}, id=#{params[:id]}"
+# puts "\n**** Full params=#{params}, id=#{params[:id]}"
     @head = Member.find(params[:id])
     add_id_to_key(params[:record][:health_data], 'bloodtype')
     @error_records = []  # Keep list of the model records that had errors when updated
@@ -108,8 +110,8 @@ class MembersController < ApplicationController
            params[:record][:health_data], @error_records)
     # Apply to head and spouse any changes to current_term.end_date or next_term.start_date
     #  from Family tab. These _override_ any changes made on the head or wife pages
-    update_field_terms(params[:current_term])
-    update_field_terms(params[:next_term])
+    update_field_terms(@head, params[:current_term])
+    update_field_terms(@head, params[:next_term])
 
     if @error_records.empty?
       redirect_to members_path

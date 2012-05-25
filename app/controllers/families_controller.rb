@@ -183,7 +183,7 @@ class FamiliesController < ApplicationController
     @wife_pers = PersonnelData.new
     update_and_check(@family, params[:record], @error_records)
       @head, @head_pers, @head_contact = 
-        update_one_member(@head, params[:head], @head_pers, params[:head_pers], @head_contact, params[:head_contact], @error_records)
+        update_one_member(@head, params[:head], params[:head_pers], params[:head_contact], nil, @error_records)
 #puts "**** @head_pers.attributes=#{@head_pers.attributes}"
     @family.update_attributes(:head=>@head)   # Set family head
 
@@ -191,7 +191,7 @@ class FamiliesController < ApplicationController
     if params[:wife] && !params[:wife][:first_name].blank?
       @wife = @head.create_wife 
       @wife, @wife_pers, @wife_contact = 
-        update_one_member(@wife, params[:wife], @wife_pers, params[:wife_pers], @wife_contact, params[:wife_contact], @error_records)
+        update_one_member(@wife, params[:wife], params[:wife_pers], params[:wife_contact], nil, @error_records)
     end  
     # Add children
     @children = []

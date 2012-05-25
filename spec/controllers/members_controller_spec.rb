@@ -155,5 +155,84 @@ describe MembersController do
       # pending development of this form!
     end
   end # describe 'location status'
+
+  describe 'updating a family from combined form' do
+    before (:each) do
+      test_sign_in(Factory.stub(:user, :admin=>true))
+      @head=Factory(:member)
+      @params = {:id=>@head.id, :record=>{}}
+    end
+      
+    it 'updates the member' do
+#        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
+      updates = {:head=>{:first_name=>'Gordon'}}
+      put :update, @params.merge(updates)
+      @head.reload.first_name.should == 'Gordon'
+    end  
+    
+    it 'updates the personnel data' do
+#        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
+      updates = {:head_pers=>{:qualifications=>'Wonderful'}}
+      put :update, @params.merge(updates)
+      @head.reload.personnel_data.qualifications.should == 'Wonderful'
+    end  
+    
+    it 'updates the health data' do
+#        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
+      updates = {:record=>{:health_data=>{:issues=>'sick'}}}
+      put :update, @params.merge(updates)
+      @head.reload.health_data.issues.should == 'sick'
+    end  
+    
+    it 'updates phone numbers and email for head' do
+      updates = {:head_contact => {:phone_1 => '+2348088888888', :phone_2 => '0802 222 2222',
+                                :email_1 => 'x@y.com', :email_2 => 'cat@dog.com'}}
+      post :update, @params.merge(updates)
+      @head.reload
+      @head.primary_contact.should_not be_nil
+      @head.primary_contact.phone_1.should == '+2348088888888'
+      @head.primary_contact.phone_2.should == '+2348022222222'
+      @head.primary_contact.email_1.should == 'x@y.com'
+      @head.primary_contact.email_2.should == 'cat@dog.com'
+    end
+              
+    describe 'updates field term dates' do
+      before(:each) do
+        @date_1_orig = Date.today+50
+        @date_2_orig = Date.today+250
+        @date_1 = Date.today+2
+        @date_2 = Date.today+100
+        @current_term = @head.field_terms.create(:end_date=>@date_1_orig, :end_estimated=>true)
+        @next_term = @head.field_terms.create(:start_date=>@date_2_orig)
+      end
+      
+      it 'when new dates are given' do
+        updates = {:current_term=>{:end_date=>@date_1.strftime("%F"), :id=>@current_term.id},
+                   :next_term=>{:start_date=>@date_2.strftime("%F"), :id=>@next_term.id} }
+        put :update, @params.merge(updates)
+        @current_term.reload.end_date.should == @date_1           
+        @next_term.reload.start_date.should == @date_2
+      end
+
+      it 'creates new field_term records if needed' do
+        @head.field_terms.destroy_all
+        updates = {:current_term=>{:end_date=>@date_1.strftime("%F")},
+                   :next_term=>{:start_date=>@date_2.strftime("%F")} }
+        put :update, @params.merge(updates)
+        @head.reload.most_recent_term.end_date.should == @date_1           
+      end
+      
+      it 'does not update field_term record if new dates are blank' do
+        updates = {:current_term=>{:end_date=>"", :id=>@current_term.id},
+                   :next_term=>{:start_date=>"", :id=>@next_term.id} }
+        put :update, @params.merge(updates)
+        @head.reload.most_recent_term.end_date.should == @date_1_orig           
+        @head.pending_term.start_date.should == @date_2_orig
+      end
+        
+    end #     'updates field term dates'
+           
+  end # updating a family
+
      
 end
