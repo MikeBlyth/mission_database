@@ -1,0 +1,21 @@
+.contacts_subform
+  -# = debug(@record.contacts)  
+  %table
+    %tr
+      %th Type
+      %th Primary
+      %th Contact name
+      %th Address
+      %th Phone 1
+      %th Phone 2
+      %th Email 1
+    - @record.contacts.each do |contact|
+      - fields_for contact, :index=>contact.id do |contact_form|
+        %tr
+          %td 
+            = contact_form.text_field :phone_1
+          %td 
+            = contact_form.collection_select(:contact_type_id, ContactType.all, :id, :description, {:include_blank => true }, :class=>'ministry_location-input')    
+
+    -# fields_for @record.contacts do |contact|
+    

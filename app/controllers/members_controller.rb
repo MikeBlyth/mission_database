@@ -49,18 +49,15 @@ class MembersController < ApplicationController
     config.columns[:child].inplace_edit = true
 #*    config.columns[:residence_location].inplace_edit = true
     config.columns[:work_location].inplace_edit = true
-    config.columns[:field_terms].collapsed = true
+#    config.columns[:field_terms].collapsed = true
     config.columns[:field_terms].associated_limit = 2
-    config.columns[:health_data].collapsed = true
-    config.columns[:travels].collapsed = true
+#    config.columns[:health_data].collapsed = true
+#    config.columns[:travels].collapsed = true
     config.columns[:travels].associated_limit = 2
-    config.columns[:contacts].collapsed = true
+#    config.columns[:contacts].collapsed = true
     config.columns[:family].actions_for_association_links = [:list]
 
     
-#    config.columns[:family].link = :show
-#    config.nested.add_link("Family", [:family])  # This doesn't seem to work; should add a "Family" link in actions
- #   config.nested.add_scoped_link(:family) 
    config.actions.exclude :search
    config.actions.add :field_search
    config.field_search.human_conditions = true
