@@ -61,9 +61,10 @@ include SimTestHelper
       fill_in "Email 1", :with => email_1
       fill_in "Email 2", :with => email_2
 
-      fill_in "Current meds", :with => "aspirin"
-      fill_in "Issues", :with => "headaches"
-      fill_in "Allergies", :with => "NKA"
+      fill_in "health_data_current_meds", :with => "aspirin"
+      fill_in "health_data_issues", :with => "headaches"
+      fill_in "health_data_allergies", :with => "NKA"
+      fill_in "health_data_comments", :with => "good"
       select 'AB+'
       select 'Educ'
       fill_in "Qualifications", :with=> "Very qualified"
@@ -94,6 +95,7 @@ include SimTestHelper
       m.health_data.current_meds.should == 'aspirin'
       m.health_data.issues.should == 'headaches'
       m.health_data.allergies.should == 'NKA'
+      m.health_data.comments.should == 'good'
       m.health_data.bloodtype.full.should == 'AB+'
       m.personnel_data.education.description.should =~ /Educ/
       m.personnel_data.employment_status.description.should =~ /Career/

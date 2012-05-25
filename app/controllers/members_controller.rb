@@ -62,6 +62,8 @@ class MembersController < ApplicationController
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :residence_location, :birth_date, :bloodtype, :status]
    config.create.link.page = false 
+#   config.update.link.inline = false  # un-comment to force member edits to be normal html (not Ajax)
+#   config.update.link.page = true     # un-comment to force member edits to be normal html (not Ajax)
   end
 
   # Given params hash, change :something_id to :something
@@ -103,11 +105,12 @@ class MembersController < ApplicationController
   def update
 # puts "\n**** Full params=#{params}, id=#{params[:id]}"
     @head = Member.find(params[:id])
-    add_id_to_key(params[:record][:health_data], 'bloodtype')
+#    add_id_to_key(params[:health_data], 'bloodtype')
+ flash[:notice] = params[:health_data]
     @error_records = []  # Keep list of the model records that had errors when updated
       @head, @head_pers, @head_contact, @health_data = 
         update_one_member(@head, params[:head], params[:head_pers], params[:head_contact],
-           params[:record][:health_data], @error_records)
+           params[:health_data], @error_records)
     # Apply to head and spouse any changes to current_term.end_date or next_term.start_date
     #  from Family tab. These _override_ any changes made on the head or wife pages
     update_field_terms(@head, params[:current_term])

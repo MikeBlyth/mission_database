@@ -179,7 +179,7 @@ describe MembersController do
     
     it 'updates the health data' do
 #        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
-      updates = {:record=>{:health_data=>{:issues=>'sick'}}}
+      updates = {:health_data=>{:issues=>'sick'}}
       put :update, @params.merge(updates)
       @head.reload.health_data.issues.should == 'sick'
     end  

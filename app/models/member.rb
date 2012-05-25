@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120427123138
+# Schema version: 20120525135835
 #
 # Table name: members
 #
@@ -16,7 +16,7 @@
 #  country_id                    :integer
 #  first_name                    :string(255)
 #  status_id                     :integer
-#  ministry_comment              :string(255)
+#  ministry_comment              :text
 #  ministry_id                   :integer
 #  residence_location_id         :integer
 #  name                          :string(255)

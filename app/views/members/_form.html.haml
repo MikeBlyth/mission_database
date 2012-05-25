@@ -6,6 +6,7 @@ $( "#tabs" ).tabs();
 - @member = @record
 - @head = @member
 - @head_pers = @member.personnel_data || PersonnelData.new
+- @health_data = @member.health_data || HealthData.new
 <div >
 
 <div id="tabs">
@@ -139,12 +140,32 @@ $( "#tabs" ).tabs();
         %td{:colspan=>'3'}
           = label_tag :head_pers_comments, "Personnel comments"
           %br
-          = text_area :head_pers,  :comments, :cols=>60, :rows=>5
+          = text_area :head_pers, :comments, :cols=>80, :rows=>5
         
   #tabs-health
-    - column = columns.find {|c| c.label == 'Health data'}
-    - renders_as = column_renders_as(column) 
-    %li{:class=>"sub-form #{active_scaffold_config_for(column.association.klass).subform.layout}-sub-form #{column.css_class unless column.css_class.nil? || column.css_class.is_a?(Proc)} id=#{sub_form_id(:association => column.name)}"}
-      = render :partial => form_partial_for_column(column, renders_as), :locals => { :column => column }
-
+    %table.new_family
+      %tr
+        %td
+          = label_tag :health_data_bloodtype_id, "Blood type"
+          %br
+          = collection_select(:health_data, :bloodtype_id, Bloodtype.all, :id, :full, {:include_blank => true }, :class=>'medium-input')    
+        %td
+          = label_tag :health_data_current_meds, "Current medications"
+          %br
+          = text_field :health_data, :current_meds
+      %tr
+        %td
+          = label_tag :health_data_issues, "Health issues"
+          %br
+          = text_field :health_data, :issues
+        %td
+          = label_tag :health_data_allergies, "Allergies"
+          %br
+          = text_field :health_data, :allergies
+      %tr
+        %td{:colspan=>'2'}
+          = label_tag :health_data_comments
+          %br
+          = text_area :health_data, :comments, :cols=>80, :rows=>5
+         
 

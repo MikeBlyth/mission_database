@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120522145318) do
+ActiveRecord::Schema.define(:version => 20120525135835) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(:version => 20120522145318) do
     t.string   "allergies"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "comments"
   end
 
   create_table "locations", :force => true do |t|
@@ -186,7 +187,7 @@ ActiveRecord::Schema.define(:version => 20120522145318) do
     t.integer  "country_id"
     t.string   "first_name"
     t.integer  "status_id"
-    t.string   "ministry_comment"
+    t.text     "ministry_comment"
     t.integer  "ministry_id"
     t.integer  "residence_location_id"
     t.string   "name"
@@ -234,7 +235,7 @@ ActiveRecord::Schema.define(:version => 20120522145318) do
   create_table "personnel_data", :force => true do |t|
     t.integer  "member_id"
     t.string   "qualifications"
-    t.string   "comments"
+    t.text     "comments"
     t.integer  "employment_status_id"
     t.integer  "education_id"
     t.datetime "created_at"
