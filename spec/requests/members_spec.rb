@@ -18,8 +18,6 @@ include SimTestHelper
       integration_test_sign_in(:admin=>true)
       @head = factory_member_basic
       @family = @head.family
-#puts "Start seed: #{Time.now}"
-      seed_tables
     end  
     
     it 'avoids "ambiguous status_id" bug' do
@@ -29,6 +27,7 @@ include SimTestHelper
 
     it "editing user should change all values correctly" do
 #puts "Start editing: #{Time.now}"
+      seed_tables
       phone_1 = '+2348887771111'
       phone_2 = '+2348887772222'
       email_1 = 'firstmail@test.com'
@@ -70,14 +69,10 @@ include SimTestHelper
       fill_in "Qualifications", :with=> "Very qualified"
       select 'Career'
       fill_in "Date active", :with => date_active.strftime("%F")
- #     fill_in "record[personnel_data][comments]", :with => "What a lot of info to fill in."
-#save_and_open_page
-#puts "Start update: #{Time.now}"
+      fill_in "head_pers[comments]", :with => "What a lot of info to fill in."
       click_button "Update"
-#puts "End update: #{Time.now}"
 
       m = @head.reload
-##puts "After filled in, member=#{m.attributes}"
       m.first_name.should == 'Samuel'
       m.middle_name.should == 'Jonah'
       m.short_name.should == 'Sam'
@@ -87,7 +82,6 @@ include SimTestHelper
       m.status.description.should =~ /On field/
       m.ministry.description.should =~ /Min/
       m.ministry_comment.should ==   "ministry comment"    
-#*      m.residence_location.description.should =~ /Site/
       m.work_location.description.should  =~ /Site/
       m.temporary_location.should == 'out of town'
       m.temporary_location_from_date.should == temp_loc_from
@@ -100,10 +94,54 @@ include SimTestHelper
       m.personnel_data.education.description.should =~ /Educ/
       m.personnel_data.employment_status.description.should =~ /Career/
       m.personnel_data.date_active.should == date_active
-#      m.personnel_data.comments.should == 'What a lot of info to fill in.'
+      m.personnel_data.comments.should == 'What a lot of info to fill in.'
     end
-    
 
-  end # Describe Members
+  end # Describe by Admin
 
-end
+  describe "Access control:" do
+      before(:each) do
+  #      integration_test_sign_in(:admin=>true)
+        @head = factory_member_basic
+        @family = @head.family
+      end  
+
+    it 'should not show edit form when not authorized' do
+      integration_test_sign_in(:admin=>false)
+      visit edit_member_path(@head)
+      page.should have_content "not authorized"
+      #save_and_open_page
+    end    
+
+    it 'should show personnel but not health tab for personnel role' do
+      integration_test_sign_in(:admin=>false, :personnel=>true)
+      visit edit_member_path(@head)
+      page.should have_no_content "not authorized"
+      page.should have_selector "#tabs-member"
+      page.should have_no_selector "#tabs-health"
+      page.should have_selector "#tabs-personnel"
+    end    
+
+    it 'should show health but not personnel tab for medical role' do
+      integration_test_sign_in(:admin=>false, :medical=>true)
+      visit edit_member_path(@head)
+      page.should have_no_content "not authorized"
+      page.should have_selector "#tabs-member"
+      page.should have_selector "#tabs-health"
+      page.should have_no_selector "#tabs-personnel"
+    end    
+
+    it 'should show only member tab for travel role' do
+      integration_test_sign_in(:admin=>false, :travel=>true)
+      visit edit_member_path(@head)
+      page.should have_no_content "not authorized"
+      page.should have_selector "#tabs-member"
+      page.should have_no_selector "#tabs-health"
+      page.should have_no_selector "#tabs-personnel"
+    end    
+
+  end
+
+end # Describe Members
+
+

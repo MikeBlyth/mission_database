@@ -10,11 +10,13 @@ ROLES =  {'admin'=>"System administrator",
           }
 
 MODELS = [:bloodtype, :city, :contact, :contact_type, :country, :education, :employment_status, :family, :field_term] + 
-         [:health_data, :location, :member, :ministry, :role, :state, :status, :travel, :user]
+         [:health_data, :location, :member, :ministry, :personnel_data, :pers_task, :role, :state, :status] +
+         [:travel, :user]
          
-LOOKUPS =[:bloodtype, :city, :contact_type, :country, :education, :employment_status, :location, :ministry, :state, :status]
+LOOKUPS = [:bloodtype, :city, :contact_type, :country, :education, :employment_status, :location] +
+          [:ministry, :state, :status]
 
-MEMBER_DATA = [:contact, :family, :field_term, :health_data, :member, :travel]
+MEMBER_DATA = [:contact, :family, :field_term, :personnel_data, :health_data, :member, :travel]
 
 USER_DATA = [:role, :user]
          

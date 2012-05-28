@@ -26,11 +26,14 @@ class Ability
 # Then some fine-tuning
     if user.personnel?
       can :manage, :all
+      cannot :manage, [HealthData]
+      # Not updating role means Personnel can add users to this database but they will only have the minimum
+      # (or default) role. Only Admin can give users roles like Personnel, Travel, Health etc.
       cannot [:create, :update, :destroy], [Bloodtype, Role]
     end
 
     if user.asst_personnel? # Personnel assistant
-      can :manage, [Family, Member, Contact, PersonnelData]
+      can :manage, [Family, Member, Contact, PersonnelData, FieldTerm]
     end
     
     if user.medical?
@@ -39,7 +42,10 @@ class Ability
     end
 
     if user.travel?
-      can :manage, Travel
+      # This allows travel people to fully manage Family and Member so they can add members who aren't
+      # already on the list. However, to be more strict, one could require that someone with 
+      # personnel privileges add the family & member, and allow travel only to assign their travel trips.
+      can :manage, [Travel, Family, Member]
     end    
     
   end  # initialize
