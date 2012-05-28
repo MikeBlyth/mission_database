@@ -3,6 +3,8 @@ class CalendarEventsController < ApplicationController
   before_filter :authenticate 
   include AuthenticationHelper
   load_and_authorize_resource
+
+  before_filter :authenticate #, :only => [:edit, :update]
   
   active_scaffold :calendar_event do |config|
     config.label = "Events for calendar"

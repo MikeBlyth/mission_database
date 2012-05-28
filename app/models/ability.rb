@@ -20,8 +20,13 @@ class Ability
     else
       can :read, :all
       can :update, User
-      cannot :read, [HealthData, PersonnelData]  # Confidential fields
+      cannot :manage, [HealthData, PersonnelData]  # Confidential fields
     end
+
+# Here are the models, taken from authorization_helper for reference when editing the abilities
+#MODELS = [:bloodtype, :city, :contact, :contact_type, :country, :education, :employment_status, :family, :field_term] + 
+#         [:health_data, :location, :member, :ministry, :personnel_data, :pers_task, :role, :state, :status] +
+#         [:travel, :user]
 
 # Then some fine-tuning
     if user.personnel?
@@ -33,12 +38,13 @@ class Ability
     end
 
     if user.asst_personnel? # Personnel assistant
+      # Personnel assistant can't manage the lookup tables such as locations, statuses
       can :manage, [Family, Member, Contact, PersonnelData, FieldTerm]
     end
     
     if user.medical?
-      can :manage, [Member, Bloodtype, HealthData]
-      cannot [:create, :destroy], [Member]
+      can :manage, [Bloodtype, HealthData]
+      can :update, Member
     end
 
     if user.travel?

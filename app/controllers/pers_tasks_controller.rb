@@ -1,4 +1,11 @@
 class PersTasksController < ApplicationController
+  load_and_authorize_resource
+
+  include AuthenticationHelper
+  include ApplicationHelper
+
+  before_filter :authenticate #, :only => [:edit, :update]
+
   active_scaffold :pers_task do |config|
     list.sorting = {:task => 'ASC'}
     config.label = 'Personnel Tasks'

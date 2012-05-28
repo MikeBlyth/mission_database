@@ -11,7 +11,16 @@ SIM::Application.routes.draw do
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
 
-#  devise_for :users
+# These are "forbidden" routes that would only be requested by someone trying to hack
+  match "health_data", :method=>'post', :to => "sessions#destroy"
+  match "health_data/new", :to => "sessions#destroy"
+  match "health_data/:id", :to => "sessions#destroy"
+  match "health_data/:id/edit", :to => "sessions#destroy"
+  match "personnel_data", :method=>'post', :to => "sessions#destroy"
+  match "personnel_data/new", :to => "sessions#destroy"
+  match "personnel_data/:id", :to => "sessions#destroy"
+  match "personnel_data/:id/edit", :to => "sessions#destroy"
+
 
   match 'countries_autocomplete/index'
   match '*a/autocomplete/country' => 'autocomplete#country'
@@ -69,11 +78,11 @@ SIM::Application.routes.draw do
   resources :employment_statuses do as_routes end
   resources :families do as_routes end
   resources :field_terms do as_routes end
-  resources :health_data do as_routes end
+#  resources :health_data do as_routes end
   resources :locations do as_routes end
   resources :members do as_routes end
   resources :ministries do as_routes end
-  resources :personnel_data do as_routes end
+#  resources :personnel_data do as_routes end
   resources :pers_tasks do as_routes end
   resources :states do as_routes end
   resources :statuses do as_routes end
@@ -84,6 +93,8 @@ SIM::Application.routes.draw do
       put 'update_roles'
     end
   end
+
+  
   
   get "members/index"
 

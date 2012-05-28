@@ -13,6 +13,10 @@ FactoryGirl.define do
     full 'Unspecified'
   end
 
+  factory :calendar_event do
+    date Date.today
+  end
+
   factory :city do   
     name 'Jos'
     country 'ng'
@@ -239,6 +243,10 @@ FactoryGirl.define do
     qualifications 'TESOL, qualified midwife'
     date_active '2005-01-01'
   end    
+
+  factory :pers_task do
+    task 'something'
+  end
 
   factory :state do
     id 1

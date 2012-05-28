@@ -20,6 +20,7 @@ end
   
 controllers = [
                 [BloodtypesController, :bloodtype],
+                [CalendarEventsController, :calendar_event],
                 [CitiesController, :city],
                 [ContactsController, :contact],
                 [CountriesController, :country],
@@ -29,6 +30,8 @@ controllers = [
                 [FieldTermsController, :field_term],
                 [LocationsController, :location],
                 [MembersController, :member],
+                [MinistriesController, :ministry],
+                [PersTasksController, :pers_task],
                 [StatesController, :state],
                 [StatusesController, :status],
                 [TravelsController, :travel],

@@ -11,14 +11,17 @@ class MembersController < ApplicationController
 
   active_scaffold :member do |config|
 
+    # Enable user-configurable listing (user can select and order columns)
     config.actions << :config_list
+    # We will not be creating any members through ActiveScaffold
+    config.actions.exclude :create
 
     config.label = "Members"
     list.columns = [:name, :spouse, 
           :child, :work_location, :ministry, :travels, :field_terms, :status, :contacts]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
-    show.columns = create.columns = update.columns = [:name, :name_override,
+    show.columns = update.columns = [:name, :name_override,
           :family,
           :last_name, :first_name, :middle_name, :short_name, :sex,
           :child,
@@ -35,7 +38,7 @@ class MembersController < ApplicationController
     show.columns.exclude    :last_name, :first_name, :middle_name, :short_name, :name_override
     update.columns.exclude :family_name
     
-    create.columns.exclude :family_name
+#    create.columns.exclude :family_name
     config.columns[:country].actions_for_association_links = []
     config.columns[:country].css_class = :hidden
     config.columns[:spouse].actions_for_association_links = [:show]
@@ -61,7 +64,7 @@ class MembersController < ApplicationController
    config.actions.add :field_search
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :residence_location, :birth_date, :bloodtype, :status]
-   config.create.link.page = false 
+#   config.create.link.page = false 
 #   config.update.link.inline = false  # un-comment to force member edits to be normal html (not Ajax)
 #   config.update.link.page = true     # un-comment to force member edits to be normal html (not Ajax)
   end
@@ -105,8 +108,7 @@ class MembersController < ApplicationController
   def update
 # puts "\n**** Full params=#{params}, id=#{params[:id]}"
     @head = Member.find(params[:id])
-#    add_id_to_key(params[:health_data], 'bloodtype')
- flash[:notice] = params[:health_data]
+#    params.delete[:health_data] unless can? :update HealthData
     @error_records = []  # Keep list of the model records that had errors when updated
       @head, @head_pers, @head_contact, @health_data = 
         update_one_member(@head, params[:head], params[:head_pers], params[:head_contact],
@@ -128,6 +130,10 @@ class MembersController < ApplicationController
     end      
   end   
   
+  def new
+      redirect_to members_path
+  end
+
   def do_show
     super
   end    
