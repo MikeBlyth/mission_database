@@ -19,6 +19,8 @@ class FieldTermsController < ApplicationController
     config.columns[:primary_work_location].inplace_edit = true
     config.columns[:employment_status].form_ui = :select 
     config.columns[:employment_status].inplace_edit = true
+#   config.update.link.inline = false  # un-comment to force member edits to be normal html (not Ajax)
+#   config.update.link.page = true     # un-comment to force member edits to be normal html (not Ajax)
   end
 
 end 
