@@ -198,7 +198,6 @@ class Travel < ActiveRecord::Base
   # * Mike Blyth & Little Bo Peep ==> ["Mike Blyth", "Little Bo Peep"]  
   def traveler_array
     # Parse the other_travelers field
-  #  return [self.member.id] unless self.other_travelers  # if nil, just return member
     if !self.other_travelers.blank?
       others = self.other_travelers.split(/;|,/).map {|n| n.strip}.compact.map do |n|
         n.sub(/^(\w*) +(&|and|) +(.*) +(.*)/,'\1 \4; \3 \4').gsub(/\s+/,' ').split(/ & | and |; /)
@@ -207,7 +206,7 @@ class Travel < ActiveRecord::Base
       others = []
     end  
     # Add the member & spouse if any
-puts "**** self.member.spouse=#{self.member.spouse}"
+#puts "**** self.member.spouse=#{self.member.spouse}" if member.spouse
     return (
             [(self.member.id if self.member), 
              (self.member.spouse.id if self.member && self.with_spouse)] + 

@@ -1,6 +1,16 @@
 require 'sim_test_helper'
 include SimTestHelper
 include ApplicationHelper
+require 'pdf_to_text'
+require 'simple_page_text_receiver'
+
+def pdf_to_text
+  temp_pdf = Tempfile.new('pdf')
+  temp_pdf << page.source.force_encoding('UTF-8')
+  temp_pdf.close
+  pdf_text = PDF::PdfToText.new(temp_pdf.path)
+  page.driver.response.instance_variable_set('@body', pdf_text.get_text)
+end
   
 def construct_family
   @family = Factory(:family, :status=>Factory(:status))
@@ -451,25 +461,14 @@ end
 ###################### REPORTS #####################################
 
 Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
-# Converts a PDF response to a text one, based on methods in 
-# http://upstre.am/blog/2009/02/testing-pdfs-with-cucumber-and-rails
-#puts "Converting the #{target_text} report from PDF to Text"
-#puts "PDF Page.body = ::#{page.body}::"
-  temp_pdf = Tempfile.new('pdf')
-  temp_pdf << page.body.force_encoding('UTF-8')
-  temp_pdf.close
-#  temp_txt = Tempfile.new('txt')
-#  temp_txt.close
-#  `pdftotext -q #{temp_pdf.path} #{temp_txt.path}`
-#  page.driver.instance_variable_set('@body', File.read(temp_txt.path))
-  #The next line replaces the previous 4, though I don't know exactly how the last bit works!
-  page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
+  pdf_to_text
   # next is a hack for now, to allow '{next month}' to mean we need to see next month's name in the report.
   if target_text == '{next month}'
     target_text = Date::MONTHNAMES[Date::today().next_month.month]  # which is the name for the next month from now
   end
-# puts "Page.body = ::#{page.body}::" # if target_text=="{next month}"
-  page.should have_content target_text
+  # PDF converter is buggy and often drops spaces, so we compare strings after spaces are removed
+  packed = page.body.gsub(' ','')
+  packed.should match(target_text.gsub(' ',''))
 end
 
 Then /^I should get a "([^"]*)" HTML report$/ do |target_text|
@@ -477,8 +476,10 @@ Then /^I should get a "([^"]*)" HTML report$/ do |target_text|
 end
 
 Then /^the report should include the name, phone and email$/ do 
-  page.should have_content @head.last_name
-  page.should have_content format_phone(@contact.phone_1)
+  # PDF converter is buggy and often drops spaces, so we compare strings after spaces are removed
+  packed = page.body.gsub(' ','')
+  packed.should match(@head.last_name.gsub(' ',''))
+  packed.should match(format_phone(@contact.phone_1).gsub(' ',''))
 end
 
 Then /^the report should include "([^"]*)"$/ do |arg1|
