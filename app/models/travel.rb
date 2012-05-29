@@ -207,6 +207,7 @@ class Travel < ActiveRecord::Base
       others = []
     end  
     # Add the member & spouse if any
+puts "**** self.member.spouse=#{self.member.spouse}"
     return (
             [(self.member.id if self.member), 
              (self.member.spouse.id if self.member && self.with_spouse)] + 

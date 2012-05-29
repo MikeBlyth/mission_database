@@ -1,12 +1,15 @@
 require 'spec_helper'
 require 'sim_test_helper'
+require 'pdf_to_text'
+require 'simple_page_text_receiver'
 include SimTestHelper
 
 def pdf_to_text
   temp_pdf = Tempfile.new('pdf')
-  temp_pdf << page.body.force_encoding('UTF-8')
+  temp_pdf << page.source.force_encoding('UTF-8')
   temp_pdf.close
-  page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
+  pdf_text = PDF::PdfToText.new(temp_pdf.path)
+  page.driver.response.instance_variable_set('@body', pdf_text.get_text)
 end
 
 describe "Report" do
@@ -74,7 +77,6 @@ describe "Report" do
       visit reports_path # whereis_report_path
       click_link "whereis-detailed-pdf"
       pdf_to_text
-#puts page.driver.body
 #      (page.driver.body =~ /Sally.*ravel/m).should_not be_nil
       page.should have_content('return')
     end

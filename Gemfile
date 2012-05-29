@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '>= 3.0.0'
+gem 'rails', '= 3.0.10'
 
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -18,7 +18,7 @@ gem 'pg'
 #gem "ttfunk", "~>1.0.0", :git => "https://github.com/sandal/ttfunk.git"
 gem 'prawn', "0.11.1"# , :git => "git://github.com/sandal/prawn" #, :submodules => true
 gem 'haml' 
-gem 'jrails'
+#gem 'jrails'
 gem 'cancan'
 #gem "meta_where"  # Last officially released gem
 gem 'chronic'
@@ -55,6 +55,7 @@ end
 
 group :test do
   gem "spork", '0.9.0.rc9'
+  gem 'pdf-reader'
 #  gem 'cover_me'
 #  gem "shoulda-matchers"
 
@@ -63,18 +64,5 @@ group :test do
   gem "test-unit"#, "1.2.3"
 end
 
-# gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-
-# Bundle the extra gems:
-# gem 'bj'
-# gem 'nokogiri'
-#gem 'sqlite3-ruby', :require => 'sqlite3'
-# gem 'aws-s3', :require => 'aws/s3'
 
 
