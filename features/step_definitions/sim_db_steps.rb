@@ -4,14 +4,6 @@ include ApplicationHelper
 require 'pdf_to_text'
 require 'simple_page_text_receiver'
 
-def pdf_to_text
-  temp_pdf = Tempfile.new('pdf')
-  temp_pdf << page.source.force_encoding('UTF-8')
-  temp_pdf.close
-  pdf_text = PDF::PdfToText.new(temp_pdf.path)
-  page.driver.response.instance_variable_set('@body', pdf_text.get_text)
-end
-  
 def construct_family
   @family = Factory(:family, :status=>Factory(:status))
   @head = @family.create_family_head

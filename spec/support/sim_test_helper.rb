@@ -7,6 +7,15 @@ module SimTestHelper
     Regexp.new(Regexp.escape(s))
   end
 
+  def pdf_to_text
+    # See https://gist.github.com/1338638 "Test PDF within Cucumber..."
+    temp_pdf = Tempfile.new('pdf')
+    temp_pdf << page.source.force_encoding('UTF-8')
+    temp_pdf.close
+    pdf_text = PDF::PdfToText.new(temp_pdf.path)
+    page.driver.response.instance_variable_set('@body', pdf_text.get_text)
+  end
+  
   def create_one_unspecified_code(type, params={})
     type = type.to_s.camelcase.constantize if type.class == Symbol
     unless type.find_by_id(UNSPECIFIED)
