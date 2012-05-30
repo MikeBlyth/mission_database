@@ -22,16 +22,14 @@ class ContactsController < ApplicationController
     config.columns[:address].inplace_edit = true
     config.columns[:phone_1].inplace_edit = true
     config.columns[:email_1].inplace_edit = true
-#    config.columns[:contact_name].description = 
-#      "Person this record applies to, if not member"
-#    config.columns[:phone_private].description = "Tick box if phone number is considered private/confidential"
-#    config.columns[:is_primary].description = "Tick box if this is the primary contact record"
-#    config.columns[:skype_private].description = "Tick box if Skype name is considered private"
-#    config.columns[:email_private].description = "Tick box if email address is considered private"
-   config.subform.layout = :vertical
-   config.subform.layout = :horizontal
-   config.subform.columns.exclude(:member, :address, :phone_2, :email_2, :blog, :other_website, :facebook, 
+    config.subform.layout = :vertical
+    config.subform.layout = :horizontal
+    config.subform.columns.exclude(:member, :address, :phone_2, :email_2, :blog, :other_website, :facebook, 
         :skype_private, :email_private, :photos)
+ 
+    # Search
+    config.columns[:member].search_sql = 'member.name'
+    config.search.columns << :member
  #    list.sorting = {:member.last_name => 'ASC'}
   end
 

@@ -11,7 +11,7 @@ class TravelsController < ApplicationController
     #  config.columns[:member].actions_for_association_links = [:show]
     config.subform.layout = :vertical
     config.columns = [:traveler_name, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,
-      :return_date, :with_spouse, :with_children, :total_passengers, :confirmed]
+      :return_date, :with_spouse, :with_children, :total_passengers]
     show.columns = create.columns = update.columns =  [:member, :date, :time, :arrival, :origin, :destination, :flight, 
       :term_passage, :personal, :ministry_related, :purpose, 
       :own_arrangements, :guesthouse, :driver_accom, 
@@ -46,6 +46,14 @@ class TravelsController < ApplicationController
     config.list.label = "Travel schedule"
     config.columns[:confirmed].inplace_edit = true
     config.list.sorting = { :date => :asc }
+
+    # Searching
+    config.actions.exclude :search
+    config.actions.add :field_search
+    config.field_search.columns = :date, :member, :other_travelers
+#    config.columns[:member].search_sql = 'member.name'
+#    config.field_search.columns << :member    
+    
   end
 
   def do_create
