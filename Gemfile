@@ -1,6 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'rails', '>= 3.0.0'
+gem "active_scaffold_vho"
+gem 'active_scaffold_config_list_vho'
 
 # Bundle edge Rails instead:
 #gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -22,7 +24,6 @@ gem 'jrails'
 gem 'cancan'
 #gem "meta_where"  # Last officially released gem
 gem 'chronic'
-gem "active_scaffold_vho"
 gem 'rack-ssl-enforcer'
 gem 'settingslogic'
 gem 'sass'
