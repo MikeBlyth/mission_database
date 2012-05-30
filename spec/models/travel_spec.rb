@@ -359,6 +359,12 @@ describe Travel do
       @travel.with_spouse = true
       @travel.traveler_array.should == [@travel.member.id, @travel.member.spouse.id]
     end
+    
+    it 'does not crash if "with spouse" is specified for unmarried member' do
+      @travel.with_spouse = true
+      @travel.traveler_array.should == [@travel.member.id]
+    end
+          
   end
   
   describe 'current_travel_status_hash finds on- off-field status of each person' do

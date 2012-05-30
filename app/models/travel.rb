@@ -209,7 +209,7 @@ class Travel < ActiveRecord::Base
     # Add the member & spouse if any
     return (
             [(self.member.id if self.member), 
-             (self.member.spouse.id if self.member && self.with_spouse)] + 
+             (self.member.spouse.id if self.member && self.member.spouse && self.with_spouse)] + 
             others).compact
   end
 
