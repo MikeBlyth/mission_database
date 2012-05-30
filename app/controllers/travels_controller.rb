@@ -10,7 +10,7 @@ class TravelsController < ApplicationController
 
     #  config.columns[:member].actions_for_association_links = [:show]
     config.subform.layout = :vertical
-    config.columns = [:traveler_name, :date, :arrival, :origin, :destination, :purpose, :flight, :guesthouse,
+    config.columns = [:traveler_name, :date, :arrival, :origin, :destination, :purpose, :term_passage, :flight, :guesthouse,
       :return_date, :with_spouse, :with_children, :total_passengers]
     show.columns = create.columns = update.columns =  [:member, :date, :time, :arrival, :origin, :destination, :flight, 
       :term_passage, :personal, :ministry_related, :purpose, 
@@ -28,7 +28,8 @@ class TravelsController < ApplicationController
     config.columns[:other_travelers].description = "Names of other travelers (separate with \";\")"
     config.columns[:with_spouse].description = "Traveling with spouse?"
     config.columns[:with_children].description = "Traveling with children?"
-    config.columns[:total_passengers].description = "Total number of passengers beyond first"
+    config.columns[:total_passengers].description = "Total number of passengers"
+    config.columns[:total_passengers].label = "Total travelers"
     config.columns[:date].inplace_edit = true
     config.columns[:arrival].inplace_edit = true
     config.columns[:origin].inplace_edit = true
