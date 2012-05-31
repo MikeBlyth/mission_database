@@ -35,7 +35,8 @@ class Member < ActiveRecord::Base
   include NameHelper
   include ApplicationHelper
   include FilterByStatusHelper
-  
+  extend CsvHelper
+    
   attr_protected :spouse_id  # any marriage stuff should be done through methods
 
   # ToDo: This can probably be refactored to use the built-in changed_attributes of the model
@@ -81,8 +82,8 @@ end
     false # or some test for current user
   end
 
-  def self.export
-    return self.first.last_name
+  def self.export(columns)
+    return export_csv(self.all, columns)
   end
 
   def self.find_with_name(name, conditions="true")

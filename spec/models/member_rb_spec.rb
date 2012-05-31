@@ -1201,8 +1201,7 @@ describe Member do
 #      @on_field = Factory.build(:status) # "field" is true by default
       @member = Factory.build(:member_without_family)
       Member.stub(:first).and_return(@member)
-      Member.export.should match(@member.last_name)
-      
+      Member.export(%w{last_name}).should match(@member.last_name)
     end
   end # Export
 end
