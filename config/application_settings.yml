@@ -40,6 +40,14 @@ defaults: &defaults
     travel: jos.travel@sim.org
     personnel: jos.perasst@sim.org
   pers_task_types: [:pipeline, :orientation, :start_of_term, :end_of_term, :end_of_service]
+  export: 
+    family_fields: head name status residence_location
+    member_fields: id name last_name first_name middle_name country ministry work_location school school_grade residence_location status
+    pers_fields: education qualifications employment_status date_active est_end_of_service
+    #  health_fields: %w{current_meds allergies bloodtype }  # Use only after consideration of health confidentiality laws and regulations
+    health_fields: 
+    contact_fields: id member phone_1 phone_2 email_1 email_2 address contact_name contact_type is_primary skype other_website blog facebook email_private phone_private skype_private
+                   
 development:
   <<: *defaults
   screen:

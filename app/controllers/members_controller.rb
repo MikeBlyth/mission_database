@@ -166,7 +166,21 @@ class MembersController < ApplicationController
     redirect_to(status_mismatch_report_path)
   end
         
-  def export(columns=%w{last_name first_name name birth_date sex country ministry work_location})
+  # String delimited by any combo of space, ";" or "," is downcased and split into an array
+  # "cat dog,mouse;lion" => ["cat", "dog", "mouse", "lion"]
+  def delimited_string_to_array(s)
+    s.nil? ? [] : s.downcase.gsub(',', ' ').gsub(';', ' ').split(' ')
+  end
+
+  # Export CSV file. Exports ALL records, so will have to be modified if a subset is desired
+  # No params currently in effect
+  def export(params={})
+     columns = delimited_string_to_array(Settings.export.member_fields)
+     columns = ['name'] if columns.empty?  # to prevent any bad behavior with empty criteria
+     pers_fields = delimited_string_to_array(Settings.export.pers_fields)
+     health_fields = delimited_string_to_array(Settings.export.health_fields)
+     columns += pers_fields if can?(:read, PersonnelData) 
+     columns += health_fields if can?(:read, HealthData) 
      send_data Member.export(columns), :filename => "members.csv"
   end
 

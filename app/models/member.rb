@@ -158,9 +158,54 @@ end
 
 # *************** End Class methods *************
 
+# ******* Methods to access associated records (family, personnel_data, health_data ...)
+
   def residence_location
     return self.family.residence_location
   end
+
+  def education
+    return self.personnel_data.education
+  end
+  
+  def qualifications
+    return self.personnel_data.qualifications
+  end
+    
+  def date_active
+    return self.personnel_data.date_active
+  end
+    
+  def est_end_of_service
+    return self.personnel_data.est_end_of_service
+  end
+    
+  def qualifications
+    return self.personnel_data.qualifications
+  end
+    
+ 
+  def city
+    return residence_location.city.name if residence_location
+  end
+  
+  def employment_status
+    return personnel_data ? personnel_data.employment_status : nil
+  end  
+  
+  def employment_status_code
+    return nil unless personnel_data && personnel_data.employment_status
+    return personnel_data.employment_status.code 
+  end  
+  
+   # Check if employment status is one which makes this person a "member" of the organization
+  # (as opposed to umbrella, dependents, visitors, and so on)
+  def org_member
+    return nil unless personnel_data && personnel_data.employment_status
+    return personnel_data.employment_status.org_member
+  end
+  
+# ******* End methods to return data from associated records (family, personnel_data, health_data ...)
 
   def add_to_family(child)
     child.id = nil
@@ -177,17 +222,6 @@ end
     umbrella_status = EmploymentStatus.find_by_code('umbrella').id
     self.joins(:personnel_data).where("employment_status_id = ?", umbrella_status)
   end 
-
-  # Check if employment status is one which makes this person a "member" of the organization
-  # (as opposed to umbrella, dependents, visitors, and so on)
-  def org_member
-    self.personnel_data.employment_status && self.personnel_data.employment_status.org_member
-  end
-  
-  # Takes name in some free text formats and returns array of matches
-  # To find Donald (Don) Duck, all of these will match:
-  # D Duck; Duck, D; Duck, Don; D Du; Do Du; Du; Don; Donald; Dona Du;
-  # Conditions parameter will pre-filter the output, e.g. can be ["status IN ?", [1,3,5]], "sex='M'", etc.
 
   def living
     status && status.code.to_s != 'deceased'
@@ -206,20 +240,7 @@ end
     return !spouse.nil?
   end
 
-  def employment_status
-    return personnel_data ? personnel_data.employment_status : nil
-  end  
-  
-  def employment_status_code
-    return nil unless personnel_data && personnel_data.employment_status
-    return personnel_data.employment_status.code 
-  end  
-  
-  def org_member
-    return nil unless personnel_data && personnel_data.employment_status
-    return personnel_data.employment_status.org_member
-  end
-      
+     
   def age_range
     case age_years
       when nil then '?'
@@ -255,6 +276,7 @@ end
     self.name <=> other.name
   end
 
+  #****** STUFF RELATED TO TERMS ****************
   # The most recent, including present term.
   def most_recent_term
     terms = self.field_terms.sort
@@ -312,10 +334,6 @@ end
     return {:start=>start, :end=>ending, :eot_status=>eot_status, :end_estimated=>end_estimated}
   end
   
-  def city
-    return residence_location.city.name
-  end
-  
   # Make array of children. This version uses age rather than child attribute as criterion
   def children(include_grown=false)
     family.children(include_grown)  
@@ -351,19 +369,6 @@ end
     errors.add(:family, "must belong to an existing family") unless 
         family_id # && Family.exists?(family_id)
   end
-
-#  # Validate spouse based on opposite sex, age, single ...
-#  def valid_spouse
-#    return if self.spouse.nil? 
-#    errors.add(:spouse, "spouse can't be same sex") if
-#      self.sex == spouse.sex
-#    errors.add(:spouse, "spouse not old enough to be married") if
-#      (spouse.age_years || 99)< 16
-#    errors.add(:spouse, "proposed spouse is already married") if
-#      spouse.spouse_id && (spouse.spouse_id != self.id)
-#    errors.add(:spouse, "must un-marry existing spouse first") if
-#      @previous_spouse && (@previous_spouse.spouse_id == self.id) && (spouse != @previous_spouse)
-#  end
 
   def valid_birth_date
     return if birth_date.blank?
@@ -594,7 +599,7 @@ end
     return nil
   end
   
-  def today_in_date_range(start_date, end_date)
+  def today_in_date_range?(start_date, end_date)
     inrange = Range.new(start_date || Date.yesterday, end_date || Date.tomorrow, 1).include? Date.today 
 #puts "** #{start_date} to #{end_date}: #{inrange}"
     return inrange
@@ -602,7 +607,7 @@ end
 
   def temp_location
     if !temporary_location.blank? && 
-        today_in_date_range(temporary_location_from_date, temporary_location_until_date)
+        today_in_date_range?(temporary_location_from_date, temporary_location_until_date)
       from_formatted  = temporary_location_from_date ?  temporary_location_from_date.to_s(:short) : 'unknown'  
       until_formatted = temporary_location_until_date ? temporary_location_until_date.to_s(:short) : 'unknown'  
       return "temporary location: #{temporary_location}, #{from_formatted} to #{until_formatted}"
@@ -628,7 +633,6 @@ end
     defaults = {:contact_type_id => Settings.contacts.primary_contact_type_code}
     self.contacts.create(defaults.merge(options))
   end
-    
 
   # Email address in member's primary contact record. Return one only with email_1 having priority.
   def email
@@ -664,14 +668,6 @@ end
     return Travel.pending.where("member_id = ?", self.id) + spouse_travel
   end  
 
-#  def in_country_per_travel
-#    most_recent_travel = self.travels.where('date < ?', Date.today).order('date asc').last
-#    if most_recent_travel.nil?
-#      return self.on_field
-#    else
-#      return most_recent_travel.arrival
-#    end
-#  end
   def in_country_per_travel
     rt = self.most_recent_travel
     if rt
@@ -708,55 +704,8 @@ private
       self.spouse_id = nil  # This method unlink_spouse is a before_save callback, so new nil value will be saved
       return
     end       
-    # If we've just removed spouse, we need to unlink the spouse, too
-#    if spouse_id.nil? && @previous_spouse
-#      @previous_spouse.update_attribute(:spouse, nil)
-#      return 
-#    end
   end
  
-  # Update spouse's record if a spouse is defined. 
-#  def cross_link_spouses
-#    # Make sure the spouse links back to self...
-#puts "**** cross_link, self_id=#{self.id}, spouse_id=#{self.spouse_id}"
-#    if spouse_id # if spouse is an existing member in the database
-#      if !spouse  # i.e. if spouse not found in db, db is corrupted
-#        spouse_id = nil
-#        return nil
-#      end 
-#puts "****5"
-#      if spouse.spouse_id != self.id # spouse is not already linked back to member
-#        #puts "**** Crosslinking: self.sex=#{self.sex}, spouse_id=#{spouse_id || ''}, spouse.sex=#{spouse.sex}, spouse.age=#{spouse.age_years}"
-#        # Register error if same sex
-#        spouse.spouse_id = self.id  # my spouse is married to me
-#puts "****7"
-#        if self.male?
-#          husband = self
-#          wife = spouse
-#        else 
-#          wife = self
-#          husband = spouse
-#        end
-#        wife.family_id = husband.family_id
-#puts "****8"
-#        begin
-#          puts "woman_id=#{spouse.id}, self.id=#{self.id}, self.spouse=#{self.spouse_id}"
-#          puts "saving spouse"
-#          spouse.save!
-#          puts "saving self"
-#          self.save!
-##          rescue 
-##     #     flash.now[:notice] = "Unable to find or update spouse (record id #{spouse_id})"
-##           logger.error "***Unable to find or update spouse (record id = #{spouse_id})"
-##           puts "***Unable to find or update spouse (record id #{spouse_id || 'nil'}), errors #{spouse.errors}"
-##           nil
-#        end # rescue block    
-#        return husband
-#      end # if spouse.spouse_id != self.id
-#    end # if spouse_id  
-#  end # cross_link_spouses
-
-  
   # return a string in days, weeks, months, or years, whatever makes sense for the age, from
   # time (t) in seconds. Sensible rounding is applied as we would normally describe someone's age.
   # Thus time_human(187000) = "2 days," time_human(34000000) = "12 months", time_human(120000000) = "3.8 years"
