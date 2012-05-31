@@ -74,40 +74,17 @@ def column_show_add_new(column, associated, record)
   false # if column == :personnel_data
 end
 
-def self.authorized_for_create?
-  false # or some test for current user
-end
 
-  def residence_location
-    return self.family.residence_location
+# *************** Class methods *************
+
+  def self.authorized_for_create?
+    false # or some test for current user
   end
 
-  def add_to_family(child)
-    child.id = nil
-    child.last_name=self.last_name
-    child.family=self
-    child.child=true
-    child.country=self.head.country
-    child.residence_location=self.residence_location
-    return child.save
-  end                            
-
-  def those_umbrella
-    # This one is here because the definition is different between member and family classes
-    umbrella_status = EmploymentStatus.find_by_code('umbrella').id
-    self.joins(:personnel_data).where("employment_status_id = ?", umbrella_status)
-  end 
-
-  # Check if employment status is one which makes this person a "member" of the organization
-  # (as opposed to umbrella, dependents, visitors, and so on)
-  def org_member
-    self.personnel_data.employment_status && self.personnel_data.employment_status.org_member
+  def self.export
+    return self.first.last_name
   end
-  
-  # Takes name in some free text formats and returns array of matches
-  # To find Donald (Don) Duck, all of these will match:
-  # D Duck; Duck, D; Duck, Don; D Du; Do Du; Du; Don; Donald; Dona Du;
-  # Conditions parameter will pre-filter the output, e.g. can be ["status IN ?", [1,3,5]], "sex='M'", etc.
+
   def self.find_with_name(name, conditions="true")
 #puts "Find_with_name #{name}"
     return [] if name.blank?
@@ -173,6 +150,43 @@ end
   def self.mismatched_status
     return off_field_mismatches + on_field_mismatches
   end
+
+  def self.those_in_country
+    return self.all.delete_if {|m| !m.in_country_per_travel}
+  end
+
+# *************** End Class methods *************
+
+  def residence_location
+    return self.family.residence_location
+  end
+
+  def add_to_family(child)
+    child.id = nil
+    child.last_name=self.last_name
+    child.family=self
+    child.child=true
+    child.country=self.head.country
+    child.residence_location=self.residence_location
+    return child.save
+  end                            
+
+  def those_umbrella
+    # This one is here because the definition is different between member and family classes
+    umbrella_status = EmploymentStatus.find_by_code('umbrella').id
+    self.joins(:personnel_data).where("employment_status_id = ?", umbrella_status)
+  end 
+
+  # Check if employment status is one which makes this person a "member" of the organization
+  # (as opposed to umbrella, dependents, visitors, and so on)
+  def org_member
+    self.personnel_data.employment_status && self.personnel_data.employment_status.org_member
+  end
+  
+  # Takes name in some free text formats and returns array of matches
+  # To find Donald (Don) Duck, all of these will match:
+  # D Duck; Duck, D; Duck, Don; D Du; Do Du; Du; Don; Donald; Dona Du;
+  # Conditions parameter will pre-filter the output, e.g. can be ["status IN ?", [1,3,5]], "sex='M'", etc.
 
   def living
     status && status.code.to_s != 'deceased'
@@ -672,10 +686,6 @@ end
     return self.on_field
   end
   
-  def self.those_in_country
-    return self.all.delete_if {|m| !m.in_country_per_travel}
-  end
-
 private
 
   # Return true if I have existing spouse whose spouse_id points back to me (as it ordinarily should)

@@ -166,6 +166,10 @@ class MembersController < ApplicationController
     redirect_to(status_mismatch_report_path)
   end
         
+  def export
+     send_data Member.export, :filename => "members.csv"
+  end
+
   def set_full_names
     Member.find(:all).each do |m| 
       if m.name.blank? || (m.first_name == m.short_name)

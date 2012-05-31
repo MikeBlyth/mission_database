@@ -1193,8 +1193,17 @@ describe Member do
     it 'does not include members w no travel and status!=on_field' do
       @member.update_attribute(:status,nil)
       Member.those_in_country.include?(@member).should be_false
-     
     end
   end # those_in_country
+
+  describe 'export' do
+    it 'makes csv object' do
+#      @on_field = Factory.build(:status) # "field" is true by default
+      @member = Factory.build(:member_without_family)
+      Member.stub(:first).and_return(@member)
+      Member.export.should match(@member.last_name)
+      
+    end
+  end # Export
 end
 

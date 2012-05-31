@@ -32,6 +32,8 @@ SIM::Application.routes.draw do
   match 'members/spouse_select'
   match 'families/:id/add_family_member' => 'families#add_family_member', :as => :add_family_member
   match 'members/edit_inline/:id' => 'members#edit_inline', :as => :edit_inline
+
+  match ':controller/export', :action => 'export'
    
   match 'reports/bloodtypes' => 'reports#bloodtypes', :defaults => {:format => 'pdf'}, :as => 'bloodtype_report'
   match 'reports/birthdays' => 'reports#birthdays', :as => 'birthday_report'

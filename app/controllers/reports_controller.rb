@@ -74,7 +74,7 @@ class ReportsController < ApplicationController
         output = WhereIsTable.new(:page_size=>Settings.reports.page_size).
              to_pdf(@families, @visitors, params)
         if params[:mail_to] then
-puts "Mailing report, params=#{params}"
+#puts "Mailing report, params=#{params}"
           Notifier.send_report(params[:mail_to], @title, output).deliver
           redirect_to reports_path
         else
