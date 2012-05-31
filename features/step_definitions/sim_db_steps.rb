@@ -451,19 +451,7 @@ end
 ###################### REPORTS #####################################
 
 Then /^I should get a "([^"]*)" PDF report$/ do |target_text|
-# Converts a PDF response to a text one, based on methods in 
-# http://upstre.am/blog/2009/02/testing-pdfs-with-cucumber-and-rails
-#puts "Converting the #{target_text} report from PDF to Text"
-#puts "PDF Page.body = ::#{page.body}::"
-  temp_pdf = Tempfile.new('pdf')
-  temp_pdf << page.body.force_encoding('UTF-8')
-  temp_pdf.close
-#  temp_txt = Tempfile.new('txt')
-#  temp_txt.close
-#  `pdftotext -q #{temp_pdf.path} #{temp_txt.path}`
-#  page.driver.instance_variable_set('@body', File.read(temp_txt.path))
-  #The next line replaces the previous 4, though I don't know exactly how the last bit works!
-  page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
+  pdf_to_text  
   # next is a hack for now, to allow '{next month}' to mean we need to see next month's name in the report.
   if target_text == '{next month}'
     target_text = Date::MONTHNAMES[Date::today().next_month.month]  # which is the name for the next month from now

@@ -7,6 +7,13 @@ module SimTestHelper
     Regexp.new(Regexp.escape(s))
   end
 
+  def pdf_to_text
+    temp_pdf = Tempfile.new('pdf')
+    temp_pdf << page.body.force_encoding('UTF-8')
+    temp_pdf.close
+    page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
+  end
+
   def create_one_unspecified_code(type, params={})
     type = type.to_s.camelcase.constantize if type.class == Symbol
     unless type.find_by_id(UNSPECIFIED)

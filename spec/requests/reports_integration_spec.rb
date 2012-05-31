@@ -2,13 +2,6 @@ require 'spec_helper'
 require 'sim_test_helper'
 include SimTestHelper
 
-def pdf_to_text
-  temp_pdf = Tempfile.new('pdf')
-  temp_pdf << page.body.force_encoding('UTF-8')
-  temp_pdf.close
-  page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
-end
-
 describe "Report" do
   
   before(:each) do
