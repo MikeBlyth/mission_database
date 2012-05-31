@@ -26,7 +26,7 @@ group :development, :test do
   gem 'annotate-models' #, '1.0.4'
   gem "rspec-rails"#, "2.5.0"
   gem "cucumber-rails" #, "0.3.2"
-  gem "capybara", ">= 1.1.1"
+  gem "capybara", "= 0.4.1.2"
 #  gem "rcov"
   gem "launchy"
   gem "factory_girl", "2.0.0.beta1"

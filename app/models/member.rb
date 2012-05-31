@@ -82,8 +82,8 @@ end
     false # or some test for current user
   end
 
-  def self.export(columns)
-    return export_csv(self.all, columns)
+  def self.export(cols=[])
+    return export_csv(self.all, cols)
   end
 
   def self.find_with_name(name, conditions="true")

@@ -12,8 +12,7 @@ module CsvHelper
   #    Smith, Joshua, "Smith, Joshua (Josh)", 21 September 1980
   #    Ho, Juan, "Ho, Juan", 19 August 1990
   def export_csv(records, columns)
-    csv_string = CSV.generate do |csv|
-      csv << columns
+    csv_string = CSV.generate(:force_quotes=>false, :headers=>columns, :write_headers=>true) do |csv|
       records.each do |r| 
         csv << columns.map do |c| 
           value = r.send(c.to_sym)
@@ -22,6 +21,7 @@ module CsvHelper
         end
       end
     end
+puts "**** csv_string = #{csv_string}"
     return csv_string
   end
 end

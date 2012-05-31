@@ -1199,9 +1199,11 @@ describe Member do
   describe 'export' do
     it 'makes csv object' do
 #      @on_field = Factory.build(:status) # "field" is true by default
-      @member = Factory.build(:member_without_family)
-      Member.stub(:first).and_return(@member)
-      Member.export(%w{last_name}).should match(@member.last_name)
+      @member = Factory.build(:member_without_family, :birth_date => Date.new(1980,1,1))
+      Member.stub(:all).and_return([@member])
+      csv = Member.export(%w{last_name birth_date})
+      csv.should match(@member.last_name)
+      csv.should match(@member.birth_date.to_s(:long))
     end
   end # Export
 end

@@ -166,8 +166,8 @@ class MembersController < ApplicationController
     redirect_to(status_mismatch_report_path)
   end
         
-  def export
-     send_data Member.export, :filename => "members.csv"
+  def export(columns=%w{last_name first_name name birth_date sex country ministry work_location})
+     send_data Member.export(columns), :filename => "members.csv"
   end
 
   def set_full_names
