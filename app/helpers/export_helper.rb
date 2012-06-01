@@ -1,4 +1,4 @@
-module CsvHelper
+module ExportHelper
   require 'csv'
 
   # Create a multi-line CSV string from the "columns" of each record. The method is general and
@@ -11,7 +11,7 @@ module CsvHelper
   #    last_name, first_name, name, birth_date
   #    Smith, Joshua, "Smith, Joshua (Josh)", 21 September 1980
   #    Ho, Juan, "Ho, Juan", 19 August 1990
-  def export_csv(records, columns)
+  def export_csv(records, columns, params={})
     csv_string = CSV.generate(:force_quotes=>false, :headers=>columns, :write_headers=>true) do |csv|
       records.each do |r| 
         csv << columns.map do |c| 
@@ -23,5 +23,10 @@ module CsvHelper
     end
     return csv_string
   end
+  
+  def export(cols=[], params={})
+    return export_csv(self.all, cols, params)
+  end
+
 end
 

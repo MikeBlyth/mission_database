@@ -35,7 +35,7 @@ class Member < ActiveRecord::Base
   include NameHelper
   include ApplicationHelper
   include FilterByStatusHelper
-  extend CsvHelper
+  extend ExportHelper
     
   attr_protected :spouse_id  # any marriage stuff should be done through methods
 
@@ -80,10 +80,6 @@ end
 
   def self.authorized_for_create?
     false # or some test for current user
-  end
-
-  def self.export(cols=[])
-    return export_csv(self.all, cols)
   end
 
   def self.find_with_name(name, conditions="true")

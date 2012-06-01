@@ -2,9 +2,37 @@ include SimTestHelper
 
 describe Contact do
 
-  describe 'summary' do
-    pending
-  end
+  describe 'summaries:' do
+    before(:each) do
+      m = Factory.build(:member)
+      @contact = Factory.build(:contact, :member=>m,
+            :phone_2=>'+2341234567890', :email_2=>'x@y.com', :skype=>'skyper',
+            :photos=>'photosite', :blog=>'blogsite', :facebook=>'fb', :other_website=>'other site')
+    end
+
+    it 'summary generates hash of needed values' do
+      s = @contact.summary
+      s['Phone'].should match(@contact.phone_1.phone_format)
+      s['Phone'].should match(@contact.phone_2.phone_format)
+      s['Email'].should match(@contact.email_1)
+      s['Email'].should match(@contact.email_2)
+      s['Photos'].should match(@contact.photos)
+      s['Blog'].should match(@contact.blog)
+      s['Facebook'].should match(@contact.facebook)
+      s['Other website'].should match (@contact.other_website)
+    end      
+    it 'summary_text generates string of needed values' do
+      s = @contact.summary_text
+      s.should match(@contact.phone_1.phone_format)
+      s.should match(@contact.phone_2.phone_format)
+      s.should match(@contact.email_1)
+      s.should match(@contact.email_2)
+      s.should match(@contact.photos)
+      s.should match(@contact.blog)
+      s.should match(@contact.facebook)
+      s.should match (@contact.other_website)
+    end      
+  end # summary
   
   describe 'summary_text' do
     pending
@@ -96,4 +124,19 @@ describe Contact do
     end # on record being updated
       
   end     # is_primary flag
+
+  describe 'export' do
+    before(:each) do
+      @member = Factory.build(:member_without_family)
+      @contact = Factory.build(:contact, :member=>@member)
+      Contact.stub(:all).and_return([@contact])
+    end      
+
+    it 'makes csv object' do
+#      @on_field = Factory.build(:status) # "field" is true by default
+      csv = Contact.export ['phone_1']
+      csv.should match(@contact.phone_1)
+    end
+  end # export
+
 end

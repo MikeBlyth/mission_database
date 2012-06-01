@@ -27,6 +27,7 @@
 
 class Contact < ActiveRecord::Base
   include ApplicationHelper
+  extend ExportHelper
   belongs_to :member
   belongs_to :contact_type
   validates_presence_of :member

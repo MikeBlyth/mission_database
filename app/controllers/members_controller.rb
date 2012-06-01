@@ -65,7 +65,7 @@ class MembersController < ApplicationController
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :residence_location, :birth_date, :bloodtype, :status]
 
-   config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
+   config.action_links.add 'export', :label => 'Export', :page => false, :type => :collection, 
      :confirm=>'This will download all the member data (most fields) for ' + 
        'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
 #   config.create.link.page = false 
