@@ -175,5 +175,16 @@ describe TravelsController do
 
   end # Multiple members
   
-  
+  describe 'Export' do
+    before(:each) do
+      @user = Factory(:user, :admin=>true)
+      test_sign_in(@user)
+    end
+
+    it 'sends data file' do
+      get :export
+      response.headers['Content-Disposition'].should =~ /travel.*csv/
+    end
+  end # Export
+    
 end

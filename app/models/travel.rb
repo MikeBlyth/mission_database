@@ -37,6 +37,7 @@ require 'application_helper'
 
 class Travel < ActiveRecord::Base
   extend ApplicationHelper
+  extend ExportHelper
    
   belongs_to :member
   has_one :field_term, :foreign_key => :beginning_travel_id

@@ -1,7 +1,8 @@
 class TravelsController < ApplicationController
   before_filter :authenticate #, :only => [:edit, :update]
   include AuthenticationHelper
-
+  include ApplicationHelper
+  
   load_and_authorize_resource
   
   active_scaffold :travel do |config|
@@ -54,6 +55,9 @@ class TravelsController < ApplicationController
     config.field_search.columns = :date, :member, :other_travelers
 #    config.columns[:member].search_sql = 'member.name'
 #    config.field_search.columns << :member    
+    config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
+       :confirm=>'This will download all the travel data (most fields) for ' + 
+         'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
     
   end
 
@@ -94,6 +98,13 @@ class TravelsController < ApplicationController
       params[:record] = saved_record_params.clone
     end # members.each
 #    puts "do_create: @record=#{@record.attributes}"
+  end
+
+  # Export CSV file. Exports ALL records, so will have to be modified if a subset is desired
+  # No params currently in effect
+  def export(params={})
+     columns = delimited_string_to_array(Settings.export.travel_fields)
+     send_data Travel.export(columns), :filename => "travel.csv"
   end
 
 # Generate a filter string for use in Travel.where(conditions_for_collection)...
