@@ -33,7 +33,7 @@ class ContactsController < ApplicationController
     config.search.columns << :member
  #    list.sorting = {:member.last_name => 'ASC'}
     config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
-        :confirm=>'This will download all the member data (most fields) for ' + 
+        :confirm=>'This will download all the contacts data (most fields) for ' + 
          'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
   end
 

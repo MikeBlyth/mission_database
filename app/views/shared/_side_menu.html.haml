@@ -8,6 +8,7 @@
       =# %li= link_to "User Settings", edit_user_path(current_user)       
       %li= link_to 'Travel', travels_path 
       %li= link_to 'Contacts', contacts_path 
+      %li= link_to 'Field terms', field_terms_path 
       %li= link_to 'Reports', reports_path      
       %li= link_to 'Calendar events', calendar_events_path      
       - if can? :create, User

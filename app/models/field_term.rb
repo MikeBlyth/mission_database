@@ -49,6 +49,10 @@ class FieldTerm < ActiveRecord::Base
       return 0
   end
 
+  def name
+    member.name
+  end
+
   # String reporting the start & end dates
   def dates
     start_s = start_date ? start_date.to_s : '?'

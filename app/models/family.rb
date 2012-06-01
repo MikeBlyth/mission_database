@@ -24,6 +24,7 @@ class Family < ActiveRecord::Base
   include NameHelper
   include FilterByStatusHelper
   include ApplicationHelper
+  extend ExportHelper
 
   attr_accessor :previous_residence_location, :previous_status
   
@@ -43,7 +44,7 @@ class Family < ActiveRecord::Base
   before_save   :update_member_statuses
 
   def to_label
-    "* #{name}"
+    "#{name}"
   end
 
   def kill_me
@@ -134,8 +135,6 @@ class Family < ActiveRecord::Base
     return child
   end                            
                             
-    
-  
   # Husband of family as Member object, nil if single
   def husband
     return nil if self.head.nil? || self.head.spouse.nil?
@@ -218,6 +217,27 @@ class Family < ActiveRecord::Base
         return true
       end
     end
+  end
+
+  # Access some data from the head-of-family, so e.g. family.date_active is same as family.head.date_active
+  def date_active 
+    self.head.date_active
+  end
+
+  def est_end_of_service 
+    self.head.est_end_of_service
+  end
+
+  def employment_status 
+    self.head.employment_status
+  end
+
+  def most_recent_term 
+    self.head.most_recent_term
+  end
+
+  def pending_term
+    self.head.pending_term
   end
 
 private

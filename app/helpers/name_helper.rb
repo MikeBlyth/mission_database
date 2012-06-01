@@ -24,7 +24,7 @@ module NameHelper
   end
   
   def to_s
-    (last_name_first || '') + " (#{self.id})"
+    last_name_first
   end
 
   # Indexed_name is the full name stored in the table. It is formed automatically on record
@@ -95,7 +95,7 @@ module NameHelper
     end
     s = (last_name) + ', ' + first 
     s << (' ' + middle) unless options[:middle] == false || middle.empty?
-    return s    
+    return s || ''
   end
   
 end

@@ -29,6 +29,9 @@ class FamiliesController < ApplicationController
     config.columns[:sim_id].label = "SIM ID"
     config.create.link.page = true 
     config.delete.link.confirm = "\n"+"*" * 60 + "\nAre you sure you want to delete this family and all its members??!!\n" + "*" * 60
+    config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
+       :confirm=>'This will download all the families data (most fields) for ' + 
+         'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
   end
   
   # Return new records for 'count' children of 'parent'. Records are not saved.
@@ -239,6 +242,11 @@ class FamiliesController < ApplicationController
     end
   end
   
+  def export(params={})
+     columns = delimited_string_to_array(Settings.export.family_fields)
+     send_data Family.export(columns), :filename => "families.csv"
+  end
+
 # Generate a filter string for use in Family.where(conditions_for_collection)...
   def conditions_for_collection
     Status.filter_condition_for_group('families',session[:filter])
