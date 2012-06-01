@@ -87,6 +87,22 @@ describe FieldTerm do
     (a <=> b).should == -1
   end  
 
+  describe 'export' do
+    before(:each) do
+      @member = Factory.build(:member_without_family)
+      @field_term = Factory.build(:field_term, :member=>@member)
+      FieldTerm.stub(:all).and_return([@field_term])
+    end      
+
+    it 'makes csv object' do
+      csv = FieldTerm.export ['start_date', 'member']
+puts "**** csv=#{csv}"      
+      csv.should match(@member.last_name)
+      csv.should match(@field_term.start_date.to_s(:long))
+    end
+      
+  end # Export
+
 end
   
 

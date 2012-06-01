@@ -1,5 +1,5 @@
-describe CsvHelper do
-extend CsvHelper
+describe ExportHelper do
+extend ExportHelper
   
   describe 'export_csv' do
     it 'builds a export csv string' do
