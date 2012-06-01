@@ -1197,14 +1197,30 @@ describe Member do
   end # those_in_country
 
   describe 'export' do
-    it 'makes csv object' do
-#      @on_field = Factory.build(:status) # "field" is true by default
+    before(:each) do
       @member = Factory.build(:member_without_family, :birth_date => Date.new(1980,1,1))
       Member.stub(:all).and_return([@member])
-      csv = Member.export(%w{last_name birth_date})
+    end      
+
+    it 'makes csv object' do
+#      @on_field = Factory.build(:status) # "field" is true by default
+      csv = Member.export ['last_name', 'birth_date']
       csv.should match(@member.last_name)
       csv.should match(@member.birth_date.to_s(:long))
     end
+
+    # Todo: Refactor next two into tests just for csv_helper or export
+    it 'gracefully ignores unknown column names' do
+      csv = Member.export ['last_name', 'xxxxxzzzz']
+      csv.should match(@member.last_name)
+    end
+
+    it 'handles case with no column names' do
+      # This test will pass regardless of what export returns; we just want to know that it doesn't crash
+      csv = Member.export [] 
+    end
+      
   end # Export
+
 end
 

@@ -15,13 +15,12 @@ module CsvHelper
     csv_string = CSV.generate(:force_quotes=>false, :headers=>columns, :write_headers=>true) do |csv|
       records.each do |r| 
         csv << columns.map do |c| 
-          value = r.send(c.to_sym)
+          value = r.send(c.to_sym) if r.respond_to? c.to_sym
           # We want dates in long form, so have to convert them separately from other data types
           value.class == Date ? value.to_s(:long) : value.to_s
         end
       end
     end
-puts "**** csv_string = #{csv_string}"
     return csv_string
   end
 end

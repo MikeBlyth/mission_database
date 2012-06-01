@@ -64,6 +64,10 @@ class MembersController < ApplicationController
    config.actions.add :field_search
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :residence_location, :birth_date, :bloodtype, :status]
+
+   config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
+     :confirm=>'This will download all the member data (most fields) for ' + 
+       'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
 #   config.create.link.page = false 
 #   config.update.link.inline = false  # un-comment to force member edits to be normal html (not Ajax)
 #   config.update.link.page = true     # un-comment to force member edits to be normal html (not Ajax)
@@ -178,9 +182,13 @@ class MembersController < ApplicationController
      columns = delimited_string_to_array(Settings.export.member_fields)
      columns = ['name'] if columns.empty?  # to prevent any bad behavior with empty criteria
      pers_fields = delimited_string_to_array(Settings.export.pers_fields)
-     health_fields = delimited_string_to_array(Settings.export.health_fields)
      columns += pers_fields if can?(:read, PersonnelData) 
-     columns += health_fields if can?(:read, HealthData) 
+     # Uncomment next 2 lines to allow exportation of health data, but
+     # (a) be aware of legal and ethical implications of making the data available this way and
+     # (b) methods must be added to Member model to access the associated models (e.g. add a 
+     #     Member#bloodtype method to access member.health_data.bloodtype
+     # health_fields = delimited_string_to_array(Settings.export.health_fields)
+     # columns += health_fields if can?(:read, HealthData) 
      send_data Member.export(columns), :filename => "members.csv"
   end
 
