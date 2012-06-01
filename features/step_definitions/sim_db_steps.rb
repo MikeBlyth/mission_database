@@ -445,7 +445,7 @@ Then /^I should see an error message$/ do
 end
 
 Then /^the list should not show the family$/ do
-  page.should have_content("Deleted * #{@family.last_name}")
+  page.should have_content("Deleted #{@family.last_name}")
 end
 
 ###################### REPORTS #####################################

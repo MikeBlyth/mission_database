@@ -234,6 +234,8 @@ puts "#{message}"
        
     birthday_data = params[:birthdays] ? birthday_calendar_data({:month=>date_for_calendar.month}) : []
     travel_data = params[:travel] ? travel_calendar_data({:date=>date_for_calendar}) : []
+puts "**** travel_data=#{travel_data}"
+puts "**** date_for_calendar=#{date_for_calendar}"
     events_data = params[:events] ? calendar_events_data({:date=>date_for_calendar}) : []
     # Merge the different arrays of data--birthdays, travel, anything else
     merged = merge_calendar_data([travel_data, birthday_data, events_data])
@@ -249,63 +251,64 @@ puts "#{message}"
     end
   end
  
-  def birthday_travel_calendar
-    # Set up the calendar form for right month (page size, titles, etc.)
-    calendar = calendar_setup
-       
-    # Select the people born this month and to put on the calendar
-    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
+#  def birthday_travel_calendar
+#    # Set up the calendar form for right month (page size, titles, etc.)
+#    calendar = calendar_setup
+#       
+#    # Select the people born this month and to put on the calendar
+#    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
 
-    # Select the people born this month and to put on the calendar
-    travel_data = travel_calendar_data({:date=>date_for_calendar})
+#    # Select the people born this month and to put on the calendar
+#    travel_data = travel_calendar_data({:date=>date_for_calendar})
 
-    # Actually print the strings
-    merged = merge_calendar_data([travel_data, birthday_data])
+#    # Actually print the strings
+#    merged = merge_calendar_data([travel_data, birthday_data])
 
-    respond_to do |format|
-      format.pdf do
-        calendar.put_data_into_days(merged)
-        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
-                          :type => "application/pdf"
-      end
-    end
-  end
- 
-  def travel_calendar
-    # Set up the calendar form for right month (page size, titles, etc.)
-    calendar = calendar_setup
-       
-    # Select the people born this month and to put on the calendar
-    travel_data = travel_calendar_data({:date=>date_for_calendar})
+#    respond_to do |format|
+#      format.pdf do
+#        calendar.put_data_into_days(merged)
+#        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
+#                          :type => "application/pdf"
+#      end
+#    end
+#  end
+# 
+#  def travel_calendar
+#    # Set up the calendar form for right month (page size, titles, etc.)
+#    calendar = calendar_setup
+#       
+#    # Select the people traveling this month to put on the calendar
+#    travel_data = travel_calendar_data({:date=>date_for_calendar})
+#puts "**** travel_data=#{travel_data}"
+#puts "**** date_for_calendar=#{date_for_calendar}"
+#    # Actually print the strings
 
-    # Actually print the strings
+#    respond_to do |format|
+#      format.pdf do
+#        calendar.put_data_into_days(travel_data)
+#        send_data calendar.render, :filename => "travel_calendar.pdf", 
+#                          :type => "application/pdf"
+#      end
+#    end
+#  end
 
-    respond_to do |format|
-      format.pdf do
-        calendar.put_data_into_days(travel_data)
-        send_data calendar.render, :filename => "travel_calendar.pdf", 
-                          :type => "application/pdf"
-      end
-    end
-  end
+#  def birthday_calendar
+#    # Set up the calendar form for right month (page size, titles, etc.)
+#    calendar = calendar_setup
+#       
+#    # Select the people born this month and to put on the calendar
+#    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
 
-  def birthday_calendar
-    # Set up the calendar form for right month (page size, titles, etc.)
-    calendar = calendar_setup
-       
-    # Select the people born this month and to put on the calendar
-    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
+#    # Actually print the strings
 
-    # Actually print the strings
-
-    respond_to do |format|
-      format.pdf do
-        calendar.put_data_into_days(birthday_data)
-        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
-                          :type => "application/pdf"
-      end
-    end
-  end
+#    respond_to do |format|
+#      format.pdf do
+#        calendar.put_data_into_days(birthday_data)
+#        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
+#                          :type => "application/pdf"
+#      end
+#    end
+#  end
 
 #  # Test showing how to use multi-column layout with Prawn and our own (temporary?) flow_in_columns method
 #   def multi_col_test
@@ -339,11 +342,12 @@ private
     return data
   end # birthday_calendar_data
 
+  # Note: Perhaps most of this should be moved into the Travel model 
   # Generate data structure for travel to insert into calendar
   def travel_calendar_data(params={})
     prefixes = {true=>Settings.reports.travel_calendar.arrival_prefix, false=>Settings.reports.travel_calendar.departure_prefix}
     starting_date = params[:date]
-    selected = Travel.where("date > ? and date < ?", starting_date, starting_date.next_month).order("date ASC")
+    selected = Travel.where("date >= ? and date < ?", starting_date, starting_date.next_month).order("date ASC")
     # Make a hash like { 1 => {:text=>"AR: John Doe\nDP: Mary Smith"}, 8 => {:text=>"AR: Adam Smith\n"}}
     data = {} 
     selected.each do |trip|
@@ -353,6 +357,7 @@ private
     return data
   end # travel_calendar_data
 
+  # Note: Perhaps most of this should be moved into the CalendarEvent model 
   # Generate data structure for travel to insert into calendar
   def calendar_events_data(params={})
     starting_date = params[:date]
