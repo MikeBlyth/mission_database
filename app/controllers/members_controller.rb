@@ -65,7 +65,7 @@ class MembersController < ApplicationController
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name]#, :residence_location, :birth_date, :bloodtype, :status]
 
-   config.action_links.add 'export', :label => 'Export', :page => false, :type => :collection, 
+   config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
      :confirm=>'This will download all the member data (most fields) for ' + 
        'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
 #   config.create.link.page = false 
@@ -170,12 +170,6 @@ class MembersController < ApplicationController
     redirect_to(status_mismatch_report_path)
   end
         
-  # String delimited by any combo of space, ";" or "," is downcased and split into an array
-  # "cat dog,mouse;lion" => ["cat", "dog", "mouse", "lion"]
-  def delimited_string_to_array(s)
-    s.nil? ? [] : s.downcase.gsub(',', ' ').gsub(';', ' ').split(' ')
-  end
-
   # Export CSV file. Exports ALL records, so will have to be modified if a subset is desired
   # No params currently in effect
   def export(params={})

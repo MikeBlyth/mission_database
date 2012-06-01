@@ -4,6 +4,7 @@ class ContactsController < ApplicationController
 
   before_filter :authenticate #, :only => [:edit, :update]
   include AuthenticationHelper
+  include ApplicationHelper
 
   active_scaffold :contact do |config|
     config.columns = [:member, :contact_type, :is_primary, :contact_name, :address, 
@@ -31,6 +32,9 @@ class ContactsController < ApplicationController
     config.columns[:member].search_sql = 'member.name'
     config.search.columns << :member
  #    list.sorting = {:member.last_name => 'ASC'}
+    config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
+        :confirm=>'This will download all the member data (most fields) for ' + 
+         'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
   end
 
   # Set is_primary true if new record belongs to a member with no primary contact or if
@@ -39,6 +43,11 @@ class ContactsController < ApplicationController
     super
     @record.is_primary = (@record.member && @record.member.contacts.where(:is_primary=>true).empty?) ||
                           @record.member.nil?
+  end
+
+  def export(params={})
+     columns = delimited_string_to_array(Settings.export.contact_fields)
+     send_data Contact.export(columns), :filename => "contacts.csv"
   end
 
 end 

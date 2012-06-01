@@ -34,10 +34,7 @@ describe Contact do
     end      
   end # summary
   
-  describe 'summary_text' do
-    pending
-  end
-  
+ 
   describe 'finds recent' do
     it {finds_recent(Contact)}
   end

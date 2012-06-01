@@ -68,6 +68,12 @@ module ApplicationHelper
       a.collect{|x| (x || '').to_s.strip}.delete_if{|x| x.blank?}.join(delim)
     end
   
+    # String delimited by any combo of space, ";" or "," is downcased and split into an array
+    # "cat dog,mouse;lion" => ["cat", "dog", "mouse", "lion"]
+    def delimited_string_to_array(s)
+      s.nil? ? [] : s.downcase.gsub(',', ' ').gsub(';', ' ').split(' ')
+    end
+
     # Just add '_id' to a string or symbol
     def link_id(s)
       return s if s =~ /_id\z/  # no change if it already ends in _id
