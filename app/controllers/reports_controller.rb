@@ -234,8 +234,6 @@ puts "#{message}"
        
     birthday_data = params[:birthdays] ? birthday_calendar_data({:month=>date_for_calendar.month}) : []
     travel_data = params[:travel] ? travel_calendar_data({:date=>date_for_calendar}) : []
-puts "**** travel_data=#{travel_data}"
-puts "**** date_for_calendar=#{date_for_calendar}"
     events_data = params[:events] ? calendar_events_data({:date=>date_for_calendar}) : []
     # Merge the different arrays of data--birthdays, travel, anything else
     merged = merge_calendar_data([travel_data, birthday_data, events_data])
