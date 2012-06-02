@@ -22,6 +22,13 @@ $( "#tabs" ).tabs();
 
   = form_for :head do |member|
     #tabs-member
+      #photo{:style=>'float: right'}
+        = member.label :photo
+        %br
+        = member.file_field :photo
+        %p
+          <b>Avatar:</b><br>
+          = image_tag @head.photo.url, :style => "max-width: 150px; margin: 10px 0px;"
       #dataform
         %table.new_family
           %tr

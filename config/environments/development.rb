@@ -34,5 +34,7 @@ SIM::Application.configure do
 # config.action_mailer.delivery_method = :smtp | :sendmail | :test  
   config.action_mailer.delivery_method = :test
 
+Progstr::Filer.access_key = '38dd9791285140709b9b28912459c14f'
+Progstr::Filer.secret_key = 'd600f64cf6d2438c9596f1fd62d518ed'
 end
 

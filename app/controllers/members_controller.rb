@@ -69,7 +69,7 @@ class MembersController < ApplicationController
      :confirm=>'This will download all the member data (most fields) for ' + 
        'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
 #   config.create.multipart = true
-#   config.update.multipart = true
+   config.update.multipart = true
 
 #   config.create.link.page = false 
 #   config.update.link.inline = false  # un-comment to force member edits to be normal html (not Ajax)
