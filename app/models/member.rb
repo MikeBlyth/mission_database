@@ -57,7 +57,7 @@ class Member < ActiveRecord::Base
 #*  belongs_to :residence_location, :class_name => "Location"#, :foreign_key => "residence_location_id"
   belongs_to :work_location, :class_name => "Location"#, :foreign_key => "work_location_id"
   belongs_to :status
-  has_file :photo, PhotoUploader
+#  has_file :photo, PhotoUploader
   validates_presence_of :last_name, :first_name, :name, :family
   validates_uniqueness_of :spouse_id, :allow_blank=>true
 #  validate :valid_spouse
