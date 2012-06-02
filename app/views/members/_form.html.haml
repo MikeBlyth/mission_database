@@ -22,100 +22,108 @@ $( "#tabs" ).tabs();
 
   = form_for :head do |member|
     #tabs-member
-      %table.new_family
-        %tr
-          %td
-            = member.label :last_name,"", :class=>'required'
-            %br
-            = member.text_field :last_name, :class=> "last_name-input"
-          %td
-            = member.label :first_name,"", :class=>'required'
-            %br
-            = member.text_field :first_name, :class=> "first_name-input"
-          %td
-            = member.label :middle_name
-            %br
-            = member.text_field :middle_name, :class=> "middle_name-input"
-          %td
-            = member.label :short_name
-            %br
-            = member.text_field :short_name, :class=> "short_name-input"
-          %td
-            = member.label :sex, :class=>'required'
-            %br
-            = member.select(:sex, [['Female','F'], ['Male','M']], {:include_blank => true} )
-        %tr
-          %td
-            .birth_date        
-              = member.label :birth_date, :class => 'birth_date-input'
-              %br
-              = member.text_field  :birth_date, :class => 'birth_date-input date_picker '
-          %td
-            .country
-              = member.label :country_id
-              %br
-              - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
-              = member.select(:country_id, choices, {:include_blank => true }, :class=>'wide-input')    
-        %tr
-          %td
-            = member.label :name, "Full name of individual", :class=>'required'
-            %br
-            = member.text_field :name, :class=> "name-input"
-            %br
-            %p.description Must be unique
-            %td
-              = label_tag :head_status_id, "Field status"
-              %br
-              - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @head[:status_id])
-              = member.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+      #photo{:style=>'float: right'}
+        = member.label :photo
+        %br
+        = member.file_field :photo
+        %p
+          <b>Avatar:</b><br>
+          = image_tag @head.photo.url, :style => "max-width: 150px; margin: 10px 0px;"
+      #dataform
+        %table.new_family
           %tr
-          - if child
-            Child stuff here
-          - else
             %td
-              = member.label :ministry_id, "Ministry"
+              = member.label :last_name,"", :class=>'required'
               %br
-              - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
-              = member.select(:ministry_id, choices, {:include_blank => true }, :class=>'wide-input')    
+              = member.text_field :last_name, :class=> "last_name-input"
             %td
-              = member.label :work_location_id, "Ministry location"
+              = member.label :first_name,"", :class=>'required'
               %br
-              - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
-              = member.select(:work_location_id, choices, {:include_blank => true }, :class=>'ministry_location-input')    
+              = member.text_field :first_name, :class=> "first_name-input"
+            %td
+              = member.label :middle_name
+              %br
+              = member.text_field :middle_name, :class=> "middle_name-input"
+            %td
+              = member.label :short_name
+              %br
+              = member.text_field :short_name, :class=> "short_name-input"
+          %tr
+            %td
+              = member.label :sex, :class=>'required'
+              %br
+              = member.select(:sex, [['Female','F'], ['Male','M']], {:include_blank => true} )
+            %td
+              .birth_date        
+                = member.label :birth_date, :class => 'birth_date-input'
+                %br
+                = member.text_field  :birth_date, :class => 'birth_date-input date_picker '
+            %td
+              .country
+                = member.label :country_id
+                %br
+                - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
+                = member.select(:country_id, choices, {:include_blank => true }, :class=>'wide-input')    
+          %tr
+            %td
+              = member.label :name, "Full name of individual", :class=>'required'
+              %br
+              = member.text_field :name, :class=> "name-input"
+              %br
+              %p.description Must be unique
+              %td
+                = label_tag :head_status_id, "Field status"
+                %br
+                - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @head[:status_id])
+                = member.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+            %tr
+            - if child
+              Child stuff here
+            - else
+              %td
+                = member.label :ministry_id, "Ministry"
+                %br
+                - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
+                = member.select(:ministry_id, choices, {:include_blank => true }, :class=>'wide-input')    
+              %td
+                = member.label :work_location_id, "Ministry location"
+                %br
+                - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
+                = member.select(:work_location_id, choices, {:include_blank => true }, :class=>'ministry_location-input')    
+              %td{:colspan=>'2'}
+                = member.label :ministry_comment, "Ministry comments"
+                %br
+                = member.text_field :ministry_comment, :class=>'ministry_comments'   
+          %tr
+            %td
+              = label :head_contact, :phone_1, "Phone on field"
+              %br
+              = text_field :head_contact, :phone_1, :class=>'phone-input'
+            %td
+              = label :head_contact, :email_1, "Email 1"
+              %br
+              = text_field :head_contact, :email_1
             %td{:colspan=>'2'}
-              = member.label :ministry_comment, "Ministry comments"
+              = member.label :temporary_location, "Temporary location"
               %br
-              = member.text_field :ministry_comment, :class=>'ministry_comments'   
-        %tr
-          %td
-            = label :head_contact, :phone_1, "Phone on field"
-            %br
-            = text_field :head_contact, :phone_1, :class=>'phone-input'
-          %td
-            = label :head_contact, :email_1, "Email 1"
-            %br
-            = text_field :head_contact, :email_1
-          %td{:colspan=>'2'}
-            = member.label :temporary_location, "Temporary location"
-            %br
-            = member.text_field :temporary_location, :class=>'temporary_location-input'
-        %tr
-          %td
-            = label :head_contact, :phone_2, "Phone 2"
-            %br
-            = text_field :head_contact, :phone_2, :class=>'phone-input'
-          %td
-            = label :head_contact, :email_2, "Email 2"
-            %br
-            = text_field :head_contact, :email_2
-          %td
-            = member.label :temporary_location_from_date, "Temp. loc. start date"
-            %br
-            = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
-          %td
-            = member.label :temporary_location_until_date, "Until"
-            %br
-            = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
+              = member.text_field :temporary_location, :class=>'temporary_location-input'
+          %tr
+            %td
+              = label :head_contact, :phone_2, "Phone 2"
+              %br
+              = text_field :head_contact, :phone_2, :class=>'phone-input'
+            %td
+              = label :head_contact, :email_2, "Email 2"
+              %br
+              = text_field :head_contact, :email_2
+            %td
+              = member.label :temporary_location_from_date, "Temp. loc. start date"
+              %br
+              = member.text_field:temporary_location_from_date, :class => 'active_date-input date_picker '
+            %td
+              = member.label :temporary_location_until_date, "Until"
+              %br
+              = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
     - if @member.child
       #tabs-school
         = member.label :school

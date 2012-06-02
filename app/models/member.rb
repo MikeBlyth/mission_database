@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120525135835
+# Schema version: 20120602073038
 #
 # Table name: members
 #
@@ -28,6 +28,7 @@
 #  temporary_location_until_date :date
 #  school                        :text
 #  school_grade                  :integer
+#  photo                         :string(255)
 #
 
 
