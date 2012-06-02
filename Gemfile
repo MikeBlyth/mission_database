@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '= 3.0.5'
+gem 'rails', '= 3.0.7'
 gem "active_scaffold_vho"
 gem 'active_scaffold_config_list_vho'
 
