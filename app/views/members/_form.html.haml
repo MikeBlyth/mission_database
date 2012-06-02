@@ -20,7 +20,7 @@ $( "#tabs" ).tabs();
     - if can? :read, HealthData
       %li <a href="#tabs-health">Health</a>
 
-  = form_for :head do |member|
+  = form_for :head, :html => { :multipart => true, :class=>'newphoto' } do |member|
     #tabs-member
       #photo{:style=>'float: right'}
         = member.label :photo
