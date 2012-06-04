@@ -174,7 +174,7 @@ GEM
       json_pure
       rubyzip
     settingslogic (2.0.6)
-    spork (0.9.0.rc9)
+    spork (0.9.2)
     systemu (2.2.0)
     term-ansicolor (1.0.5)
     test-unit (2.3.0)
@@ -223,6 +223,6 @@ DEPENDENCIES
   sass
   selenium-client (>= 1.2.18)
   settingslogic
-  spork (= 0.9.0.rc9)
+  spork (= 0.9.2)
   test-unit
   twiliolib

@@ -4,10 +4,18 @@ include ApplicationHelper
 require 'httparty'
 require 'uri'
 
+class SmsGateway
+  def send(number, body)
+  end
+end
+
 class SmsController < ApplicationController
   include HTTParty
   skip_before_filter :verify_authenticity_token
 
+  # Twilio sends the message to create just as if it were a web HTTP request
+  # The create method should handle the incoming message by determining any actions
+  # needed and sending a return message.
   def create  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
     from = params[:From]
@@ -43,7 +51,6 @@ class SmsController < ApplicationController
   
    def send_clickatell(num, body)
     user = SiteSetting[:clickatell_user_name]
-
     pwd =  SiteSetting[:clickatell_password]
     api =  SiteSetting[:clickatell_api_id]
     missing = clickatell_missing_parameters(user, pwd, api)
@@ -58,7 +65,14 @@ class SmsController < ApplicationController
     return reply
   end
 
-  def send_twilio(num)  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
+  # Send out a single message to an array of numbers.
+  # Note that we could put logic here to change the gateway based on the number (US via one, Europe via another...)
+  def send_multi(numbers, body, gateway=SmsGateway.new)
+    gateway.send(numbers[0], body)
+    #numbers.each {|number| self.send gateway_method, number, body}
+  end
+
+  def send_twilio(num, body='')  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
       account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
 
       outgoing = {
@@ -74,6 +88,7 @@ class SmsController < ApplicationController
 
 private
 
+  # Parse the message received from mobile
   def process_sms(body)
     return "Nothing found in your message!" if body.blank?
     command, text = extract_commands(body)[0] # parse to first word=command, rest = text
@@ -106,7 +121,7 @@ private
   end
 
   def from_member(from) 
-    return true if from == '+16199282591'
+    return true if from == '+16199282591' # Mike's Google Voice number for testing
     Contact.find_by_phone_1(from) || Contact.find_by_phone_2(from)
   end
 

@@ -168,4 +168,18 @@ describe SmsController do
 
   end # 'handles these commands:'
 
+  describe 'sends to multiple contacts' do
+    before(:each) do
+      @gateway = mock('gateway')
+      @message = 'Test'
+      @numbers = ['+12222222222', '+2348038000000']
+    end
+    
+    it 'does something' do
+      @gateway.should_receive(:send).with('+12222222222', 'Test')
+      controller.send_multi(@numbers, @message, @gateway)
+    end
+    
+  end # sends to multiple contacts
+
 end

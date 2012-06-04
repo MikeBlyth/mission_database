@@ -39,7 +39,7 @@ group :development, :test do
 end
 
 group :test do
-  gem "spork", '0.9.0.rc9'
+  gem "spork", '= 0.9.2'
 #  gem 'cover_me'
 #  gem "shoulda-matchers"
 
