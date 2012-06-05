@@ -19,5 +19,5 @@ describe ContactsController do
       response.headers['Content-Disposition'].should =~ /contact.*csv/
     end
   end # Export
-     
+ 
 end
