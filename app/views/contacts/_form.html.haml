@@ -1,77 +1,77 @@
-%div{:class=>'active-scaffold contact_form'}
-  = form_for :record do |form| 
-    %table.contact_form
-      %tr
-        %td
-          = form.label :contact_name
-          %br
-          = form.text_field :contact_name    
-        %td
-          = form.label :contact_type
-          %br
-          = form.collection_select :contact_type_id, ContactType.all, :id, :description
-        %td
-          = form.label :is_primary, 'Primary contact?'
-          %br
-          = form.check_box :is_primary
-      %tr
-        %td{:colspan=>'3'}
-          = form.label :address
-          %br
-          = form.text_field :address
-      %tr
-        %td
-          = form.label :email_1
-          %br
-          = form.text_field :email_1
-        %td
-          = form.label :email_2
-          %br
-          = form.text_field :email_2
-        %td
-          = form.label :email_private, "Keep email private?"
-          %br
-          = form.check_box :email_private
-      %tr
-        %td
-          = form.label :phone_1
-          %br
-          = form.text_field :phone_1
-        %td
-          = form.label :phone_2
-          %br
-          = form.text_field :phone_2
-        %td
-          = form.label :phone_private, "Keep phone private?"
-          %br
-          = form.check_box :phone_private
-      %tr
-        %td
-          = form.label :facebook
-          %br
-          = form.text_field :facebook
-        %td
-          = form.label :skype
-          %br
-          = form.text_field :skype
-        %td
-          = form.label :skype_private, "Keep Skype private?"
-          %br
-          = form.check_box :skype_private
-      %tr
-        %td
-          = form.label :blog
-          %br
-          = form.text_field :blog
-        %td
-          = form.label :other_website
-          %br
-          = form.text_field :other_website
-      %tr
-        %td
-          = form.label :photos
-          %br
-          = form.text_field :photos
+-# Called by frontends/default/views/_base_form.html.erb
+= fields_for :record do |form| 
+  %table.contact_form
+    %tr
+      %td
+        = form.label :contact_name
+        %br
+        = form.text_field :contact_name    
+      %td
+        = form.label :contact_type
+        %br
+        = form.collection_select :contact_type_id, ContactType.all, :id, :description
+      %td
+        = form.label :is_primary, 'Primary contact?'
+        %br
+        = form.check_box :is_primary
+    %tr
+      %td{:colspan=>'3'}
+        = form.label :address
+        %br
+        = form.text_field :address
+    %tr
+      %td
+        = form.label :email_1
+        %br
+        = form.text_field :email_1
+      %td
+        = form.label :email_2
+        %br
+        = form.text_field :email_2
+      %td
+        = form.label :email_private, "Keep email private?"
+        %br
+        = form.check_box :email_private
+    %tr
+      %td
+        = form.label :phone_1
+        %br
+        = form.text_field :phone_1
+      %td
+        = form.label :phone_2
+        %br
+        = form.text_field :phone_2
+      %td
+        = form.label :phone_private, "Keep phone private?"
+        %br
+        = form.check_box :phone_private
+    %tr
+      %td
+        = form.label :facebook
+        %br
+        = form.text_field :facebook
+      %td
+        = form.label :skype
+        %br
+        = form.text_field :skype
+      %td
+        = form.label :skype_private, "Keep Skype private?"
+        %br
+        = form.check_box :skype_private
+    %tr
+      %td
+        = form.label :blog
+        %br
+        = form.text_field :blog
+      %td
+        = form.label :other_website
+        %br
+        = form.text_field :other_website
+    %tr
+      %td
+        = form.label :photos
+        %br
+        = form.text_field :photos
+  
     
-      
 
