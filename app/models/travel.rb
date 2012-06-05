@@ -334,6 +334,7 @@ class Travel < ActiveRecord::Base
   
   # Ensure that record has either a valid member or something in other_travelers
   def name_info
+    return true if self.member # Isn't this simpler than next line?
     return true if Member.find_by_id(self.member_id) || (! self.other_travelers.blank?)
     errors[:member] << "Must use existing member or enter name in 'Other travelers'"
     return false

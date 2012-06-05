@@ -23,6 +23,7 @@ describe Travel do
 
     before(:each) do
       @object.member_id = nil
+      @object.member = nil
       @guest_name = "Guest passenger"
       @object.other_travelers = @guest_name
     end      
