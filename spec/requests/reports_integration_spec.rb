@@ -24,12 +24,6 @@ describe "Report" do
       @residence = Factory(:location, :description=>'Jos')
       @work = Factory(:location, :description=>'Gidan Bege')
       @location_unspecified = Factory(:location_unspecified)
-#      @member = Factory(:member, :residence_location_id=>@residence.id,
-#                :status_id=>@on_field.id,
-#                :work_location_id => @work.id,
-#                :temporary_location => @temp_location,
-#                :temporary_location_from_date => Date.today - 1.week,
-#                :temporary_location_until_date => Date.today - 5.days)
       @member = factory_member_create(:residence_location_id=>@residence.id,
                 :status_id=>@on_field.id,
                 :work_location_id => @work.id,
@@ -43,7 +37,8 @@ describe "Report" do
                  :origin => 'Abuja', :arrival => false, :member_id => @member.id) 
     end
 
-    it "reports residence location if no overrides" do
+    # Covered in new report tests
+    it "reports residence location if no overrides", :slow=>true do
       visit reports_path # whereis_report_path
       click_link "whereis-detailed-pdf"
       pdf_to_text
@@ -52,7 +47,7 @@ describe "Report" do
       page.should_not have_content('return')
     end
 
-    it "reports outgoing travel of on-field member" do
+    it "reports outgoing travel of on-field member", :slow=>true do
       @travel.update_attribute(:return_date, Date.today+5.days)
       visit reports_path # whereis_report_path
       click_link "whereis-detailed-pdf"
@@ -61,7 +56,7 @@ describe "Report" do
       page.should have_content('return')
     end
 
-    it "reports outgoing travel of on-field spouse" do
+    it "reports outgoing travel of on-field spouse", :slow=>true do
       @travel.update_attributes(:return_date=>Date.today+5.days, :with_spouse=>true)
       @member.create_wife({:first_name=>'Sally', :name=>"#{@member.last_name}, Sally"})
       visit reports_path # whereis_report_path
@@ -72,7 +67,7 @@ describe "Report" do
       page.should have_content('return')
     end
 
-    it "reports incoming travel of off-field member " do
+    it "reports incoming travel of off-field member ", :slow=>true do
       @travel.update_attributes(:return_date=>Date.today+5.days, :arrival=>true)
       status = Factory(:status, :on_field=>false, :active=>false)
       @member.update_attribute(:status, status)   # Make member not active and not on field
@@ -84,7 +79,7 @@ describe "Report" do
       page.should have_content(@member.travel_location)
     end
 
-    it "reports location of person with 'on-field' visitor status" do
+    it "reports location of person with 'on-field' visitor status", :slow=>true do
       visitor_status = Factory(:status, :on_field=>true, :active=>false)
       @member.update_attribute(:status, visitor_status)   # Make member on field but not active
       visit reports_path # whereis_report_path
@@ -94,7 +89,7 @@ describe "Report" do
       page.should_not have_content('ravel')
     end
     
-    it "reports location of someone not in database but in travel record" do
+    it "reports location of someone not in database but in travel record", :slow=>true do
       @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true, :member=>nil, 
           :other_travelers=>"Santa Claus")
       visit reports_path # whereis_report_path
@@ -103,17 +98,6 @@ describe "Report" do
       page.should have_content("Santa Claus")
       page.should have_content('isitor')
     end
-
-#    it "does not include member with on-field status as a visitor" do
-#      @travel.update_attributes(:return_date=>Date.tomorrow, :arrival=>true,  
-#          :other_travelers=>"Santa Claus")
-#      visit reports_path # whereis_report_path
-#      click_link "whereis-detailed-pdf"
-#      pdf_to_text
-#      page.should have_content("Santa Claus")
-#      page.should have_content('isitor')
-#      page.should_not have_content(@member.last_name)
-#    end
 
   end # Where Is
   

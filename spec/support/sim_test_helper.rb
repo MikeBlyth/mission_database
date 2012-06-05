@@ -7,11 +7,17 @@ module SimTestHelper
     Regexp.new(Regexp.escape(s))
   end
 
-  def pdf_to_text
+  # 
+  def pdf_string_to_text_string(pdf_string)
     temp_pdf = Tempfile.new('pdf')
-    temp_pdf << page.body.force_encoding('UTF-8')
+    temp_pdf << pdf_string.force_encoding('UTF-8')
     temp_pdf.close
-    page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
+    `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`
+  end
+
+  # Given that the page.body actually contains PDF, convert it to text (keeping it in page.body)
+  def pdf_to_text
+    page.driver.instance_variable_set('@body', pdf_string_to_text_string(page.body) )
   end
 
   def create_one_unspecified_code(type, params={})

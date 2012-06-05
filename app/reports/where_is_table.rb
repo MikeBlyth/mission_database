@@ -20,7 +20,7 @@ class WhereIsTable < Prawn::Document
     return [ name_column, smart_join(formatted[:emails], "\n"), smart_join(formatted[:phones], "\n") ]
   end
 
-  def to_pdf(families, visitors, options = {})
+  def to_pdf(families, visitors=[], options = {})
     options[:location] ||= 'short'
     location_col = default_true(options[:location_column]) # make separate column for locations? Default=true
 
