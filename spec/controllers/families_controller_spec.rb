@@ -403,6 +403,11 @@ include SimTestHelper
       lambda {put :update, @params.merge(updates)}.should change(Member, :count).by(1)
       @family.reload.children.first.first_name.should == 'Zinger'
     end            
+
+    it 'includes blank line for next child' do
+      get :edit, :id=>@family.id
+      assigns[:children].count.should == 1
+    end
     
     it 'adds wife' do
       updates = {:wife=>{:first_name=>'Grace', :sex=>'F'} }

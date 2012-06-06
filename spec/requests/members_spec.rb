@@ -20,7 +20,7 @@ include SimTestHelper
       @family = @head.family
     end  
     
-    it 'avoids "ambiguous status_id" bug' do
+    it 'avoids "ambiguous status_id" bug', :slow=>true do  # make a controller test if we need this
       visit root_path
       click_link "Active only"
     end
