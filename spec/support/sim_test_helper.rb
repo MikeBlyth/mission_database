@@ -7,11 +7,17 @@ module SimTestHelper
     Regexp.new(Regexp.escape(s))
   end
 
-  def pdf_to_text
+  # 
+  def pdf_string_to_text_string(pdf_string)
     temp_pdf = Tempfile.new('pdf')
-    temp_pdf << page.body.force_encoding('UTF-8')
+    temp_pdf << pdf_string.force_encoding('UTF-8')
     temp_pdf.close
-    page.driver.instance_variable_set('@body', `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`)
+    `pdftotext -enc UTF-8 -q #{temp_pdf.path} - 2>&1`
+  end
+
+  # Given that the page.body actually contains PDF, convert it to text (keeping it in page.body)
+  def pdf_to_text
+    page.driver.instance_variable_set('@body', pdf_string_to_text_string(page.body) )
   end
 
   def create_one_unspecified_code(type, params={})
@@ -49,6 +55,16 @@ module SimTestHelper
           :country=>member.country )
     spouse.personnel_data.update_attribute(:employment_status, member.employment_status)
     member.update_attribute(:spouse, spouse)
+    puts "Error creating/saving spouse (sim_test_helper ~40)" unless spouse.valid? && member.valid?
+    return spouse
+  end
+  
+  def build_spouse(member)
+    spouse = Factory.build(:member, :spouse=>member, :last_name=> member.last_name, 
+          :first_name=> "Honey", :family=>member.family, :sex=>member.other_sex, :child=>false,
+          :country=>member.country )
+    spouse.personnel_data = PersonnelData.new(:employment_status=>member.employment_status, :member=>spouse)
+    member.spouse = spouse
     puts "Error creating/saving spouse (sim_test_helper ~40)" unless spouse.valid? && member.valid?
     return spouse
   end
@@ -172,6 +188,39 @@ module SimTestHelper
     return member
   end
   
+  def factory_member_build(params={}, options={})
+    number = rand(1000000)
+#    if params[:options] 
+#      make_spouse = params[:options][:spouse]
+#      # any other options ... process here before they're all deleted
+#      params.delete[:options]
+#    end
+    params[:last_name] ||= "Johnson #{number}"
+    params[:first_name] ||= 'Gerald'
+    params[:name] ||= "Johnson #{number}, Gerald"
+    params[:sex] ||= 'M'
+    params[:status] ||= Factory.build(:status, params[:status] || {})
+#*    params[:residence_location_id] = create_associated_details(:location, params[:residence_location_id], true)
+    params[:work_location] ||= Location.new(params[:work_location] || {})
+    residence_location = params.delete(:residence_location) || Location.new(params[:residence_location] || {})
+    params[:ministry] ||= Ministry.new(params[:ministry] || {})
+    params[:personnel_data] ||= PersonnelData.new(params[:personnel_data] || {})
+    params[:family] ||= Family.new(:last_name=>params[:last_name],
+                        :first_name=>params[:first_name],
+                        :name=>params[:name],
+                        :status=>params[:status],
+                        :residence_location=>params[:residence_location],
+                        :sim_id => rand(100000)
+                        )
+    member = Member.new(params)
+    family = params[:family]
+    family.head = member
+    family.residence_location = residence_location
+    puts "Error updating family or family head" unless member.valid? && member.family.valid?
+    build_spouse(member) if options[:spouse]
+    return member
+  end
+
   def add_details(member, params={})
     location = params[:location] || Location.first || Factory(:location)
     member.update_attributes(:middle_name => 'Midname',

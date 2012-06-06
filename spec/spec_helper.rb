@@ -78,6 +78,7 @@ end # Spork.prefork
 
 Spork.each_run do
 puts "SPORK EACH_RUN ..."
+load 'sim_test_helper.rb'
 #>  load Rails.root+'app/helpers/application_helper.rb'
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by

@@ -4,6 +4,18 @@ require 'sim_test_helper'
   include SimTestHelper
 
 describe 'Contacts' do
+    before(:each) do
+      integration_test_sign_in(:admin=>true)
+    end  
+
+    it "renders the submit button within the form (not outside it)", :slow=>true do
+      visit new_contact_path
+      page.should have_css('form.create input.submit')
+     # assert_select "form", :action => contacts_path(@record), :method => "post" do
+     #   assert_select "input#contact_name", :name => "record[name]"
+     # end
+    end     
+ 
 
 #    before(:each) do
 #     # require 'cleaner'
