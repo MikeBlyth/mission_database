@@ -4,11 +4,6 @@ include ApplicationHelper
 require 'httparty'
 require 'uri'
 
-class SmsGateway
-  def send(number, body)
-  end
-end
-
 class SmsController < ApplicationController
   include HTTParty
   skip_before_filter :verify_authenticity_token
@@ -49,13 +44,13 @@ class SmsController < ApplicationController
     end
   end
   
-   def send_clickatell(num, body)
+   def send_clickatell(number, body)
     user = SiteSetting[:clickatell_user_name]
     pwd =  SiteSetting[:clickatell_password]
     api =  SiteSetting[:clickatell_api_id]
     missing = clickatell_missing_parameters(user, pwd, api)
     return missing if missing
-    dest = num.gsub('+', '')  # Clickatell may not like '+' prefix
+    dest = number.gsub('+', '')  # Clickatell may not like '+' prefix
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     uri = clickatell_base_uri + "?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
 # puts "getting #{uri}" if Rails.env.to_s == 'test'
@@ -72,12 +67,12 @@ class SmsController < ApplicationController
     #numbers.each {|number| self.send gateway_method, number, body}
   end
 
-  def send_twilio(num, body='')  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
+  def send_twilio(number, body='')  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
       account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
 
       outgoing = {
           'From' => CALLER_ID,
-          'To' => num,
+          'To' => number,
           'Body' => "Test response"
       }
 

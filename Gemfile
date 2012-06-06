@@ -14,7 +14,7 @@ gem 'cancan'
 #gem "meta_where"  # Last officially released gem
 gem 'chronic'
 gem 'rack-ssl-enforcer'
-gem 'settingslogic'
+gem 'settingslogic', "2.0.8"
 gem 'sass'
 gem 'twiliolib'
 gem 'httparty'
