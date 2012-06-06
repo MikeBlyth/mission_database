@@ -96,7 +96,6 @@ describe FieldTerm do
 
     it 'makes csv object' do
       csv = FieldTerm.export ['start_date', 'member']
-puts "**** csv=#{csv}"      
       csv.should match(@member.last_name)
       csv.should match(@field_term.start_date.to_s(:long))
     end

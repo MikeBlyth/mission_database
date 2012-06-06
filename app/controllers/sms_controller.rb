@@ -3,30 +3,35 @@ require 'application_helper'
 include ApplicationHelper
 require 'httparty'
 require 'uri'
+require 'sms_gateway'
 
 class SmsController < ApplicationController
   include HTTParty
   skip_before_filter :verify_authenticity_token
 
+  # Create - handle incoming SMS message from Twilio
+  #
   # Twilio sends the message to create just as if it were a web HTTP request
   # The create method should handle the incoming message by determining any actions
   # needed and sending a return message.
+  # ToDo
+  # Remove line for testing; configure for other gateways
   def create  # need the name 'create' to conform with REST defaults, or change routes
 #puts "IncomingController create: params=#{params}"
-    from = params[:From]
-    body = params[:Body]
+    from = params[:From]  # The phone number of the sender
+    body = params[:Body]  # This is the body of the incoming message
     params.delete 'SmsSid'
     params.delete 'AccountSid'
     params.delete 'SmsMessageSid'
-    if from_member(from)
+    if from_member(from)  # We only accept SMS from registered phone numbers of members
       AppLog.create(:code => "SMS.received", :description=>"from #{from}: #{body}")
-      resp = process_sms(body)[0..159]
-      render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s
+      resp = process_sms(body)[0..159]    # generate response
+      render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s  # Confirm w incoming gateway that msg received
       AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}")
-      if SiteSetting[:outgoing_sms].downcase == 'clickatell'
-        from = '+2348162522097' if from =~/82591/
-        send_clickatell(from, resp)
-   #   send_clickatell('+2348162522097', "Response sent")
+      if SiteSetting[:outgoing_sms].downcase == 'clickatell'  # It's our only gateway so far
+        from = '+2348162522097' if from =~/82591/  # This is only for testing! Remove 
+        ClickatellGateway.new.send(from, resp)
+   #$   send_clickatell('+2348162522097', "Response sent")
       end
     else  
       AppLog.create(:code => "SMS.rejected", :description=>"from #{from}: #{body}")
@@ -34,31 +39,6 @@ class SmsController < ApplicationController
     end
   end 
   
-  def clickatell_missing_parameters(user, pwd, api)
-    if (user.blank? || pwd.blank? || api.blank?)
-      error_msg = "Error - Clickatell settings not all defined or retrieved"
-#puts "Error - Clickatell settings not all defined or retrieved" 
-      AppLog.create(:severity=>'Error', :code=>'Clickatell.undefined', 
-                    :description=> error_msg)
-      return error_msg
-    end
-  end
-  
-   def send_clickatell(number, body)
-    user = SiteSetting[:clickatell_user_name]
-    pwd =  SiteSetting[:clickatell_password]
-    api =  SiteSetting[:clickatell_api_id]
-    missing = clickatell_missing_parameters(user, pwd, api)
-    return missing if missing
-    dest = number.gsub('+', '')  # Clickatell may not like '+' prefix
-    clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
-    uri = clickatell_base_uri + "?user=#{user}&password=#{pwd}&api_id=#{api}&to=#{dest}&text=#{URI.escape(body)}"
-# puts "getting #{uri}" if Rails.env.to_s == 'test'
-    reply =  HTTParty::get uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
-    AppLog.create(:code => "SMS.sent.clickatell", 
-      :description=>"to #{dest}: #{body[0..30]}, resp=#{reply}")
-    return reply
-  end
 
   # Send out a single message to an array of numbers.
   # Note that we could put logic here to change the gateway based on the number (US via one, Europe via another...)
@@ -67,19 +47,19 @@ class SmsController < ApplicationController
     #numbers.each {|number| self.send gateway_method, number, body}
   end
 
-  def send_twilio(number, body='')  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
-      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+#  def send_twilio(number, body='')  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
+#      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
 
-      outgoing = {
-          'From' => CALLER_ID,
-          'To' => number,
-          'Body' => "Test response"
-      }
+#      outgoing = {
+#          'From' => CALLER_ID,
+#          'To' => number,
+#          'Body' => "Test response"
+#      }
 
-     resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/SMS/Messages",
-                               'POST', outgoing)
-     puts "#### code: %s\nbody: %s" % [resp.code, resp.body]
-   end
+#     resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/SMS/Messages",
+#                               'POST', outgoing)
+#     puts "#### code: %s\nbody: %s" % [resp.code, resp.body]
+#   end
 
 private
 
