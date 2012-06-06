@@ -82,8 +82,8 @@ class ClickatellGateway < SmsGateway
   def send(number=@number, body=@body)
     number.sub!('+', '')  # Clickatell may not like '+' prefix
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
-    @uri = clickatell_base_uri + "?user=#{@user}&password=#{@password}&api_id=#{@api}&to=#{number}&text=#{URI.escape(body)}"
-    @status =  HTTParty::get @uri unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+    @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{number}&text=#{URI.escape(body)}"
+    @status =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
     super
   end
 

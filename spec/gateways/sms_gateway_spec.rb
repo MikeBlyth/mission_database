@@ -17,15 +17,53 @@ describe SmsGateway do
 end
 
 describe ClickatellGateway do
-  it 'initializes successfully' do
-    gateway = ClickatellGateway.new
-    gateway.status[:errors].should be_nil
-  end
+
+  describe 'when needed parameters are missing' do
+    before(:each) do
+      SiteSetting.stub(:clickatell_user_name).and_return(nil)
+      @gateway = ClickatellGateway.new
+    end
+
+    it 'gives error when parameter is missing' do
+      @gateway.status[:errors].should_not be_nil
+      @gateway.status[:errors][0].should match('user_name')
+    end
+
+  end # when needed parameters are missing
   
-  it 'gives error when parameter is missing' do
-    SiteSetting.stub(:clickatell_user_name).and_return(nil)
-    gateway = ClickatellGateway.new
-    gateway.status[:errors].should_not be_nil
-    gateway.status[:errors][0].should match('user_name')
-  end
+  describe 'when needed parameters are present' do
+    before(:each) do
+      @gateway = ClickatellGateway.new
+    end
+          
+    it 'initializes successfully' do
+      @gateway.status[:errors].should be_nil
+      @gateway.gateway_name.should == 'clickatell'  # this is defined by ClickatellGateway#initialize
+    end
+    
+    describe 'Send method' do
+      # Maybe this before(:each) should be refactored? It's funny to have the test going on there, but it's not
+      # DRY if we put the mock & message expectation in the individual tests ...
+      before(:each) do
+        HTTParty = mock('HTTParty')
+        HTTParty.stub(:get).and_return '200'
+        HTTParty.should_receive(:get)
+        @gateway.send('+2347777777777', 'test message')
+      end
+
+      it 'forms URI properly' do
+        uri = @gateway.uri
+        uri.should match("user=#{SiteSetting.clickatell_user_name}")
+        uri.should match("password=#{SiteSetting.clickatell_password}") 
+        uri.should match("api_id=#{SiteSetting.clickatell_api_id}")
+        uri.should match("to=2347777777777")
+        uri.should match("text=#{URI.escape('test message')}")
+      end
+
+      it 'sets @status variable' do
+        @gateway.status.should == '200'
+      end        
+
+    end # Send method
+  end # when needed parameters are present
 end
