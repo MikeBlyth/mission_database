@@ -234,6 +234,17 @@ describe MembersController do
            
   end # updating a family
 
+  describe 'Group assignment' do
+    it 'assigns groups from multi-select' do
+      test_sign_in(Factory.stub(:user, :admin=>true))
+      @member = Factory.create(:member)
+      @a = Factory.create(:group)
+      @b = Factory.create(:group)
+      put :update, :id=>@member.id, :head=>{:group_ids=>[@a.id.to_s, @b.id.to_s]}
+      @member.reload.group_ids.sort.should == [@a.id, @b.id].sort
+    end
+  end    
+
   describe 'Export' do
       before(:each) do
         @user = Factory(:user, :admin=>true)

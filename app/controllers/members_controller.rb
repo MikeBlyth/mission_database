@@ -96,7 +96,7 @@ class MembersController < ApplicationController
   end
   
   def attach_groups
-    @head.update_attributes(:group_ids=>params[:head][:group_ids])
+    @head.update_attributes(:group_ids=>params[:head][:group_ids]) if params[:head] && params[:head][:group_ids]
   end
 
   def do_edit

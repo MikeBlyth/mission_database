@@ -147,6 +147,11 @@ FactoryGirl.define do
     end_date nil
   end
 
+  factory :group do
+    sequence(:group_name) {|n| "Group #{n}" }
+    type_of_group 'Test group'
+  end
+
   factory :health_data do
     member { |a| a.association :member }
   end    

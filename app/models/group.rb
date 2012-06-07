@@ -15,7 +15,8 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :members
   belongs_to :parent_group, :class_name => "Group", :foreign_key => "parent_group_id"
   has_many :subgroups, :class_name => "Group"
-
+  validates_uniqueness_of :group_name
+  
   def to_s
     group_name
   end
