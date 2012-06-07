@@ -42,8 +42,14 @@ class SmsController < ApplicationController
 
   # Send out a single message to an array of numbers.
   # Note that we could put logic here to change the gateway based on the number (US via one, Europe via another...)
-  def send_multi(numbers, body, gateway=SmsGateway.new)
-    gateway.send(numbers[0], body)
+  def send_multi(numbers, body, gateway_class=ClickatellGateway)
+    gateway_instances = []
+    numbers.each do |number|
+      gateway_instance = gateway_class.new
+      gateway_instance.send(number, body)
+      gateway_instances << gateway_instance
+    end
+    return gateway_instances
     #numbers.each {|number| self.send gateway_method, number, body}
   end
 

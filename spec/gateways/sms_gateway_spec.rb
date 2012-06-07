@@ -25,8 +25,8 @@ describe ClickatellGateway do
     end
 
     it 'gives error when parameter is missing' do
-      @gateway.status[:errors].should_not be_nil
-      @gateway.status[:errors][0].should match('user_name')
+      @gateway.errors.should_not be_nil
+      @gateway.errors[0].should match('user_name')
     end
 
   end # when needed parameters are missing
@@ -37,7 +37,7 @@ describe ClickatellGateway do
     end
           
     it 'initializes successfully' do
-      @gateway.status[:errors].should be_nil
+      @gateway.errors.should be_nil
       @gateway.gateway_name.should == 'clickatell'  # this is defined by ClickatellGateway#initialize
     end
     
@@ -60,8 +60,8 @@ describe ClickatellGateway do
         uri.should match("text=#{URI.escape('test message')}")
       end
 
-      it 'sets @status variable' do
-        @gateway.status.should == '200'
+      it 'sets @http_status variable' do
+        @gateway.http_status.should == '200'
       end        
 
     end # Send method

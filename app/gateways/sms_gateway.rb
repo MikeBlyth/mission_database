@@ -24,11 +24,11 @@ require 'uri'
 #
 class SmsGateway
   attr_accessor :number, :body, :required_params
-  attr_reader :uri, :status, :gateway_name
+  attr_reader :uri, :http_status, :gateway_name, :errors
 
   def initialize
-    @status = {}
     get_required_params if @required_params && !@required_params.empty?
+    @gateway_name ||= 'SmsGateway'
   end
 
   def get_required_params
@@ -42,8 +42,8 @@ class SmsGateway
       end
     end
     unless missing.empty?
-      @status[:errors] ||= []
-      @status[:errors] << missing.join(', ')
+      @errors ||= []
+      @errors << missing.join(', ')
     end
   end
       
@@ -58,7 +58,7 @@ class SmsGateway
   def send(number=@number, body=@body)
     @number=number
     @body=body
-    AppLog.create(:code => "SMS.sent.#{@gateway_name}", :description=>"to #{@number}: #{@body[0..30]}, resp=#{@status}")
+    AppLog.create(:code => "SMS.sent.#{@gateway_name}", :description=>"to #{@number}: #{@body[0..30]}, resp=#{@http_status}")
   end
 end
 
@@ -83,7 +83,7 @@ class ClickatellGateway < SmsGateway
     number.sub!('+', '')  # Clickatell may not like '+' prefix
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{number}&text=#{URI.escape(body)}"
-    @status =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+    @http_status =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
     super
   end
 
