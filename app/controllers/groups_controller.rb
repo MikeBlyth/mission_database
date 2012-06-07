@@ -16,10 +16,7 @@ class GroupsController < ApplicationController
   end
 
   def attach_group_members
-    group_members = params[:record][:members]
-    if group_members
-      member_ids = group_members.map {|g| g.to_i}
-    end
+    @record.update_attributes(:member_ids=>params[:record][:member_ids])
   end
   
   def do_create
@@ -27,7 +24,14 @@ class GroupsController < ApplicationController
     attach_group_members
   end
 
+#def update
+#  puts "update called with params #{params}"
+#  record = Group.find params[:id]
+#  record.update_attributes params
+#end
+
   def do_update
+#puts "**** params=#{params}"
     super
     attach_group_members
   end

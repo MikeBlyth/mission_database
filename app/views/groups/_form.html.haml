@@ -18,4 +18,5 @@
       %td
         = form.label :member_ids, "Members"
         %br
-        = form.select :member_ids, Member.limit(10).collect {|x| [x.name, x.id]}, {}, :multiple => true
+        = form.select :member_ids, Member.those_active.order('name').collect {|x| [x.name, x.id]}, {}, 
+          :multiple => true, :size=>15
