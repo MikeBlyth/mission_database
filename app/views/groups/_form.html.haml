@@ -1,0 +1,17 @@
+-# Called by frontends/default/views/_base_form.html.erb
+= fields_for :record do |form| 
+  %table.contact_form
+    %tr
+      %td
+        = form.label :group_name
+        %br
+        = form.text_field :group_name    
+      %td
+        = form.label :type_of_group
+        %br
+        = form.text_field :type_of_group  
+      %td
+        = form.label :parent_group_id
+        %br
+        = form.collection_select :parent_group_id, Group.all, :id, :group_name
+ 

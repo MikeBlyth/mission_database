@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120602073038) do
+ActiveRecord::Schema.define(:version => 20120607065210) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -150,6 +150,19 @@ ActiveRecord::Schema.define(:version => 20120602073038) do
     t.integer  "ending_travel_id"
     t.boolean  "end_estimated"
     t.boolean  "start_estimated"
+  end
+
+  create_table "groups", :force => true do |t|
+    t.string   "group_name"
+    t.string   "type_of_group"
+    t.integer  "parent_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "groups_members", :id => false, :force => true do |t|
+    t.integer "group_id"
+    t.integer "member_id"
   end
 
   create_table "health_data", :force => true do |t|

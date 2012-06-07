@@ -18,7 +18,7 @@ class MembersController < ApplicationController
 
     config.label = "Members"
     list.columns = [:name, :spouse, 
-          :child, :work_location, :ministry, :travels, :field_terms, :status, :contacts]
+          :child, :work_location, :ministry, :travels, :field_terms, :status, :contacts, :groups]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = update.columns = [:name, :name_override,
@@ -48,6 +48,8 @@ class MembersController < ApplicationController
     config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
     config.columns[:ministry].inplace_edit = true
+    config.columns[:groups].form_ui = :select 
+    config.columns[:groups].inplace_edit = true
     config.columns[:status].form_ui = :select 
     config.columns[:status].inplace_edit = true
     config.columns[:child].inplace_edit = true
@@ -140,6 +142,9 @@ class MembersController < ApplicationController
   def new
       redirect_to members_path
   end
+
+def do_new
+end
 
   def do_show
     super

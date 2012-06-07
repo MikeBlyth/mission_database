@@ -1,5 +1,6 @@
 SIM::Application.routes.draw do
 
+
 # SMS with Twilio
 
   resources :sms
@@ -81,6 +82,7 @@ SIM::Application.routes.draw do
   resources :families do as_routes end
   resources :field_terms do as_routes end
 #  resources :health_data do as_routes end
+  resources :groups do as_routes end
   resources :locations do as_routes end
   resources :members do as_routes end
   resources :ministries do as_routes end

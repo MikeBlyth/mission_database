@@ -49,6 +49,7 @@ class Member < ActiveRecord::Base
   has_one  :health_data, :dependent => :destroy
   has_one  :personnel_data, :dependent => :destroy
   belongs_to :spouse, :class_name => "Member", :foreign_key => "spouse_id"
+  has_and_belongs_to_many :groups
   belongs_to :family
   belongs_to :country
   belongs_to :bloodtype 
