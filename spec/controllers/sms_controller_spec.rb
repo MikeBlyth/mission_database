@@ -191,6 +191,11 @@ describe SmsController do
       controller.send_multi(@numbers, @message, SmsGateway)                
     end
     
+    it 'returns the gateway objects for the sent messages' do
+      gateway_instances = controller.send_multi(@numbers, @message, SmsGateway)
+      gateway_instances.map {|g| g.number}.should == @numbers
+    end      
+
   end # sends to multiple contacts
 
 end
