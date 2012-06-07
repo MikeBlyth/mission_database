@@ -14,4 +14,22 @@ class GroupsController < ApplicationController
     config.columns[:parent_group].inplace_edit = true
     config.columns[:parent_group].form_ui = :select 
   end
+
+  def attach_group_members
+    group_members = params[:record][:members]
+    if group_members
+      member_ids = group_members.map {|g| g.to_i}
+    end
+  end
+  
+  def do_create
+    super
+    attach_group_members
+  end
+
+  def do_update
+    super
+    attach_group_members
+  end
+
 end

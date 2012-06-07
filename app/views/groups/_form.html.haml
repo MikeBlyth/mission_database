@@ -14,4 +14,8 @@
         = form.label :parent_group_id
         %br
         = form.collection_select :parent_group_id, Group.all, :id, :group_name
- 
+    %tr
+      %td
+        = form.label :member_ids, "Members"
+        %br
+        = form.select :member_ids, Member.limit(10).collect {|x| [x.name, x.id]}, {}, :multiple => true
