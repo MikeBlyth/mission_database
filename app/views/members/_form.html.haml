@@ -19,6 +19,7 @@ $( "#tabs" ).tabs();
         %li <a href="#tabs-personnel">Personnel</a>
     - if can? :read, HealthData
       %li <a href="#tabs-health">Health</a>
+    %li <a href="#tabs-groups">Groups</a>
 
   = form_for :head do |member|
     #tabs-member
@@ -188,5 +189,9 @@ $( "#tabs" ).tabs();
               = label_tag :health_data_comments
               %br
               = text_area :health_data, :comments, :cols=>80, :rows=>5
+    #tabs-groups
+      = member.label :group_ids, "Groups"
+      %br
+      = member.select :group_ids, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15          
            
 

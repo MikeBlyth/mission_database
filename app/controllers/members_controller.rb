@@ -95,6 +95,10 @@ class MembersController < ApplicationController
     field_term.update_attributes(params)
   end
   
+  def attach_groups
+    @head.update_attributes(:group_ids=>params[:head][:group_ids])
+  end
+
   def do_edit
     super
 #puts "**** @record.attributes=#{@record.attributes}"
@@ -126,7 +130,8 @@ class MembersController < ApplicationController
     #  from Family tab. These _override_ any changes made on the head or wife pages
     update_field_terms(@head, params[:current_term])
     update_field_terms(@head, params[:next_term])
-
+    attach_groups
+    
     if @error_records.empty?
       redirect_to members_path
     else  # send back to user to try again
