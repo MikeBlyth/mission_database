@@ -1,6 +1,8 @@
 SIM::Application.routes.draw do
 
 
+  resources :messages do as_routes end
+
 # SMS with Twilio
 
   resources :sms

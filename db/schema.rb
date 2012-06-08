@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120607065210) do
+ActiveRecord::Schema.define(:version => 20120608071630) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -224,6 +224,21 @@ ActiveRecord::Schema.define(:version => 20120607065210) do
     t.integer "travel_id"
   end
 
+  create_table "messages", :force => true do |t|
+    t.string   "body"
+    t.integer  "from_id"
+    t.string   "code"
+    t.integer  "confirm_time_limit"
+    t.integer  "retries"
+    t.integer  "retry_interval"
+    t.integer  "expiration"
+    t.integer  "response_time_limit"
+    t.integer  "importance"
+    t.string   "to_groups"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ministries", :force => true do |t|
     t.string   "description"
     t.integer  "code"
@@ -265,6 +280,19 @@ ActiveRecord::Schema.define(:version => 20120607065210) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "sent_messages", :force => true do |t|
+    t.string   "message_id"
+    t.string   "member_id"
+    t.integer  "status"
+    t.datetime "confirmed_time"
+    t.string   "delivery_modes"
+    t.string   "confirmed_mode"
+    t.string   "confirmation_message"
+  end
+
+  add_index "sent_messages", ["member_id"], :name => "index_sent_messages_on_member_id"
+  add_index "sent_messages", ["message_id"], :name => "index_sent_messages_on_message_id"
 
   create_table "site_settings", :force => true do |t|
     t.string   "name"
