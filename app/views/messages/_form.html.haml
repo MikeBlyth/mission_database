@@ -1,57 +1,91 @@
+<script>
+$(function() {
+$( "#accordion" ).accordion( { autoHeight: false, animation: false });
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){	
+//default usage
+$("#record_body").charCount({
+allowed: 150,	
+counterText: 'Characters left for one SMS message: '	
+});
+//custom usage
+$("#message2").charCount({
+allowed: 50,		
+warning: 20,
+counterText: 'Characters left for one SMS message: '	
+});
+});
+</script>
 
 = fields_for :record do |form|
-  %table{:style=>'width: 300px'}
-    %tr
-      %td
-        = label :record, :body, "Message"
-        %br
-        = text_field :record, :body
-    %tr
-      %td
-        %table
-          %tr
-            %td
-              = label :options, :email, "Send email"
-              %br
-              = check_box :options, :email         
-            %td
-              = label :options, :sms, "Send SMS"
-              %br
-              = check_box :options, :sms         
-    %tr
-      %td
-        = label :record, :to_groups, "Destination groups"
-        %br
-        = select :record, :to_groups, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15          
-    %tr
-      %td 
-        = form.label :retries
-        %br
-        = form.text_field :retries 
-    %tr
-      %td 
-        = form.label :retry_interval
-        %br
-        = form.telephone_field :retry_interval
-    %tr
-      %td 
-        = form.label :response_time_limit
-        %br
-        = form.text_field :response_time_limit 
-    %tr
-      %td 
-        = form.label :expiration, "Expiration (hours)"
-        %br
-        = form.text_field :expiration
-    %tr
-      %td 
-        = form.label :importance
-        %br
-        = form.text_field :importance 
-    %tr
-      %td 
-        = form.label :confirm_time_limit, "Confirmation time limit"
-        %br
-        = form.text_field :confirm_time_limit
+  #accordion
+    %h3
+      %a{:href=>"#"}
+        Message
+    %div
+      %table{:style=>'width: 300px'}
+        %tr
+          %td
+            = form.label :body, "Message"
+            %br
+            = form.text_area :body, :size => "40x3", :maxlength=>"300", :value=>"(from #{@current_user.name})"
+        %tr
+          %td
+            %table
+              %tr
+                %td
+                  = label :options, :email, "Send email"
+                  %br
+                  = check_box :options, :email         
+                %td
+                  = label :options, :sms, "Send SMS"
+                  %br
+                  = check_box :options, :sms         
+                %td
+                  = label :options, :sms_timestamp, "Add SMS timestamp", :disabled=>"disabled"
+                  %br
+                  = check_box :options, :sms_timestamp, :disabled=>"disabled"         
+        %tr
+          %td
+            = form.label :to_groups, "Destination groups"
+            %br
+            = form.select :to_groups, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15          
+        %tr
+          %td 
+            = form.label :retries
+            %br
+            = form.select :retries, [['none', 0], ['1',1], ['2',2], ['3',3]] 
+    %h3 
+      %a{:href=>"#"}
+        Advanced
+    %div 
+      %table
+        %tr
+          %td 
+            = form.label :retry_interval
+            %br
+            = form.select :retry_interval, [['5 minutes', 5], ['10 minutes', 10], ['15 minutes', 15], ['30 minutes', 30]]
+        %tr
+          %td 
+            = form.label :response_time_limit
+            %br
+            = form.select :response_time_limit, [['no response needed', 0], ['5 minutes', 5], ['10 minutes', 10], ['15 minutes', 15], ['30 minutes', 30], ['1 hour', 60], ['2 hours', 120], ['6 hours', 360], ['12 hours', 720], ['24 hours', 1440]]
+        %tr
+          %td 
+            = form.label :expiration, "Expiration"
+            %br
+            = form.select :expiration, [['never',0], ['24 hours', 1440] ]
+        %tr
+          %td 
+            = form.label :importance
+            %br
+            = form.select :importance, [['normal',1], ['alert', 2], ['critical', 3]] 
+        %tr
+          %td 
+            = form.label :confirm_time_limit, "Confirmation time limit"
+            %br
+            = form.select :confirm_time_limit, [['not needed', 0], ['5 minutes', 5], ['10 minutes', 10], ['15 minutes', 15], ['30 minutes', 30]]
 
 

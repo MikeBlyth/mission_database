@@ -184,3 +184,120 @@ function set_spouse_choices(as_form) {
     });
   };
 
+// ************************ CHARCOUNT ******************************
+// *********************************************************************
+// ** It might be worth putting this in a separate file since it's not used in most pages
+/*
+If you want to use this script, please keep the original author in this header!
+
+Purpose:	Script for applying maxlengths to textareas and monitoring their character lengths.
+Author: 	James O'Cull
+Date: 		08/14/08
+
+To use, simply apply a maxlenth value to a textarea.
+If you need it to prevent typing past a certain point, add lengthcut="true"
+
+Example:
+<textarea maxlength="1000" lengthcut="true"></textarea>
+
+If you add a new text area with javascript, simply call parseCharCounts() again find the new textarea(s) and label them!
+*/
+var LabelCounter = 0;
+
+function parseCharCounts()
+{
+	//Get Everything...
+	var elements = document.getElementsByTagName('textarea');
+	var element = null;
+	var maxlength = 9;
+	var newlabel = null;
+	
+	for(var i=0; i < elements.length; i++)
+	{
+		element = elements[i];
+		
+		if(element.getAttribute('maxlength') != null && element.getAttribute('limiterid') == null)
+		{
+			maxlength = element.getAttribute('maxlength');
+			
+			//Create new label
+			newlabel = document.createElement('label');
+			newlabel.id = 'limitlbl_' + LabelCounter;
+			newlabel.style.color = 'red';
+			newlabel.style.display = 'block'; //Make it block so it sits nicely.
+			newlabel.innerHTML = "Updating...";
+			
+			//Attach limiter to our textarea
+			element.setAttribute('limiterid', newlabel.id);
+			element.onkeyup = function(){ displayCharCounts(this); };
+			
+			//Append element
+			element.parentNode.insertBefore(newlabel, element);
+			
+			//Force the update now!
+			displayCharCounts(element);
+		}
+		
+		//Push up the number
+		LabelCounter++;
+	}
+}
+
+/*
+ * 	Character Count Plugin - jQuery plugin
+ * 	Dynamic character count for text areas and input fields
+ *	written by Alen Grakalic	
+ *	http://cssglobe.com/post/7161/jquery-plugin-simplest-twitterlike-dynamic-character-count-for-textareas
+ *
+ *	Copyright (c) 2009 Alen Grakalic (http://cssglobe.com)
+ *	Dual licensed under the MIT (MIT-LICENSE.txt)
+ *	and GPL (GPL-LICENSE.txt) licenses.
+ *
+ *	Built for jQuery library
+ *	http://jquery.com
+ *
+ */
+ 
+(function($) {
+
+	$.fn.charCount = function(options){
+	  
+		// default configuration properties
+		var defaults = {	
+			allowed: 140,		
+			warning: 25,
+			css: 'counter',
+			counterElement: 'span',
+			cssWarning: 'warning',
+			cssExceeded: 'exceeded',
+			counterText: ''
+		}; 
+			
+		var options = $.extend(defaults, options); 
+		
+		function calculate(obj){
+			var count = $(obj).val().length;
+			var available = options.allowed - count;
+			if(available <= options.warning && available >= 0){
+				$(obj).next().addClass(options.cssWarning);
+			} else {
+				$(obj).next().removeClass(options.cssWarning);
+			}
+			if(available < 0){
+				$(obj).next().addClass(options.cssExceeded);
+			} else {
+				$(obj).next().removeClass(options.cssExceeded);
+			}
+			$(obj).next().html(options.counterText + available);
+		};
+				
+		this.each(function() {  			
+			$(this).after('<'+ options.counterElement +' class="' + options.css + '">'+ options.counterText +'</'+ options.counterElement +'>');
+			calculate(this);
+			$(this).keyup(function(){calculate(this)});
+			$(this).change(function(){calculate(this)});
+		});
+	  
+	};
+
+})(jQuery);

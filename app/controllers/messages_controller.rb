@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   active_scaffold :message do |config|
+    # put any configuration stuff for AS here
   end
 
   def do_new
