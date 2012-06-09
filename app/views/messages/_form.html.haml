@@ -1,0 +1,57 @@
+
+= fields_for :record do |form|
+  %table{:style=>'width: 300px'}
+    %tr
+      %td
+        = label :record, :body, "Message"
+        %br
+        = text_field :record, :body
+    %tr
+      %td
+        %table
+          %tr
+            %td
+              = label :options, :email, "Send email"
+              %br
+              = check_box :options, :email         
+            %td
+              = label :options, :sms, "Send SMS"
+              %br
+              = check_box :options, :sms         
+    %tr
+      %td
+        = label :record, :to_groups, "Destination groups"
+        %br
+        = select :record, :to_groups, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15          
+    %tr
+      %td 
+        = form.label :retries
+        %br
+        = form.text_field :retries 
+    %tr
+      %td 
+        = form.label :retry_interval
+        %br
+        = form.telephone_field :retry_interval
+    %tr
+      %td 
+        = form.label :response_time_limit
+        %br
+        = form.text_field :response_time_limit 
+    %tr
+      %td 
+        = form.label :expiration, "Expiration (hours)"
+        %br
+        = form.text_field :expiration
+    %tr
+      %td 
+        = form.label :importance
+        %br
+        = form.text_field :importance 
+    %tr
+      %td 
+        = form.label :confirm_time_limit, "Confirmation time limit"
+        %br
+        = form.text_field :confirm_time_limit
+
+

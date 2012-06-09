@@ -282,8 +282,8 @@ ActiveRecord::Schema.define(:version => 20120608071630) do
   end
 
   create_table "sent_messages", :force => true do |t|
-    t.string   "message_id"
-    t.string   "member_id"
+    t.integer  "message_id"
+    t.integer  "member_id"
     t.integer  "status"
     t.datetime "confirmed_time"
     t.string   "delivery_modes"

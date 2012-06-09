@@ -46,6 +46,7 @@ class Member < ActiveRecord::Base
   has_many :contacts, :dependent => :destroy 
   has_many :travels, :dependent => :destroy 
   has_many :field_terms,  :dependent => :destroy 
+  has_many :sent_messages
   has_many :messages, :through => :sent_messages
   has_one  :health_data, :dependent => :destroy
   has_one  :personnel_data, :dependent => :destroy
