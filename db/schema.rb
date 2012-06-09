@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120608071630) do
+ActiveRecord::Schema.define(:version => 20120609195703) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -237,6 +237,9 @@ ActiveRecord::Schema.define(:version => 20120608071630) do
     t.string   "to_groups"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "send_email"
+    t.boolean  "send_sms"
+    t.integer  "user_id"
   end
 
   create_table "ministries", :force => true do |t|

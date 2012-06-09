@@ -1,11 +1,11 @@
 # == Schema Information
-# Schema version: 20120608071630
+# Schema version: 20120609195703
 #
 # Table name: sent_messages
 #
 #  id                   :integer         not null, primary key
-#  message_id           :string(255)
-#  member_id            :string(255)
+#  message_id           :integer
+#  member_id            :integer
 #  status               :integer
 #  confirmed_time       :datetime
 #  delivery_modes       :string(255)

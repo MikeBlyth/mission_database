@@ -36,13 +36,13 @@ counterText: 'Characters left for one SMS message: '
             %table
               %tr
                 %td
-                  = label :options, :email, "Send email"
+                  = form.label :send_email, "Send email"
                   %br
-                  = check_box :options, :email         
+                  = form.check_box :send_email         
                 %td
-                  = label :options, :sms, "Send SMS"
+                  = form.label  :send_sms, "Send SMS"
                   %br
-                  = check_box :options, :sms         
+                  = form.check_box  :send_sms         
                 %td
                   = label :options, :sms_timestamp, "Add SMS timestamp", :disabled=>"disabled"
                   %br
