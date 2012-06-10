@@ -51,6 +51,6 @@ class Message < ActiveRecord::Base
     # Send the messages
     puts "********************************"
     target_groups = to_groups.split(",").map{|g| g.to_i}
-    self.members = members_in_multiple_groups(target_groups)
+    self.members = Group.members_in_multiple_groups(target_groups)
   end
 end
