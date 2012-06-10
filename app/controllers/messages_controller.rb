@@ -5,8 +5,6 @@ class MessagesController < ApplicationController
 
   def do_new
     super
-    [:confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance].each do |setting|
-      @record.send "#{setting}=", Settings.messages[setting]
     end
   end
 

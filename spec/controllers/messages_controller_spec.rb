@@ -25,4 +25,11 @@ describe MessagesController do
     end
   end
 
+#  describe 'Create' do
+#    before(:each) do
+#      @group
+#      @message = 
+#    it 'x' do
+      
+
 end
