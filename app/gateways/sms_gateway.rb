@@ -55,7 +55,7 @@ class SmsGateway
     end      
   end      
 
-  def send(number=@number, body=@body)
+  def deliver(number=@number, body=@body)
     @number=number
     @body=body
     AppLog.create(:code => "SMS.sent.#{@gateway_name}", :description=>"to #{@number}: #{@body[0..30]}, resp=#{@http_status}")
@@ -79,7 +79,7 @@ class ClickatellGateway < SmsGateway
   # Send a message (@body) to a phone (@number)
   # If using a RESTFUL interface or other where a URI is called, you can follow this model. Otherwise,
   # this method will have to do whatever needed to tell the gateway service to send the message.
-  def send(number=@number, body=@body)
+  def deliver(number=@number, body=@body)
     number.sub!('+', '')  # Clickatell may not like '+' prefix
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{number}&text=#{URI.escape(body)}"

@@ -10,7 +10,7 @@ describe SmsGateway do
 
   it 'stores number and body when specified in send' do
     gateway = SmsGateway.new
-    gateway.send('+2347777777777', 'test message')
+    gateway.deliver('+2347777777777', 'test message')
     gateway.number.should == '+2347777777777'
     gateway.body.should == 'test message'
   end
@@ -41,14 +41,14 @@ describe ClickatellGateway do
       @gateway.gateway_name.should == 'clickatell'  # this is defined by ClickatellGateway#initialize
     end
     
-    describe 'Send method' do
+    describe 'Deliver method' do
       # Maybe this before(:each) should be refactored? It's funny to have the test going on there, but it's not
       # DRY if we put the mock & message expectation in the individual tests ...
       before(:each) do
         HTTParty = mock('HTTParty')
         HTTParty.stub(:get).and_return '200'
         HTTParty.should_receive(:get)
-        @gateway.send('+2347777777777', 'test message')
+        @gateway.deliver('+2347777777777', 'test message')
       end
 
       it 'forms URI properly' do
@@ -64,6 +64,6 @@ describe ClickatellGateway do
         @gateway.http_status.should == '200'
       end        
 
-    end # Send method
+    end # deliver method
   end # when needed parameters are present
 end

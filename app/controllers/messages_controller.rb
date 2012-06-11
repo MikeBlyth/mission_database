@@ -5,7 +5,6 @@ class MessagesController < ApplicationController
 
   def do_new
     super
-    end
   end
 
   def do_create

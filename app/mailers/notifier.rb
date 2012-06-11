@@ -4,6 +4,10 @@ class Notifier < ActionMailer::Base
   include IncomingMailsHelper  
   include NotifierHelper
     
+# Question: we use something like Notifier.send_help to get a message. This looks like 
+# and instance method, so how can we call it for Notifier? Why don't we have to define
+# send_help as a class method?
+
   def travel_reminder(travel)
     return nil unless travel.member   # If no member, then no one to mail notice to!
     @content = travel_reminder_content(travel)
@@ -43,6 +47,14 @@ class Notifier < ActionMailer::Base
   def send_test(recipients, content)
     @content = "Test from database@sim-nigeria.org\n\n#{content}"
     mail(:to => recipients, :subject=>'Test from database') do |format|
+      format.text {render 'generic'}
+      format.html {render 'generic'}
+    end 
+  end
+
+  def send_generic(recipients, content)
+    @content = content
+    mail(:to => recipients, :subject=>'Message from SIM Nigeria') do |format|
       format.text {render 'generic'}
       format.html {render 'generic'}
     end 
@@ -94,7 +106,7 @@ class Notifier < ActionMailer::Base
   end
 
   def contact_updates(recipients, contacts)
-    @content = "--Content--"
+    @content = "--Content--"  # This is not used -- take it out?
     @contacts = contacts
     @email = true # Same template used for screen display (check) & actual mailing, so @email is
                   # used to flag that we are emailing msg. So we don't include the "Send" button.
