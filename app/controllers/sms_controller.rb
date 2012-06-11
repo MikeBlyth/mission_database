@@ -30,7 +30,7 @@ class SmsController < ApplicationController
       AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}")
       if SiteSetting[:outgoing_sms].downcase == 'clickatell'  # It's our only gateway so far
         from = '+2348162522097' if from =~/82591/  # This is only for testing! Remove 
-        ClickatellGateway.new.send(from, resp)
+        ClickatellGateway.new.deliver(from, resp)
    #$   send_clickatell('+2348162522097', "Response sent")
       end
     else  
@@ -46,7 +46,7 @@ class SmsController < ApplicationController
     gateway_instances = []
     numbers.each do |number|
       gateway_instance = gateway_class.new
-      gateway_instance.send(number, body)
+      gateway_instance.deliver(number, body)
       gateway_instances << gateway_instance
     end
     return gateway_instances

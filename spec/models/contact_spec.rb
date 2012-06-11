@@ -125,7 +125,7 @@ describe Contact do
   describe 'export' do
     before(:each) do
       @member = Factory.build(:member_without_family)
-      @contact = Factory.build(:contact, :member=>@member)
+      @contact = Factory.build(:contact, :member=>@member, :phone_1=>'8080808080')
       Contact.stub(:all).and_return([@contact])
     end      
 
