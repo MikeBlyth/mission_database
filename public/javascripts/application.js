@@ -2,6 +2,12 @@
 // This file is automatically included by javascript_include_tag :defaults
 
 // Message page
+
+    $(function() { $('<p class="msg-info">At least <span id="msg-count">0</span> SMS messages will be sent</p>')
+      .insertAfter('#record_to_groups');
+      
+     });
+
 // SMS Selection
     $('#record_send_sms').live("change", function(){
         if ($(this).is(':checked')) {
@@ -21,7 +27,11 @@
         $.getJSON("../groups/member_count.js", 
             {to_groups: $(this).val()
             },
-        function(data) {alert('Those groups include ' + data + ' members' )}            
+        function(data) {
+ //       alert('Those groups include ' + data + ' members' );
+        $('#msg-count').text(data);                
+        }            
+   
         ); 
       });
       
