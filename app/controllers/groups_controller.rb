@@ -19,6 +19,21 @@ class GroupsController < ApplicationController
     @record.update_attributes(:member_ids=>params[:record][:member_ids])
   end
   
+  def member_count
+    groups = params[:to_groups]
+    if groups
+      target_groups = groups.map {|g| g.to_i}
+      count = Group.members_in_multiple_groups(target_groups).count
+    else
+      count = 0
+    end
+    @json_resp =  Member.new(:name=>'Jane')
+    @json_resp = count # {:member=>'John'}
+    respond_to do |format|
+      format.js { render :json => @json_resp }
+    end
+  end    
+    
   def do_create
     super
     attach_group_members

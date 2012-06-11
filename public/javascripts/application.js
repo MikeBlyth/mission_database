@@ -16,6 +16,16 @@
         }  
       });
 
+    $('#record_to_groups').live("change", function(){
+ //       alert("Selected groups = " + $(this).val());
+        $.getJSON("../groups/member_count.js", 
+            {to_groups: $(this).val()
+            },
+        function(data) {alert('Those groups include ' + data + ' members' )}            
+        ); 
+      });
+      
+
 // ****************** DATEPICKER **************************************  
 	$(function() {
     $(".datepicker").live("click", function(){
@@ -185,7 +195,7 @@ function set_spouse_choices(as_form) {
             {name: last_name, 
              sex: sex.text()[0],
              id: my_id}, 
-    function(data){
+    function(data){ 
     // !!** need to do something to check whether data is returned before we 
     // !!**   destroy the existing option list
 //      select_control.empty()

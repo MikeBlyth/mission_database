@@ -36,6 +36,7 @@ SIM::Application.routes.draw do
   match 'members/set_full_names'
   match 'members/spouse_select'
   match 'families/:id/add_family_member' => 'families#add_family_member', :as => :add_family_member
+  match 'groups/member_count'
   match 'members/edit_inline/:id' => 'members#edit_inline', :as => :edit_inline
 
   match ':controller/export', :action => 'export'
