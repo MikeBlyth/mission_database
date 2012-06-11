@@ -28,12 +28,12 @@ class SentMessage < ActiveRecord::Base
   end
 
   def send_email
-    message = Notifier.send_generic([@contact.email_1], self.body)
-    message.deliver
+    outgoing = Notifier.send_generic([@contact.email_1], message.body)
+    outgoing.deliver
   end
 
   def send_sms
-    gateway = gateway = ClickatellGateway.new
-    gateway.deliver(@contact.phone_1, self.body[0..150])        
+    gateway = ClickatellGateway.new
+    gateway.deliver(@contact.phone_1, message.body[0..150])        
   end
 end

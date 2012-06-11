@@ -34,7 +34,7 @@ FactoryGirl.define do
     member { |a| a.association :member }
     contact_type_id 1
     email_1 'my_email@example.com'
-    phone_1 '0808-888-8888'
+    phone_1 '+2348088888888'
     skype 'MySkypeName'
     is_primary true
     after_build do

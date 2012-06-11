@@ -25,11 +25,26 @@ describe MessagesController do
     end
   end
 
-#  describe 'Create' do
-#    before(:each) do
-#      @group
-#      @message = 
-#    it 'x' do
+  describe 'Edit' do
+    before(:each) do
+    end
+    it 'converts to_groups to array' do
+      message = Message.create(:to_groups=>"1,2", :body=>"Test")
+#      Message.stub(:find).with(1).and_return(message)
+      put :edit, :id=>message.id
+      assigns(:record).to_groups.should == [1, 2]
+    end
+  end
+  
+  describe 'Create' do
+    it 'adds user name to record' do
+      message = Message.new(:to_groups=>"1,2", :body=>"Test")
+#      Message.stub(:save).and_return(true)
+      post :create, :record => {:body=>"test", :to_groups=>["1", '2']}
+      Message.first.user.should == @user
+    end
+  end
+  
       
 
 end

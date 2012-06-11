@@ -27,30 +27,32 @@ class Message < ActiveRecord::Base
   validates_numericality_of :confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance
       
   validates_presence_of :body
-  before_save :convert_to_groups
+  before_save :convert_groups_to_string
   after_save  :send_messages
   
   def after_initialize
     [:confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance].each do |setting|
       self.send "#{setting}=", Settings.messages[setting] if (self.send setting).nil?
     end
-  end    
-
-  def checker
-    puts "**** Saving with to_groups=#{to_groups}"
-  end
+  #  user = current_user 
+  end   
   
-  def convert_to_groups
-    if to_groups.is_a? Array
-    # Convert :to_groups=>["1", "2", "4"] or [1,2,4] to "1,2,4", as maybe simpler than converting with YAML
-      to_groups =to_groups.map {|g| g.to_i}.join(",")
+  # Convert :to_groups=>["1", "2", "4"] or [1,2,4] to "1,2,4", as maybe 
+  #    simpler than converting with YAML
+  def convert_groups_to_string
+    if self.to_groups.is_a? Array
+      self.to_groups = self.to_groups.map {|g| g.to_i}.join(",")
     end
   end 
+
+  def to_groups_array
+    to_groups.split(",").map{|g| g.to_i}
+  end
   
+  # Send the messages -- done by creating the sent_message objects, one for each member
+  #   members_in_multiple_groups(array) is all the members belonging to these groups and
+  #   to_groups_array is the array form of the destination groups for this message
   def send_messages
-    # Send the messages
-    puts "********************************"
-    target_groups = to_groups.split(",").map{|g| g.to_i}
-    self.members = Group.members_in_multiple_groups(target_groups)
+    self.members = Group.members_in_multiple_groups(to_groups_array)
   end
 end
