@@ -1,6 +1,21 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+// Message page
+// SMS Selection
+    $('#record_send_sms').live("change", function(){
+        if ($(this).is(':checked')) {
+          $('.counter').css('display','block')
+          $('#record_retries').css('display','inline')
+          $('label[for=record_retries]').css('display','inline')
+          }
+        else {
+          $('.counter').css('display','none')
+          $('#record_retries').css('display','none')
+          $('label[for=record_retries]').css('display','none')
+        }  
+      });
+
 // ****************** DATEPICKER **************************************  
 	$(function() {
     $(".datepicker").live("click", function(){

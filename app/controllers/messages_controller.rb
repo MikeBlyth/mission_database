@@ -12,6 +12,11 @@ class MessagesController < ApplicationController
     record.user = current_user
   end
 
+#  def create
+#    super
+#    redirect_to message_path(@record) and return
+#  end
+
   def do_edit
     super
     @record.to_groups = @record.to_groups_array # Convert string to integer array
