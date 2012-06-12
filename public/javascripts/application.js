@@ -12,6 +12,7 @@
         $('<div><p class="msg-info for-sms">At least <span id="msg-count">0</span> SMS messages will be sent</p></div>')
         .insertAfter('#record_to_groups');
      toggle_sms_display();      
+
      });
 
 // SMS Selection
@@ -37,6 +38,17 @@
         } 
     } ;
 
+    $('#adv-toggle').live("click", function(){
+var display = $('#options').css('display');
+console.log(display);
+      if (display == 'block') {
+        $(this).text('Show advanced options')
+        }
+      else {
+        $(this).text('Hide advanced options')
+      }        
+      $('#advanced #options').toggle('blind',{},'fast');
+    });
 
     $('#record_to_groups').live("change", function(){
  //       alert("Selected groups = " + $(this).val());

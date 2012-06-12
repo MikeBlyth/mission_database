@@ -316,3 +316,16 @@ table.children {
 .active-scaffold-header div.actions a.export {
   background-image: url(images/export.png);
   padding: 5px 5px 5px 25px; }
+
+#msg-form #bottom {
+  position: relative; }
+
+#advanced {
+  position: absolute;
+  top: 0px;
+  left: 310px;
+  width: 150px;
+  padding: 5px; }
+
+#advanced #options {
+  background-color: #aaccaa; }
