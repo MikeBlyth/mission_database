@@ -28,6 +28,7 @@ class Message < ActiveRecord::Base
       
   validates_presence_of :body, :message=>'You need to write something in your message!'
   validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
+  validate :sending_medium
   before_save :convert_groups_to_string
   after_save  :send_messages
   
@@ -55,10 +56,17 @@ class Message < ActiveRecord::Base
   #   to_groups_array is the array form of the destination groups for this message
   def send_messages
     self.members = Group.members_in_multiple_groups(to_groups_array)
+    self.sent_messages.each {|msg| msg.send_to_gateways}
   end
   
   def timestamp
     t = created_at.getlocal
     t.strftime('%e%b%I%M%p')[0..9]
+  end
+
+  def sending_medium
+    unless send_sms or send_email
+      errors.add(:base,'Must select a message type (email, SMS, etc.)')
+    end
   end
 end

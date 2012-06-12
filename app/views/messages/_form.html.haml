@@ -1,3 +1,7 @@
+%p{:style=>'border: 1px solid red; width: 300px; padding: 1em'}
+  Note: Message sending is still experimental and few options are working.
+  Be sure to follow up any messages you send with this system, and do not
+  assume that they are being delivered reliably (yet).
 = fields_for :record do |form|
   #msg-form
     #top
@@ -31,8 +35,8 @@
             %br
             = form.select :to_groups, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15          
       #advanced 
-        %label#adv-toggle Advanced options
-        #options
+        %label#adv-toggle Show advanced options
+        #options{:style=>'display: none'}
           %table
             %tr
               %td 
