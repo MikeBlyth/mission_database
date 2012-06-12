@@ -9,6 +9,7 @@ describe SentMessage do
       ActionMailer::Base.deliveries.clear  # clear incoming mail queue
       @message = Message.new(:body=>'test message', :to_groups=>"1")
       @sent_message = SentMessage.new(:message=>@message, :member=>@member)
+      @message.stub(:created_at).and_return(Time.now)
       @gateway = mock('gateway')
       ClickatellGateway ||= mock('ClickatellGateway')
       ClickatellGateway.stub(:new).and_return(@gateway)
@@ -21,7 +22,7 @@ describe SentMessage do
 
     it "Sends an SMS" do
       @message.send_sms = true
-      @gateway.should_receive(:deliver).with(@contact.phone_1, 'test message')
+      @gateway.should_receive(:deliver).with(@contact.phone_1, "test message #{@message.timestamp}")
       @sent_message.send_to_gateways
       puts "**** @sent_message.attributes=#{@sent_message.attributes}"
     end
@@ -29,7 +30,7 @@ describe SentMessage do
     it "Resends up to maximum retries" do
       @message.send_sms = true
       @message.retries = 1
-      @gateway.should_receive(:deliver).with(@contact.phone_1, 'test message').twice
+      @gateway.should_receive(:deliver).with(@contact.phone_1, "test message #{@message.timestamp}").twice
       3.times {@sent_message.send_to_gateways}
       @sent_message.attempts.should == 2  # Original plus one retry
     end

@@ -19,6 +19,7 @@ describe Message do
   describe 'to_groups field' do
     before(:each) do
       @message = Message.new(:body=>'test')
+      @message.stub(:created_at).and_return(Time.now)
     end
     
     it 'is changed from param array to string' do

@@ -34,6 +34,7 @@ class SentMessage < ActiveRecord::Base
 
   def send_sms
     gateway = ClickatellGateway.new
-    gateway.deliver(@contact.phone_1, message.body[0..150])        
+    gateway.deliver(@contact.phone_1, message.body[0..149] + ' ' + message.timestamp)        
   end
+
 end

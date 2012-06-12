@@ -26,7 +26,8 @@ class Message < ActiveRecord::Base
   belongs_to :user
   validates_numericality_of :confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance
       
-  validates_presence_of :body
+  validates_presence_of :body, :message=>'You need to write something in your message!'
+  validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
   before_save :convert_groups_to_string
   after_save  :send_messages
   
@@ -54,5 +55,10 @@ class Message < ActiveRecord::Base
   #   to_groups_array is the array form of the destination groups for this message
   def send_messages
     self.members = Group.members_in_multiple_groups(to_groups_array)
+  end
+  
+  def timestamp
+    t = created_at.getlocal
+    t.strftime('%e%b%I%M%p')[0..9]
   end
 end
