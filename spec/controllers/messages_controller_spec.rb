@@ -29,7 +29,11 @@ describe MessagesController do
     before(:each) do
     end
     it 'converts to_groups to array' do
-      message = Message.create(:to_groups=>"1,2", :body=>"Test")
+      # NB: If this test fails because of an invalid 'message', you may get a Routing Error,
+      #   No route matches {:controller=>"messages", :action=>"edit"
+      # which is not helpful! That's why we do the message.should be_valid after creating it.
+      message = Message.create(:to_groups=>"1,2", :body=>"Test", :send_email=>true)
+      message.errors.should == {} 
 #      Message.stub(:find).with(1).and_return(message)
       put :edit, :id=>message.id
       assigns(:record).to_groups.should == [1, 2]
@@ -38,9 +42,7 @@ describe MessagesController do
   
   describe 'Create' do
     it 'adds user name to record' do
-      message = Message.new(:to_groups=>"1,2", :body=>"Test")
-#      Message.stub(:save).and_return(true)
-      post :create, :record => {:body=>"test", :to_groups=>["1", '2']}
+      post :create, :record => {:body=>"test", :to_groups=>["1", '2'], :send_email=>true}
       Message.first.user.should == @user
     end
   end
