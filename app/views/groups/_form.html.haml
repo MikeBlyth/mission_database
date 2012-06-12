@@ -18,5 +18,5 @@
       %td
         = form.label :member_ids, "Members"
         %br
-        = form.select :member_ids, Member.those_active.order('name').collect {|x| [x.name, x.id]}, {:include_blank=>"--none--"}, 
+        = form.select :member_ids, Member.those_active_adults.order('name').collect {|x| [x.name, x.id]}, {:include_blank=>"--none--"}, 
           :multiple => true, :size=>15

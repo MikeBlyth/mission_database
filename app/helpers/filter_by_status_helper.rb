@@ -21,6 +21,10 @@ module FilterByStatusHelper
       self.joins(:status).where("active").readonly(false) 
     end 
 
+    def those_active_adults
+      self.joins(:status).where("active and not child").readonly(false) 
+    end 
+
     def those_on_field_or_active
       self.joins(:status).where("active or on_field")
     end 
