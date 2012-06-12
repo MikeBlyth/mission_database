@@ -14,6 +14,7 @@
 #  attempts             :integer
 
 class SentMessage < ActiveRecord::Base
+  require 'mail'
   belongs_to :message
   belongs_to :member
 
