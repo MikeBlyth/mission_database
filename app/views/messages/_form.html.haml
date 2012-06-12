@@ -1,24 +1,3 @@
-<script>
-$(function() {
-$( "#accordion" ).accordion( { autoHeight: false, animation: false });
-});
-</script>
-<script type="text/javascript">
-$(document).ready(function(){	
-//default usage
-$("#record_body").charCount({
-allowed: 150,	
-counterText: 'Characters left for one SMS message: '	
-});
-//custom usage
-$("#message2").charCount({
-allowed: 50,		
-warning: 20,
-counterText: 'Characters left for one SMS message: '	
-});
-});
-</script>
-
 = fields_for :record do |form|
   #accordion
     %h3
@@ -43,20 +22,15 @@ counterText: 'Characters left for one SMS message: '
                   = form.label  :send_sms, "Send SMS"
                   %br
                   = form.check_box  :send_sms         
-                %td
-                  = label :options, :sms_timestamp, "Add SMS timestamp", :disabled=>"disabled"
+                %td 
+                  = form.label :retries, :class=>'for-sms'
                   %br
-                  = check_box :options, :sms_timestamp, :disabled=>"disabled"         
+                  = form.select :retries, [['none', 0], ['1',1], ['2',2], ['3',3]], {}, :class=>'for-sms'
         %tr
           %td
             = form.label :to_groups, "Destination groups"
             %br
             = form.select :to_groups, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15          
-        %tr
-          %td 
-            = form.label :retries
-            %br
-            = form.select :retries, [['none', 0], ['1',1], ['2',2], ['3',3]] 
     %h3 
       %a{:href=>"#"}
         Advanced
@@ -64,9 +38,9 @@ counterText: 'Characters left for one SMS message: '
       %table
         %tr
           %td 
-            = form.label :retry_interval
+            = form.label :retry_interval, :class=>'for-sms'
             %br
-            = form.select :retry_interval, [['5 minutes', 5], ['10 minutes', 10], ['15 minutes', 15], ['30 minutes', 30]]
+            = form.select :retry_interval, [['5 minutes', 5], ['10 minutes', 10], ['15 minutes', 15], ['30 minutes', 30]], {}, :class=>'for-sms'
         %tr
           %td 
             = form.label :response_time_limit

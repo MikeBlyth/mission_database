@@ -53,6 +53,9 @@ div.statuses-view {
 .education-input, .ministry_comments {
   width: 270px; }
 
+.exceeded {
+  background: yellow; }
+
 #menu {
   background: #cceeff;
   min-height: 800px;
