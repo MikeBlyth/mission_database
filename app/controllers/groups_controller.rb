@@ -36,6 +36,9 @@ class GroupsController < ApplicationController
     
   def do_create
     super
+    # For some reason, ActiveScaffold is not updating the parent_group_id, so
+    # rather than debug that issue, we're setting it here.
+    @record.parent_group_id = params[:record][:parent_group_id]
     attach_group_members
   end
 
@@ -48,7 +51,15 @@ class GroupsController < ApplicationController
   def do_update
 #puts "**** params=#{params}"
     super
+    # For some reason, ActiveScaffold is not updating the parent_group_id, so
+    # rather than debug that issue, we're setting it here.
+    @record.parent_group_id = params[:record][:parent_group_id]
     attach_group_members
+  end
+
+  def do_create_save
+    super
+    puts "**** parent_group_id=#{parent_group_id}"
   end
 
 end
