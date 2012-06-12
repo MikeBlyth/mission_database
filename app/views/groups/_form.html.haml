@@ -13,10 +13,10 @@
       %td
         = form.label :parent_group_id
         %br
-        = form.collection_select :parent_group_id, Group.all, :id, :group_name
+        = form.collection_select :parent_group_id, Group.order('group_name'), :id, :group_name, :include_blank=>"--none--"
     %tr
       %td
         = form.label :member_ids, "Members"
         %br
-        = form.select :member_ids, Member.those_active.order('name').collect {|x| [x.name, x.id]}, {}, 
+        = form.select :member_ids, Member.those_active.order('name').collect {|x| [x.name, x.id]}, {:include_blank=>"--none--"}, 
           :multiple => true, :size=>15
