@@ -12,7 +12,7 @@
         $('<div><p class="msg-info for-sms">At least <span id="msg-count">0</span> SMS messages will be sent</p></div>')
         .insertAfter('#record_to_groups');
      toggle_sms_display();      
-
+     $('#as_messages-create--form .submit').val('Send message');
      });
 
 // SMS Selection
@@ -49,6 +49,8 @@ console.log(display);
       }        
       $('#advanced #options').toggle('blind',{},'fast');
     });
+
+    $('#as_messages-create--messages .submit').text('Send message')
 
     $('#record_to_groups').live("change", function(){
  //       alert("Selected groups = " + $(this).val());
