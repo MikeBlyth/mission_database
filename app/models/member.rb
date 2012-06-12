@@ -153,6 +153,10 @@ end
     return off_field_mismatches + on_field_mismatches
   end
 
+  # All members who are listed as being in_country. We can't preselect the active members
+  # because a few inactive ones might be visiting.
+  # This is a SLOW method so shouldn't be used very often -- will add a few seconds to a 
+  # request.
   def self.those_in_country
     return self.all.delete_if {|m| !m.in_country_per_travel}
   end

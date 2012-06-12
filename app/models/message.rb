@@ -55,7 +55,9 @@ class Message < ActiveRecord::Base
   #   members_in_multiple_groups(array) is all the members belonging to these groups and
   #   to_groups_array is the array form of the destination groups for this message
   def send_messages
-    self.members = Group.members_in_multiple_groups(to_groups_array)
+    target_members = Group.members_in_multiple_groups(to_groups_array) && # an array of users
+                     Member.those_in_country
+    self.members = target_members
     self.sent_messages.each {|msg| msg.send_to_gateways}
   end
   

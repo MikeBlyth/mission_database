@@ -34,10 +34,10 @@ class SentMessage < ActiveRecord::Base
   end
 
   def send_sms
-    if Rails.env == 'production'
-      gateway = ClickatellGateway.new
-    else  
+    if Rails.env == 'development'
       gateway = SmsGateway.new  # just for testing
+    else  
+      gateway = ClickatellGateway.new
     end
     gateway.deliver(@contact.phone_1, message.body[0..149] + ' ' + message.timestamp)        
   end

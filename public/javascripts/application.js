@@ -9,7 +9,7 @@
             warning: 20,
             counterText: 'Characters left for one SMS message: '	
             });      
-        $('<div><p class="msg-info for-sms">At least <span id="msg-count">0</span> SMS messages will be sent</p></div>')
+        $('<div><p class="msg-info for-sms">About <span id="msg-count">0</span> SMS messages will be sent</p></div>')
         .insertAfter('#record_to_groups');
      toggle_sms_display();      
      $('#as_messages-create--form .submit').val('Send message');
