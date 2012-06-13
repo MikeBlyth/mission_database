@@ -6,6 +6,9 @@ SIM::Application.configure do
   # since you don't have to restart the webserver when you make code changes.
   config.cache_classes = false
 
+  # Enable livereload (https://github.com/johnbintz/rack-livereload) 
+  config.middleware.insert_before(Rack::Lock, Rack::LiveReload)
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 

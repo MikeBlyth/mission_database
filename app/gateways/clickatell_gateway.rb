@@ -27,5 +27,14 @@ class ClickatellGateway < SmsGateway
     super
   end
 
+  def self.parse_status_params(params)
+    gateway_msg_id = params[:apiMsgId]
+    status = decode_status(params[:status])
+    return {:gateway_msg_id => gateway_msg_id, :updates=>{:status=>status}}
+  end
+
+  def self.decode_status(gateway_reported_status)
+    return gateway_reported_status  # Stub -- eventually need some standard statuses for our system
+  end
 end  
 

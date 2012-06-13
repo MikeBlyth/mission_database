@@ -36,6 +36,7 @@ GEM
       activemodel (= 3.0.7)
       activesupport (= 3.0.7)
     activesupport (3.0.7)
+    addressable (2.2.8)
     annotate-models (1.0.4)
     archive-tar-minitar (0.5.2)
     arel (2.0.9)
@@ -72,8 +73,12 @@ GEM
     culerity (0.2.15)
     database_cleaner (0.6.7)
     diff-lcs (1.1.2)
+    em-websocket (0.3.6)
+      addressable (>= 2.1.1)
+      eventmachine (>= 0.12.9)
     erubis (2.6.6)
       abstract (>= 1.0.0)
+    eventmachine (0.12.10)
     factory_girl (2.0.0.beta1)
     factory_girl_rails (1.1.beta1)
       factory_girl (~> 2.0.0.beta)
@@ -81,6 +86,18 @@ GEM
     ffi (1.0.9)
     gherkin (2.3.7)
       json (>= 1.4.6)
+    guard (1.1.1)
+      listen (>= 0.4.2)
+      thor (>= 0.14.6)
+    guard-livereload (1.0.0)
+      em-websocket (>= 0.2.0)
+      guard (>= 1.1.0)
+      multi_json (~> 1.0)
+    guard-rspec (1.0.1)
+      guard (>= 1.1)
+    guard-spork (1.0.0)
+      guard (>= 1.0.0)
+      spork (>= 0.8.4)
     haml (3.1.1)
     httparty (0.7.7)
       crack (= 0.1.8)
@@ -93,6 +110,10 @@ GEM
       rake (>= 0.8.1)
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
+    listen (0.4.4)
+      rb-fchange (~> 0.0.5)
+      rb-fsevent (~> 0.9.1)
+      rb-inotify (~> 0.8.8)
     macaddr (1.6.0)
       systemu (~> 2.2.0)
     mail (2.2.19)
@@ -137,6 +158,11 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.9.2.2)
+    rb-fchange (0.0.5)
+      ffi
+    rb-fsevent (0.9.1)
+    rb-inotify (0.8.8)
+      ffi (>= 0.5.0)
     redgreen (1.2.2)
     render_component_vho (3.0.3)
       railties (~> 3.0.0)
@@ -165,6 +191,7 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
+    ruby_gntp (0.3.4)
     rubyzip (0.9.4)
     sass (3.1.1)
     selenium-client (1.2.18)
@@ -208,6 +235,9 @@ DEPENDENCIES
   database_cleaner (>= 0.5.2)
   factory_girl (= 2.0.0.beta1)
   factory_girl_rails (= 1.1.beta1)
+  guard-livereload
+  guard-rspec
+  guard-spork
   haml
   httparty
   jrails
@@ -220,6 +250,7 @@ DEPENDENCIES
   redgreen
   rspec-rails
   ruby-debug19
+  ruby_gntp
   sass
   selenium-client (>= 1.2.18)
   settingslogic (= 2.0.8)

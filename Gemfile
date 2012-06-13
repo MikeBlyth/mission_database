@@ -46,6 +46,10 @@ group :test do
   gem "autotest"
   gem "redgreen"
   gem "test-unit"#, "1.2.3"
+  gem "guard-rspec"
+  gem "ruby_gntp"
+  gem 'guard-livereload'  # https://github.com/guard/guard-livereload
+  gem 'guard-spork' 
 end
 
 # gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"

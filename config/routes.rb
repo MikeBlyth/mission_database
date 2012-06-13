@@ -1,11 +1,11 @@
 SIM::Application.routes.draw do
 
 
+  match "sent_messages/clickatell_status", :to => "sent_messages#update_status_clickatell"
   resources :sent_messages do as_routes end
-
   resources :messages do as_routes end
 
-# SMS with Twilio
+# SMS with Twilio 
 
   resources :sms
 

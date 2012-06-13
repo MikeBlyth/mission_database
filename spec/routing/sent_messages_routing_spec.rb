@@ -31,5 +31,8 @@ describe SentMessagesController do
       { :delete => "/sent_messages/1" }.should route_to(:controller => "sent_messages", :action => "destroy", :id => "1")
     end
 
+    it "recognizes Clickatell status call" do
+      { :get => "/sent_messages/clickatell_status"}.should route_to(:controller=>"sent_messages", :action=> "update_status_clickatell")
+    end
   end
 end
