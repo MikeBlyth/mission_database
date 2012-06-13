@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120611074921) do
+ActiveRecord::Schema.define(:version => 20120613213558) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -293,8 +293,10 @@ ActiveRecord::Schema.define(:version => 20120611074921) do
     t.string   "confirmed_mode"
     t.string   "confirmation_message"
     t.integer  "attempts",             :default => 0
+    t.string   "gateway_message_id"
   end
 
+  add_index "sent_messages", ["gateway_message_id"], :name => "index_sent_messages_on_gateway_message_id"
   add_index "sent_messages", ["member_id"], :name => "index_sent_messages_on_member_id"
   add_index "sent_messages", ["message_id"], :name => "index_sent_messages_on_message_id"
 
