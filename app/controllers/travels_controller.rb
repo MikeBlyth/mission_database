@@ -38,7 +38,7 @@ class TravelsController < ApplicationController
     config.columns[:purpose].inplace_edit = true
     config.columns[:flight].inplace_edit = true
     config.columns[:guesthouse].inplace_edit = true
-    config.columns[:return_date].inplace_edit = true
+    config.columns[:return_date].inplace_edit = false # because editing it doesn't change the actual return flight date
     config.columns[:with_spouse].inplace_edit = true
     config.columns[:with_children].inplace_edit = true
     config.columns[:other_travelers].inplace_edit = true

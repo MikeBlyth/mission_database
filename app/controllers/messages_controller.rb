@@ -1,6 +1,8 @@
 class MessagesController < ApplicationController
   active_scaffold :message do |config|
     config.list.columns = [:created_at, :user, :body,  :send_sms, :send_email, :to_groups, :importance]
+    config.create.link.page = true 
+    config.create.link.inline = false 
   end
 
   def do_new
