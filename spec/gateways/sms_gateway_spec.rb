@@ -46,7 +46,8 @@ describe ClickatellGateway do
       # DRY if we put the mock & message expectation in the individual tests ...
       before(:each) do
         HTTParty = mock('HTTParty')
-        HTTParty.stub(:get).and_return '200'
+        @http_return = "ID: ABCDEF"
+        HTTParty.stub(:get).and_return @http_return
         HTTParty.should_receive(:get)
       end
 
@@ -62,11 +63,11 @@ describe ClickatellGateway do
 
       it 'sets @http_status variable' do
         @gateway.deliver('+2347777777777', 'test message')
-        @gateway.http_status.should == '200'
+        @gateway.http_status.should == @http_return
       end        
 
       it 'gives @http_status as return value' do
-        @gateway.deliver('+2347777777777', 'test message').should == '200'
+        @gateway.deliver('+2347777777777', 'test message').should == @http_return
       end        
 
     end # deliver method

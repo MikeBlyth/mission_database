@@ -43,6 +43,11 @@ class ClickatellGateway < SmsGateway
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{number}&text=#{URI.escape(body)}"
     @http_status =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
 #puts "**** CGtw#deliver @http_status=#{@http_status}"
+    if @http_status =~ /ID: (\w+)/
+      message_id = $1
+    else
+      message_id = @http_status  # Will include error message
+    end
     super
   end
 

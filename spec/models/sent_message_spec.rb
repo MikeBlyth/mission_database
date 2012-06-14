@@ -66,6 +66,13 @@ describe SentMessage do
     end
 
     it "sets the gateway message ID" do
+      @gateway.stub(:deliver).and_return("ID: #@gw_msg_id") # Note: This is the format for Clickatell
+      @message.send_sms = true
+      @sent_message.should_receive(:update_attributes).with(:attempts=>1, :gateway_message_id=>@gw_msg_id)
+      @sent_message.send_to_gateways
+    end
+
+    it "sets the gateway message ID" do
       @gateway.stub(:deliver).and_return("ID: #@gw_msg_id")
       @message.send_sms = true
       @sent_message.should_receive(:update_attributes).with(:attempts=>1, :gateway_message_id=>@gw_msg_id)
