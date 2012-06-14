@@ -48,10 +48,10 @@ describe ClickatellGateway do
         HTTParty = mock('HTTParty')
         HTTParty.stub(:get).and_return '200'
         HTTParty.should_receive(:get)
-        @gateway.deliver('+2347777777777', 'test message')
       end
 
       it 'forms URI properly' do
+        @gateway.deliver('+2347777777777', 'test message')
         uri = @gateway.uri
         uri.should match("user=#{SiteSetting.clickatell_user_name}")
         uri.should match("password=#{SiteSetting.clickatell_password}") 
@@ -61,7 +61,12 @@ describe ClickatellGateway do
       end
 
       it 'sets @http_status variable' do
+        @gateway.deliver('+2347777777777', 'test message')
         @gateway.http_status.should == '200'
+      end        
+
+      it 'gives @http_status as return value' do
+        @gateway.deliver('+2347777777777', 'test message').should == '200'
       end        
 
     end # deliver method

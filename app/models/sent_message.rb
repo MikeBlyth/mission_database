@@ -25,7 +25,7 @@ class SentMessage < ActiveRecord::Base
     return false unless @contact
     send_email if message.send_email && @contact.email_1
     send_sms if message.send_sms && @contact.phone_1
-    update_attributes(:attempts=>attempts+1)
+    update_attributes(:attempts=>attempts+1, :gateway_message_id=>@gateway_message_id)
   end
 
   def send_email
@@ -34,12 +34,20 @@ class SentMessage < ActiveRecord::Base
   end
 
   def send_sms
-    if Rails.env == 'development'
-      gateway = SmsGateway.new  # just for testing
-    else  
+#puts "send_sms"
+    if Rails.env != 'development'
       gateway = ClickatellGateway.new
+    else  
+      gateway = SmsGateway.new  # just for testing
     end
-    gateway.deliver(@contact.phone_1, message.body[0..149] + ' ' + message.timestamp)        
+    gateway_reply = gateway.deliver(@contact.phone_1, message.body[0..149] + ' ' + message.timestamp)        
+#puts "**** gateway_reply=#{gateway_reply}"
+    if gateway_reply =~ /ID: (\w+)/
+      @gateway_message_id = $1
+    else
+      @gateway_message_id = gateway_reply  # Will include error message
+    end
+#puts "**** @gateway_message_id=#{@gateway_message_id}"
   end
 
 end

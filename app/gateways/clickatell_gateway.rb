@@ -37,10 +37,12 @@ class ClickatellGateway < SmsGateway
   # If using a RESTFUL interface or other where a URI is called, you can follow this model. Otherwise,
   # this method will have to do whatever needed to tell the gateway service to send the message.
   def deliver(number=@number, body=@body)
+#puts "***** CGtw#deliver"
     number.sub!('+', '')  # Clickatell may not like '+' prefix
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{number}&text=#{URI.escape(body)}"
     @http_status =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+#puts "**** CGtw#deliver @http_status=#{@http_status}"
     super
   end
 

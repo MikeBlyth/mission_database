@@ -59,6 +59,7 @@ class SmsGateway
     @number=number
     @body=body
     AppLog.create(:code => "SMS.sent.#{@gateway_name}", :description=>"to #{@number}: #{@body[0..30]}, resp=#{@http_status}")
+    return @http_status
   end
 end
 
