@@ -10,6 +10,23 @@ class ClickatellGateway < SmsGateway
   # In this ClickatellGateway class, then, after initialization we will have @user_name, @password, and @api_id
   # extracted from the SiteSettings.
   # The initialize method could also set those variables itself (but then they won't be accessible to users)
+
+  ClickatellStatusCodes = {
+    1 => {:our_status=>-1, :description=>"The message ID is incorrect or reporting is delayed."},
+    2 => {:our_status=>1, :description=>"The message could not be delivered and has been queued for attempted redelivery."},
+    3 => {:our_status=>1, :description=>"Delivered to gateway."},
+    4 => {:our_status=>2, :description=>"Received by handset."},
+    5 => {:our_status=>-1, :description=>"Error with message, likely problem with content"},
+    6 => {:our_status=>-1, :description=>"User canceled delivery"},
+    7 => {:our_status=>-1, :description=>"Error with message"},
+    8 => {:our_status=>1, :description=>"Message received by gateway."},
+    9 => {:our_status=>-1, :description=>"Routing error"},
+    10 => {:our_status=>-1, :description=>"Message expired"},
+    11 => {:our_status=>-1, :description=>"Message queued for later delivery"},
+    12 => {:our_status=>-1, :description=>"Out of credit"},
+    14 => {:our_status=>-1, :description=>"Maximum MT limit exceeded"}
+    }
+
   def initialize
     @gateway_name = 'clickatell'
     @required_params = [:user_name, :password, :api_id]
@@ -34,7 +51,7 @@ class ClickatellGateway < SmsGateway
   end
 
   def self.decode_status(gateway_reported_status)
-    return gateway_reported_status  # Stub -- eventually need some standard statuses for our system
+    return ClickatellStatusCodes[gateway_reported_status.to_i][:our_status]
   end
 end  
 
