@@ -40,7 +40,7 @@ describe ReportsController do
       merged[4][:align].should == birthdays[4][:align]
     end
  
-    it "indicates when couple and/or kids traveling wtih member" do
+    it "indicates when couple and/or kids traveling with member" do
       pending
     end
     
@@ -55,8 +55,9 @@ describe ReportsController do
     
   describe "sends Where Is report by email" do
     before(:each) do
-      @user = Factory(:user, :admin=>true)  #   Sign in as admin so the controllers will work!
-      test_sign_in(@user)
+#      @user = Factory(:user, :admin=>true)  #   Sign in as admin so the controllers will work!
+#      test_sign_in(@user)
+      test_sign_in_fast
       @params = {:mail_to => "test@example.com", :format=>'pdf'}
       @member = Factory(:family).head
     end

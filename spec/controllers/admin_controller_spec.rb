@@ -316,8 +316,9 @@ describe AdminController do
 
   describe 'notices:' do
     before(:each) do
-      @user = Factory.stub(:user, :admin=>true)
-      test_sign_in(@user)
+#      @user = Factory.stub(:user, :admin=>true)
+#      test_sign_in(@user)
+       test_sign_in_fast
     end
       
     describe 'family summaries' do

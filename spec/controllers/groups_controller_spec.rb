@@ -2,10 +2,11 @@ require 'spec_helper'
 require 'sim_test_helper'
 
 describe GroupsController do
-      before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
-      end
+    before(:each) do
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+      test_sign_in_fast
+    end
 
   def mock_group(stubs={})
     @mock_group ||= mock_model(Group, stubs).as_null_object

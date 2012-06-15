@@ -4,15 +4,16 @@ include SimTestHelper
 describe ContactsController do
   
   before(:each) do
-      @user = Factory.stub(:user, :admin=>true)
-      test_sign_in(@user)
+#      @user = Factory.stub(:user, :admin=>true)
+#      test_sign_in(@user)
+      test_sign_in_fast
   end
 
   describe 'Export' do
-      before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
-      end
+#      before(:each) do
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+#      end
     
     it 'CSV sends data file' do
       get :export

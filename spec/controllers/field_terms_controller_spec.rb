@@ -7,8 +7,9 @@ describe FieldTermsController do
 
   describe 'Export' do
       before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+      test_sign_in_fast
       end
     
     it 'CSV sends data file' do

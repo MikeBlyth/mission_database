@@ -80,8 +80,9 @@ describe TravelsController do
   describe "automatic return trip" do
     
     before(:each) do
-        @user = Factory.build(:user, :admin=>true)
-        test_sign_in(@user)
+#        @user = Factory.build(:user, :admin=>true)
+#        test_sign_in(@user)
+        test_sign_in_fast
         @member = Factory(:member)
         @attr = {:member=>"#{@member.id}", :date=>Date.today, :arrival=>false, 
               :time => Time.new(1,1,1,5,15,0,"+01:00"),
@@ -177,8 +178,9 @@ describe TravelsController do
   
   describe 'Export' do
     before(:each) do
-      @user = Factory(:user, :admin=>true)
-      test_sign_in(@user)
+#      @user = Factory(:user, :admin=>true)
+#      test_sign_in(@user)
+      test_sign_in_fast
     end
 
     it 'sends data file' do

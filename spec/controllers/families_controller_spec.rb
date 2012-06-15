@@ -26,8 +26,9 @@ include SimTestHelper
     describe "for signed-in admin users" do
  
       before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+        test_sign_in_fast
       end
       
       it "should allow access to 'new'" do
@@ -65,8 +66,9 @@ include SimTestHelper
 
   describe 'make new, empty family' do
       before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+        test_sign_in_fast
       end
     
     it 'should make all required elements for new-family form' do
@@ -84,8 +86,9 @@ include SimTestHelper
 
   describe 'create new family from form' do
       before(:each) do
-          @user = Factory.build(:user, :admin=>true)
-          test_sign_in(@user)
+#          @user = Factory.build(:user, :admin=>true)
+#          test_sign_in(@user)
+          test_sign_in_fast
           @params={:record=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"},
                    :head=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"}
                    }
@@ -246,8 +249,9 @@ include SimTestHelper
   describe 'residence and status of family members:' do
 
     before(:each) do
-      @user = Factory(:user, :admin=>true)
-      test_sign_in(@user)
+#      @user = Factory(:user, :admin=>true)
+#      test_sign_in(@user)
+          test_sign_in_fast
       @original_location = Factory(:location, :description=>"Original Location")
       @new_location = Factory(:location, :description=>"New Location")
       @original_status = Factory(:status, :description=>"Original status")
@@ -364,7 +368,8 @@ include SimTestHelper
 
   describe 'updating a family from combined form' do
     before (:each) do
-      test_sign_in(Factory.stub(:user, :admin=>true))
+#      test_sign_in(Factory.stub(:user, :admin=>true))
+      test_sign_in_fast
       @head=factory_member_basic
       @family = @head.family
       @family.head = @head
@@ -535,7 +540,8 @@ include SimTestHelper
 
   describe 'Personnel Tasks' do
     before (:each) do
-      test_sign_in(Factory.stub(:user, :admin=>true))
+#      test_sign_in(Factory.stub(:user, :admin=>true))
+      test_sign_in_fast
       @head=factory_member_basic
       @family = @head.family
       @family.head = @head

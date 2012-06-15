@@ -27,8 +27,9 @@ describe MembersController do
     describe "for signed-in admin users" do
  
       before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+        test_sign_in_fast
       end
       
       it "should allow access to 'new'" do
@@ -113,8 +114,9 @@ describe MembersController do
     before(:each) do
       @member = Factory(:member_without_family)
       @spouse = Factory.build(:member_without_family, :sex=>@member.other_sex, :spouse=>@member)
-      @user = Factory(:user, :admin=>true)
-      test_sign_in(@user)
+#      @user = Factory(:user, :admin=>true)
+#      test_sign_in(@user)
+      test_sign_in_fast
     end  
   
 #    it 'sets previous_spouse in an update' do
@@ -139,7 +141,8 @@ describe MembersController do
     
     it 'updates the statuses of a group of members' do
       # Using a set of parameters like {... 'member_29'=>{'status_id=>'2'} ...}
-      test_sign_in(Factory.stub(:user, :admin=>true))
+#      test_sign_in(Factory.stub(:user, :admin=>true))
+      test_sign_in_fast
       id_1 = Factory(:member).id
       id_2 = Factory(:member).id
       params = {:garbage=>'xyz', "member_#{id_1}"=>{'status_id'=>'2'}, "member_#{id_2}"=>{'status_id'=>'5'} }
@@ -158,7 +161,8 @@ describe MembersController do
 
   describe 'updating a family from combined form' do
     before (:each) do
-      test_sign_in(Factory.stub(:user, :admin=>true))
+#      test_sign_in(Factory.stub(:user, :admin=>true))
+      test_sign_in_fast
       @head=Factory(:member)
       @params = {:id=>@head.id, :record=>{}}
     end
@@ -236,7 +240,8 @@ describe MembersController do
 
   describe 'Group assignment' do
     it 'assigns groups from multi-select' do
-      test_sign_in(Factory.stub(:user, :admin=>true))
+#      test_sign_in(Factory.stub(:user, :admin=>true))
+      test_sign_in_fast
       @member = Factory.create(:member)
       @a = Factory.create(:group)
       @b = Factory.create(:group)
@@ -247,8 +252,9 @@ describe MembersController do
 
   describe 'Export' do
       before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+        test_sign_in_fast
       end
     
     it 'CSV sends data file' do
