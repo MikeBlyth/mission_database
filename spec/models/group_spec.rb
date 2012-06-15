@@ -33,13 +33,15 @@ describe 'members_with_subgroups  ' do
     end
     
     it 'finds members belonging to one of an array of group ids' do
-      Member.stub(:find) do |ids|
-        if ids.sort == [1,2,4,6,7,8]
-          "Success!"
-        else
-         "Nope, got #{ids.sort} instead of [1, 2, 4, 7, 8]"
-       end
-      end
+    # This is a kludgy test. It just checks that 'members_in_multiple_groups' causes
+    # Member to select members with the right ids. To avoid using the database, we
+    # have multiple levels of mocks. Also, this is quite coupled with the actual method,
+    # since it only works with the 'where' method with :id=>[array of members].
+
+      Member.stub(:where).and_return(
+                    mock('Relation',:joins=>
+                       mock('Relation2', :where=>
+                          mock('Relation3', :all=>true))))
       Group.stub(:find_by_id) do |id|
         if id == 1           
           @mid_2
@@ -47,7 +49,8 @@ describe 'members_with_subgroups  ' do
           @low_1b
         end
       end
-      Group.members_in_multiple_groups([1,2]).should == 'Success!' # all branch 2 plus 1b
+      Member.should_receive(:where).with(:id=>[1,2,4,6,7,8])
+      Group.members_in_multiple_groups([1,2])#.should == 'Success!' # all branch 2 plus 1b
     end
   end # members_with_subgroups 
   

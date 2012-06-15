@@ -35,11 +35,14 @@ class Group < ActiveRecord::Base
   # Group.members_in_multiple_groups([1,3]) will return all the members who belong to group 1 (or subgroups) or 
   # group 3 (or subgroups). Group_ids which do not exist in the database are ignored. 
   def self.members_in_multiple_groups(group_ids=[])
-    members = []
+    members = []  # This is an array of member ids
     group_ids.each do |group_id|
       group = Group.find_by_id group_id
       members << group.members_with_subgroups if group
     end
-    return Member.find members.flatten.uniq
+    puts "**** #{members.flatten.uniq.sort}"
+    member_records = Member.where(:id=>members.flatten.uniq.sort)
+puts "**** member_records=#{member_records}"
+    return member_records.joins(:contacts).where(:contacts=>{:is_primary => true}).all
   end
 end

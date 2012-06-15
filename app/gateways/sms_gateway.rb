@@ -7,24 +7,27 @@ require 'uri'
 # Convenient way to send SMS. 
 # * Extracts parameters from the SiteSettings upon initialization
 # * Gives error if any of the required settings are not found
-# * provides stub "send" method which saves body and phone number to instance variables and generates log entry
+# * provides stub "send" method which saves body and phone numbers to instance variables and generates log entry
 #
 # * SmsGateway itself is not functional; actual sending must be defined in the sub-class
 #   such as ClickatellGateway.
+# 
+# Numbers is an array of phone numbers as strings. They should be in full international form.
+# The initial plus sign is not needed and is stripped if present.
 #
 # Example:
 #   gateway = ClickatellGateway.new
 #   if gateway.status[:errors] 
 #     (handle setup problem; probably some parameters are missing from the setup/configuration)
 #   end
-#   gateway.send("+2345551111111", "Security alert!")
+#   gateway.send(["+2345551111111]", "Security alert!")
 #   if gateway.status == ...
 #
 # See class definition of ClickatellGateway as an example of how to define a new gateway. 
 #
 class SmsGateway
-  attr_accessor :number, :body, :required_params
-  attr_reader :uri, :http_status, :gateway_name, :errors
+  attr_accessor :numbers, :body, :required_params
+  attr_reader :uri, :gateway_reply, :gateway_name, :errors
 
   def initialize
     get_required_params if @required_params && !@required_params.empty?
@@ -55,11 +58,11 @@ class SmsGateway
     end      
   end      
 
-  def deliver(number=@number, body=@body)
-    @number=number
+  def deliver(numbers=@numbers, body=@body)
+    @numbers=numbers
     @body=body
-    AppLog.create(:code => "SMS.sent.#{@gateway_name}", :description=>"to #{@number}: #{@body[0..30]}, resp=#{@http_status}")
-    return @http_status
+    AppLog.create(:code => "SMS.sent.#{@gateway_name}", :description=>"to #{@numbers}: #{@body[0..30]}, resp=#{@gateway_reply}")
+    return @gateway_reply
   end
 end
 

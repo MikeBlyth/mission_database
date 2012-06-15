@@ -40,19 +40,6 @@ class SmsController < ApplicationController
   end 
   
 
-  # Send out a single message to an array of numbers.
-  # Note that we could put logic here to change the gateway based on the number (US via one, Europe via another...)
-  def send_multi(numbers, body, gateway_class=ClickatellGateway)
-    gateway_instances = []
-    numbers.each do |number|
-      gateway_instance = gateway_class.new
-      gateway_instance.deliver(number, body)
-      gateway_instances << gateway_instance
-    end
-    return gateway_instances
-    #numbers.each {|number| self.send gateway_method, number, body}
-  end
-
 #  def send_twilio(number, body='')  ### NOT FINISHED -- JUST TAKEN FROM AN ONLINE EXAMPLE!
 #      account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
 

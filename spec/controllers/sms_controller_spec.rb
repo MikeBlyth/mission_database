@@ -166,36 +166,4 @@ describe SmsController do
 
   end # 'handles these commands:'
 
-  describe 'sends to multiple contacts' do
-    before(:each) do
-#      @gateway_class = mock('TestGateway')
-#      @gateway = mock('gateway').as_null_object
-#      @gateway_class.stub(:new).and_return(@gateway)
-      @message = 'Test'
-      @numbers = ['+12222222222', '+2348038000000']
-    end
-    
-    # This test is unnecessarily tied to implementation -- all we really care about for now is that the messages were
-    # sent somehow -- which will be reflected in the log. 
-#    it 'creates gateway objects' do
-#      SmsGateway.should_receive(:new).twice
-#      gateway_instances = controller.send_multi(@numbers, @message, SmsGateway)
-#      gateway_instances.should == [@gateway, @gateway]
-#    end
-    
-    it 'sends the multiple messages (reflected in logs)' do
-      @numbers.each do |number|
-        AppLog.should_receive(:create).with(:code => "SMS.sent.SmsGateway", 
-                :description=>"to #{number}: Test, resp=")
-      end
-      controller.send_multi(@numbers, @message, SmsGateway)                
-    end
-    
-    it 'returns the gateway objects for the sent messages' do
-      gateway_instances = controller.send_multi(@numbers, @message, SmsGateway)
-      gateway_instances.map {|g| g.number}.should == @numbers
-    end      
-
-  end # sends to multiple contacts
-
 end

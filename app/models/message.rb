@@ -58,7 +58,11 @@ class Message < ActiveRecord::Base
     target_members = Group.members_in_multiple_groups(to_groups_array) && # an array of users
                      Member.those_in_country
     self.members = target_members
-    self.sent_messages.each {|msg| msg.send_to_gateways}
+    # Collect array of email addresses and one of phone numbers, so we can send in bulk.
+#     self.sent_messages.each {|msg| msg.send_to_gateways} #(old -- used for sending one at a time
+    numbers = []
+    emails = []
+    
   end
   
   def timestamp

@@ -33,20 +33,30 @@ class ClickatellGateway < SmsGateway
     super
   end
 
-  # Send a message (@body) to a phone (@number)
+  def numbers_to_string_list(numbers)
+    if numbers.is_a? String
+      num_array = numbers.split(/,\s*/)
+    else
+      num_array = numbers
+    end 
+    return num_array.map {|n| n.sub!('+', '')}.join(',') # Clickatell may not like '+' prefix
+  end
+    
+
+  # Send a message (@body) to a phone (@numbers)
   # If using a RESTFUL interface or other where a URI is called, you can follow this model. Otherwise,
   # this method will have to do whatever needed to tell the gateway service to send the message.
-  def deliver(number=@number, body=@body)
+  def deliver(numbers=@numbers, body=@body)
 #puts "***** CGtw#deliver"
-    number.sub!('+', '')  # Clickatell may not like '+' prefix
+    outgoing_numbers = numbers_to_string_list(numbers)  
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
-    @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{number}&text=#{URI.escape(body)}"
-    @http_status =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
-#puts "**** CGtw#deliver @http_status=#{@http_status}"
-    if @http_status =~ /ID: (\w+)/
+    @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{outgoing_numbers}&text=#{URI.escape(body)}"
+    @gateway_reply =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+#puts "**** CGtw#deliver @gateway_reply=#{@gateway_reply}"
+    if @gateway_reply =~ /ID: (\w+)/
       message_id = $1
     else
-      message_id = @http_status  # Will include error message
+      message_id = @gateway_reply  # Will include error message
     end
     super
   end
