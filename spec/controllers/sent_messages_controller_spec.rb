@@ -2,7 +2,11 @@ require 'spec_helper'
 
 describe SentMessagesController do
   before( :each) {test_sign_in_fast}
-
+#    before(:each) do
+#      @user = Factory(:user, :admin=>true)
+#      test_sign_in(@user)
+#    end
+      
   describe "incoming Clickatell status updates" do
     before( :each) do
       @apiMsgId = '996f364775e24b8432f45d77da8eca47'

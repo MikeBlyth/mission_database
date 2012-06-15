@@ -23,7 +23,9 @@ describe SentMessage do
         :retries=>0, :send_email=>nil, :send_sms=>nil).as_null_object
       @sent_message = SentMessage.new(:message=>@message, :member=>@member)
       @message.stub(:timestamp).and_return('09Jul0545p')
+      # *** Gateway ****
       @gateway = mock('gateway', :deliver=>@gw_reply, :http_status=>@gw_reply).as_null_object
+      
       ClickatellGateway ||= mock('ClickatellGateway')
       ClickatellGateway.stub(:new).and_return(@gateway)
       end

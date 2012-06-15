@@ -53,6 +53,8 @@ puts "SPORK PREFORK ..."
   def test_sign_in_fast
       controller.stub(:authenticate_admin).and_return(:true)
       controller.stub(:authenticate).and_return(:true)
+      controller.stub(:current_user).and_return(mock_model(User, :admin? => true))
+      controller.stub(:current_user_admin?).and_return(true)
   end
 
   def test_sign_out

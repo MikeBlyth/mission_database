@@ -17,6 +17,7 @@ class Ability
     # In production, may want to include something like
     #      cannot :manage, [:medical, :personnel] 
     #  if we don't want system admin to have access to these
+      return
     else
       can :read, :all
       can :update, User
