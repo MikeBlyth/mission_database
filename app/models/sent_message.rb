@@ -19,7 +19,9 @@ class SentMessage < ActiveRecord::Base
   belongs_to :member
 
   def send_to_gateways
+#puts "**** send_to_gateways"
     self.attempts ||= 0
+raise "send_to_gateways with nil member" if member.nil?
     return nil if attempts > message.retries # Do nothing if we've already tried enough times
     @contact = member.primary_contact
     return false unless @contact
@@ -30,6 +32,7 @@ class SentMessage < ActiveRecord::Base
 
   def send_email
     outgoing = Notifier.send_generic([@contact.email_1], message.body)
+raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
   end
 
