@@ -17,9 +17,6 @@ module FilterByStatusHelper
       self.those_active.joins(:personnel_data).where("employment_status_id in (?)", EmploymentStatus.org_statuses)
     end 
 
-    def those_sending_messages
-    end
-
     def those_active
       self.joins(:status).where("active").readonly(false) 
     end 

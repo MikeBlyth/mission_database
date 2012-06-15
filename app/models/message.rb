@@ -30,7 +30,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
   validate :sending_medium
   before_save :convert_groups_to_string
-  after_save  :send_messages
+  after_save  :deliver
   
   def after_initialize
     [:confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance].each do |setting|
@@ -54,17 +54,29 @@ class Message < ActiveRecord::Base
   # Send the messages -- done by creating the sent_message objects, one for each member
   #   members_in_multiple_groups(array) is all the members belonging to these groups and
   #   to_groups_array is the array form of the destination groups for this message
-  def send_messages
+  def deliver
+#    puts "**** Message#send_messages"
     target_members = Group.members_in_multiple_groups(to_groups_array) && # an array of users
                      Member.those_in_country
     self.members = target_members
     # Collect array of email addresses and one of phone numbers, so we can send in bulk.
 #     self.sent_messages.each {|msg| msg.send_to_gateways} #(old -- used for sending one at a time
     numbers = []
-    emails = []
-    
+    email_addresses = []
+    email_addresses = [self.members.first.primary_contact.email_1]
+    deliver_email(email_addresses)
+#puts "**** email_addresses=#{email_addresses}"
   end
   
+private
+
+  def deliver_email(emails)
+#puts "**** deliver_email: emails=#{emails}"
+    outgoing = Notifier.send_generic(emails, self.body)
+raise "send_email with nil email produced" if outgoing.nil?
+    outgoing.deliver
+  end
+
   def timestamp
     t = created_at.getlocal
     t.strftime('%e%b%I%M%p')[0..9]

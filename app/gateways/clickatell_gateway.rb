@@ -51,8 +51,7 @@ class ClickatellGateway < SmsGateway
     outgoing_numbers = numbers_to_string_list(numbers)  
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{outgoing_numbers}&text=#{URI.escape(body)}"
-    @gateway_reply =  HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
-#puts "**** CGtw#deliver @gateway_reply=#{@gateway_reply}"
+    call_gateway
     if @gateway_reply =~ /ID: (\w+)/
       message_id = $1
     else
@@ -61,6 +60,13 @@ class ClickatellGateway < SmsGateway
     super
   end
 
+  # Connect to Clickatell via the URI.
+  # This can be overridden for testing; mock method can simply provide the desired reply
+  def call_gateway
+    @gateway_reply = HTTParty::get @uri #unless Rails.env.to_s == 'test'  # Careful with testing since this really sends messages!
+#puts "**** CGtw#deliver @gateway_reply=#{@gateway_reply}"
+  end
+    
   def self.parse_status_params(params)
     gateway_msg_id = params[:apiMsgId]
     status = decode_status(params[:status])

@@ -40,9 +40,7 @@ class Group < ActiveRecord::Base
       group = Group.find_by_id group_id
       members << group.members_with_subgroups if group
     end
-    puts "**** #{members.flatten.uniq.sort}"
     member_records = Member.where(:id=>members.flatten.uniq.sort)
-puts "**** member_records=#{member_records}"
     return member_records.joins(:contacts).where(:contacts=>{:is_primary => true}).all
   end
 end
