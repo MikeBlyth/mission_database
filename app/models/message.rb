@@ -30,7 +30,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
   validate :sending_medium
   before_save :convert_groups_to_string
-  after_save  :deliver
+#  after_save  :deliver
   
   def after_initialize
     [:confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance].each do |setting|
