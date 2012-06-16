@@ -30,7 +30,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
   validate :sending_medium
   before_save :convert_groups_to_string
-#  after_save  :deliver
+  after_save  :create_sent_messages   # each record represents this message for one recipient
   
   def after_initialize
     [:confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance].each do |setting|
@@ -47,25 +47,26 @@ class Message < ActiveRecord::Base
     end
   end 
 
-  # Send the messages -- done by creating the sent_message objects, one for each member
-  #   members_in_multiple_groups(array) is all the members belonging to these groups and
-  #   to_groups_array is the array form of the destination groups for this message
-  def deliver(params={})
-#    puts "**** Message#send_messages"
+  def create_sent_messages
+puts "**** create_sent_messages"
     target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
                      Member.those_in_country
     self.members = target_members
 puts "**** target_members=#{target_members}"
-puts "**** target_members.first.primary_contact=#{target_members.first.primary_contact}"
-    # Collect array of email addresses and one of phone numbers, so we can send in bulk.
-#     self.sent_messages.each {|msg| msg.send_to_gateways} #(old -- used for sending one at a time
-    phone_numbers = []
-    email_addresses = []
-    email_addresses = [self.members.first.primary_contact.email_1]
+#puts "**** target_members.first.primary_contact=#{target_members.first.primary_contact}"
+  end
+  
+  # Send the messages -- done by creating the sent_message objects, one for each member
+  #   members_in_multiple_groups(array) is all the members belonging to these groups and
+  #   to_groups_array is the array form of the destination groups for this message
+  def deliver(params={})
+#    puts "**** Message#deliver"
     if send_email
+      email_addresses = members.map {|m| m.primary_contact.email_1}
       deliver_email(email_addresses)
     end
     if send_sms
+      phone_numbers = members.map {|m| m.primary_contact.phone_1.gsub('+','')}
       deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
     end
 #puts "**** email_addresses=#{email_addresses}"
@@ -77,21 +78,21 @@ puts "**** target_members.first.primary_contact=#{target_members.first.primary_c
   end
   
   def to_groups_array
-    to_groups.split(",").map{|g| g.to_i}
+    to_groups.split(",").map{|g| g.to_i} if to_groups
   end
   
 private
 
   def deliver_email(emails)
 #puts "**** deliver_email: emails=#{emails}"
-    outgoing = Notifier.send_generic(emails, self.body)
+    outgoing = Notifier.send_generic(emails, self.body, true) # send using bcc:, not to:
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
   end
   
   def deliver_sms(params)
     sms_gateway = params[:sms_gateway]
-    phone_numbers = params[:phone_numbers]
+    phone_numbers = params[:phone_numbers].join(',')
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
   end

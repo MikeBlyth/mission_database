@@ -52,10 +52,14 @@ class Notifier < ActionMailer::Base
     end 
   end
 
-  def send_generic(recipients, content)
+  def send_generic(recipients, content, bcc=false)
 #puts "**** send_generic recipients=#{recipients}, content=#{content}"
     @content = content
-    mail(:to => recipients, :subject=>'Message from SIM Nigeria') do |format|
+    mail(
+      :to => (bcc ? '' : recipients),
+      :bcc => (bcc ? recipients : ''), 
+      :subject=>'Message from SIM Nigeria'
+                                           ) do |format|
       format.text {render 'generic'}
       format.html {render 'generic'}
     end 

@@ -16,6 +16,21 @@ describe Notifier do
 
   # TODO: this partly duplicates tests found in admin controller
   # Need to rationalize division of mailer tests between controllers and mailer.
+
+  describe "send_generic" do
+    
+    it 'normally sets To: field' do
+      mail = Notifier.send_generic("test@example.com",'body')
+      mail.to.should == ["test@example.com"]
+      mail.bcc.should be_empty
+    end
+    it 'sets Bcc: field and not To: if bcc is selected' do
+      mail = Notifier.send_generic("test@example.com",'body', true)
+      mail.bcc.should == ["test@example.com"]
+      mail.to.should be_empty
+    end
+  end
+
   describe "travel_updates" do
     let(:mail) { Notifier.travel_updates('test@example.com', (@travel ? [@travel] : nil)) }
     let(:trav_member) {Factory.stub(:member_without_family)}

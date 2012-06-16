@@ -56,6 +56,18 @@ def select_media(params={})
   params.each {|medium, truefalse| @message.stub("send_#{medium}".to_sym).and_return(truefalse)}
 end
 
+def nominal_phone_number_string
+  @members.map {|m| m.primary_contact.phone_1.gsub('+','')}.join(',')
+end
+
+def nominal_email_array
+  @members.map {|m| m.primary_contact.email_1}
+end
+
+def nominal_body
+  "#{@message.body} #{@message.timestamp}"
+end
+
 describe Message do
     before(:each) do
       @message = Message.new(:body=>'test message')
@@ -102,60 +114,98 @@ describe Message do
     message.timestamp.should == '12Jul1014a'
   end
             
-  describe 'member selection:' do
+  describe 'generates sent_message records' do
+    before(:each) do
+  #    @old_sent_message = SentMessage
+  #    silence_warnings{ SentMessage = mock_model(SentMessage)}
+      @members = members_w_contacts(1)
+      @message = Factory.build(:message, :created_at=>@created_at, :send_email=>true)
+   #   @message.stub(:save).and_return(true)
+    end
+    after(:each) do
+  #    silence_warnings{ SentMessage = @old_sent_message }
+    end
+    
     it 'excludes members who are not on the field' do
-      @contact = Factory.stub(:contact)
-      @on_field = Factory.stub(:member)
-      @on_field.stub(:primary_contact).and_return(@contact)
-      @off_field = Factory.stub(:member)
-      Group.stub(:members_in_multiple_groups).and_return([@on_field, @off_field])
-      Member.stub(:those_in_country).and_return([@on_field])
-      @message.to_groups = '1'
-      @message.deliver   
-      @message.members.should == [@on_field]
+      Member.stub(:those_in_country).and_return([@members[0]])
+      @message.save.should be_true   
+      @message.members.should == [@members[0]]
     end      
-  end #member selection
 
+    it 'saves sent_message record for member' do
+      @message.save
+      @message.save.should be_true   
+      @message.members.should == @members
+    end   
+  end # generates sent_message records
+  
   describe 'delivers to gateways' do
+    # Note that in these tests we simply *insert* the members during the test setup,
+    # since we have already tested that Message will do that properly. Otherwise we
+    # will have to "save" the message first, to trigger the creation of the sent_message
+    # records that tie the message to the members.
     after(:each) do
       silence_warnings{ Notifier=@old_notifier }
     end
-      
     before(:each) do
       # *** Mock the email generator, Notifier ***
         @email = mock('Email', :deliver=>nil)
         @old_notifier = Notifier
         silence_warnings{ Notifier = mock('Notifier', :send_generic => @email) }
-      # Stuff needed for message
-        @members = members_w_contacts(1)
       # *** Message ***
         @created_at = Time.new(2000,06,07,14,20)
         @message = Factory.build(:message, :created_at=>@created_at)
-      # *** Gateway ****
-#        @gw_msg_id = '74958a4f4c328c5bd4a988dfb5a0670c'
-#        @gw_reply = "ID: #{@gw_msg_id}"
+    end
+
+    describe 'with single addresses' do
+      
+      before(:each) do
+        @members = members_w_contacts(1)
+        @message.stub(:members).and_return(@members)
         @gateway = MockClickatellGateway.new(nil,@members)
       end
-    
-    it "Sends an email" do
-      select_media(:email=>true)
-      Notifier.should_receive(:send_generic).
-        with([@members[0].primary_contact.email_1], @message.body)
-      @message.deliver
-    end
+      
+      it "Sends an email" do
+        select_media(:email=>true)
+        Notifier.should_receive(:send_generic).
+          with([@members[0].primary_contact.email_1], @message.body, true)
+        @message.deliver
+      end
 
-    it "Does not sends an email if it's not selected" do
-      select_media(:email=>false)
-      Notifier.should_not_receive(:send_generic).
-        with([@members[0].primary_contact.email_1], @message.body)
-      @message.deliver
-    end
+      it "Does not sends an email if it's not selected" do
+        select_media(:email=>false)
+        Notifier.should_not_receive(:send_generic)
+        @message.deliver
+      end
 
-    it "Sends an SMS" do
-      select_media(:sms=>true)
-      @gateway.should_receive(:deliver)# .with(@contact.phone_1, "test message #{@message.timestamp}")
-      @message.deliver(:sms_gateway=>@gateway)
-    end
+      it "Sends an SMS" do
+        select_media(:sms=>true)
+        @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body)
+        @message.deliver(:sms_gateway=>@gateway)
+      end
+    end # with single addresses
+
+    describe 'with multiple addresses' do
+      
+      before(:each) do
+        @members = members_w_contacts(2)
+        @message.stub(:members).and_return(@members)
+        @gateway = MockClickatellGateway.new(nil,@members)
+      end
+      
+      it "Sends an email" do
+        select_media(:email=>true)
+        Notifier.should_receive(:send_generic).with(nominal_email_array, @message.body, true)
+        @message.deliver
+      end
+
+      it "Sends an SMS" do
+        select_media(:sms=>true)
+        @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body)
+        @message.deliver(:sms_gateway=>@gateway)
+      end
+    end # with multiple addresses
+
 
   end # deliver
 
