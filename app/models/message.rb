@@ -48,11 +48,11 @@ class Message < ActiveRecord::Base
   end 
 
   def create_sent_messages
-puts "**** create_sent_messages"
+#puts "**** create_sent_messages"
     target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
                      Member.those_in_country
     self.members = target_members
-puts "**** target_members=#{target_members}"
+#puts "**** target_members=#{target_members}"
 #puts "**** target_members.first.primary_contact=#{target_members.first.primary_contact}"
   end
   
@@ -104,13 +104,14 @@ raise "send_email with nil email produced" if outgoing.nil?
       if gateway_reply =~ /ID: (\w+)/
 #puts "**** $1=#{$1}"
         gtw_msg_id = $1
+        status = MessagesHelper::MsgSentToGateway
       else
         gtw_msg_id = gateway_reply  # Will include error message
 #puts "**** gateway_reply=#{gateway_reply}"
       end
 puts "**** self.sent_messages=#{self.sent_messages}"
 puts "**** sent_messages[0]=#{sent_messages[0]}"     
-      self.sent_messages[0].update_attributes(:gateway_message_id => gtw_msg_id)
+      self.sent_messages[0].update_attributes(:gateway_message_id => gtw_msg_id, :status=>status)
 puts "**** gtw_msg_id=#{gtw_msg_id}"
     end
   end

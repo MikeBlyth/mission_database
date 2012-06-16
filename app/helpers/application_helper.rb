@@ -155,9 +155,8 @@ module ApplicationHelper
       ].each {|key| params.delete key}
   end
 
-end  # ApplicationHelper module
-
 #******* Anything below this point is not in the module itself *********
+end  # ApplicationHelper module
 
 require "#{Rails.root}/config/initializers/date_formats.rb"
 

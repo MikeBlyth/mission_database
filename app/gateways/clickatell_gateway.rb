@@ -52,11 +52,11 @@ class ClickatellGateway < SmsGateway
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{outgoing_numbers}&text=#{URI.escape(body)}"
     call_gateway
-    if @gateway_reply =~ /ID: (\w+)/
-      message_id = $1
-    else
-      message_id = @gateway_reply  # Will include error message
-    end
+#    if @gateway_reply =~ /ID: (\w+)/
+#      message_id = $1
+#    else
+#      message_id = @gateway_reply  # Will include error message
+#    end
     super
   end
 

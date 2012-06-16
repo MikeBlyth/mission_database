@@ -6,7 +6,6 @@ class MockClickatellGateway < ClickatellGateway
   # Set members to an array of members (who must have primary_contacts defined)
   #   and the response will be generated based on the phone numbers of those members
   attr_accessor :mock_response, :members
-  
   def initialize(response=nil, members=[])
     super()
     @mock_response = response
@@ -18,10 +17,12 @@ class MockClickatellGateway < ClickatellGateway
   #    ID: dxvtg2o9jhbqe4edifn026905st8mpz4 To: 2348162522102
   def generate_response
     if @members.size == 1
+      @mock_response = 
       "ID: #{rand(36**32).to_s(36)}"  # Phone number is not given when it's the only one
     else
-      @members.map{|m| 
-        "ID: #{rand(36**32).to_s(36)} To: #{m.primary_contact.phone_1.gsub("+",'')}"}.join("\n")
+      @mock_response = 
+         @members.map{|m| 
+           "ID: #{rand(36**32).to_s(36)} To: #{m.primary_contact.phone_1.gsub("+",'')}"}.join("\n")
     end
   end
   
@@ -216,14 +217,22 @@ describe Message do
         @members = members_w_contacts(1)
         @gateway = MockClickatellGateway.new(nil,@members)
         @message.save
-        @message.sent_messages.size.should == 1
-        @message.members.should == @members
         @message.deliver(:sms_gateway=>@gateway)
         @gtw_id = @message.reload.sent_messages.first.gateway_message_id
-puts "**** @gtw_id=#{@gtw_id}" 
         @gtw_id.should_not be_nil
-        @gtw_id.size.should > 10
+        @gateway.mock_response.should match(@gtw_id)
       end
+      
+      it "inserts pending status into sent_message" do
+        select_media(:sms=>true)
+        @members = members_w_contacts(1)
+        @gateway = MockClickatellGateway.new(nil,@members)
+        @message.save
+        @message.deliver(:sms_gateway=>@gateway)
+        @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
+      end
+      
+      
 
     end # message id and status
 
