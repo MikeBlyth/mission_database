@@ -70,7 +70,7 @@ puts "**** target_members=#{target_members}"
       deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
     end
     #*********STUB!***********
-    self.sent_messages.each {|m| m.update_attributes(:gateway_message_id=>'AAAAAAAAAAAAAAAAAAA')}
+#    self.sent_messages.each {|m| m.update_attributes(:gateway_message_id=>'AAAAAAAAAAAAAAAAAAA')}
 #puts "**** email_addresses=#{email_addresses}"
   end
 
@@ -94,9 +94,25 @@ raise "send_email with nil email produced" if outgoing.nil?
   
   def deliver_sms(params)
     sms_gateway = params[:sms_gateway]
-    phone_numbers = params[:phone_numbers].join(',')
+    phone_number_array = params[:phone_numbers]
+    phone_numbers = phone_number_array.join(',')
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
+#puts "**** gateway_reply=#{gateway_reply}"
+#puts "**** phone_numbers=#{phone_numbers}"
+    if phone_number_array.size == 1
+      if gateway_reply =~ /ID: (\w+)/
+#puts "**** $1=#{$1}"
+        gtw_msg_id = $1
+      else
+        gtw_msg_id = gateway_reply  # Will include error message
+#puts "**** gateway_reply=#{gateway_reply}"
+      end
+puts "**** self.sent_messages=#{self.sent_messages}"
+puts "**** sent_messages[0]=#{sent_messages[0]}"     
+      self.sent_messages[0].update_attributes(:gateway_message_id => gtw_msg_id)
+puts "**** gtw_msg_id=#{gtw_msg_id}"
+    end
   end
 
   def sending_medium

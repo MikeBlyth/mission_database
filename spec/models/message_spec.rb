@@ -29,7 +29,8 @@ class MockClickatellGateway < ClickatellGateway
     "ERR: 105, INVALID DESTINATION ADDRESS"
   end
 
-  def call_gateway
+  def deliver(*)
+puts "**** call_gateway, @mock_response=#{@mock_response || "nil"}, generate_response=#{generate_response}"
     return @mock_response || generate_response
   end  
 end
@@ -163,6 +164,7 @@ describe Message do
         # Note that you can't access sent_message records unless they *are* created.
         @members = members_w_contacts(1)
         @message.stub(:members).and_return(@members)  # NB: See above
+        @message.stub(:sent_messages).and_return((0..@members.size-1).map{|n| SentMessage.new})
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
@@ -211,12 +213,13 @@ describe Message do
       
       it "inserts gateway_message_id into sent_message" do
         select_media(:sms=>true)
-        @members = members_w_contacts(2)
+        @members = members_w_contacts(1)
         @gateway = MockClickatellGateway.new(nil,@members)
         @message.save
+        @message.sent_messages.size.should == 1
         @message.members.should == @members
         @message.deliver(:sms_gateway=>@gateway)
-        @gtw_id = @message.sent_messages.first.gateway_message_id
+        @gtw_id = @message.reload.sent_messages.first.gateway_message_id
 puts "**** @gtw_id=#{@gtw_id}" 
         @gtw_id.should_not be_nil
         @gtw_id.size.should > 10
