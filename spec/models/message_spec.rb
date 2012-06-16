@@ -17,7 +17,7 @@ class MockClickatellGateway < ClickatellGateway
   #    ID: ny4eiyiac4qfy7do4mgrydqyacoen652 To: 2348162522097
   #    ID: dxvtg2o9jhbqe4edifn026905st8mpz4 To: 2348162522102
   def generate_response
-    if @members.size = 1
+    if @members.size == 1
       "ID: #{rand(36**32).to_s(36)}"  # Phone number is not given when it's the only one
     else
       @members.map{|m| 
@@ -140,10 +140,6 @@ describe Message do
   end # generates sent_message records
   
   describe 'delivers to gateways' do
-    # Note that in these tests we simply *insert* the members during the test setup,
-    # since we have already tested that Message will do that properly. Otherwise we
-    # will have to "save" the message first, to trigger the creation of the sent_message
-    # records that tie the message to the members.
     after(:each) do
       silence_warnings{ Notifier=@old_notifier }
     end
@@ -160,8 +156,13 @@ describe Message do
     describe 'with single addresses' do
       
       before(:each) do
+        # Note that in these tests we simply *insert* the members during the test setup,
+        # since we have already tested that Message will do that properly. Otherwise we
+        # will have to "save" the message first, to trigger the creation of the sent_message
+        # records that tie the message to the members.
+        # Note that you can't access sent_message records unless they *are* created.
         @members = members_w_contacts(1)
-        @message.stub(:members).and_return(@members)
+        @message.stub(:members).and_return(@members)  # NB: See above
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
@@ -189,7 +190,7 @@ describe Message do
       
       before(:each) do
         @members = members_w_contacts(2)
-        @message.stub(:members).and_return(@members)
+        @message.stub(:members).and_return(@members)   # NB: See above
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
@@ -206,6 +207,22 @@ describe Message do
       end
     end # with multiple addresses
 
+    describe 'message id and status' do
+      
+      it "inserts gateway_message_id into sent_message" do
+        select_media(:sms=>true)
+        @members = members_w_contacts(2)
+        @gateway = MockClickatellGateway.new(nil,@members)
+        @message.save
+        @message.members.should == @members
+        @message.deliver(:sms_gateway=>@gateway)
+        @gtw_id = @message.sent_messages.first.gateway_message_id
+puts "**** @gtw_id=#{@gtw_id}" 
+        @gtw_id.should_not be_nil
+        @gtw_id.size.should > 10
+      end
+
+    end # message id and status
 
   end # deliver
 

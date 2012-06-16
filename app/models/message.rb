@@ -69,6 +69,8 @@ puts "**** target_members=#{target_members}"
       phone_numbers = members.map {|m| m.primary_contact.phone_1.gsub('+','')}
       deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
     end
+    #*********STUB!***********
+    self.sent_messages.each {|m| m.update_attributes(:gateway_message_id=>'AAAAAAAAAAAAAAAAAAA')}
 #puts "**** email_addresses=#{email_addresses}"
   end
 
