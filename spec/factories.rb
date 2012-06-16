@@ -229,6 +229,15 @@ FactoryGirl.define do
       school_grade 7
     end
   
+  factory :message do
+    body 'test message'
+    to_groups '1'
+    retries 0
+    send_email nil
+    send_sms nil
+  end
+    
+
   factory :ministry do
     sequence(:id) {|n| n}
     sequence(:code) {|n| 20+n}

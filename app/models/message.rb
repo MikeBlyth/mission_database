@@ -47,25 +47,37 @@ class Message < ActiveRecord::Base
     end
   end 
 
-  def to_groups_array
-    to_groups.split(",").map{|g| g.to_i}
-  end
-  
   # Send the messages -- done by creating the sent_message objects, one for each member
   #   members_in_multiple_groups(array) is all the members belonging to these groups and
   #   to_groups_array is the array form of the destination groups for this message
-  def deliver
+  def deliver(params={})
 #    puts "**** Message#send_messages"
-    target_members = Group.members_in_multiple_groups(to_groups_array) && # an array of users
+    target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
                      Member.those_in_country
     self.members = target_members
+puts "**** target_members=#{target_members}"
+puts "**** target_members.first.primary_contact=#{target_members.first.primary_contact}"
     # Collect array of email addresses and one of phone numbers, so we can send in bulk.
 #     self.sent_messages.each {|msg| msg.send_to_gateways} #(old -- used for sending one at a time
-    numbers = []
+    phone_numbers = []
     email_addresses = []
     email_addresses = [self.members.first.primary_contact.email_1]
-    deliver_email(email_addresses)
+    if send_email
+      deliver_email(email_addresses)
+    end
+    if send_sms
+      deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
+    end
 #puts "**** email_addresses=#{email_addresses}"
+  end
+
+  def timestamp
+    t = created_at.getlocal
+    t.strftime('%e%b%I%M%P')[0..9]
+  end
+  
+  def to_groups_array
+    to_groups.split(",").map{|g| g.to_i}
   end
   
 private
@@ -76,10 +88,12 @@ private
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
   end
-
-  def timestamp
-    t = created_at.getlocal
-    t.strftime('%e%b%I%M%p')[0..9]
+  
+  def deliver_sms(params)
+    sms_gateway = params[:sms_gateway]
+    phone_numbers = params[:phone_numbers]
+    gateway_reply = 
+      sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
   end
 
   def sending_medium
