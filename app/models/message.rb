@@ -98,21 +98,22 @@ raise "send_email with nil email produced" if outgoing.nil?
     phone_numbers = phone_number_array.join(',')
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
-#puts "**** gateway_reply=#{gateway_reply}"
+puts "**** gateway_reply=#{gateway_reply}"
 #puts "**** phone_numbers=#{phone_numbers}"
     if phone_number_array.size == 1
       if gateway_reply =~ /ID: (\w+)/
-#puts "**** $1=#{$1}"
         gtw_msg_id = $1
         status = MessagesHelper::MsgSentToGateway
       else
         gtw_msg_id = gateway_reply  # Will include error message
-#puts "**** gateway_reply=#{gateway_reply}"
+        status = MessagesHelper::MsgError
+puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
       end
-puts "**** self.sent_messages=#{self.sent_messages}"
-puts "**** sent_messages[0]=#{sent_messages[0]}"     
-      self.sent_messages[0].update_attributes(:gateway_message_id => gtw_msg_id, :status=>status)
-puts "**** gtw_msg_id=#{gtw_msg_id}"
+      self.sent_messages[0].update_attributes(
+          :gateway_message_id => gtw_msg_id, 
+          :status=>status
+          )
+puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
     end
   end
 

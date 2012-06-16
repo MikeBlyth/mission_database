@@ -26,13 +26,21 @@ class MockClickatellGateway < ClickatellGateway
     end
   end
   
-  def generate_error_response
+  def error_response
     "ERR: 105, INVALID DESTINATION ADDRESS"
   end
 
   def deliver(*)
-puts "**** call_gateway, @mock_response=#{@mock_response || "nil"}, generate_response=#{generate_response}"
-    return @mock_response || generate_response
+    if @mock_response.blank?
+      return generate_response
+    else
+      return @mock_response
+    end
+    return
+puts "**** deliver, @mock_response=#{@mock_response || "nil"}, generate_response=#{generate_response}"
+response = @mock_response || generate_response
+puts "**** response=#{response}"
+    return (@mock_response || "")
   end  
 end
 
@@ -230,6 +238,19 @@ describe Message do
         @message.save
         @message.deliver(:sms_gateway=>@gateway)
         @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
+      end
+      
+      it "inserts error status into sent_message" do
+        select_media(:sms=>true)
+        @members = members_w_contacts(1)
+        @gateway = MockClickatellGateway.new()
+        @gateway.mock_response = @gateway.error_response
+        @gateway.deliver.should == @gateway.error_response
+        @message.save
+        @message.deliver(:sms_gateway=>@gateway)
+        @sent_message = @message.sent_messages.first
+        @sent_message.status.should == MessagesHelper::MsgError
+        @sent_message.gateway_message_id.should == @gateway.error_response
       end
       
       
