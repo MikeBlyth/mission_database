@@ -47,19 +47,14 @@ class ClickatellGateway < SmsGateway
   # If using a RESTFUL interface or other where a URI is called, you can follow this model. Otherwise,
   # this method will have to do whatever needed to tell the gateway service to send the message.
   def deliver(numbers=@numbers, body=@body)
-#puts "***** CGtw#deliver"
     outgoing_numbers = numbers_to_string_list(numbers)  
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}"+
             "&callback=2"+
             "&to=#{outgoing_numbers}&text=#{URI.escape(body)}"
     call_gateway
-#    if @gateway_reply =~ /ID: (\w+)/
-#      message_id = $1
-#    else
-#      message_id = @gateway_reply  # Will include error message
-#    end
-    super
+    super  # Note that it's called AFTER we make the connection to Clickatell, so it can include
+           #   the results in the log.
   end
 
   # Connect to Clickatell via the URI.

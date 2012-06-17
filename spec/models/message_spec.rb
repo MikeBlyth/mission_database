@@ -1,92 +1,7 @@
 require 'spec_helper'
-
-class MockClickatellGateway < ClickatellGateway
-  # Used for testing only (obviously, since it's in the testing library :-)
-  # Set mock_response to literally what you want it to be or
-  # Set members to an array of members (who must have primary_contacts defined)
-  #   and the response will be generated based on the phone numbers of those members
-  attr_accessor :mock_response, :members
-  def initialize(response=nil, members=[])
-    super()
-    @mock_response = response
-    @members = members
-  end
-  
-  # Generate a Clickatell-style response like
-  #    ID: ny4eiyiac4qfy7do4mgrydqyacoen652 To: 2348162522097
-  #    ID: dxvtg2o9jhbqe4edifn026905st8mpz4 To: 2348162522102
-  def generate_response
-    if @members.size == 1
-      @mock_response = 
-      "ID: #{rand_string(32)}"  # Phone number is not given when it's the only one
-    else
-      @mock_response = 
-         @members.map{|m| 
-           "ID: #{rand_string(32)} To: #{m.primary_contact.phone_1.gsub("+",'')}"}.join("\n")
-    end
-  end
-  
-  def error_response
-    "ERR: 105, INVALID DESTINATION ADDRESS"
-  end
-
-  def deliver(*)
-#    return (@mock_response || generate_response) # should be all that's needed, but doesn't work!
-    if @mock_response.blank?
-      return generate_response
-    else
-      return @mock_response
-    end
-  end  
-end  # Of MockClickatellGateway
-
-def rand_string(n=10)
-  s = rand(36**n).to_s(36)
-  s << 'a' if s.size < n
-  return s
-end
-
-def random_phone
-  "+#{rand(10**10-10**9)+10**9}"
-end
-
-def member_w_contact(use_stub=true)
-  factory_method = use_stub ? :stub : :create   # can use either stub or create
-  member = Factory.send(factory_method, :member) 
-  contact = Factory.send(factory_method, :contact, :member=>member, 
-      :phone_1 => random_phone,
-      :email_1 => "#{rand_string(5)}@test.com")
-  member.stub(:primary_contact).and_return(contact) if use_stub
-  member.primary_contact.should_not be_nil
-  return member
-end    
-
-def members_w_contacts(n=1, use_stub=true)
-  all = []
-  n.times { all << member_w_contact(use_stub)}
-  # Set up group selection so that the generated members are the ones returned for every case
-  Group.stub(:members_in_multiple_groups).and_return(all)
-  # Make it appear that all these members are in country
-  Member.stub(:those_in_country).and_return(all)
-  return all
-end  
-
-# some shortcuts
-def select_media(params={})
-  params.each {|medium, truefalse| @message.stub("send_#{medium}".to_sym).and_return(truefalse)}
-end
-
-def nominal_phone_number_string
-  @members.map {|m| m.primary_contact.phone_1.gsub('+','')}.join(',')
-end
-
-def nominal_email_array
-  @members.map {|m| m.primary_contact.email_1}
-end
-
-def nominal_body
-  "#{@message.body} #{@message.timestamp}"
-end
+require 'mock_clickatell_gateway'
+require 'messages_test_helper'
+include MessagesTestHelper
 
 describe Message do
     before(:each) do
@@ -173,6 +88,8 @@ describe Message do
         @email = mock('Email', :deliver=>nil)
         @old_notifier = Notifier
         silence_warnings{ Notifier = mock('Notifier', :send_generic => @email) }
+        @old_applog = AppLog
+        silence_warnings { AppLog = mock('AppLog').as_null_object }
       # *** Message ***
         @created_at = Time.new(2000,06,07,14,20)
         @message = Factory.build(:message, :created_at=>@created_at)

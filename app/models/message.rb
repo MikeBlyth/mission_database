@@ -62,7 +62,7 @@ class Message < ActiveRecord::Base
   #   members_in_multiple_groups(array) is all the members belonging to these groups and
   #   to_groups_array is the array form of the destination groups for this message
   def deliver(params={})
-#    puts "**** Message#deliver"
+    puts "**** Message#deliver"
     if send_email
       email_addresses = members.map {|m| m.primary_contact.email_1}
       deliver_email(email_addresses)

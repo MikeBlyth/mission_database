@@ -1,4 +1,7 @@
 require 'spec_helper'
+require 'mock_clickatell_gateway'
+require 'messages_test_helper'
+include MessagesTestHelper
 
 describe MessagesController do
 
@@ -21,24 +24,25 @@ describe MessagesController do
     end
   end
 
-  describe 'Edit' do
-    it 'converts to_groups to array' do
-      # NB: If this test fails because of an invalid 'message', you may get a Routing Error,
-      #   No route matches {:controller=>"messages", :action=>"edit"
-      # which is not helpful! That's why we do the message.should be_valid after creating it.
-      message = Message.create(:to_groups=>"1,2", :body=>"Test", :send_email=>true)
-      message.errors.should == {} 
-#      Message.stub(:find).with(1).and_return(message)
-      put :edit, :id=>message.id
-      assigns(:record).to_groups.should == [1, 2]
-    end
-  end
-  
   describe 'Create' do
+    before(:each) do
+      @old_applog = AppLog
+      silence_warnings { AppLog = mock('AppLog') }
+    end
+    after(:each) do
+      silence_warnings { AppLog = @old_applog }
+    end
+      
     it 'adds user name to record' do
       post :create, :record => {:body=>"test", :to_groups=>["1", '2'], :send_email=>true}
       Message.first.user.should == @user
     end
+    
+    it 'sends the message' do
+      @members = members_w_contacts(1, false)
+      AppLog.should_receive(:create)
+      post :create, :record => {:body=>"test", :to_groups=>["1", '2'], :send_sms=>true}
+    end  
   end
   
       

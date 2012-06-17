@@ -373,5 +373,6 @@ module SimTestHelper
                   YAML.dump_stream( *objects )
               end )
     end
+
   
 end #Module

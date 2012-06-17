@@ -74,14 +74,19 @@ puts "SPORK PREFORK ..."
   # This line is ONLY needed when tests require the full set of tables (countries, locations, and so on) found
   # in seeds.rb. It takes a long time to run seeds, so it should not be included in ordinary testing.
   #  require "#{Rails.root}/db/seeds.rb"  
+
+load 'sim_test_helper.rb'
+load 'messages_test_helper.rb'
+load 'secret_credentials.rb'
  
 
 end # Spork.prefork
 
 Spork.each_run do
 puts "SPORK EACH_RUN ..."
-load 'sim_test_helper.rb'
-load 'secret_credentials.rb'
+#load 'sim_test_helper.rb'
+#load 'messages_test_helper.rb'
+#load 'secret_credentials.rb'
 #>  load Rails.root+'app/helpers/application_helper.rb'
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by
