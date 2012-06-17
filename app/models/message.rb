@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120609195703
+# Schema version: 20120613213558
 #
 # Table name: messages
 #
@@ -18,6 +18,7 @@
 #  updated_at          :datetime
 #  send_email          :boolean
 #  send_sms            :boolean
+#  user_id             :integer
 #
 
 class Message < ActiveRecord::Base

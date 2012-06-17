@@ -275,6 +275,13 @@ describe Message do
         end
         
         it "inserts gateway_message_id into sent_message" do
+          # This checks that gateway_message ids are inserted into the sent_message records when
+          # deliver is called. Those gateway_message_ids are identifiers that the gateway
+          # uses to update status later. So we need to be sure that the sent_message record
+          # belonging to a given member gets the ID attached that corresponds to the same
+          # phone number. I.e. if we get "ID: Abciciiix To: 2348087775555" from the gateway,
+          # then the sent_message for the person with phone number 2348087775555 has to get
+          # gateway_message_id 'Abciciiix'
           @message.deliver(:sms_gateway=>@gateway)
           @message.sent_messages.each do |sent_message|
             gtw_id = sent_message.gateway_message_id  
@@ -284,10 +291,10 @@ describe Message do
           end
         end
         
-#        it "inserts pending status into sent_message" do
-#          @message.deliver(:sms_gateway=>@gateway)
-#          @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
-#        end
+        it "inserts pending status into sent_message" do
+          @message.deliver(:sms_gateway=>@gateway)
+          @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
+        end
 #        
 #        it "inserts error status into sent_message" do
 #          @gateway.mock_response = @gateway.error_response

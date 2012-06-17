@@ -50,7 +50,9 @@ class ClickatellGateway < SmsGateway
 #puts "***** CGtw#deliver"
     outgoing_numbers = numbers_to_string_list(numbers)  
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
-    @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}&to=#{outgoing_numbers}&text=#{URI.escape(body)}"
+    @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}"+
+            "&callback=2"+
+            "&to=#{outgoing_numbers}&text=#{URI.escape(body)}"
     call_gateway
 #    if @gateway_reply =~ /ID: (\w+)/
 #      message_id = $1

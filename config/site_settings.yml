@@ -32,6 +32,11 @@
 #   default: secret
 #   type: password
 
+base_url:
+  name: Base URL for this site
+  default: https://simjos.heroku.com/
+  type: string
+
 birthday_prefix: 
   name: Prefix to show on calendar for birthdays
   default: BD 
@@ -53,7 +58,7 @@ clickatell_password:
 clickatell_api_id:
   name: Clickatell HTTP API number
   type: string
-  
+
 twilio_api_version:
   name: Twilio API Version
   type: string
