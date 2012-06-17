@@ -100,7 +100,7 @@ raise "send_email with nil email produced" if outgoing.nil?
 #puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
-puts "**** gateway_reply=#{gateway_reply}"
+#puts "**** gateway_reply=#{gateway_reply}"
 #puts "**** phone_numbers=#{phone_numbers}"
     if phone_number_array.size == 1
       if gateway_reply =~ /ID: (\w+)/
@@ -127,15 +127,15 @@ puts "**** gateway_reply=#{gateway_reply}"
 #puts "**** statuses=#{statuses}"
       member = nil
       @member_phones = self.members.map {|m| {:phone=>m.primary_contact.phone_1, :member=>m}}
-  puts "**** @member_phones=#{@member_phones}"
+#  puts "**** @member_phones=#{@member_phones}"
       statuses.each do |s|
         if s[:id] && s[:phone]
   #        member = Member.find self.members.find_index {|m| m.primary_contact.phone_1 == s[:phone]}
-puts "**** s=#{s}"
+#puts "**** s=#{s}"
           member = @member_phones.find{|m| m[:phone]==s[:phone]}[:member]
-puts "**** member=#{member}"
+#puts "**** member=#{member}"
           sent_message = SentMessage.where(:member_id=>member.id, :message_id=>self.id).first
-puts "**** sent_message.inspect=#{sent_message.inspect}"
+#puts "**** sent_message.inspect=#{sent_message.inspect}"
           sent_message.update_attributes(
               :gateway_message_id => s[:id], 
               :status=> MessagesHelper::MsgSentToGateway
