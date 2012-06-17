@@ -51,6 +51,7 @@ class Message < ActiveRecord::Base
 #puts "**** create_sent_messages"
     target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
                      Member.those_in_country
+#puts "**** target_members=#{target_members}"
     self.members = target_members
 #puts "**** target_members=#{target_members}"
 #puts "**** target_members.first.primary_contact=#{target_members.first.primary_contact}"
@@ -114,6 +115,12 @@ puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
           :status=>status
           )
 puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
+    else
+      self.sent_messages[0].update_attributes(
+          :gateway_message_id => "XXXXXXXXXXXXXXXXX", 
+          :status=>status
+          )
+     
     end
   end
 

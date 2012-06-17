@@ -31,29 +31,31 @@ class MockClickatellGateway < ClickatellGateway
   end
 
   def deliver(*)
+#    return (@mock_response || generate_response) # should be all that's needed, but doesn't work!
     if @mock_response.blank?
       return generate_response
     else
       return @mock_response
     end
-    return
-puts "**** deliver, @mock_response=#{@mock_response || "nil"}, generate_response=#{generate_response}"
-response = @mock_response || generate_response
-puts "**** response=#{response}"
-    return (@mock_response || "")
   end  
 end
 
-def member_w_contact
-  member = Factory.stub(:member)
-  contact = Factory.stub(:contact)
-  member.stub(:primary_contact).and_return(contact)
+def member_w_contact(use_stub=true)
+  if use_stub
+    member = Factory.stub(:member) 
+    contact = Factory.stub(:contact, :member=>member)
+    member.stub(:primary_contact).and_return(contact)
+  else
+    member = Factory.create(:member)
+    contact = Factory.create(:contact, :member=>member)
+  end
+  member.primary_contact.should_not be_nil
   return member
 end    
 
-def members_w_contacts(n=1)
+def members_w_contacts(n=1, use_stub=true)
   all = []
-  n.times { all << member_w_contact}
+  n.times { all << member_w_contact(use_stub)}
   # Set up group selection so that the generated members are the ones returned for every case
   Group.stub(:members_in_multiple_groups).and_return(all)
   # Make it appear that all these members are in country
@@ -126,14 +128,8 @@ describe Message do
             
   describe 'generates sent_message records' do
     before(:each) do
-  #    @old_sent_message = SentMessage
-  #    silence_warnings{ SentMessage = mock_model(SentMessage)}
-      @members = members_w_contacts(1)
+      @members = members_w_contacts(2)
       @message = Factory.build(:message, :created_at=>@created_at, :send_email=>true)
-   #   @message.stub(:save).and_return(true)
-    end
-    after(:each) do
-  #    silence_warnings{ SentMessage = @old_sent_message }
     end
     
     it 'excludes members who are not on the field' do
@@ -142,11 +138,22 @@ describe Message do
       @message.members.should == [@members[0]]
     end      
 
-    it 'saves sent_message record for member' do
+    it 'creates association w recipient members' do
       @message.save
       @message.save.should be_true   
       @message.members.should == @members
     end   
+
+    it 'saves sent_message record for member' do
+      @members = members_w_contacts(2, false) # false = "Don't use stubs, use real objects"
+      @message.save.should be_true   
+      @message.sent_messages.count.should == 2
+      @message.sent_messages.each do |sent_message|
+        sent_message.member.should_not be_nil
+        @members.should include sent_message.member
+      end
+    end   
+
   end # generates sent_message records
   
   describe 'delivers to gateways' do
@@ -202,6 +209,7 @@ describe Message do
       before(:each) do
         @members = members_w_contacts(2)
         @message.stub(:members).and_return(@members)   # NB: See above
+        @message.stub(:sent_messages).and_return((0..@members.size-1).map{|n| SentMessage.new})
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
@@ -219,42 +227,71 @@ describe Message do
     end # with multiple addresses
 
     describe 'message id and status' do
-      
-      it "inserts gateway_message_id into sent_message" do
-        select_media(:sms=>true)
-        @members = members_w_contacts(1)
-        @gateway = MockClickatellGateway.new(nil,@members)
-        @message.save
-        @message.deliver(:sms_gateway=>@gateway)
-        @gtw_id = @message.reload.sent_messages.first.gateway_message_id
-        @gtw_id.should_not be_nil
-        @gateway.mock_response.should match(@gtw_id)
-      end
-      
-      it "inserts pending status into sent_message" do
-        select_media(:sms=>true)
-        @members = members_w_contacts(1)
-        @gateway = MockClickatellGateway.new(nil,@members)
-        @message.save
-        @message.deliver(:sms_gateway=>@gateway)
-        @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
-      end
-      
-      it "inserts error status into sent_message" do
-        select_media(:sms=>true)
-        @members = members_w_contacts(1)
-        @gateway = MockClickatellGateway.new()
-        @gateway.mock_response = @gateway.error_response
-        @gateway.deliver.should == @gateway.error_response
-        @message.save
-        @message.deliver(:sms_gateway=>@gateway)
-        @sent_message = @message.sent_messages.first
-        @sent_message.status.should == MessagesHelper::MsgError
-        @sent_message.gateway_message_id.should == @gateway.error_response
-      end
-      
-      
+      describe 'with single phone number' do
+        before(:each) do
+          select_media(:sms=>true)
+          @members = members_w_contacts(1)
+          @message.save
+          @gateway = MockClickatellGateway.new(nil,@members)
+        end
+        
+        it "inserts gateway_message_id into sent_message" do
+          @message.deliver(:sms_gateway=>@gateway)
+          @gtw_id = @message.reload.sent_messages.first.gateway_message_id
+          @gtw_id.should_not be_nil
+          @gateway.mock_response.should match(@gtw_id)
+        end
+        
+        it "inserts pending status into sent_message" do
+          @message.deliver(:sms_gateway=>@gateway)
+          @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
+        end
+        
+        it "inserts error status into sent_message" do
+          @gateway.mock_response = @gateway.error_response
+          @message.deliver(:sms_gateway=>@gateway)
+          @sent_message = @message.sent_messages.first
+          @sent_message.status.should == MessagesHelper::MsgError
+          @sent_message.gateway_message_id.should == @gateway.error_response
+        end
+      end # with single phone number
 
+      describe 'with multiple phone numbers' do
+        before(:each) do
+          select_media(:sms=>true)
+          @members = members_w_contacts(2, false) # false = "Don't use stubs, use real objects"
+          @message.save
+          @gateway = MockClickatellGateway.new(nil,@members)
+puts "**** @members[0].primary_contact=#{@members[0].primary_contact}"
+        end
+        
+        it "inserts gateway_message_id into sent_message" do
+          @message.deliver(:sms_gateway=>@gateway)
+          @message.sent_messages.each do |sent_message|
+puts "**** sent_message.member=#{sent_message.member.inspect}"
+puts "**** sent_message.member.primary_contact=#{sent_message.member.contacts}"
+puts "**** @members[0].primary_contact=#{@members[0].primary_contact}"
+            gtw_id = sent_message.gateway_message_id  
+            gtw_id.should_not be_nil
+            phone = sent_message.member.primary_contact.phone_1.gsub("+",'')
+            @gateway.mock_response.should match("ID: #{gtw_id}\s+Phone: #{phone}")
+          end
+        end
+        
+#        it "inserts pending status into sent_message" do
+#          @message.deliver(:sms_gateway=>@gateway)
+#          @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
+#        end
+#        
+#        it "inserts error status into sent_message" do
+#          @gateway.mock_response = @gateway.error_response
+#          @message.deliver(:sms_gateway=>@gateway)
+#          @sent_message = @message.sent_messages.first
+#          @sent_message.status.should == MessagesHelper::MsgError
+#          @sent_message.gateway_message_id.should == @gateway.error_response
+#        end
+
+      end # with multiple phone numbers
     end # message id and status
 
   end # deliver
