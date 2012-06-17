@@ -97,6 +97,7 @@ raise "send_email with nil email produced" if outgoing.nil?
     sms_gateway = params[:sms_gateway]
     phone_number_array = params[:phone_numbers]
     phone_numbers = phone_number_array.join(',')
+#puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
 puts "**** gateway_reply=#{gateway_reply}"
@@ -108,18 +109,39 @@ puts "**** gateway_reply=#{gateway_reply}"
       else
         gtw_msg_id = gateway_reply  # Will include error message
         status = MessagesHelper::MsgError
-puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
+#puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
       end
       self.sent_messages[0].update_attributes(
           :gateway_message_id => gtw_msg_id, 
           :status=>status
           )
-puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
+#puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
     else
-      self.sent_messages[0].update_attributes(
-          :gateway_message_id => "XXXXXXXXXXXXXXXXX", 
-          :status=>status
+      statuses = gateway_reply.split("\n").map do |s|
+        if s =~ /ID:\s+(\w+)\s+To:\s+([0-9]+)/
+          {:id=>$1, :phone=>"+" + $2}    # Add '+' to phone number for matching from database
+        else
+          {:id=>nil, :phone=>nil, :error=>s}
+        end
+      end
+#puts "**** statuses=#{statuses}"
+      member = nil
+      @member_phones = self.members.map {|m| {:phone=>m.primary_contact.phone_1, :member=>m}}
+  puts "**** @member_phones=#{@member_phones}"
+      statuses.each do |s|
+        if s[:id] && s[:phone]
+  #        member = Member.find self.members.find_index {|m| m.primary_contact.phone_1 == s[:phone]}
+puts "**** s=#{s}"
+          member = @member_phones.find{|m| m[:phone]==s[:phone]}[:member]
+puts "**** member=#{member}"
+          sent_message = SentMessage.where(:member_id=>member.id, :message_id=>self.id).first
+puts "**** sent_message.inspect=#{sent_message.inspect}"
+          sent_message.update_attributes(
+              :gateway_message_id => s[:id], 
+              :status=> MessagesHelper::MsgSentToGateway
           )
+        end
+      end
      
     end
   end

@@ -18,11 +18,11 @@ class MockClickatellGateway < ClickatellGateway
   def generate_response
     if @members.size == 1
       @mock_response = 
-      "ID: #{rand(36**32).to_s(36)}"  # Phone number is not given when it's the only one
+      "ID: #{rand_string(32)}"  # Phone number is not given when it's the only one
     else
       @mock_response = 
          @members.map{|m| 
-           "ID: #{rand(36**32).to_s(36)} To: #{m.primary_contact.phone_1.gsub("+",'')}"}.join("\n")
+           "ID: #{rand_string(32)} To: #{m.primary_contact.phone_1.gsub("+",'')}"}.join("\n")
     end
   end
   
@@ -38,17 +38,25 @@ class MockClickatellGateway < ClickatellGateway
       return @mock_response
     end
   end  
+end  # Of MockClickatellGateway
+
+def rand_string(n=10)
+  s = rand(36**n).to_s(36)
+  s << 'a' if s.size < n
+  return s
+end
+
+def random_phone
+  "+#{rand(10**10-10**9)+10**9}"
 end
 
 def member_w_contact(use_stub=true)
-  if use_stub
-    member = Factory.stub(:member) 
-    contact = Factory.stub(:contact, :member=>member)
-    member.stub(:primary_contact).and_return(contact)
-  else
-    member = Factory.create(:member)
-    contact = Factory.create(:contact, :member=>member)
-  end
+  factory_method = use_stub ? :stub : :create   # can use either stub or create
+  member = Factory.send(factory_method, :member) 
+  contact = Factory.send(factory_method, :contact, :member=>member, 
+      :phone_1 => random_phone,
+      :email_1 => "#{rand_string(5)}@test.com")
+  member.stub(:primary_contact).and_return(contact) if use_stub
   member.primary_contact.should_not be_nil
   return member
 end    
@@ -221,7 +229,9 @@ describe Message do
 
       it "Sends an SMS" do
         select_media(:sms=>true)
-        @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body)
+        
+        @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body).
+          and_return('ID: AAAAAAAA') # return is not used in this test but is needed
         @message.deliver(:sms_gateway=>@gateway)
       end
     end # with multiple addresses
@@ -230,7 +240,7 @@ describe Message do
       describe 'with single phone number' do
         before(:each) do
           select_media(:sms=>true)
-          @members = members_w_contacts(1)
+          @members = members_w_contacts(1, false)
           @message.save
           @gateway = MockClickatellGateway.new(nil,@members)
         end
@@ -262,19 +272,15 @@ describe Message do
           @members = members_w_contacts(2, false) # false = "Don't use stubs, use real objects"
           @message.save
           @gateway = MockClickatellGateway.new(nil,@members)
-puts "**** @members[0].primary_contact=#{@members[0].primary_contact}"
         end
         
         it "inserts gateway_message_id into sent_message" do
           @message.deliver(:sms_gateway=>@gateway)
           @message.sent_messages.each do |sent_message|
-puts "**** sent_message.member=#{sent_message.member.inspect}"
-puts "**** sent_message.member.primary_contact=#{sent_message.member.contacts}"
-puts "**** @members[0].primary_contact=#{@members[0].primary_contact}"
             gtw_id = sent_message.gateway_message_id  
             gtw_id.should_not be_nil
             phone = sent_message.member.primary_contact.phone_1.gsub("+",'')
-            @gateway.mock_response.should match("ID: #{gtw_id}\s+Phone: #{phone}")
+            @gateway.mock_response.should match("ID: #{gtw_id}\s+To: #{phone}")
           end
         end
         
