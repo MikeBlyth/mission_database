@@ -22,7 +22,7 @@ describe SentMessagesController do
     end
     
     it 'updates the message status' do
-      @sent_message.should_receive(:update_attributes).with(hash_including(:status => anything()))
+      @sent_message.should_receive(:update_attributes).with(hash_including(:msg_status => anything()))
       get :update_status_clickatell, @params
     end
 

@@ -171,14 +171,14 @@ describe Message do
         
         it "inserts pending status into sent_message" do
           @message.deliver(:sms_gateway=>@gateway)
-          @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
+          @message.sent_messages.first.msg_status.should == MessagesHelper::MsgSentToGateway
         end
         
         it "inserts error status into sent_message" do
           @gateway.mock_response = @gateway.error_response
           @message.deliver(:sms_gateway=>@gateway)
           @sent_message = @message.sent_messages.first
-          @sent_message.status.should == MessagesHelper::MsgError
+          @sent_message.msg_status.should == MessagesHelper::MsgError
           @sent_message.gateway_message_id.should == @gateway.error_response
         end
       end # with single phone number
@@ -210,16 +210,15 @@ describe Message do
         
         it "inserts pending status into sent_message" do
           @message.deliver(:sms_gateway=>@gateway)
-          @message.sent_messages.first.status.should == MessagesHelper::MsgSentToGateway
+          @message.sent_messages.first.msg_status.should == MessagesHelper::MsgSentToGateway
         end
-#        
-#        it "inserts error status into sent_message" do
-#          @gateway.mock_response = @gateway.error_response
-#          @message.deliver(:sms_gateway=>@gateway)
-#          @sent_message = @message.sent_messages.first
-#          @sent_message.status.should == MessagesHelper::MsgError
-#          @sent_message.gateway_message_id.should == @gateway.error_response
-#        end
+        
+        it "inserts error status into sent_message" do
+          @gateway.mock_response = @gateway.error_response
+          @message.deliver(:sms_gateway=>@gateway)
+          @sent_message = @message.sent_messages.first
+          @sent_message.msg_status.should == MessagesHelper::MsgError
+        end
 
       end # with multiple phone numbers
     end # message id and status

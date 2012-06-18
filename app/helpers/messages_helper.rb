@@ -18,5 +18,9 @@ module MessagesHelper
   MsgPending = 1
   MsgDeliverd = 2
   MsgResponseReceived = 3
+  
+  def msg_status_column(record)
+    MessageStatuses[record.msg_status]
+  end
    
 end

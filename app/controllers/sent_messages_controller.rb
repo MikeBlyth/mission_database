@@ -1,6 +1,7 @@
 class SentMessagesController < ApplicationController
   active_scaffold :sent_message do |config|
-    config.list.columns = [:message_id, :member, :status, :confirmed_time, :delivery_modes, :confirmed_mode, :confirmation_message]
+    config.list.columns = [:message, :member, :msg_status, :confirmed_time, :confirmed_mode, :confirmation_message]
+    config.subform.columns.exclude :message
   end
   include AuthenticationHelper
   load_and_authorize_resource

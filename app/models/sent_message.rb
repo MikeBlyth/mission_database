@@ -1,12 +1,12 @@
 # == Schema Information
-# Schema version: 20120613213558
+# Schema version: 20120618055042
 #
 # Table name: sent_messages
 #
 #  id                   :integer         not null, primary key
 #  message_id           :integer
 #  member_id            :integer
-#  status               :integer
+#  msg_status           :integer
 #  confirmed_time       :datetime
 #  delivery_modes       :string(255)
 #  confirmed_mode       :string(255)
@@ -22,6 +22,10 @@ class SentMessage < ActiveRecord::Base
 
   before_save :set_confirmed_time
   
+  def to_s
+    member.full_name_short
+  end
+
   def set_confirmed_time  
     self.confirmed_time = Time.now
   end

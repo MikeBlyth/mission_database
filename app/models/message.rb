@@ -48,6 +48,10 @@ class Message < ActiveRecord::Base
     end
   end 
 
+  def to_s
+    "#{timestamp}: #{body[0..50]}"
+  end
+
   def create_sent_messages
 #puts "**** create_sent_messages"
     target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
@@ -62,7 +66,7 @@ class Message < ActiveRecord::Base
   #   members_in_multiple_groups(array) is all the members belonging to these groups and
   #   to_groups_array is the array form of the destination groups for this message
   def deliver(params={})
-    puts "**** Message#deliver"
+    puts "**** Message#deliver" if params[:verbose]
     if send_email
       email_addresses = members.map {|m| m.primary_contact.email_1}
       deliver_email(email_addresses)
@@ -101,35 +105,37 @@ raise "send_email with nil email produced" if outgoing.nil?
 #puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
-#puts "**** gateway_reply=#{gateway_reply}"
+puts "**** gateway_reply=#{gateway_reply}"
 #puts "**** phone_numbers=#{phone_numbers}"
+    ######## SINGLE PHONE NUMBER ########
     if phone_number_array.size == 1
       if gateway_reply =~ /ID: (\w+)/
         gtw_msg_id = $1
-        status = MessagesHelper::MsgSentToGateway
+        msg_status = MessagesHelper::MsgSentToGateway
       else
         gtw_msg_id = gateway_reply  # Will include error message
-        status = MessagesHelper::MsgError
-#puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
+        msg_status = MessagesHelper::MsgError
+puts "**** gtw_msg_id=#{gtw_msg_id}, msg_status=#{msg_status}"
       end
       self.sent_messages[0].update_attributes(
           :gateway_message_id => gtw_msg_id, 
-          :status=>status
+          :msg_status=>msg_status
           )
-#puts "**** gtw_msg_id=#{gtw_msg_id}, status=#{status}"
+#puts "**** gtw_msg_id=#{gtw_msg_id}, msg_msg_status=#{msg_msg_status}"
     else
-      statuses = gateway_reply.split("\n").map do |s|
+      ####### MULTIPLE PHONE NUMBERS ################
+      msg_statuses = gateway_reply.split("\n").map do |s|
         if s =~ /ID:\s+(\w+)\s+To:\s+([0-9]+)/
           {:id=>$1, :phone=>"+" + $2}    # Add '+' to phone number for matching from database
         else
           {:id=>nil, :phone=>nil, :error=>s}
         end
       end
-#puts "**** statuses=#{statuses}"
+#puts "**** msg_statuses=#{msg_statuses}"
       member = nil
       @member_phones = self.members.map {|m| {:phone=>m.primary_contact.phone_1, :member=>m}}
 #  puts "**** @member_phones=#{@member_phones}"
-      statuses.each do |s|
+      msg_statuses.each do |s|
         if s[:id] && s[:phone]
   #        member = Member.find self.members.find_index {|m| m.primary_contact.phone_1 == s[:phone]}
 #puts "**** s=#{s}"
@@ -139,11 +145,14 @@ raise "send_email with nil email produced" if outgoing.nil?
 #puts "**** sent_message.inspect=#{sent_message.inspect}"
           sent_message.update_attributes(
               :gateway_message_id => s[:id], 
-              :status=> MessagesHelper::MsgSentToGateway
+              :msg_status=> MessagesHelper::MsgSentToGateway
           )
         end
       end
-     
+    # Any sent_messages not now marked with gateway_message_id and msg_status must have errors
+    sent_messages.each do |m| 
+      m.update_attributes(:msg_status=> MessagesHelper::MsgError) if m.msg_status.nil?
+    end
     end
   end
 

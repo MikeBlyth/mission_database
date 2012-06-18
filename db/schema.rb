@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120613213558) do
+ActiveRecord::Schema.define(:version => 20120618055042) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -287,7 +287,7 @@ ActiveRecord::Schema.define(:version => 20120613213558) do
   create_table "sent_messages", :force => true do |t|
     t.integer  "message_id"
     t.integer  "member_id"
-    t.integer  "status"
+    t.integer  "msg_status"
     t.datetime "confirmed_time"
     t.string   "delivery_modes"
     t.string   "confirmed_mode"
