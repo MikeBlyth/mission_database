@@ -12,6 +12,7 @@ describe SmsController do
 
     # Target -- the person being inquired about in info command
     @target = Factory.stub(:member, :last_name=>'Target')  # Request is going to be for this person's info
+    @sender = mock_model(Member)
     @from = '+2348030000000'  # This is the number of incoming SMS
     @body = "info #{@target.last_name}"
     @params = {:From => @from, :Body => @body}
@@ -22,7 +23,8 @@ describe SmsController do
 
     describe 'accepted messages' do
       before(:each) do
-       Contact.stub(:find_by_phone_1).and_return(true)
+       # Contact.stub(:find_by_phone_1).and_return(true)
+       Member.stub(:find_by_phone).and_return(@sender)
       end
       
       it 'creates a log entry for SMS received' do
@@ -50,21 +52,13 @@ describe SmsController do
   describe 'filters based on member status' do
 
     it 'accepts sms from SIM member (using phone_1)' do
-      Contact.stub(:find_by_phone_1).and_return(true)
-      post :create, @params
-      response.status.should == 200
-    end
-    
-    it 'accepts sms from SIM member (using phone_2)' do
-      Contact.stub(:find_by_phone_1).and_return(false)
-      Contact.stub(:find_by_phone_1).and_return(true)
+      Member.stub(:find_by_phone).and_return(@sender)
       post :create, @params
       response.status.should == 200
     end
     
     it 'rejects sms from strangers' do
-      Contact.stub(:find_by_phone_1).and_return(false)
-      Contact.stub(:find_by_phone_2).and_return(false)
+      Member.stub(:find_by_phone).and_return(nil)
       post :create, @params
       response.status.should == 403
     end

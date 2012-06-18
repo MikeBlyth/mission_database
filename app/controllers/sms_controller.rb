@@ -94,12 +94,13 @@ private
     group_id = Group.find(:first, 
       :conditions => [ "lower(group_name) = ? OR lower(abbrev) = ?", group.downcase, group.downcase]).id
     message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group_id, :body=>body)
+    # message.deliver  # Don't forget to deliver!
     return ('group deliver')
   end
 
   def from_member(from) 
     return true if from == '+16199282591' # Mike's Google Voice number for testing
-    Contact.find_by_phone_1(from) || Contact.find_by_phone_2(from)
+    Member.find_by_phone(from)
   end
 
 end # Class

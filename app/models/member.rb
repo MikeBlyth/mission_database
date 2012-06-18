@@ -161,6 +161,9 @@ end
     return self.all.delete_if {|m| !m.in_country_per_travel}
   end
 
+  def self.find_by_phone(phone_number)
+    Member.joins(:contacts).where("phone_1 = ? OR phone_2 = ?", phone_number, phone_number).first
+  end
 # *************** End Class methods *************
 
 # ******* Methods to access associated records (family, personnel_data, health_data ...)
