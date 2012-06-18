@@ -23,7 +23,8 @@ class SmsController < ApplicationController
     params.delete 'SmsSid'
     params.delete 'AccountSid'
     params.delete 'SmsMessageSid'
-    if from_member(from)  # We only accept SMS from registered phone numbers of members
+    @sender = from_member(from)  # returns member from this database with matching phone number
+    if @sender  # We only accept SMS from registered phone numbers of members
       AppLog.create(:code => "SMS.received", :description=>"from #{from}: #{body}")
       resp = process_sms(body)[0..159]    # generate response
       render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s  # Confirm w incoming gateway that msg received
@@ -90,16 +91,18 @@ private
   end
 
   def group_deliver(text)
-    group, body = text.sub(' ',"\x0").split("\x0") # just a way of stripping the first word as the group name
-    group_id = Group.find(:first, 
-      :conditions => [ "lower(group_name) = ? OR lower(abbrev) = ?", group.downcase, group.downcase]).id
-    message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group_id, :body=>body)
+    target_group, body = text.sub(' ',"\x0").split("\x0") # just a way of stripping the first word as the group name
+    group = Group.find(:first, 
+      :conditions => [ "lower(group_name) = ? OR lower(abbrev) = ?", target_group.downcase, target_group.downcase])
+    sender_name = @sender.shorter_name
+    body = body[0..148-sender_name.size] + '-' + sender_name  # Truncate msg and add sender's name
+    message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group.id, :body=>body)
     # message.deliver  # Don't forget to deliver!
-    return ('group deliver')
+    return ("sent to #{group.group_name}")
   end
 
   def from_member(from) 
-    return true if from == '+16199282591' # Mike's Google Voice number for testing
+#    return true if from == '+16199282591' # Mike's Google Voice number for testing
     Member.find_by_phone(from)
   end
 

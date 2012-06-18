@@ -6,19 +6,25 @@ include MessagesTestHelper
 describe SmsController do
 # Incoming SMS Text Messages
 
-  before(:each) do
-    HTTParty = mock('HTTParty').as_null_object if HTTParty.class == Module
-    HTTParty.stub(:get).and_return '200'
 
+  before(:each) do
+    # Intercept Internet calls so we don't actually call SMS gateway
+    @old_HTTParty = HTTParty
+    silence_warnings {HTTParty = mock('HTTParty').as_null_object}
+    HTTParty.stub(:get).and_return '200'
     # Target -- the person being inquired about in info command
     @target = Factory.stub(:member, :last_name=>'Target')  # Request is going to be for this person's info
-    @sender = mock_model(Member)
+    @sender = Factory.stub(:member)
+    @sender.stub(:shorter_name).and_return('V Anderson')
+    Member.stub(:find_by_phone).and_return(@sender)
     @from = '+2348030000000'  # This is the number of incoming SMS
     @body = "info #{@target.last_name}"
     @params = {:From => @from, :Body => @body}
     AppLog = double('AppLog').as_null_object if AppLog.superclass == ActiveRecord::Base  # as_null_object stops it from complaining about unexpected messages
   end
+  after(:each) {  silence_warnings {HTTParty = @old_HTTParty} }
 
+    
   describe 'logging' do
 
     describe 'accepted messages' do
@@ -40,8 +46,7 @@ describe SmsController do
     
     describe 'rejected messages' do
       it 'creates a log entry for rejected incoming SMS' do
-        Contact.stub(:find_by_phone_1).and_return(false)
-        Contact.stub(:find_by_phone_2).and_return(false)
+        Member.stub(:find_by_phone).and_return(nil)
         AppLog.should_receive(:create).with(hash_including(:code => "SMS.rejected"))
         post :create, @params
       end
@@ -52,7 +57,6 @@ describe SmsController do
   describe 'filters based on member status' do
 
     it 'accepts sms from SIM member (using phone_1)' do
-      Member.stub(:find_by_phone).and_return(@sender)
       post :create, @params
       response.status.should == 200
     end
@@ -68,7 +72,7 @@ describe SmsController do
 
   describe 'handles these commands:' do
     before(:each) do
-      controller.stub(:from_member).and_return(Member.new)   # Just a shortcut to have a contact record that matches from line
+  #    controller.stub(:from_member).and_return(Member.new)   # Just a shortcut to have a contact record that matches from line
     end      
 
     describe "'info'" do
@@ -172,8 +176,10 @@ describe SmsController do
       describe 'when group is found' do
         
         it 'delivers a group message if group is found' do
+          nominal_body = @body+"-#{@sender.shorter_name}"
           Message.should_receive(:new).with(hash_including(
-              :send_email=>true, :send_sms=>true, :to_groups=>@group.id, :body=>@body))          
+              :send_email=>true, :send_sms=>true, :to_groups=>@group.id, :body=>nominal_body))          
+          HTTParty.should_receive(:get).with /sent/
           post :create, @params   # i.e. sends 'd testgroup test message'
         end
       end # 'when group is found'
