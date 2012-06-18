@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120618055042) do
+ActiveRecord::Schema.define(:version => 20120618142711) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -158,6 +158,7 @@ ActiveRecord::Schema.define(:version => 20120618055042) do
     t.integer  "parent_group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "abbrev"
   end
 
   create_table "groups_members", :id => false, :force => true do |t|

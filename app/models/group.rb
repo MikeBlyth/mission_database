@@ -15,7 +15,9 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :members
   belongs_to :parent_group, :class_name => "Group", :foreign_key => "parent_group_id"
   has_many :subgroups, :class_name => "Group", :foreign_key => "parent_group_id"
-  validates_uniqueness_of :group_name
+  validate :abbrev_ok
+  validates_presence_of :group_name, :abbrev
+  validates_uniqueness_of :group_name, :abbrev
   
   def to_s
     group_name
@@ -43,4 +45,10 @@ class Group < ActiveRecord::Base
     member_records = Member.where(:id=>members.flatten.uniq.sort)
     return member_records.joins(:contacts).where(:contacts=>{:is_primary => true}).all
   end
+
+  def abbrev_ok
+    abbrev = group_name[0..5].sub(' ','').downcase if abbrev.blank?
+    errors.add(:abbrev,'must not include spaces') if abbrev =~ / /
+  end
+    
 end

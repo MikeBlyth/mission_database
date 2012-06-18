@@ -12,6 +12,8 @@
 #
 
 class AppLog < ActiveRecord::Base
+  before_save :control_description_length
+  
   def self.tail(lines=10)
     reply = ''
     first_line = self.count > lines ? self.count-lines : 0
@@ -21,4 +23,7 @@ class AppLog < ActiveRecord::Base
     reply
   end
 
+  def control_description_length
+    self.description = self.description[0..254]
+  end
 end

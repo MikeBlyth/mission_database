@@ -149,6 +149,7 @@ FactoryGirl.define do
 
   factory :group do
     sequence(:group_name) {|n| "Group #{n}" }
+    sequence(:abbrev) {|n| "group#{n}"}
     type_of_group 'Test group'
   end
 

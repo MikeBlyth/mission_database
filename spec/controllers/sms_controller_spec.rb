@@ -1,9 +1,10 @@
 #require 'spec_helper'
 #include SimTestHelper
 #include ApplicationHelper
-#  
+include MessagesTestHelper  
 
 describe SmsController do
+# Incoming SMS Text Messages
 
   before(:each) do
     HTTParty = mock('HTTParty').as_null_object if HTTParty.class == Module
@@ -163,6 +164,28 @@ describe SmsController do
       end     
 
     end # 'info sends contact info'
+
+    describe 'd (group deliver)' do
+      before(:each) do
+        @group_name = 'testgroup'
+        @body = 'xtest messagex'
+        @group = Factory(:group, :group_name=>@group_name)
+        @params['Body'] = "d #{@group_name} #{@body}"
+        @message = Message.new
+        Message.stub(:new)
+      end
+      
+      describe 'when group is found' do
+        
+        it 'delivers a group message if group is found' do
+          Message.should_receive(:new).with(hash_including(
+              :send_email=>true, :send_sms=>true, :to_groups=>@group.id, :body=>@body))          
+          post :create, @params   # i.e. sends 'd testgroup test message'
+        end
+      end # 'when group is found'
+      
+    end # d (group deliver)
+          
 
   end # 'handles these commands:'
 

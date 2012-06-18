@@ -33,21 +33,13 @@ class ClickatellGateway < SmsGateway
     super
   end
 
-  def numbers_to_string_list(numbers)
-    if numbers.is_a? String
-      num_array = numbers.split(/,\s*/)
-    else
-      num_array = numbers
-    end 
-    return num_array.join(',').gsub('+', '') # Clickatell may not like '+' prefix
-  end
-    
-
   # Send a message (@body) to a phone (@numbers)
   # If using a RESTFUL interface or other where a URI is called, you can follow this model. Otherwise,
   # this method will have to do whatever needed to tell the gateway service to send the message.
   def deliver(numbers=@numbers, body=@body)
-    outgoing_numbers = numbers_to_string_list(numbers)  
+    @numbers = numbers  # Update instance variables (matters only if they were included in this call)
+    @body = body
+    outgoing_numbers = numbers_to_string_list
     clickatell_base_uri = "http://api.clickatell.com/http/sendmsg"
     @uri = clickatell_base_uri + "?user=#{@user_name}&password=#{@password}&api_id=#{@api_id}"+
             "&callback=2"+

@@ -1,5 +1,9 @@
 require 'spec_helper'
 
 describe AppLog do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it 'truncates messages to fit' do
+    entry = AppLog.create(:code => "SMS.sent.#{@gateway_name}", :description=>'x'*300)
+    entry.description.size.should < 256
+  end
+    
 end

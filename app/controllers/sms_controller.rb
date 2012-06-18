@@ -17,7 +17,7 @@ class SmsController < ApplicationController
   # ToDo
   # Remove line for testing; configure for other gateways
   def create  # need the name 'create' to conform with REST defaults, or change routes
-#puts "IncomingController create: params=#{params}"
+# puts "**** IncomingController create: params=#{params}"
     from = params[:From]  # The phone number of the sender
     body = params[:Body]  # This is the body of the incoming message
     params.delete 'SmsSid'
@@ -62,6 +62,7 @@ private
     command, text = extract_commands(body)[0] # parse to first word=command, rest = text
     return case command.downcase
            when 'info' then do_info(text)  
+           when 'd' then group_deliver(text)
            # More commands go here ...
            else
              "unknown '#{command}'. Info=" + (do_info(text) if Member.find_with_name(text))
@@ -86,6 +87,14 @@ private
     else
       return "**no contact info found**"
     end
+  end
+
+  def group_deliver(text)
+    group, body = text.sub(' ',"\x0").split("\x0") # just a way of stripping the first word as the group name
+    group_id = Group.find(:first, 
+      :conditions => [ "lower(group_name) = ? OR lower(abbrev) = ?", group.downcase, group.downcase]).id
+    message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group_id, :body=>body)
+    return ('group deliver')
   end
 
   def from_member(from) 
