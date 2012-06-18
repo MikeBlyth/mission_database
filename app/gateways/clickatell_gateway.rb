@@ -39,7 +39,7 @@ class ClickatellGateway < SmsGateway
     else
       num_array = numbers
     end 
-    return num_array.map {|n| n.sub!('+', '')}.join(',') # Clickatell may not like '+' prefix
+    return num_array.join(',').gsub('+', '') # Clickatell may not like '+' prefix
   end
     
 

@@ -26,6 +26,10 @@ describe ClickatellGateway do
     end
           
     it 'initializes successfully' do
+      if @gateway.errors
+        puts "*** Errors in gateway initialization may be caused by 'cleaned' initialization"
+        puts "*** parameters. Try restarting Spork before looking for other errors."
+      end
       @gateway.errors.should be_nil
       @gateway.gateway_name.should == 'clickatell'  # this is defined by ClickatellGateway#initialize
     end
@@ -57,6 +61,11 @@ describe ClickatellGateway do
         uri.should match("api_id=#{SiteSetting.clickatell_api_id}")
         uri.should match("to=2347777777777")
         uri.should match("text=#{URI.escape('test message')}")
+      end
+
+      it "forms URI phone number string when number doesn't start with a +" do
+        @gateway.deliver('1234567890', 'test message')
+        @gateway.uri.should match("to=1234567890")
       end
 
       it 'sets @gateway_reply variable' do
