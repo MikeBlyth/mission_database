@@ -32,6 +32,17 @@ class Group < ActiveRecord::Base
     return belong.uniq.flatten
   end
 
+  # Given an array of group names, return an array of matching group ids
+  # If a name does not correspond to a group, return the name itself in the results
+  # so calling method must check for string vs. integer to detect this error condition.
+  def self.ids_from_names(names)
+    names.map do |name|
+      group = Group.find(:first, 
+        :conditions => [ "lower(group_name) = ? OR lower(abbrev) = ?", name.downcase, name.downcase])
+      group.nil? ? name : group.id
+    end
+  end
+
   # Return array of member_ids who belong to any group (or its subgroups) in an array of group_ids
   # E.g. if there are groups with ids = 1,2,3,4 ...
   # Group.members_in_multiple_groups([1,3]) will return all the members who belong to group 1 (or subgroups) or 

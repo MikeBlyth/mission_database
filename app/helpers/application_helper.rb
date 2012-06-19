@@ -109,6 +109,7 @@ module ApplicationHelper
   #   command_2 Parameters for this command 
   #   ...
   # make array like [ [command_1, ''], [command_2, 'Parameters for this command']]
+  # where a command is the first word on each line
   def extract_commands(body)
     commands = body.lines.map do |line| 
       line =~ /\s*(\w+)( .*)?/ 

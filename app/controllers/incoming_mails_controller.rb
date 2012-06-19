@@ -10,7 +10,8 @@ class IncomingMailsController < ApplicationController
       render :text => 'Refused--unknown sender', :status => 403, :content_type => Mime::TEXT.to_s
       return
     end
-    commands = extract_commands(params['plain'])
+    @body = params['plain']
+    commands = extract_commands(@body)
     success = process_commands(commands)
 
     # if the message was handled successfully then send a status of 200,
@@ -29,12 +30,19 @@ private
   def from_member
     from = params['from']
     matching_contact = Contact.where('email_1 = ? OR email_2 = ?', from, from).first 
-    return matching_contact ? matching_contact.member : nil
+    @from_member = matching_contact ? matching_contact.member : nil
   end  
 
   def process_commands(commands)
     successful = true
     from = params['from']
+    # Special case for command 'd' = distribute to one or more groups, because the rest of the 
+    #   body will be sent without scanning for further commands
+    if commands[0][0] == 'd'  # distribute
+      result = group_deliver(@body)
+      Notifier.send_generic(from, result).deliver  # Let the sender know success, errors, etc.
+      return successful
+    end
     commands.each do |command|
 # puts "**********COMMAND: #{command}"
       case command[0]
@@ -76,5 +84,37 @@ private
     Notifier.send_info(from, from_member, name, members).deliver
 #puts "****** AFTER DELIVER *********"
   end
+
+  def group_deliver(text)
+    unless text =~ /\A\s*d\s+(.*):\s*(.*)/)  # "d <groups>: <body>..."  (body is multipline)
+      return("I don't understand. To send to groups, separate the group names with spaces" +
+             " and be sure to follow the group or groups with a colon (':').")
+    end
+    body = $2   # All the rest of the message, from match above (text =~ ...)
+    group_names_string = $1
+    group_names = group_names_string.gsub(/;|,/, ' ').split(/\s+/)  # e.g. ['security', 'admin']
+    group_ids = Group.ids_from_names(group_names)   # e.g. [1, 5]
+    valid_group_ids = group_ids.map {|g| g if g.is_a? Integer}.compact
+    valid_group_names = valid_group_ids.map{|g| Group.find(g).group_name}
+    invalid_group_names = group_ids - valid_group_ids   # This will be names of any groups not found
+    if valid_group_ids.empty?
+      return("You sent the \"d\" command which means to forward the message to groups, but " +
+          "no valid group names or abbreviations found in \"#{group_names_string}.\" ")
+    end
+    sender_name = @from_member.full_name_short
+    message = Message.new(:send_sms=>false, :send_email=>true, 
+                          :to_groups=>valid_group_ids, :body=>@body)
+    # message.deliver  # Don't forget to deliver!
+    confirmation = "Your message #{body[0..120] was sent to groups #{valid_group_names.join(', ')}. "
+    unless invalid_group_names.empty?
+      if invalid_group_names.size == 1
+        confirmation << "Group #{invalid_group_names} was not found, so did not receive messages."
+      else
+        confirmation << "Groups #{invalid_group_names.join(', ')} were not found, so did not receive messages."
+      end
+    end
+    return confirmation
+  end
+
 end # Class
 
