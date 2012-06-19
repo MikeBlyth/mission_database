@@ -175,11 +175,29 @@ describe SmsController do
       
       describe 'when group is found' do
         
-        it 'delivers a group message if group is found' do
+        it 'delivers a group message' do
           nominal_body = @body+"-#{@sender.shorter_name}"
           Message.should_receive(:new).with(hash_including(
               :send_email=>true, :send_sms=>true, :to_groups=>@group.id, :body=>nominal_body))          
+          post :create, @params   # i.e. sends 'd testgroup test message'
+        end
+
+        it 'confirms to sender' do
           HTTParty.should_receive(:get).with /sent/
+          post :create, @params   # i.e. sends 'd testgroup test message'
+        end
+      end # 'when group is found'
+      
+      describe 'when group is not found' do
+        before(:each) { @params['Body'] = "d bad_group #{@body}"}
+        it 'does not deliver a group message' do
+          nominal_body = @body+"-#{@sender.shorter_name}"
+          Message.should_not_receive(:new)
+          post :create, @params   # i.e. sends 'd testgroup test message'
+        end
+
+        it 'informs sender of error' do
+          HTTParty.should_receive(:get).with /error/i
           post :create, @params   # i.e. sends 'd testgroup test message'
         end
       end # 'when group is found'

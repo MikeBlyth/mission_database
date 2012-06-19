@@ -94,11 +94,15 @@ private
     target_group, body = text.sub(' ',"\x0").split("\x0") # just a way of stripping the first word as the group name
     group = Group.find(:first, 
       :conditions => [ "lower(group_name) = ? OR lower(abbrev) = ?", target_group.downcase, target_group.downcase])
-    sender_name = @sender.shorter_name
-    body = body[0..148-sender_name.size] + '-' + sender_name  # Truncate msg and add sender's name
-    message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group.id, :body=>body)
-    # message.deliver  # Don't forget to deliver!
-    return ("sent to #{group.group_name}")
+    if group   # if we found the group requested by the sender
+      sender_name = @sender.shorter_name
+      body = body[0..148-sender_name.size] + '-' + sender_name  # Truncate msg and add sender's name
+      message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group.id, :body=>body)
+      # message.deliver  # Don't forget to deliver!
+      return("sent to #{group.group_name}")
+    else
+      return("Error: no group #{target_group}")
+    end
   end
 
   def from_member(from) 

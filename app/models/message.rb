@@ -89,6 +89,26 @@ class Message < ActiveRecord::Base
     to_groups.split(",").map{|g| g.to_i} if to_groups
   end
   
+  def current_status
+puts "**** current_status"
+    status = {:errors=>0, :pending=>0, :delivered=>0, :replied=>0}
+    sent_messages.each do |m|
+      case m.msg_status
+      when MessagesHelper::MsgError
+        status[:errors] += 1
+      when MessagesHelper::MsgSentToGateway, MessagesHelper::MsgPending
+        status[:pending] += 1
+      when MessagesHelper::MsgDelivered
+        status[:delivered] += 1
+      when MessagesHelper::MsgResponseReceived
+        status[:replied] += 1
+      else
+        status[:errors] += 1
+      end
+    end
+    return status
+  end
+
 private
 
   def deliver_email(emails)

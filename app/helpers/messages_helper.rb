@@ -16,7 +16,7 @@ module MessagesHelper
   MsgError = -1
   MsgSentToGateway = 0
   MsgPending = 1
-  MsgDeliverd = 2
+  MsgDelivered = 2
   MsgResponseReceived = 3
   
   def msg_status_column(record)

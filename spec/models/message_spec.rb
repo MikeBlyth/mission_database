@@ -223,6 +223,41 @@ describe Message do
       end # with multiple phone numbers
     end # message id and status
 
-  end # deliver
+  end # delivers to gateways
+  
+  describe 'reports status' do
+    before(:each) do
+      @sent_messages = (0..5).map {|i| mock_model(SentMessage, :id=>i, 
+          :msg_status=>MessagesHelper::MsgSentToGateway).as_null_object}
+      @message = Factory.stub(:message)
+      @message.stub(:sent_messages).and_return @sent_messages
+    end
+    
+    it '(check test setup)' do
+      @message.sent_messages.size.should == @sent_messages.size
+      @message.sent_messages.first.msg_status.should == @sent_messages.first.msg_status
+    end
+    
+    it 'reports "pending"' do
+      @message.current_status.should == {:pending=>6, :delivered=>0, :replied=>0, :errors=>0}
+    end
+    it 'reports "sent to gateway" as "pending"' do
+      @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgPending)
+      @message.current_status.should == {:pending=>6, :delivered=>0, :replied=>0, :errors=>0}
+    end
+    it 'reports "delivered"' do
+      @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgDelivered)
+      @message.current_status.should == {:pending=>5, :delivered=>1, :replied=>0, :errors=>0}
+    end
+    it 'reports "replied"' do
+      @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgResponseReceived)
+      @message.current_status.should == {:pending=>5, :delivered=>0, :replied=>1, :errors=>0}
+    end
+    it 'reports "errors"' do
+      @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgError)
+      @sent_messages[1].stub(:msg_status).and_return(nil)
+      @message.current_status.should == {:pending=>4, :delivered=>0, :replied=>0, :errors=>2}
+    end
+  end # reports status
 
 end
