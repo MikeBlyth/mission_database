@@ -112,8 +112,8 @@ module ApplicationHelper
   # where a command is the first word on each line
   def extract_commands(body)
     commands = body.lines.map do |line| 
-      line =~ /\s*(\w+)( .*)?/ 
-      [($1 || '').downcase, ($2 || '').strip.chomp]
+      line =~ /\s*(\S+)\s*(.*)?/ 
+      [($1 || '').downcase, ($2 || '').chomp]
     end  
  #puts "*** Commands = #{commands}"
     return commands

@@ -288,6 +288,8 @@ describe IncomingMailsController do
    
   describe 'distributes email & sms to groups' do
     before(:each) do
+      @mock_message = mock_model(Message, :deliver=>true)
+      Message.stub(:create).and_return(@mock_message)
       @member = Factory.stub(:member)
       controller.stub(:from_member).and_return(@member)   # have a contact record that matches from line
       @group_1 = Factory(:group)
@@ -300,23 +302,37 @@ describe IncomingMailsController do
       controller.from_member.should == @member
     end
     
-    it 'distributes to groups when groups are found' do
-      Message.should_receive(:new).with({:send_sms=>false, :send_email=>true, 
+    it 'distributes email to groups when groups are found' do
+      Message.should_receive(:create).with({:send_sms=>false, :send_email=>true, 
                           :to_groups=>[@group_1.id, @group_2.id], :body=>@body})
-      @params['plain'] = "d #{@group_1.abbrev} #{@group_2.abbrev}: #{@body}"
+      @params['plain'] = "email #{@group_1.abbrev} #{@group_2.abbrev}: #{@body}"
+      post :create, @params
+    end
+
+    it 'distributes sms to groups when groups are found' do
+      Message.should_receive(:create).with({:send_sms=>true, :send_email=>false, 
+                          :to_groups=>[@group_1.id, @group_2.id], :body=>@body})
+      @params['plain'] = "sms #{@group_1.abbrev} #{@group_2.abbrev}: #{@body}"
+      post :create, @params
+    end
+
+    it 'distributes sms & email to groups when groups are found' do
+      Message.should_receive(:create).with({:send_sms=>true, :send_email=>true, 
+                          :to_groups=>[@group_1.id, @group_2.id], :body=>@body})
+      @params['plain'] = "d+email #{@group_1.abbrev} #{@group_2.abbrev}: #{@body}"
       post :create, @params
     end
 
     it 'distributes to found groups when only some groups are found' do
-      Message.should_receive(:new).with({:send_sms=>false, :send_email=>true, 
+      Message.should_receive(:create).with({:send_sms=>false, :send_email=>true, 
                           :to_groups=>[@group_1.id, @group_2.id], :body=>@body})
-      @params['plain'] = "d badGroup #{@group_1.abbrev} sadGroup #{@group_2.abbrev}: #{@body}"
+      @params['plain'] = "email badGroup #{@group_1.abbrev} sadGroup #{@group_2.abbrev}: #{@body}"
       post :create, @params
     end
 
     it 'creates no message when no groups are found' do
-      Message.should_not_receive(:new)
-      @params['plain'] = "d badGroup sadGroup: #{@body}"
+      Message.should_not_receive(:create)
+      @params['plain'] = "email badGroup sadGroup: #{@body}"
       post :create, @params
     end
     
@@ -342,6 +358,13 @@ describe IncomingMailsController do
           Regexp.new("was sent to groups #{@group_1.group_name}.* sadGroup were not found")).
           and_return(@mock_mail)
         @params['plain'] = "d badGroup sadGroup #{@group_1.abbrev} #{@group_2.abbrev}: #{@body}"
+        post :create, @params
+      end
+      it 'warns if nothing after the "d" command' do
+        Notifier.should_receive(:send_generic).with(@params[:from], 
+          Regexp.new("I don't understand")).
+          and_return(@mock_mail)
+        @params['plain'] = "d "
         post :create, @params
       end
     end # notifies sender of results

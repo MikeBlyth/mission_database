@@ -44,15 +44,16 @@ private
   def process_commands(commands)
     successful = true
     from = params['from']
-    # Special case for command 'd' = distribute to one or more groups, because the rest of the 
-    #   body will be sent without scanning for further commands
-    if commands[0][0] == 'd'  # distribute
-      result = group_deliver(@body)
+    # Special case for commands 'd' and/or sms = distribute to one or more groups, 
+    #   because the rest of the body will be sent without scanning for further commands
+    #   ('email' is an alias for 'd'. 
+    first_command = commands[0][0].sub("&", "+").sub('sms', 'd')  # just the command itself, from the first line
+    if ['d', 'email', 'd+email', 'email+d'].include? first_command
+      result = group_deliver(@body, first_command)
       Notifier.send_generic(from, result).deliver  # Let the sender know success, errors, etc.
       return successful
     end
     commands.each do |command|
-# puts "**********COMMAND: #{command}"
       case command[0]
         when 'help'
           Notifier.send_help(from).deliver
@@ -93,8 +94,8 @@ private
 #puts "****** AFTER DELIVER *********"
   end
 
-  def group_deliver(text)
-    unless text =~ /\A\s*d\s+(.*):\s*(.*)/  # "d <groups>: <body>..."  (body is multipline)
+  def group_deliver(text, command)
+    unless text =~ /\A\s*\S+\s+(.*):\s*(.*)/  # "d <groups>: <body>..."  (body is multi-line)
       return("I don't understand. To send to groups, separate the group names with spaces" +
              " and be sure to follow the group or groups with a colon (':').")
     end
@@ -110,13 +111,17 @@ private
           "no valid group names or abbreviations found in \"#{group_names_string}.\" ")
     end
     sender_name = @from_member.full_name_short
-    message = Message.new(:send_sms=>false, :send_email=>true, 
-                          :to_groups=>valid_group_ids, :body=>body)
-    # message.deliver  # Don't forget to deliver!
+    # If command is like 'email'... use email. If it's like 'd' use sms.
+    #  (This could be done more elegantly but the method below works well with testing)
+    use_email = (command =~ /e/) ? true : false
+    use_sms   = (command =~ /d/) ? true : false
+    message = Message.create(:to_groups=>valid_group_ids, :body=>body, 
+        :send_email => use_email, :send_sms => use_sms)
+    message.deliver  # Don't forget to deliver!
     confirmation = "Your message #{body[0..120]} was sent to groups #{valid_group_names.join(', ')}. "
     unless invalid_group_names.empty?
       if invalid_group_names.size == 1
-        confirmation << "Group #{invalid_group_names} was not found, so did not receive messages."
+        confirmation << "Group #{invalid_group_names} was not found, so did not receive message."
       else
         confirmation << "Groups #{invalid_group_names.join(', ')} were not found, so did not receive messages."
       end
