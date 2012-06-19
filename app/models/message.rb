@@ -82,7 +82,12 @@ class Message < ActiveRecord::Base
 
   def timestamp
     t = created_at.getlocal
-    t.strftime('%e%b%I%M%P')[0..9]
+    hour = t.hour
+    if (0..9).include?(hour) || (13..21).include?(hour)
+      (t.strftime('%e%b')+t.strftime('%l')[1]+t.strftime(':%M%P'))[0..9]
+    else
+      t.strftime('%e%b%l%M%P')[0..9]
+    end
   end
   
   def to_groups_array
@@ -122,14 +127,6 @@ class Message < ActiveRecord::Base
               :delivered=>delivered.size, :delivered_names => delivered_names,
               :replied=>replied.size, :replied_names => replied_names
               }
-#    status = {}
-#    status[:errors] = sent_messages.count {|m| m.msg_status == MessagesHelper::MsgError || m.msg_status.nil?}
-#    status[:pending] = 
-#      sent_messages.count {|m| m.msg_status == MessagesHelper::MsgSentToGateway || 
-#                               m.msg_status == MessagesHelper::MsgPending}
-#    status[:delivered] = sent_messages.count {|m| m.msg_status == MessagesHelper::MsgDelivered}
-#    status[:replied] = sent_messages.count {|m| m.msg_status == MessagesHelper::MsgResponseReceived}
-#    return status
   end
 
 private

@@ -13,4 +13,5 @@ Time::DATE_FORMATS[:us_date_long] = "%B %-1e, %Y"
 Time::DATE_FORMATS[:date] = "%-1e %B"
 Time::DATE_FORMATS[:us_date] = "%B %-1e"
 Time::DATE_FORMATS[:time] = "%I:%M %p"
+Time::DATE_FORMATS[:date_time] = "%-1e %b %y %H:%M"
 
