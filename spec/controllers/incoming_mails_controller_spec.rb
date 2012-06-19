@@ -67,7 +67,6 @@ describe IncomingMailsController do
       examples.each do |e|
         @params['plain'] = e
         rebuild_message # needed only if the controller gets info from mail object made from params['message']
-puts "**** @params=#{@params}"
         post :create, @params
         response.status.should == 200
       end  
@@ -287,5 +286,23 @@ puts "**** @params=#{@params}"
     
   end # handles these commands
    
-
+  describe 'distributes email & sms to groups' do
+    before(:each) do
+#      controller.stub(:from_member).and_return(Factory.stub(:member))   # have a contact record that matches from line
+      @member = Factory(:member)
+      @member.contacts << Contact.new(:is_primary=>true, :email_1=>'test@test.com', :phone_1=>'+2345555555555')
+      @group_1 = Factory(:group)
+      @group_2 = Factory(:group)
+      @body = 'Test message'
+      @params[:from] = 'test@test.com'
+    end
+    
+    it 'distributes to groups when groups are found' do
+      Message.should_receive(:new).with({:send_sms=>false, :send_email=>true, 
+                          :to_groups=>[@group_1.id, @group_2.id], :body=>@body})
+      @params['plain'] = "d #{@group_1.abbrev} #{@group_2.abbrev}: #{@body}"
+      post :create, @params
+    end
+  end # Distributes email and sms to groups
+      
 end

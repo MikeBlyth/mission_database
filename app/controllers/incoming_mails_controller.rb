@@ -12,12 +12,13 @@ class IncomingMailsController < ApplicationController
     end
     @from_address = params['from']
     @body = params['plain']
+puts "**** from_member=#{from_member}" 
     commands = extract_commands(@body)
+puts "**** commands (1)=#{commands}"
     if commands.nil? || commands.empty?
       Notifier.send_generic(@from_address, "Error: nothing found in your message #{@body[0..160]}")
       success = false
     else
-puts "**** commands=#{commands}"
       success = process_commands(commands)
     end
 
@@ -41,6 +42,7 @@ private
   end  
 
   def process_commands(commands)
+puts "**** commands=#{commands}"
     successful = true
     from = params['from']
     # Special case for command 'd' = distribute to one or more groups, because the rest of the 
@@ -93,6 +95,7 @@ private
   end
 
   def group_deliver(text)
+puts "**** text=#{text}"
     unless text =~ /\A\s*d\s+(.*):\s*(.*)/  # "d <groups>: <body>..."  (body is multipline)
       return("I don't understand. To send to groups, separate the group names with spaces" +
              " and be sure to follow the group or groups with a colon (':').")
@@ -104,13 +107,16 @@ private
     valid_group_ids = group_ids.map {|g| g if g.is_a? Integer}.compact
     valid_group_names = valid_group_ids.map{|g| Group.find(g).group_name}
     invalid_group_names = group_ids - valid_group_ids   # This will be names of any groups not found
+puts "**** invalid_group_names=#{invalid_group_names}"
     if valid_group_ids.empty?
       return("You sent the \"d\" command which means to forward the message to groups, but " +
           "no valid group names or abbreviations found in \"#{group_names_string}.\" ")
     end
+puts "**** @from_member=#{@from_member}"
     sender_name = @from_member.full_name_short
     message = Message.new(:send_sms=>false, :send_email=>true, 
-                          :to_groups=>valid_group_ids, :body=>@body)
+                          :to_groups=>valid_group_ids, :body=>body)
+puts "**** message=#{message}"
     # message.deliver  # Don't forget to deliver!
     confirmation = "Your message #{body[0..120]} was sent to groups #{valid_group_names.join(', ')}. "
     unless invalid_group_names.empty?
