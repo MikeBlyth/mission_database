@@ -95,10 +95,11 @@ private
   end
 
   def group_deliver(text, command)
-    unless text =~ /\A\s*\S+\s+(.*):\s*(.*)/  # "d <groups>: <body>..."  (body is multi-line)
+    unless text =~ /\A\s*\S+\s+(.*?):\s*(.*)/m  # "d <groups>: <body>..."  (body is multi-line)
       return("I don't understand. To send to groups, separate the group names with spaces" +
              " and be sure to follow the group or groups with a colon (':')." +
-             " What I got was \"#{text}.\"")
+             "\n\nFor example, \"email admin: This is a message for admin.\"" +
+             " \n\nWhat I got was \"#{text}.\"")
     end
     body = $2   # All the rest of the message, from match above (text =~ ...)
     group_names_string = $1
