@@ -57,7 +57,7 @@ describe IncomingMailsController do
     end      
     
     it 'variety of "command" lines without crashing' do
-      examples = [ "",
+      examples = [ 
                    "command",
                    "command and params",
                    "two\nlines",
@@ -67,10 +67,18 @@ describe IncomingMailsController do
       examples.each do |e|
         @params['plain'] = e
         rebuild_message # needed only if the controller gets info from mail object made from params['message']
+puts "**** @params=#{@params}"
         post :create, @params
         response.status.should == 200
       end  
     end    
+
+    it 'empty email giving error' do
+      @params['plain'] = ''
+      rebuild_message
+      post :create, @params
+      response.status.should >= 400
+    end
 
     it 'single command on first line' do
       @params['plain'] = 'Test with parameters list'

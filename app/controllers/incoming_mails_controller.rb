@@ -10,9 +10,16 @@ class IncomingMailsController < ApplicationController
       render :text => 'Refused--unknown sender', :status => 403, :content_type => Mime::TEXT.to_s
       return
     end
+    @from_address = params['from']
     @body = params['plain']
     commands = extract_commands(@body)
-    success = process_commands(commands)
+    if commands.nil? || commands.empty?
+      Notifier.send_generic(@from_address, "Error: nothing found in your message #{@body[0..160]}")
+      success = false
+    else
+puts "**** commands=#{commands}"
+      success = process_commands(commands)
+    end
 
     # if the message was handled successfully then send a status of 200,
     #   else give a 422 with the errors
@@ -86,7 +93,7 @@ private
   end
 
   def group_deliver(text)
-    unless text =~ /\A\s*d\s+(.*):\s*(.*)/)  # "d <groups>: <body>..."  (body is multipline)
+    unless text =~ /\A\s*d\s+(.*):\s*(.*)/  # "d <groups>: <body>..."  (body is multipline)
       return("I don't understand. To send to groups, separate the group names with spaces" +
              " and be sure to follow the group or groups with a colon (':').")
     end
@@ -105,7 +112,7 @@ private
     message = Message.new(:send_sms=>false, :send_email=>true, 
                           :to_groups=>valid_group_ids, :body=>@body)
     # message.deliver  # Don't forget to deliver!
-    confirmation = "Your message #{body[0..120] was sent to groups #{valid_group_names.join(', ')}. "
+    confirmation = "Your message #{body[0..120]} was sent to groups #{valid_group_names.join(', ')}. "
     unless invalid_group_names.empty?
       if invalid_group_names.size == 1
         confirmation << "Group #{invalid_group_names} was not found, so did not receive messages."
