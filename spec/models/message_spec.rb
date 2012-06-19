@@ -225,10 +225,13 @@ describe Message do
 
   end # delivers to gateways
   
-  describe 'reports status' do
+  describe 'gives status reports:' do
     before(:each) do
       @sent_messages = (0..5).map {|i| mock_model(SentMessage, :id=>i, 
           :msg_status=>MessagesHelper::MsgSentToGateway).as_null_object}
+      @sent_messages.each do |m| 
+        m.stub(:member).and_return(mock_model(Member, :shorter_name=>"Name #{m.id+1}"))
+      end
       @message = Factory.stub(:message)
       @message.stub(:sent_messages).and_return @sent_messages
     end
@@ -236,28 +239,55 @@ describe Message do
     it '(check test setup)' do
       @message.sent_messages.size.should == @sent_messages.size
       @message.sent_messages.first.msg_status.should == @sent_messages.first.msg_status
+      @message.sent_messages.first.member.shorter_name.should == 'Name 1'
     end
     
     it 'reports "pending"' do
-      @message.current_status.should == {:pending=>6, :delivered=>0, :replied=>0, :errors=>0}
+      @message.current_status.should == {:pending=>6, :delivered=>0, :replied=>0, :errors=>0,
+        :pending_names=>'Name 1, Name 2, Name 3, Name 4, Name 5, Name 6',
+        :errors_names => "",
+        :delivered_names=>"",
+        :replied_names=>""
+        }
     end
     it 'reports "sent to gateway" as "pending"' do
       @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgPending)
-      @message.current_status.should == {:pending=>6, :delivered=>0, :replied=>0, :errors=>0}
+      @message.current_status.should == {:pending=>6, :delivered=>0, :replied=>0, :errors=>0,
+        :pending_names=>'Name 1, Name 2, Name 3, Name 4, Name 5, Name 6',
+        :errors_names => "",
+        :delivered_names=>"",
+        :replied_names=>""
+        }
     end
     it 'reports "delivered"' do
       @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgDelivered)
-      @message.current_status.should == {:pending=>5, :delivered=>1, :replied=>0, :errors=>0}
+      @message.current_status.should == {:pending=>5, :delivered=>1, :replied=>0, :errors=>0,
+        :pending_names=>'Name 2, Name 3, Name 4, Name 5, Name 6',
+        :errors_names => "",
+        :delivered_names=>"Name 1",
+        :replied_names=>""
+        }
     end
     it 'reports "replied"' do
       @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgResponseReceived)
-      @message.current_status.should == {:pending=>5, :delivered=>0, :replied=>1, :errors=>0}
+      @message.current_status.should == {:pending=>5, :delivered=>0, :replied=>1, :errors=>0,
+        :pending_names=>'Name 2, Name 3, Name 4, Name 5, Name 6',
+        :errors_names => "",
+        :delivered_names=>"",
+        :replied_names=>"Name 1"
+        }
     end
     it 'reports "errors"' do
       @sent_messages[0].stub(:msg_status).and_return(MessagesHelper::MsgError)
       @sent_messages[1].stub(:msg_status).and_return(nil)
-      @message.current_status.should == {:pending=>4, :delivered=>0, :replied=>0, :errors=>2}
+      @message.current_status.should == {:pending=>4, :delivered=>0, :replied=>0, :errors=>2,
+        :pending_names=>'Name 3, Name 4, Name 5, Name 6',
+        :errors_names => "Name 1, Name 2",
+        :delivered_names=>"",
+        :replied_names=>""
+        }
     end
+    
   end # reports status
 
 end

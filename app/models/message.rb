@@ -88,25 +88,48 @@ class Message < ActiveRecord::Base
   def to_groups_array
     to_groups.split(",").map{|g| g.to_i} if to_groups
   end
+
+  def sent_messages_pending
+    sent_messages.map {|m| m if m.msg_status == MessagesHelper::MsgSentToGateway || 
+                               m.msg_status == MessagesHelper::MsgPending}.compact
+  end                               
+  
+  def sent_messages_errors
+    sent_messages.map  {|m| m if m.msg_status == MessagesHelper::MsgError || m.msg_status.nil?}.compact
+  end                               
+  
+  def sent_messages_delivered
+    sent_messages.map {|m| m if m.msg_status == MessagesHelper::MsgDelivered}.compact
+  end                               
+  
+  def sent_messages_replied
+    sent_messages.map {|m| m if m.msg_status == MessagesHelper::MsgResponseReceived}.compact
+  end                               
   
   def current_status
-puts "**** current_status"
-    status = {:errors=>0, :pending=>0, :delivered=>0, :replied=>0}
-    sent_messages.each do |m|
-      case m.msg_status
-      when MessagesHelper::MsgError
-        status[:errors] += 1
-      when MessagesHelper::MsgSentToGateway, MessagesHelper::MsgPending
-        status[:pending] += 1
-      when MessagesHelper::MsgDelivered
-        status[:delivered] += 1
-      when MessagesHelper::MsgResponseReceived
-        status[:replied] += 1
-      else
-        status[:errors] += 1
-      end
-    end
-    return status
+#puts "**** current_status"
+    errors = sent_messages_errors
+    errors_names = errors.map{|m| m.member.shorter_name}.join(', ')
+    pending = sent_messages_pending
+    pending_names = pending.map{|m| m.member.shorter_name}.join(', ')
+    delivered = sent_messages_delivered
+    delivered_names = delivered.map{|m| m.member.shorter_name}.join(', ')
+    replied = sent_messages_replied
+    replied_names = replied.map{|m| m.member.shorter_name}.join(', ')
+
+    status = {:errors=>errors.size, :errors_names => errors_names,
+              :pending=>pending.size, :pending_names => pending_names,
+              :delivered=>delivered.size, :delivered_names => delivered_names,
+              :replied=>replied.size, :replied_names => replied_names
+              }
+#    status = {}
+#    status[:errors] = sent_messages.count {|m| m.msg_status == MessagesHelper::MsgError || m.msg_status.nil?}
+#    status[:pending] = 
+#      sent_messages.count {|m| m.msg_status == MessagesHelper::MsgSentToGateway || 
+#                               m.msg_status == MessagesHelper::MsgPending}
+#    status[:delivered] = sent_messages.count {|m| m.msg_status == MessagesHelper::MsgDelivered}
+#    status[:replied] = sent_messages.count {|m| m.msg_status == MessagesHelper::MsgResponseReceived}
+#    return status
   end
 
 private
