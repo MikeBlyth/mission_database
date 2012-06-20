@@ -293,4 +293,23 @@ describe Message do
     
   end # reports status
 
+  describe 'processes responses from recipients' do
+    before(:each) do
+      @member = mock_model(Member, :id=>100)
+      @sent_messages = (0..2).map {|i| mock_model(SentMessage, :id=>i,
+          :member_id => @member.id-1 + i, # so middle one gets the right member
+          :msg_status=>MessagesHelper::MsgSentToGateway).as_null_object}
+      @message.stub(:sent_messages).and_return(@sent_messages)
+    end
+
+    it 'marks sent_message with response status' do
+      @resp_text = 'I got it'
+      @sent_messages[1].should_receive(:update_attributes).with(:msg_status=>MessagesHelper::MsgResponseReceived,
+           :confirmation_message=>@resp_text)
+      @sent_messages[0].should_not_receive(:update_attributes)
+      @sent_messages[2].should_not_receive(:update_attributes)
+      @message.process_response(@member, @resp_text)
+    end
+  end # processes responses from recipients
+
 end
