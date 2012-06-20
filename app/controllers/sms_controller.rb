@@ -64,6 +64,7 @@ private
     return case command.downcase
            when 'info' then do_info(text)  
            when 'd' then group_deliver(text)
+           when /\A!/ then process_response(command, text)
            # More commands go here ...
            else
              "unknown '#{command}'. Info=" + (do_info(text) if Member.find_with_name(text))
@@ -105,8 +106,27 @@ private
     end
   end
 
+  def process_response(command, text)
+    message_id = command[1..99]
+    message = Message.find_by_id(message_id)
+#puts "**** command=#{command}, text=#{text}, @sender.id=#{@sender.id}, message=#{message.id}"
+    if message
+#puts "**** processing(#{@sender}, #{text})"
+      message.process_response(@sender, text)
+      return("Thanks for your response :-)")
+    else
+      return("Thanks for responding, but message number #{message_id} was not found. Check the number again.")
+    end
+##    target = SentMessage.where("member_id = ? AND message_id = ?", @sender.id, command[1..99].to_i)[0]
+#    target = SentMessage.where("member_id = ?", @sender.id)[0]
+#puts "**** target=#{target}"
+#target.should_not == nil
+    return ''
+  end
+
   def from_member(from) 
 #    return true if from == '+16199282591' # Mike's Google Voice number for testing
+#puts "**** From_member from=#{from}"
     Member.find_by_phone(from)
   end
 

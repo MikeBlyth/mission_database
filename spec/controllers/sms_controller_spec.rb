@@ -12,6 +12,8 @@ describe SmsController do
     @old_HTTParty = HTTParty
     silence_warnings {HTTParty = mock('HTTParty').as_null_object}
     HTTParty.stub(:get).and_return '200'
+    @old_AppLog = AppLog
+    silence_warnings {AppLog = double('AppLog').as_null_object}
     # Target -- the person being inquired about in info command
     @target = Factory.stub(:member, :last_name=>'Target')  # Request is going to be for this person's info
     @sender = Factory.stub(:member)
@@ -20,9 +22,11 @@ describe SmsController do
     @from = '+2348030000000'  # This is the number of incoming SMS
     @body = "info #{@target.last_name}"
     @params = {:From => @from, :Body => @body}
-    AppLog = double('AppLog').as_null_object if AppLog.superclass == ActiveRecord::Base  # as_null_object stops it from complaining about unexpected messages
   end
-  after(:each) {  silence_warnings {HTTParty = @old_HTTParty} }
+  after(:each) do
+    silence_warnings {HTTParty = @old_HTTParty} 
+    silence_warnings {AppLog = @old_AppLog} 
+  end
 
     
   describe 'logging' do
@@ -203,8 +207,25 @@ describe SmsController do
       end # 'when group is found'
       
     end # d (group deliver)
-          
-
+  
   end # 'handles these commands:'
+
+  describe 'handles responses to messages' do
+    # Responses are indicated by a command '!nnnn' where nnnn is the message number
+    before(:each) do
+      # We have to set up a message that the incoming SMS is responding to
+      @message = Factory.stub(:message, :send_email => true)
+      Message.stub(:find_by_id).and_return(@message)
+    end
+
+    it 'updates status of sent_message record' do
+      # When a response is received, the sent_message corresponding to the message & user
+      #   should be updated to show that it was responded to
+      @params['Body'] = "!#{@message.id}"  # e.g. #24 if @message.id is 24
+      @message.should_receive(:process_response)
+      post :create, @params
+    end               
+
+  end # handles responses to messages         
 
 end

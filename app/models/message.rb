@@ -132,6 +132,11 @@ class Message < ActiveRecord::Base
               }
   end
 
+  # Do whatever needed to record that 'member' has responded to this message
+  def process_response(member, text)
+    puts "**** message #{self.id} received :process_response with member #{member.id}, \"#{text}.\""
+  end
+
 #private
 
   def deliver_email(emails)
