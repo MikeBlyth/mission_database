@@ -9,11 +9,10 @@ describe SmsController do
 
   before(:each) do
     # Intercept Internet calls so we don't actually call SMS gateway
-    @old_HTTParty = HTTParty
-    silence_warnings {HTTParty = mock('HTTParty').as_null_object}
-    HTTParty.stub(:get).and_return '200'
-    @old_AppLog = AppLog
-    silence_warnings {AppLog = double('AppLog').as_null_object}
+    AppLog.stub(:create)
+    @gateway = MockClickatellGateway.new
+    ClickatellGateway.stub(:new).and_return(@gateway)
+#    silence_warnings {AppLog = double('AppLog').as_null_object}
     # Target -- the person being inquired about in info command
     @target = Factory.stub(:member, :last_name=>'Target')  # Request is going to be for this person's info
     @sender = Factory.stub(:member)
@@ -23,11 +22,6 @@ describe SmsController do
     @body = "info #{@target.last_name}"
     @params = {:From => @from, :Body => @body}
   end
-  after(:each) do
-    silence_warnings {HTTParty = @old_HTTParty} 
-    silence_warnings {AppLog = @old_AppLog} 
-  end
-
     
   describe 'logging' do
 
@@ -96,7 +90,7 @@ describe SmsController do
           @last_name = "Abcde"
           residence_location = Factory.stub(:location, :description=>'Rayfield')
           work_location = Factory.stub(:location, :description=>'Spring of Life')
-          @target = Factory.stub(:member, :last_name=>@last_name,
+          @target = Factory.stub(:member_without_family, :last_name=>@last_name,
                        :birth_date => Date.new(1980,6,15),
                        :work_location=>work_location,
                        :temporary_location => 'Miango Resort Hotel',
@@ -187,7 +181,7 @@ describe SmsController do
         end
 
         it 'confirms to sender' do
-          HTTParty.should_receive(:get).with /sent/
+          @gateway.should_receive(:deliver).with(@from,  /sent/)
           post :create, @params   # i.e. sends 'd testgroup test message'
         end
       end # 'when group is found'
@@ -201,7 +195,7 @@ describe SmsController do
         end
 
         it 'informs sender of error' do
-          HTTParty.should_receive(:get).with /error/i
+          @gateway.should_receive(:deliver).with(@from,  /error/i)
           post :create, @params   # i.e. sends 'd testgroup test message'
         end
       end # 'when group is found'
