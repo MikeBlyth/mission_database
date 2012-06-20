@@ -67,6 +67,7 @@ class Message < ActiveRecord::Base
   #   to_groups_array is the array form of the destination groups for this message
   def deliver(params={})
     puts "**** Message#deliver" if params[:verbose]
+    save! if self.new_record?
     if send_email
       email_addresses = members.map {|m| m.primary_contact.email_1}
       deliver_email(email_addresses)
@@ -84,10 +85,12 @@ class Message < ActiveRecord::Base
     t = created_at.getlocal
     hour = t.hour
     if (0..9).include?(hour) || (13..21).include?(hour)
-      (t.strftime('%e%b')+t.strftime('%l')[1]+t.strftime(':%M%P'))[0..9]
+      str = (t.strftime('%e%b')+t.strftime('%l')[1]+t.strftime(':%M%P'))[0..9]
     else
-      t.strftime('%e%b%l%M%P')[0..9]
+      str = t.strftime('%e%b%l%M%P')[0..9]
     end
+    str = str[1..9] if str[0] == ' '   # gives us one extra character :-)
+    return str
   end
   
   def to_groups_array
@@ -129,7 +132,7 @@ class Message < ActiveRecord::Base
               }
   end
 
-private
+#private
 
   def deliver_email(emails)
 #puts "**** deliver_email: emails=#{emails}"
@@ -138,14 +141,19 @@ raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
   end
   
+  def assemble_body
+    resp_tag = response_time_limit? ? " !#{self.id}" : ''
+    self.body = body[0..(159-self.timestamp.size-resp_tag.size)] + resp_tag + ' ' + self.timestamp
+  end
+
   def deliver_sms(params)
     sms_gateway = params[:sms_gateway]
     phone_number_array = params[:phone_numbers]
     phone_numbers = phone_number_array.join(',')
-  #  insert_response_tags if response_time_limit
 #puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
+    assemble_body()
     gateway_reply = 
-      sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
+      sms_gateway.deliver(phone_numbers, body)
 #puts "**** gateway_reply=#{gateway_reply}"
 #puts "**** phone_numbers=#{phone_numbers}"
     ######## SINGLE PHONE NUMBER ########
@@ -197,9 +205,6 @@ raise "send_email with nil email produced" if outgoing.nil?
     end
   end
  
-  def insert_response_tags
-  end
-  
   def sending_medium
     unless send_sms or send_email
       errors.add(:base,'Must select a message type (email, SMS, etc.)')

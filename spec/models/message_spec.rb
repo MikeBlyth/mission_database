@@ -11,13 +11,13 @@ describe Message do
 
   describe 'initialization' do
     
-    it 'sets defaults' do
+    it 'sets defaults [NB: adjust tests if you change defaults!]' do
       m = Message.new
       m.retries.should_not be_nil
       m.confirm_time_limit.should_not be_nil
       m.retry_interval.should_not be_nil
       m.expiration.should_not be_nil
-      m.response_time_limit.should_not be_nil
+      m.response_time_limit.should be_nil
       m.importance.should_not be_nil
       # The names or actual settings might get changed here, so this test may be modified   
     end     
@@ -109,29 +109,26 @@ describe Message do
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
-      it "Sends an email" do
+      it "Sends an email only" do
         select_media(:email=>true)
         Notifier.should_receive(:send_generic).
           with([@members[0].primary_contact.email_1], @message.body, true)
-        @message.deliver
-      end
-
-      it "Does not sends an email if it's not selected" do
-        select_media(:email=>false)
-        Notifier.should_not_receive(:send_generic)
+        @gateway.should_not_receive(:deliver)
         @message.deliver
       end
 
       it "Sends an SMS" do
         select_media(:sms=>true)
+        Notifier.should_not_receive(:send_generic)
         @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body)
         @message.deliver(:sms_gateway=>@gateway)
       end
       
       it "Inserts response tag" do
+        select_media(:sms=>true)
         @message.response_time_limit = 15
         @message.deliver(:sms_gateway=>@gateway)
-        @message.body.should match Regexp.new(@message.id.to_s)
+        @message.body.should match Regexp.new("!"+@message.id.to_s)
       end
     end # with single addresses
 
