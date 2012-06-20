@@ -11,9 +11,26 @@
             });      
         $('<div><p class="msg-info for-sms">About <span id="msg-count">0</span> SMS messages will be sent</p></div>')
         .insertAfter('#record_to_groups');
-     toggle_sms_display();      
+     toggle_sms_display();  
+     toggle_email_display();  
      $('#as_messages-create--form .submit').val('Send message');
      });
+
+// Email Selection
+    $('#record_send_email').live("change", function(){
+    toggle_email_display()
+    });
+
+    function toggle_email_display() {
+        if ($('#record_send_email').is(':checked')) {
+   //       $('.for-email').css('display','inline')
+          $('.for-email').show('blind', 500)
+          }
+        else {
+          $('.for-email').effect('blind', 500)
+//          $('.for-email').css('display','none')
+        } 
+    } ;
 
 // SMS Selection
     $('#record_send_sms').live("change", function(){

@@ -320,6 +320,8 @@ table.children {
 #msg-form {
   background-color: #daffcd;
   width: 500px; }
+  #msg-form #record_subject {
+    width: 300px; }
 
 #msg-form #bottom {
   position: relative; }

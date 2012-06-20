@@ -1,4 +1,4 @@
-%p{:style=>'border: 1px solid red; width: 300px; padding: 1em'}
+%p{:style=>'border: 1px solid red; width: 300px; padding: 0.5em; margin-bottom: 1em'}
   Note: Message sending is still experimental and few options are working.
   Be sure to follow up any messages you send with this system, and do not
   assume that they are being delivered reliably (yet).
@@ -7,8 +7,13 @@
     #top
       %table{:style=>'width: 300px'}
         %tr
+          %td.for-email
+            = form.label :subject, "Subject (for email only)"
+            %br
+            = form.text_field :subject
+        %tr
           %td
-            = form.label :body, "Message"
+            = form.label :body, "Message (email and/or SMS)"
             %br
             = form.text_area :body, :size => "40x3", :maxlength=>"300", :value=>"(from #{@current_user.name})"
         %tr
