@@ -25,8 +25,8 @@ class Message < ActiveRecord::Base
   has_many :sent_messages
   has_many :members, :through => :sent_messages  # May not be needed, 
   belongs_to :user
-  validates_numericality_of :confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance
-      
+  validates_numericality_of :confirm_time_limit, :retries, :retry_interval, 
+      :expiration, :response_time_limit, :importance, :allow_nil => true
   validates_presence_of :body, :message=>'You need to write something in your message!'
   validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
   validate :sending_medium
