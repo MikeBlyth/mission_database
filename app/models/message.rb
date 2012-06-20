@@ -142,10 +142,11 @@ raise "send_email with nil email produced" if outgoing.nil?
     sms_gateway = params[:sms_gateway]
     phone_number_array = params[:phone_numbers]
     phone_numbers = phone_number_array.join(',')
+  #  insert_response_tags if response_time_limit
 #puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, self.body[0..149] + ' ' + self.timestamp)
-puts "**** gateway_reply=#{gateway_reply}"
+#puts "**** gateway_reply=#{gateway_reply}"
 #puts "**** phone_numbers=#{phone_numbers}"
     ######## SINGLE PHONE NUMBER ########
     if phone_number_array.size == 1
@@ -155,7 +156,7 @@ puts "**** gateway_reply=#{gateway_reply}"
       else
         gtw_msg_id = gateway_reply  # Will include error message
         msg_status = MessagesHelper::MsgError
-puts "**** gtw_msg_id=#{gtw_msg_id}, msg_status=#{msg_status}"
+#puts "**** gtw_msg_id=#{gtw_msg_id}, msg_status=#{msg_status}"
       end
       self.sent_messages[0].update_attributes(
           :gateway_message_id => gtw_msg_id, 
@@ -195,7 +196,10 @@ puts "**** gtw_msg_id=#{gtw_msg_id}, msg_status=#{msg_status}"
     end
     end
   end
-
+ 
+  def insert_response_tags
+  end
+  
   def sending_medium
     unless send_sms or send_email
       errors.add(:base,'Must select a message type (email, SMS, etc.)')

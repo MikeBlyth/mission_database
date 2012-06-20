@@ -127,6 +127,12 @@ describe Message do
         @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body)
         @message.deliver(:sms_gateway=>@gateway)
       end
+      
+      it "Inserts response tag" do
+        @message.response_time_limit = 15
+        @message.deliver(:sms_gateway=>@gateway)
+        @message.body.should match Regexp.new(@message.id.to_s)
+      end
     end # with single addresses
 
     describe 'with multiple addresses' do
