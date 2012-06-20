@@ -44,6 +44,20 @@ class Notifier < ActionMailer::Base
     end
   end
 
+  def send_group_message(recipients, content, subject, id, response_time_limit, bcc=false)
+    @content = content
+    @id = id
+    @response_time_limit = response_time_limit
+    mail(
+      :to => (bcc ? '' : recipients),
+      :bcc => (bcc ? recipients : ''), 
+      :subject=>subject + " (Message #{id})"
+                                           ) do |format|
+      format.text {render 'group_message'}
+      format.html {render 'group_message'}
+    end 
+  end
+
   def send_test(recipients, content)
     @content = "Test from database@sim-nigeria.org\n\n#{content}"
     mail(:to => recipients, :subject=>'Test from database') do |format|

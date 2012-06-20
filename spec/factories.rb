@@ -231,6 +231,7 @@ FactoryGirl.define do
     end
   
   factory :message do
+    subject 'Subject line'
     body 'test message'
     to_groups '1'
     retries 0

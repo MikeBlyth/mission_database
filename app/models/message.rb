@@ -143,7 +143,9 @@ class Message < ActiveRecord::Base
 
   def deliver_email(emails)
 #puts "**** deliver_email: emails=#{emails}"
-    outgoing = Notifier.send_generic(emails, self.body, true) # send using bcc:, not to:
+    self.subject ||= 'Message from SIM Nigeria'
+    outgoing = Notifier.send_group_message(emails, self.body, subject, id, 
+          response_time_limit, true) # send using bcc:, not to:
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
   end

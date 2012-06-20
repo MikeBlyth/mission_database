@@ -87,12 +87,12 @@ describe Message do
       # *** Mock the email generator, Notifier ***
         @email = mock('Email', :deliver=>nil)
         @old_notifier = Notifier
-        silence_warnings{ Notifier = mock('Notifier', :send_generic => @email) }
+        silence_warnings{ Notifier = mock('Notifier', :send_group_message => @email) }
         @old_applog = AppLog
         silence_warnings { AppLog = mock('AppLog').as_null_object }
       # *** Message ***
         @created_at = Time.new(2000,06,07,14,20)
-        @message = Factory.build(:message, :created_at=>@created_at)
+        @message = Factory.build(:message, :created_at=>@created_at, :subject=>'Subject line')
     end
 
     describe 'with single addresses' do
@@ -106,20 +106,24 @@ describe Message do
         @members = members_w_contacts(1)
         @message.stub(:members).and_return(@members)  # NB: See above
         @message.stub(:sent_messages).and_return((0..@members.size-1).map{|n| SentMessage.new})
+        @message.stub(:subject).and_return('Subject line')
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
       it "Sends an email only" do
         select_media(:email=>true)
-        Notifier.should_receive(:send_generic).
-          with([@members[0].primary_contact.email_1], @message.body, true)
+        Notifier.should_receive(:send_group_message).
+          with([@members[0].primary_contact.email_1], @message.body, 
+          @message.subject, anything(), 
+          @message.response_time_limit,
+          true)
         @gateway.should_not_receive(:deliver)
         @message.deliver
       end
 
       it "Sends an SMS" do
         select_media(:sms=>true)
-        Notifier.should_not_receive(:send_generic)
+        Notifier.should_not_receive(:send_group_message)
         @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body)
         @message.deliver(:sms_gateway=>@gateway)
       end
@@ -143,7 +147,10 @@ describe Message do
       
       it "Sends an email" do
         select_media(:email=>true)
-        Notifier.should_receive(:send_generic).with(nominal_email_array, @message.body, true)
+        Notifier.should_receive(:send_group_message).with(nominal_email_array, @message.body, 
+          @message.subject, anything(), 
+          @message.response_time_limit,
+          true)
         @message.deliver
       end
 
