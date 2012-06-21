@@ -75,6 +75,8 @@ end
       @gateway = ClickatellGateway.new
       @httyparty = HTTParty
       silence_warnings{HTTParty = mock('HTTParty')}
+      @session_reply = mock('SessionReply', :body=>'OK: uoiusdjweoijlskdfjowei7789',
+                :session => 'uoiusdjweoijlskdfjowei7789')
      end
     after(:each) do
       silence_warnings{ HTTParty = @httyparty }  # Restore normal 
@@ -95,6 +97,16 @@ end
       gateway_session_set('dummy')
       @mock_reply.stub(:body).and_return('Fine')
       HTTParty.should_receive(:get).with(test_uri+"&session_id=dummy").and_return(@mock_reply)
+      @gateway.call_gateway
+    end
+    it 'with an expired session, getting a new one' do
+      test_uri = "http://etc/do_something?blahblahblah"
+      gateway_uri_set(test_uri)
+      gateway_session_set('dummy')
+      @mock_reply.stub(:body).and_return("Err: #{ClickatellGateway::ExpiredSessionCode}, Session expired")
+      HTTParty.should_receive(:get).with(test_uri+"&session_id=dummy").and_return(@mock_reply)
+      HTTParty.should_receive(:get).with(/auth\?/).and_return(@session_reply)
+      HTTParty.should_receive(:get).with(test_uri+"&session_id=#{@session_reply.session}").and_return(@mock_reply)
       @gateway.call_gateway
     end
   end

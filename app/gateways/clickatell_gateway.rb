@@ -73,9 +73,9 @@ class ClickatellGateway < SmsGateway
   end
             
   # Clickatell uses sessions as an alternative to basic authentication. 
-  def get_session(try_again=true)
-    @uri = base_uri.sub('http://', 'https://') + "auth?" + credentials
-    reply = (HTTParty::get @uri).body
+  def get_session
+    session_uri = base_uri.sub('http://', 'https://') + "auth?" + credentials
+    reply = (HTTParty::get session_uri).body
     if reply =~ /OK: (\w+)/
       @session = $1
       return @session
