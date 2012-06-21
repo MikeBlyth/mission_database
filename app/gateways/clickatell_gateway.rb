@@ -61,11 +61,11 @@ class ClickatellGateway < SmsGateway
   # Get the status for message with Clickatell ID = gw_msg_id
   def query(gw_msg_id)
     unless gw_msg_id.blank?
-      @uri = base_uri + "querymsg?&apimsgid=#{gw_msg_id}"
+      @uri = base_uri + "querymsg?apimsgid=#{gw_msg_id}"
       call_gateway
       # If we got the status, then the ID will match the one we asked for and there will be Status: nnn
       if @gateway_reply.body =~ /ID: (\w+) Status: (\w+)/ && ($1 == gw_msg_id)
-        return $2.to_i
+        return ClickatellStatusCodes[$2.to_i][:our_status]
       else
         return @gateway_reply.body
       end
@@ -75,13 +75,13 @@ class ClickatellGateway < SmsGateway
   # Clickatell uses sessions as an alternative to basic authentication. 
   def get_session
     session_uri = base_uri.sub('http://', 'https://') + "auth?" + credentials
-    reply = (HTTParty::get session_uri).body
-    if reply =~ /OK: (\w+)/
+    reply = HTTParty::get session_uri
+    if reply.body =~ /OK: (\w+)/
       @session = $1
       return @session
     else
       @session = nil
-      return reply   # Which contains the error message
+      return reply.body   # Which contains the error message
     end
   end
     
