@@ -281,7 +281,7 @@ describe Notifier do
     before(:each) do
       @message_id = 25
       @response_time_limit = 15
-      @params = {:recipients => 'mike@example.com', :content => 'Test message', 
+      @params = {:recipients => ['mike@example.com'], :content => 'Test message', 
         :subject => "Test Subject Line", :id => @message_id, 
         :response_time_limit => @response_time_limit, :bcc => true} 
     end

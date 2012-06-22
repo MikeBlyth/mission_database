@@ -51,11 +51,12 @@ class Notifier < ActionMailer::Base
     @response_time_limit = params[:response_time_limit]
     @subject = params[:subject] + ' ' + message_id_tag(:action=>:generate, :id=>@id)
     @bcc = params[:bcc]
-    @recipients = params[:recipients]
+    @recipients = params[:recipients].compact
+puts "**** @recipients=#{@recipients}, @subject=#{@subject}"
     mail(
       :to => (@bcc ? '' : @recipients),
       :bcc => (@bcc ? @recipients : ''), 
-      :subject=>@subject
+      :subject => @subject
                           ) do |format|
       format.text {render 'group_message'}
       format.html {render 'group_message'}
