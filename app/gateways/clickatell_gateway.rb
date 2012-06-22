@@ -56,6 +56,7 @@ class ClickatellGateway < SmsGateway
     call_gateway
     super  # Note that it's called AFTER we make the connection to Clickatell, so it can include
            #   the results in the log.
+    return @gateway_reply
   end
 
   # Get the status for message with Clickatell ID = gw_msg_id

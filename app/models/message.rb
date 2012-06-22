@@ -172,6 +172,7 @@ raise "send_email with nil email produced" if outgoing.nil?
     ######## SINGLE PHONE NUMBER ########
     if phone_number_array.size == 1
       if gateway_reply =~ /ID: (\w+)/
+puts "**** gateway_reply=#{gateway_reply}"        
         gtw_msg_id = $1
         msg_status = MessagesHelper::MsgSentToGateway
       else
