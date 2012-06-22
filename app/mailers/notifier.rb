@@ -3,6 +3,7 @@ class Notifier < ActionMailer::Base
   include ApplicationHelper
   include IncomingMailsHelper  
   include NotifierHelper
+  include MessagesHelper
     
 # Question: we use something like Notifier.send_help to get a message. This looks like 
 # and instance method, so how can we call it for Notifier? Why don't we have to define
@@ -44,15 +45,18 @@ class Notifier < ActionMailer::Base
     end
   end
 
-  def send_group_message(recipients, content, subject, id, response_time_limit, bcc=false)
-    @content = content
-    @id = id
-    @response_time_limit = response_time_limit
+  def send_group_message(params) #recipients, content, subject, id, response_time_limit, bcc=false)
+    @content = params[:content]
+    @id = params[:id]
+    @response_time_limit = params[:response_time_limit]
+    @subject = params[:subject] + ' ' + message_id_tag(:action=>:generate, :id=>@id)
+    @bcc = params[:bcc]
+    @recipients = params[:recipients]
     mail(
-      :to => (bcc ? '' : recipients),
-      :bcc => (bcc ? recipients : ''), 
-      :subject=>subject + " (Message #{id})"
-                                           ) do |format|
+      :to => (@bcc ? '' : @recipients),
+      :bcc => (@bcc ? @recipients : ''), 
+      :subject=>@subject
+                          ) do |format|
       format.text {render 'group_message'}
       format.html {render 'group_message'}
     end 

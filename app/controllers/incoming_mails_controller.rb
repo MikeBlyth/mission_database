@@ -12,6 +12,7 @@ class IncomingMailsController < ApplicationController
       return
     end
     @from_address = params['from']
+    @subject = params['subject']
     @body = params['plain']
     commands = extract_commands(@body)
     if commands.nil? || commands.empty?
@@ -29,7 +30,23 @@ class IncomingMailsController < ApplicationController
       render :text => 'Error: Email commands not recogized', :status => 422, :content_type => Mime::TEXT.to_s
     end
   end # create
-
+  
+  # Is this email confirming the receipt of a message (with possible response included?)
+  def process_message_response
+    response_match = Regexp.new '!([0-9]{1,10})'
+    if @subject =~ /\(#([0-9]{1,10})/ || @body =~ /!([0-9]{1,10})/
+      msg_id = $1
+      message = Message.find_by_id(msg_id)
+      if message
+        message.process_response(@from_member, first_nonblank_line(text) ).
+            sub(/[\s\(\[]*!#{msg_id}[\s\.,\)\]]*/, ' ').strip  # remove the message confirm id from body
+      else
+        Notifier.send_generic(@from_address, "Error: It seems you tried to confirm message ##{msg_id}, " +
+           "but you don't seem to have a message with that ID. Maybe you should contact the sender " +
+           "in person to confirm that you received the message, if that is what you meant to do.").deliver
+      end
+    end
+  end
 
   # Is this message from someone in our database?
   # (look for a contact record having an email_1 or email_2 matching the message From: header)

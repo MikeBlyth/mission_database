@@ -21,6 +21,12 @@ module ApplicationHelper
       return value.downcase == 'unspecified' ? nil_value : value
     end
 
+    # Return first non-blank line from string which may contain many lines.
+    def first_nonblank_line(str)
+      return nil if str.nil? || str.blank?
+      str.lines.find {|line| !line.blank?}.chomp
+    end
+ 
     # Tries sending 'key' to object as method, then as hash key (string and symbol)
     #   so a model, a hash, or other object can be accessed the same way
     def method_or_key(object, key)

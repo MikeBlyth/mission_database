@@ -20,6 +20,7 @@
 #  send_sms            :boolean
 #  user_id             :integer
 #
+include MessagesHelper
 
 class Message < ActiveRecord::Base
   has_many :sent_messages
@@ -141,11 +142,13 @@ class Message < ActiveRecord::Base
 
 #private
 
+  # ToDo: clean up this mess and just give Notifier the Message object!
   def deliver_email(emails)
 #puts "**** deliver_email: emails=#{emails}"
     self.subject ||= 'Message from SIM Nigeria'
-    outgoing = Notifier.send_group_message(emails, self.body, subject, id, 
-          response_time_limit, true) # send using bcc:, not to:
+    outgoing = Notifier.send_group_message(:recipients=>emails, :content=>self.body, 
+        :subject => subject, :id => id, :response_time_limit => response_time_limit, 
+        :bcc => true) # send using bcc:, not to:
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
   end

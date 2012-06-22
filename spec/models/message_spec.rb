@@ -107,16 +107,17 @@ describe Message do
         @message.stub(:members).and_return(@members)  # NB: See above
         @message.stub(:sent_messages).and_return((0..@members.size-1).map{|n| SentMessage.new})
         @message.stub(:subject).and_return('Subject line')
+        @message.stub(:id).and_return(21)
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
       it "Sends an email only" do
         select_media(:email=>true)
         Notifier.should_receive(:send_group_message).
-          with([@members[0].primary_contact.email_1], @message.body, 
-          @message.subject, anything(), 
-          @message.response_time_limit,
-          true)
+          with(:recipients => [@members[0].primary_contact.email_1], :content => @message.body, 
+          :subject => @message.subject, :id => anything(), 
+          :response_time_limit => @message.response_time_limit,
+          :bcc => true)
         @gateway.should_not_receive(:deliver)
         @message.deliver
       end
@@ -147,10 +148,12 @@ describe Message do
       
       it "Sends an email" do
         select_media(:email=>true)
-        Notifier.should_receive(:send_group_message).with(nominal_email_array, @message.body, 
-          @message.subject, anything(), 
-          @message.response_time_limit,
-          true)
+        Notifier.should_receive(:send_group_message).with(:recipients => nominal_email_array, 
+          :content => @message.body, 
+          :subject => @message.subject, 
+          :id => anything(), 
+          :response_time_limit => @message.response_time_limit,
+          :bcc => true)
         @message.deliver
       end
 

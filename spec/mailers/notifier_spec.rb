@@ -275,7 +275,20 @@ describe Notifier do
       message = Notifier.contact_updates('mike@example.com', [])
       message.to_s.should match "No changes"
     end
+  end  # Contact updates
 
+  describe 'group_message' do
+    before(:each) do
+      @message_id = 25
+      @response_time_limit = 15
+      @params = {:recipients => 'mike@example.com', :content => 'Test message', 
+        :subject => "Test Subject Line", :id => @message_id, 
+        :response_time_limit => @response_time_limit, :bcc => true} 
+    end
 
+    it 'adds tag to subject line' do
+      message = Notifier.send_group_message(@params)
+      message.subject.should =~ Regexp.new(@message_id.to_s)
+    end
   end
 end

@@ -14,6 +14,40 @@ module MessagesHelper
     record.created_at.to_s(:date_time)
   end
   
+  #  Generate or find the message id tag used to identify confirmation responses
+  #  A bit complicated because of using different formats in the subject line and the
+  #  message body, and a different format when presenting the message than when confirming it.
+  #  Maybe that's totally unnecessary and we can come up with a single style.
+  #  If action is :generate, the tag is created (a string)
+  #  If action is :find, the tag is searched for; if found, the message number is returned
+  #  If action is :confirm_tag, the confirmation form used in body is returned (e.g., '!500' w quotes)
+  def message_id_tag(params={:id => 0, :text => nil, :location=>:body, :action=>:generate})
+    case params[:action]
+    when :generate
+      if params[:location] == :body
+        return "##{params[:id]}"
+      else
+        return "(SimJos message ##{params[:id]})"
+      end
+    when :find
+      if params[:location] == :body
+        params[:text] =~ /[\s\(\[]*!([0-9]*)/ || params[:text] =~ /confirm +[!#]([0-9]*)/i
+        return $1 ? $1.to_i : nil
+      else
+        params[:text] =~ /SimJos message #([0-9]{1,9})\)/i
+        return $1 ? $1.to_i : nil
+      end
+    when :confirm_tag    # This is for use in an explanation of how to confirm
+      return "'!#{params[:id]}'"
+    end
+  end
+
+  def find_message_id_tag(params={:subject=>nil, :body=>nil})
+    message_id_tag(:action => :find, :text => params[:subject], :location => :subject) ||
+    message_id_tag(:action => :find, :text => params[:body], :location => :body) 
+  end  
+      
+  
   MessageStatuses = {
     -1 => 'Error',
      0 => 'Sent to gateway',
