@@ -167,7 +167,11 @@ raise "send_email with nil email produced" if outgoing.nil?
     assemble_body()
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, body)
-puts "**** gateway_reply=#{gateway_reply}, match=#{gateway_reply =~ /ID: (\w+)/}, $1=#{$1}"        
+#puts "**** gateway_reply=#{gateway_reply}, match=#{gateway_reply =~ /ID: (\w+)/}, $1=#{$1}"      
+puts "**** gateway_reply=#{gateway_reply}"
+match = gateway_reply =~ /ID: (\w+)/
+msg_id = $1
+puts "**** match=${match}, msg_id ($1) = #{$1}"
 # Gives gateway_reply=ID: f6ce4d001b13842cce12e1486e0ac926, match=0, $1=  in heroku, but
 #       gateway_reply=ID: be407fdfc611df569776bf660d5f484a, match=0, $1=be407fdfc611df569776bf660d5f484a
 # in Rails console. 
