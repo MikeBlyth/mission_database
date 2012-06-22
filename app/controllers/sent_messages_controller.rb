@@ -5,7 +5,6 @@ class SentMessagesController < ApplicationController
     list.sorting = {:message_id => 'DESC'}
   end
   include AuthenticationHelper
-  load_and_authorize_resource
 
   def update_status_clickatell
 puts "Clickatell status call with params=#{params}"
