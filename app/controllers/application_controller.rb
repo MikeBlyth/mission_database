@@ -10,7 +10,8 @@ class ApplicationController < ActionController::Base
 
   def require_https
     redirect_to :protocol => "https://" unless (request.protocol=='https://' or request.host=='localhost' or
-        request.host == 'test.host' or request.remote_addr == '127.0.0.1')
+        request.host == 'test.host' or request.host == 'clickatell.com' or
+        request.remote_addr == '127.0.0.1')
   end
 
   rescue_from CanCan::AccessDenied do |exception|
