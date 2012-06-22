@@ -50,8 +50,6 @@ puts "**** body=#{@body}, msg_id=#{msg_id}"
         user_reply = first_nonblank_line(@body)
 puts "**** user_reply='#{user_reply}'"
         user_reply = user_reply.sub(search_target, ' ').strip if user_reply
-puts search_target
-puts "**** user_reply='#{user_reply}', stripped = '#{user_reply.strip}'"
         message.process_response(@from_member, user_reply)
       else
         msg_tag = message_id_tag(:id => msg_id, :action => :create, :location => :body)

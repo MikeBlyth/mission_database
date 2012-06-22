@@ -142,8 +142,8 @@ class Message < ActiveRecord::Base
   def process_response(member, text)
   puts "**** process_response: self.id=#{self.id}, member=#{member}, text=#{text}"
 puts "**** sent_messages = #{self.sent_messages}"
-    sent_message = self.sent_messages.find {|m| m.member_id == member.id}
-puts "**** send_message=#{send_message}"
+    sent_message = self.sent_messages.detect {|m| m.member_id == member.id}
+puts "**** sent_message=#{sent_message}"
     sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
         :confirmation_message=>text, :confirmed_time => Time.now)
   end
