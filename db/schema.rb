@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120620182505) do
+ActiveRecord::Schema.define(:version => 20120622210833) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -226,7 +226,7 @@ ActiveRecord::Schema.define(:version => 20120620182505) do
   end
 
   create_table "messages", :force => true do |t|
-    t.string   "body"
+    t.text     "body"
     t.integer  "from_id"
     t.string   "code"
     t.integer  "confirm_time_limit"

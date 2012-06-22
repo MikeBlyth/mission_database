@@ -74,7 +74,12 @@ class Message < ActiveRecord::Base
       deliver_email(email_addresses)
     end
     if send_sms
-      phone_numbers = members.map {|m| m.primary_contact.phone_1.gsub('+','')}
+      phone_numbers = members.map do |m| 
+        this_contact = m.primary_contact
+        this_phone = this_contact.phone_1 || this_contact.phone_2  # in case there is _2 and not _1
+        this_phone.gsub('+','') if this_phone   # don't want the plus signs on Clickatell
+      end
+      phone_numbers.compact   # remove entries that don't have phone numbers
       deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
     end
     #*********STUB!***********
@@ -194,7 +199,7 @@ raise "send_email with nil email produced" if outgoing.nil?
           :gateway_message_id => gtw_msg_id, 
           :msg_status=>msg_status
           )
-puts "**** self.sent_messages[0].reload.gateway_message_id=#{self.sent_messages[0].reload.gateway_message_id}"          
+#puts "**** self.sent_messages[0].reload.gateway_message_id=#{self.sent_messages[0].reload.gateway_message_id}"          
 #puts "**** gtw_msg_id=#{gtw_msg_id}, msg_msg_status=#{msg_msg_status}"
     else
       ####### MULTIPLE PHONE NUMBERS ################
@@ -205,7 +210,7 @@ puts "**** self.sent_messages[0].reload.gateway_message_id=#{self.sent_messages[
           {:id=>nil, :phone=>nil, :error=>s}
         end
       end
-puts "**** msg_statuses=#{msg_statuses}"
+#puts "**** msg_statuses=#{msg_statuses}"
       member = nil
       @member_phones = self.members.map {|m| {:phone=>m.primary_contact.phone_1, :member=>m}}
 #  puts "**** @member_phones=#{@member_phones}"

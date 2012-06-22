@@ -232,6 +232,18 @@ describe Message do
           @sent_message = @message.sent_messages.first
           @sent_message.msg_status.should == MessagesHelper::MsgError
         end
+    
+        it "does not include empty phone numbers" do
+          @members[1].primary_contact.update_attributes(:phone_1 => nil, :phone_2 => nil)
+          @message.deliver(:sms_gateway=>@gateway)
+          @gateway.numbers.should == [@members[0].primary_contact.phone_1.sub('+', '')]
+        end          
+
+        it "does not include empty phone numbers" do
+          @members[1].primary_contact.update_attributes(:phone_1 => '', :phone_2 => '')
+          @message.deliver(:sms_gateway=>@gateway)
+          @gateway.numbers.should == [@members[0].primary_contact.phone_1.sub('+', '')]
+        end          
 
       end # with multiple phone numbers
     end # message id and status
