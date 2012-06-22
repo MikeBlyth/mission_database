@@ -179,10 +179,12 @@ raise "send_email with nil email produced" if outgoing.nil?
         msg_status = MessagesHelper::MsgError
 #puts "**** gtw_msg_id=#{gtw_msg_id}, msg_status=#{msg_status}"
       end
+puts "**** updating id=#{sent_messages[0].id}, gtw_msg_id=#{gtw_msg_id}"
       self.sent_messages[0].update_attributes(
           :gateway_message_id => gtw_msg_id, 
           :msg_status=>msg_status
           )
+puts "**** self.sent_messages[0].reload.gateway_message_id=#{self.sent_messages[0].reload.gateway_message_id}"          
 #puts "**** gtw_msg_id=#{gtw_msg_id}, msg_msg_status=#{msg_msg_status}"
     else
       ####### MULTIPLE PHONE NUMBERS ################
