@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
   before_filter :require_https, :except => :update_status_clickatell #, :only => [:login, :signup, :change_password] 
 
   def require_https
-puts "**** #{request.headers['REQUEST_URI']}"
     redirect_to :protocol => "https://" unless (request.protocol=='https://' or request.host=='localhost' or
         request.host == 'test.host' or 
         request.headers['REQUEST_URI'] =~ /update_status_clickatell/ or
@@ -19,7 +18,7 @@ puts "**** #{request.headers['REQUEST_URI']}"
   rescue_from CanCan::AccessDenied do |exception|
 # puts "CanCan AccessDenied #{exception.message}\n\tsigned in=#{signed_in?} as #{current_user}, #{current_user.admin if current_user}"
 # puts "CanCan AccessDenied #{exception.message}"
-    puts "**** Access denied by CanCan: #{exception.message} ****" if Rails.env == 'test'
+    puts "**** Access denied by CanCan: #{exception.message} ****"# if Rails.env == 'test'
     if !signed_in? 
       redirect_to signin_path
     else  

@@ -4,7 +4,8 @@ class SentMessagesController < ApplicationController
     config.subform.columns.exclude :message
     list.sorting = {:message_id => 'DESC'}
   end
-  include AuthenticationHelper
+#  include AuthenticationHelper
+skip_authorize_resource :only => :update_status_clickatell
 
   def update_status_clickatell
 puts "Clickatell status call with params=#{params}"

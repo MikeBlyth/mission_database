@@ -5,7 +5,7 @@ class Ability
   def initialize(user)
 #    user ||= User.new # guest user (not logged in)
     if user.nil?
-#puts "No user!"
+puts "No user!"
       cannot :manage, :all
       return
     end
