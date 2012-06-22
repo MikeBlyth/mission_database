@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
     config.ignore_columns.add [:created_at, :updated_at, :lock_version]
   end
 
-  before_filter :require_https #, :only => [:login, :signup, :change_password] 
+  before_filter :require_https, :except => :update_status_clickatell #, :only => [:login, :signup, :change_password] 
 
   def require_https
     redirect_to :protocol => "https://" unless (request.protocol=='https://' or request.host=='localhost' or
