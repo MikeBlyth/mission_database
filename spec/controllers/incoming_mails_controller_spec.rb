@@ -381,6 +381,9 @@ describe IncomingMailsController do
       Contact.stub(:where).and_return([contact])   # have a contact record that matches from line
       @subject_with_tag = 'Re: Important ' + 
         message_id_tag(:id=>@responding_to, :location => :subject, :action=>:generate)
+      @user_reply = "I'm in Kafanchan"
+      @body_with_tag = message_id_tag(:id=>@responding_to, :location => :body, :action=>:confirm_tag) +
+        ' ' + @user_reply
     end
     
     it 'ignores messages without msg_id reply tag' do
@@ -392,6 +395,13 @@ describe IncomingMailsController do
       @params[:subject] = @subject_with_tag
       Message.should_receive(:find_by_id).with(25)
       @message.should_receive(:process_response).with(@member, @params['plain'])
+      post :create, @params
+    end
+
+    it 'processes messages with msg_id in body' do
+      @params[:plain] = @body_with_tag
+      Message.should_receive(:find_by_id).with(25)
+      @message.should_receive(:process_response).with(@member, @user_reply)
       post :create, @params
     end
 

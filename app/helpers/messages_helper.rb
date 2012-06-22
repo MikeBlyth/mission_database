@@ -39,7 +39,7 @@ module MessagesHelper
         return $1 ? $1.to_i : nil
       end
     when :confirm_tag    # This is for use in an explanation of how to confirm
-      return "'!#{params[:id]}'"
+      return "!#{params[:id]}"
     end
   end
 

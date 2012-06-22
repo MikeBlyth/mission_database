@@ -36,17 +36,21 @@ class IncomingMailsController < ApplicationController
   def process_message_response
     # Is this email confirming receipt of a previous message? 
     msg_id = find_message_id_tag(:subject=>@subject, :body=>@body)
+puts "**** body=#{@body}, msg_id=#{msg_id}"
     if msg_id  
       # Does the "confirmed message" id actually match a message?
       message = Message.find_by_id(msg_id)
       if message
         msg_tag = message_id_tag(:id => msg_id, :action => :confirm_tag) # e.g. !2104
-        search_target = Regexp.new('[\s\(\[]*' + "#{Regexp.escape(msg_tag)}" + '[\s\.,\)\]]*')
+        search_target = Regexp.new('[\'\s\(\[]*' + "#{Regexp.escape(msg_tag)}" + '[\'\s\.,\)\]]*')
         # The main reason to strip out the tag (like !2104) from the message is that it may be the
         # first part of the response, if there is one; e.g. "!2104 Kafanchan" replying to a message
         # requesting location. 
         user_reply = first_nonblank_line(@body)
-        user_reply.sub!(search_target, ' ').strip if user_reply
+puts "**** user_reply='#{user_reply}'"
+        user_reply = user_reply.sub(search_target, ' ').strip if user_reply
+puts search_target
+puts "**** user_reply='#{user_reply}', stripped = '#{user_reply.strip}'"
         message.process_response(@from_member, user_reply)
       else
         msg_tag = message_id_tag(:id => msg_id, :action => :create, :location => :body)
