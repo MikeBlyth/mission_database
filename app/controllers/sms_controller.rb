@@ -112,7 +112,7 @@ private
 #puts "**** command=#{command}, text=#{text}, @sender.id=#{@sender.id}, message=#{message.id}"
     if message
 #puts "**** processing(#{@sender}, #{text})"
-      message.process_response(@sender, text)
+      message.process_response(:member => @sender, :response => text, :mode => 'SMS')
       return("Thanks for your response :-)")
     else
       return("Thanks for responding, but message number #{message_id} was not found. Check the number again.")

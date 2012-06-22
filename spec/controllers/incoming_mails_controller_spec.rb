@@ -394,14 +394,16 @@ describe IncomingMailsController do
     it 'processes messages with msg_id in subject' do
       @params[:subject] = @subject_with_tag
       Message.should_receive(:find_by_id).with(25)
-      @message.should_receive(:process_response).with(@member, @params['plain'])
+      @message.should_receive(:process_response).with(:member => @member, :text => @params['plain'], 
+          :mode => 'email')
       post :create, @params
     end
 
     it 'processes messages with msg_id in body' do
       @params[:plain] = @body_with_tag
       Message.should_receive(:find_by_id).with(25)
-      @message.should_receive(:process_response).with(@member, @user_reply)
+      @message.should_receive(:process_response).with(:member => @member, :text => @user_reply, 
+          :mode => 'email')
       post :create, @params
     end
 

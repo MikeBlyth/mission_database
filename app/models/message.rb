@@ -139,13 +139,22 @@ class Message < ActiveRecord::Base
   end
 
   # Do whatever needed to record that 'member' has responded to this message
-  def process_response(member, text)
+  # Do not update a record that already has been marked with MsgResponseReceived
+  def process_response(params={})
+    member=params[:member]
+    text=params[:text]
+    mode=params[:mode] # (SMS or email)
   puts "**** process_response: self.id=#{self.id}, member=#{member}, text=#{text}"
-puts "**** sent_messages = #{self.sent_messages}"
+#puts "**** sent_messages = #{self.sent_messages}"
     sent_message = self.sent_messages.detect {|m| m.member_id == member.id}
-puts "**** sent_message=#{sent_message}"
-    sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
-        :confirmation_message=>text, :confirmed_time => Time.now)
+#puts "**** sent_message=#{sent_message}"
+    if sent_message && sent_message.status < MessagesHelper::MsgResponseReceived  
+      sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
+          :confirmation_message=>text, :confirmed_time => Time.now)
+    else
+      AppLog.create(:code => "Message.response", 
+        :description=>"Message#process_response called with #{params}, but corresponding sent_message record was not found", :severity=>'error')
+    end
   end
 
 #private

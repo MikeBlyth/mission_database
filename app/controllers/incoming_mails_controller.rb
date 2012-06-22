@@ -37,7 +37,7 @@ puts "**** @from_member=#{@from_member}"
   def process_message_response
     # Is this email confirming receipt of a previous message? 
     msg_id = find_message_id_tag(:subject=>@subject, :body=>@body)
-puts "**** body=#{@body}, msg_id=#{msg_id}"
+#puts "**** body=#{@body}, msg_id=#{msg_id}"
     if msg_id  
       # Does the "confirmed message" id actually match a message?
       message = Message.find_by_id(msg_id)
@@ -48,9 +48,9 @@ puts "**** body=#{@body}, msg_id=#{msg_id}"
         # first part of the response, if there is one; e.g. "!2104 Kafanchan" replying to a message
         # requesting location. 
         user_reply = first_nonblank_line(@body)
-puts "**** user_reply='#{user_reply}'"
+#puts "**** user_reply='#{user_reply}'"
         user_reply = user_reply.sub(search_target, ' ').strip if user_reply
-        message.process_response(@from_member, user_reply)
+        message.process_response(:member => @from_member, :text => user_reply, :mode => 'email')
       else
         msg_tag = message_id_tag(:id => msg_id, :action => :create, :location => :body)
         Notifier.send_generic(@from_address, "Error: It seems you tried to confirm message ##{msg_id}, " +

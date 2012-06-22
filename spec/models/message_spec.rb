@@ -331,7 +331,7 @@ describe Message do
            :confirmation_message=>@resp_text, :confirmed_time => instance_of(Time))
       @sent_messages[0].should_not_receive(:update_attributes)
       @sent_messages[2].should_not_receive(:update_attributes)
-      @message.process_response(@member, @resp_text)
+      @message.process_response(:member => @member, :text => @resp_text, :mode => 'email')
     end
   end # processes responses from recipients
 
