@@ -168,12 +168,16 @@ raise "send_email with nil email produced" if outgoing.nil?
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, body)
 puts "**** gateway_reply=#{gateway_reply}, match=#{gateway_reply =~ /ID: (\w+)/}, $1=#{$1}"        
+# Gives gateway_reply=ID: f6ce4d001b13842cce12e1486e0ac926, match=0, $1=  in heroku, but
+#       gateway_reply=ID: be407fdfc611df569776bf660d5f484a, match=0, $1=be407fdfc611df569776bf660d5f484a
+# in Rails console. 
 #puts "**** phone_numbers=#{phone_numbers}"
     ######## SINGLE PHONE NUMBER ########
     gtw_msg_id = nil
     if phone_number_array.size == 1
       if gateway_reply =~ /ID: (\w+)/
         gtw_msg_id = $1
+        gtw_msg_id = gateway_reply[4..99]        # Temporary fix
         msg_status = MessagesHelper::MsgSentToGateway
 puts "**** msg_status=#{msg_status}, gtw_msg_id=#{gtw_msg_id}"
       else
@@ -193,6 +197,7 @@ puts "**** self.sent_messages[0].reload.gateway_message_id=#{self.sent_messages[
       msg_statuses = gateway_reply.split("\n").map do |s|
         if s =~ /ID:\s+(\w+)\s+To:\s+([0-9]+)/
           {:id=>$1, :phone=>"+" + $2}    # Add '+' to phone number for matching from database
+
         else
           {:id=>nil, :phone=>nil, :error=>s}
         end
