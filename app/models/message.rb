@@ -167,7 +167,7 @@ raise "send_email with nil email produced" if outgoing.nil?
     assemble_body()
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, body)
-puts "**** gateway_reply=#{gateway_reply}, match=#{gateway_reply =~ /ID: (\w+)/}"        
+puts "**** gateway_reply=#{gateway_reply}, match=#{gateway_reply =~ /ID: (\w+)/}, $1=#{$1}"        
 #puts "**** phone_numbers=#{phone_numbers}"
     ######## SINGLE PHONE NUMBER ########
     gtw_msg_id = nil
@@ -175,7 +175,7 @@ puts "**** gateway_reply=#{gateway_reply}, match=#{gateway_reply =~ /ID: (\w+)/}
       if gateway_reply =~ /ID: (\w+)/
         gtw_msg_id = $1
         msg_status = MessagesHelper::MsgSentToGateway
-puts "**** msg_status=#{msg_status}, m"
+puts "**** msg_status=#{msg_status}, gtw_msg_id=#{gtw_msg_id}"
       else
         gtw_msg_id = gateway_reply  # Will include error message
         msg_status = MessagesHelper::MsgError
