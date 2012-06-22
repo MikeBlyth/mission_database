@@ -139,7 +139,7 @@ class Message < ActiveRecord::Base
   end
 
   # Do whatever needed to record that 'member' has responded to this message
-  # Do not update a record that already has been marked with MsgResponseReceived
+  # Do not update a record that already has been marked with MessagesHelper::MsgResponseReceived
   def process_response(params={})
     member=params[:member]
     text=params[:text]
@@ -148,7 +148,7 @@ class Message < ActiveRecord::Base
 #puts "**** sent_messages = #{self.sent_messages}"
     sent_message = self.sent_messages.detect {|m| m.member_id == member.id}
 #puts "**** sent_message=#{sent_message}"
-    if sent_message && sent_message.msg_status < MessagesHelper::MsgResponseReceived  
+    if sent_message && (sent_message.nil || sent_message.status < MessagesHelper::MsgResponseReceived ) 
       sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
           :confirmation_message=>text, :confirmed_time => Time.now)
     else
