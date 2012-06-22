@@ -170,6 +170,7 @@ raise "send_email with nil email produced" if outgoing.nil?
 puts "**** gateway_reply=#{gateway_reply}"        
 #puts "**** phone_numbers=#{phone_numbers}"
     ######## SINGLE PHONE NUMBER ########
+    gtw_msg_id = nil
     if phone_number_array.size == 1
       if gateway_reply =~ /ID: (\w+)/
         gtw_msg_id = $1
