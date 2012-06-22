@@ -2,6 +2,7 @@ require 'spec_helper'
 include SimTestHelper
 include ApplicationHelper
 include IncomingMailsHelper
+include MessagesHelper
   
 def rebuild_message
     @params[:message] = "From: #{@params['from']}\r\n" + 
@@ -12,12 +13,12 @@ end
 
 describe IncomingMailsController do
   before(:each) do
-    @params = {
+    @params = HashWithIndifferentAccess.new(
              'from' => 'member@example.com',
              'to' => 'database@sim-nigeria.org',
              'subject' => 'Test message',
-             'plain' => '--content--',
-             }
+             'plain' => '--content--'
+             )
     rebuild_message
     ActionMailer::Base.deliveries.clear  # clear incoming mail queue
   end
@@ -369,5 +370,30 @@ describe IncomingMailsController do
       end
     end # notifies sender of results
   end # Distributes email and sms to groups
-      
+  
+  describe 'handles email responses to group messages' do
+    before(:each) do
+      @responding_to = 25
+      @message = mock_model(Message, :deliver=>true, :process_response => nil)
+      Message.stub(:find_by_id).with(@responding_to).and_return(@message)
+      @member = Factory.stub(:member)
+      contact = mock('contact', :member => @member)
+      Contact.stub(:where).and_return([contact])   # have a contact record that matches from line
+      @subject_with_tag = 'Re: Important ' + 
+        message_id_tag(:id=>@responding_to, :location => :subject, :action=>:generate)
+    end
+    
+    it 'ignores messages without msg_id reply tag' do
+      @message.should_not_receive(:process_response)
+      post :create, @params
+    end
+
+    it 'processes messages with msg_id in subject' do
+      @params[:subject] = @subject_with_tag
+      Message.should_receive(:find_by_id).with(25)
+      @message.should_receive(:process_response).with(@member, @params['plain'])
+      post :create, @params
+    end
+
+  end #    handles email responses to group messages   
 end

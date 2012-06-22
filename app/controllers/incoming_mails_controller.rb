@@ -14,6 +14,7 @@ class IncomingMailsController < ApplicationController
     @from_address = params['from']
     @subject = params['subject']
     @body = params['plain']
+    process_message_response
     commands = extract_commands(@body)
     if commands.nil? || commands.empty?
       Notifier.send_generic(@from_address, "Error: nothing found in your message #{@body[0..160]}")
@@ -33,14 +34,22 @@ class IncomingMailsController < ApplicationController
   
   # Is this email confirming the receipt of a message (with possible response included?)
   def process_message_response
-    response_match = Regexp.new '!([0-9]{1,10})'
-    if @subject =~ /\(#([0-9]{1,10})/ || @body =~ /!([0-9]{1,10})/
-      msg_id = $1
+    # Is this email confirming receipt of a previous message? 
+    msg_id = find_message_id_tag(:subject=>@subject, :body=>@body)
+    if msg_id  
+      # Does the "confirmed message" id actually match a message?
       message = Message.find_by_id(msg_id)
       if message
-        message.process_response(@from_member, first_nonblank_line(text) ).
-            sub(/[\s\(\[]*!#{msg_id}[\s\.,\)\]]*/, ' ').strip  # remove the message confirm id from body
+        msg_tag = message_id_tag(:id => msg_id, :action => :confirm_tag) # e.g. !2104
+        search_target = Regexp.new('[\s\(\[]*' + "#{Regexp.escape(msg_tag)}" + '[\s\.,\)\]]*')
+        # The main reason to strip out the tag (like !2104) from the message is that it may be the
+        # first part of the response, if there is one; e.g. "!2104 Kafanchan" replying to a message
+        # requesting location. 
+        user_reply = first_nonblank_line(@body)
+        user_reply.sub!(search_target, ' ').strip if user_reply
+        message.process_response(@from_member, user_reply)
       else
+        msg_tag = message_id_tag(:id => msg_id, :action => :create, :location => :body)
         Notifier.send_generic(@from_address, "Error: It seems you tried to confirm message ##{msg_id}, " +
            "but you don't seem to have a message with that ID. Maybe you should contact the sender " +
            "in person to confirm that you received the message, if that is what you meant to do.").deliver

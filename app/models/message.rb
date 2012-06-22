@@ -135,6 +135,7 @@ class Message < ActiveRecord::Base
 
   # Do whatever needed to record that 'member' has responded to this message
   def process_response(member, text)
+#puts "**** process_response: member=#{member}, text=#{text}"
     sent_message = self.sent_messages.find {|m| m.member_id == member.id}
     sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
         :confirmation_message=>text)

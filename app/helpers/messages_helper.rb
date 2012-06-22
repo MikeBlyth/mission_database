@@ -22,6 +22,7 @@ module MessagesHelper
   #  If action is :find, the tag is searched for; if found, the message number is returned
   #  If action is :confirm_tag, the confirmation form used in body is returned (e.g., '!500' w quotes)
   def message_id_tag(params={:id => 0, :text => nil, :location=>:body, :action=>:generate})
+#puts "**** params=#{params}"
     case params[:action]
     when :generate
       if params[:location] == :body
