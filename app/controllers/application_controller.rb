@@ -9,8 +9,9 @@ class ApplicationController < ActionController::Base
   before_filter :require_https, :except => :update_status_clickatell #, :only => [:login, :signup, :change_password] 
 
   def require_https
+puts "**** request.host=#{request.host}, request.env[\"HOST\"] = #{request.env["HOST"]}"
     redirect_to :protocol => "https://" unless (request.protocol=='https://' or request.host=='localhost' or
-        request.host == 'test.host' or request.host == 'clickatell.com' or
+        request.host == 'test.host' or request.domain == 'clickatell.com' or
         request.remote_addr == '127.0.0.1')
   end
 
