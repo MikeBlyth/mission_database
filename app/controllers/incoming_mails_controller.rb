@@ -66,6 +66,7 @@ puts "**** user_reply='#{user_reply}', stripped = '#{user_reply.strip}'"
   def from_member
     from = params['from']
     matching_contact = Contact.where('email_1 = ? OR email_2 = ?', from, from).first 
+puts "**** matching_contact=#{matching_contact}, from=#{params['from']}"
     @from_member = matching_contact ? matching_contact.member : nil
   end  
 
