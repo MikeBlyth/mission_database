@@ -1,7 +1,7 @@
 
 class MessagesController < ApplicationController
   active_scaffold :message do |config|
-    config.list.columns = [:created_at, :user, :body,  :send_sms, :send_email, :to_groups, 
+    config.list.columns = [:id, :created_at, :user, :body,  :send_sms, :send_email, :to_groups, 
         :sent_messages, :importance, :status_summary]
     config.create.link.page = true 
     config.columns[:sent_messages].label = 'Sent to'
@@ -9,6 +9,7 @@ class MessagesController < ApplicationController
     config.create.link.inline = false 
     config.update.link = false
     config.actions.exclude :update
+    list.sorting = {:created_at => 'DESC'}
   end
 
   def do_new

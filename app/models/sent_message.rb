@@ -20,8 +20,6 @@ class SentMessage < ActiveRecord::Base
   belongs_to :message
   belongs_to :member
 
-  before_save :set_confirmed_time
-  
   def to_s
     member.full_name_short
   end

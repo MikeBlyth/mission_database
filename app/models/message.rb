@@ -138,7 +138,7 @@ class Message < ActiveRecord::Base
 #puts "**** process_response: member=#{member}, text=#{text}"
     sent_message = self.sent_messages.find {|m| m.member_id == member.id}
     sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
-        :confirmation_message=>text)
+        :confirmation_message=>text, :confirmed_time => Time.now)
   end
 
 #private
