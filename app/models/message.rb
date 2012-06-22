@@ -148,7 +148,7 @@ class Message < ActiveRecord::Base
 #puts "**** sent_messages = #{self.sent_messages}"
     sent_message = self.sent_messages.detect {|m| m.member_id == member.id}
 #puts "**** sent_message=#{sent_message}"
-    if sent_message && (sent_message.nil? || sent_message.msg_status < MessagesHelper::MsgResponseReceived ) 
+    if sent_message && (sent_message.msg_status.nil? || sent_message.msg_status < MessagesHelper::MsgResponseReceived ) 
       sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
           :confirmation_message=>text, :confirmed_time => Time.now)
     else
