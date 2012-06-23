@@ -169,7 +169,7 @@ class Message < ActiveRecord::Base
           :confirmation_message=>text, :confirmed_time => Time.now, :confirmed_mode  => mode)
     else
       AppLog.create(:code => "Message.response", 
-        :description=>"Message#process_response called with #{params}, but corresponding sent_message record was not found", :severity=>'error')
+        :description=>"Message#process_response called for message #{self.id}, member=#{member}, but corresponding sent_message record was not found", :severity=>'error')
     end
   end
 
