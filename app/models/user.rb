@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20110413013605
+# Schema version: 20120623114943
 #
 # Table name: users
 #
@@ -18,6 +18,7 @@
 #  member                :boolean
 #  immigration           :boolean
 #  asst_personnel        :boolean
+#  security              :boolean
 #
 
 class User < ActiveRecord::Base
