@@ -11,7 +11,7 @@ module MessagesHelper
   end
   
   def created_at_column(record)
-    record.created_at.to_s(:date_time)
+    to_local_time(record.created_at)
   end
   
   #  Generate or find the message id tag used to identify confirmation responses
@@ -51,10 +51,10 @@ module MessagesHelper
   
   MessageStatuses = {
     -1 => 'Error',
-     0 => 'Sent to gateway',
-     1 => 'Pending (gateway)',
+     0 => 'Sent',
+     1 => 'Pending',
      2 => 'Delivered',
-     3 => 'Response received'
+     3 => 'Responded'
      }
     
   MsgError = -1

@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120607065210
+# Schema version: 20120622210833
 #
 # Table name: groups
 #
@@ -9,6 +9,7 @@
 #  parent_group_id :integer
 #  created_at      :datetime
 #  updated_at      :datetime
+#  abbrev          :string(255)
 #
 
 class Group < ActiveRecord::Base

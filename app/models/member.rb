@@ -636,6 +636,13 @@ end
     end
     return primary
   end
+  
+  def primary_phone(options={:with_plus => false})
+    contact = self.primary_contact
+    phone = contact.phone_1 || contact.phone_2
+    phone = phone[1..20] if phone && !options[:with_plus] && phone[0]='+'
+    return phone
+  end
 
   def create_contact(options={})
     defaults = {:contact_type_id => Settings.contacts.primary_contact_type_code}

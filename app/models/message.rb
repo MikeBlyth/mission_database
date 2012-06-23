@@ -1,4 +1,28 @@
 # == Schema Information
+# Schema version: 20120622210833
+#
+# Table name: messages
+#
+#  id                  :integer         not null, primary key
+#  body                :text
+#  from_id             :integer
+#  code                :string(255)
+#  confirm_time_limit  :integer
+#  retries             :integer
+#  retry_interval      :integer
+#  expiration          :integer
+#  response_time_limit :integer
+#  importance          :integer
+#  to_groups           :string(255)
+#  created_at          :datetime
+#  updated_at          :datetime
+#  send_email          :boolean
+#  send_sms            :boolean
+#  user_id             :integer
+#  subject             :string(255)
+#
+
+# == Schema Information
 # Schema version: 20120613213558
 #
 # Table name: messages
@@ -74,12 +98,7 @@ class Message < ActiveRecord::Base
       deliver_email(email_addresses)
     end
     if send_sms
-      phone_numbers = members.map do |m| 
-        this_contact = m.primary_contact
-        this_phone = this_contact.phone_1 || this_contact.phone_2  # in case there is _2 and not _1
-        this_phone.gsub('+','') if this_phone   # don't want the plus signs on Clickatell
-      end
-      phone_numbers.compact   # remove entries that don't have phone numbers
+      phone_numbers = members.map { |m| m.primary_phone }.compact
       deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
     end
     #*********STUB!***********
@@ -175,64 +194,52 @@ raise "send_email with nil email produced" if outgoing.nil?
     self.body = body[0..(159-self.timestamp.size-resp_tag.size)] + resp_tag + ' ' + self.timestamp
   end
 
+  # Deliver text messages to an array of phone members, recording their acceptance at the gateway
+  # ToDo: refactor so we don't need to get member-phone number correspondance twice
   def deliver_sms(params)
     sms_gateway = params[:sms_gateway]
     phone_number_array = params[:phone_numbers]
     phone_numbers = phone_number_array.join(',')
 #puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
     assemble_body()
+    #******* CONNECT TO GATEWAY AND DELIVER MESSAGES 
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, body)
-#puts "**** gateway_reply=#{gateway_reply}, match=#{gateway_reply =~ /ID: (\w+)/}, $1=#{$1}"      
-#puts "**** gateway_reply=#{gateway_reply}"
-#match = gateway_reply =~ /ID: (\w+)/
-#msg_id = $1
-#puts "**** match=#{match}, msg_id ($1) = #{$1}"
-# Gives gateway_reply=ID: f6ce4d001b13842cce12e1486e0ac926, match=0, $1=  in heroku, but
-#       gateway_reply=ID: be407fdfc611df569776bf660d5f484a, match=0, $1=be407fdfc611df569776bf660d5f484a
-# in Rails console. 
-#puts "**** phone_numbers=#{phone_numbers}"
-    ######## SINGLE PHONE NUMBER ########
+    #******* PROCESS GATEWAY REPLY (INITIAL STATUSES OF SENT MESSAGES)  
     gtw_msg_id = nil
     if phone_number_array.size == 1
+      #   SINGLE PHONE NUMBER   
       if gateway_reply =~ /ID: (\w+)/
         gtw_msg_id = $1
         gtw_msg_id = gateway_reply[4..99]        # Temporary workaround as $1 doesn't work on Heroku
         msg_status = MessagesHelper::MsgSentToGateway
-#puts "**** msg_status=#{msg_status}, gtw_msg_id=#{gtw_msg_id}"
       else
         gtw_msg_id = gateway_reply  # Will include error message
         msg_status = MessagesHelper::MsgError
-#puts "**** Error: gtw_msg_id=#{gtw_msg_id}, msg_status=#{msg_status}"
       end
-#puts "**** updating id=#{sent_messages[0].id}, gtw_msg_id=#{gtw_msg_id}"
-      self.sent_messages[0].update_attributes(
-          :gateway_message_id => gtw_msg_id, 
-          :msg_status=>msg_status
-          )
-#puts "**** self.sent_messages[0].reload.gateway_message_id=#{self.sent_messages[0].reload.gateway_message_id}"          
-#puts "**** gtw_msg_id=#{gtw_msg_id}, msg_msg_status=#{msg_msg_status}"
+      # Mark the message to this member as being sent
+      self.sent_messages[0].update_attributes(:gateway_message_id => gtw_msg_id, 
+          :msg_status => msg_status)
     else
-      ####### MULTIPLE PHONE NUMBERS ################
+      # MULTIPLE PHONE NUMBERS
+      # Get the Clickatell reply and parse into array of hash like {:id=>'asebi9xxke...', :phone => '2345552228372'}
       msg_statuses = gateway_reply.split("\n").map do |s|
         if s =~ /ID:\s+(\w+)\s+To:\s+([0-9]+)/
-          {:id=>$1, :phone=>"+" + $2}    # Add '+' to phone number for matching from database
+          {:id => $1, :phone => $2}    
         else
-          {:id=>nil, :phone=>nil, :error=>s}
+          {:id => nil, :phone => nil, :error => s}
         end
       end
-#puts "**** msg_statuses=#{msg_statuses}"
-      member = nil
-      @member_phones = self.members.map {|m| {:phone=>m.primary_contact.phone_1, :member=>m}}
-#  puts "**** @member_phones=#{@member_phones}"
+      # Make array to associate members with their numbers
+      @member_phones = self.members.map {|m| {:phone => m.primary_phone, :member => m} }
+      # Update the sent_message records to indicate which have been accepted at Gateway  
       msg_statuses.each do |s|
         if s[:id] && s[:phone]
-  #        member = Member.find self.members.find_index {|m| m.primary_contact.phone_1 == s[:phone]}
-#puts "**** s=#{s}"
+          # Find the right member by matching phone numbers
           member = @member_phones.find{|m| m[:phone]==s[:phone]}[:member]
-#puts "**** member=#{member}"
+          # Find the right sent_message by matching member & message
           sent_message = SentMessage.where(:member_id=>member.id, :message_id=>self.id).first
-#puts "**** sent_message.inspect=#{sent_message.inspect}"
+          # Update the sent_message
           sent_message.update_attributes(
               :gateway_message_id => s[:id], 
               :msg_status=> MessagesHelper::MsgSentToGateway

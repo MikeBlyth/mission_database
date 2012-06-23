@@ -1,7 +1,7 @@
 class SentMessagesController < ApplicationController
   active_scaffold :sent_message do |config|
-    config.list.columns = [:id, :gateway_message_id, :member, :msg_status, :confirmed_time, :confirmed_mode, :confirmation_message]
-    config.subform.columns.exclude :message
+    config.list.columns = [:id, :message_id, :member, :msg_status, :confirmed_time, :confirmed_mode, :confirmation_message]
+ #   config.subform.columns.exclude :message
     list.sorting = {:message_id => 'DESC'}
   end
 #  include AuthenticationHelper
