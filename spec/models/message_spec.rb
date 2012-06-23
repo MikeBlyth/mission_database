@@ -328,7 +328,8 @@ describe Message do
       @resp_text = 'I got it'
       @sent_messages[1].should_receive(:update_attributes).
           with(:msg_status=>MessagesHelper::MsgResponseReceived,
-           :confirmation_message=>@resp_text, :confirmed_time => instance_of(Time))
+          :confirmed_mode=>"email",
+          :confirmation_message=>@resp_text, :confirmed_time => instance_of(Time))
       @sent_messages[0].should_not_receive(:update_attributes)
       @sent_messages[2].should_not_receive(:update_attributes)
       @message.process_response(:member => @member, :text => @resp_text, :mode => 'email')

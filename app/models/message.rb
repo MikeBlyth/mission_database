@@ -169,7 +169,7 @@ class Message < ActiveRecord::Base
 #puts "**** sent_message=#{sent_message}"
     if sent_message && (sent_message.msg_status.nil? || sent_message.msg_status < MessagesHelper::MsgResponseReceived ) 
       sent_message.update_attributes(:msg_status=>MessagesHelper::MsgResponseReceived,
-          :confirmation_message=>text, :confirmed_time => Time.now, :mode => mode)
+          :confirmation_message=>text, :confirmed_time => Time.now, :confirmed_mode  => mode)
     else
       AppLog.create(:code => "Message.response", 
         :description=>"Message#process_response called with #{params}, but corresponding sent_message record was not found", :severity=>'error')
