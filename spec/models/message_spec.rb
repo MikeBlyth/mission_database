@@ -103,9 +103,7 @@ describe Message do
         # will have to "save" the message first, to trigger the creation of the sent_message
         # records that tie the message to the members.
         # Note that you can't access sent_message records unless they *are* created.
-        @members = members_w_contacts(1)
-        @message.stub(:members).and_return(@members)  # NB: See above
-        @message.stub(:sent_messages).and_return((0..@members.size-1).map{|n| SentMessage.new})
+        @members = members_w_contacts(1, false)
         @message.stub(:subject).and_return('Subject line')
         @message.stub(:id).and_return(21)
         @gateway = MockClickatellGateway.new(nil,@members)
@@ -140,9 +138,7 @@ describe Message do
     describe 'with multiple addresses' do
       
       before(:each) do
-        @members = members_w_contacts(2)
-        @message.stub(:members).and_return(@members)   # NB: See above
-        @message.stub(:sent_messages).and_return((0..@members.size-1).map{|n| SentMessage.new})
+        @members = members_w_contacts(2, false)
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       

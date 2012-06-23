@@ -184,7 +184,12 @@ class Message < ActiveRecord::Base
         :bcc => true) # send using bcc:, not to:
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
-#    sent_messages.where("
+    # Mark all as being sent, but only if they have an email address
+    # This is terribly inefficient ... need to find a way to use a single SQL statement
+    sent_messages.each do |sm| 
+puts sm.inspect
+      sm.update_attributes(:msg_status => MsgSentToGateway) if sm.member.primary_email
+    end
   end
   
   def assemble_body

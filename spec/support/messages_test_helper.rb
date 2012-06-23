@@ -16,10 +16,16 @@ module MessagesTestHelper
   def member_w_contact(use_stub=true)
     factory_method = use_stub ? :stub : :create   # can use either stub or create
     member = Factory.send(factory_method, :member) 
+    phone = random_phone
+    email = "#{rand_string(5)}@test.com"
     contact = Factory.send(factory_method, :contact, :member=>member, 
-        :phone_1 => random_phone,
-        :email_1 => "#{rand_string(5)}@test.com")
-    member.stub(:primary_contact).and_return(contact) if use_stub
+        :phone_1 => phone,
+        :email_1 => email)
+    if use_stub
+      member.stub(:primary_contact).and_return(contact)
+      member.stub(:primary_phone).and_return(phone)
+      member.stub(:primary_email).and_return(email)
+    end
     member.primary_contact.should_not be_nil
     return member
   end    
