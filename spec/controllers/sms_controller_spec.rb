@@ -224,7 +224,7 @@ describe SmsController do
         Group.stub(:primary_group_abbrevs).and_return('cat dog zebrafish')
         @params['Body'] = 'groups'
         post :create, @params   
-        response.body.should == 'cat dog zebrafish'
+        response.body.should  =~ /cat dog zebrafish/
       end
     end
   

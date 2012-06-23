@@ -81,14 +81,13 @@ private
                         ['info <name>', 'get contact info'],
                         ['!21 <reply>', 'reply to msg 21']
                       ]
-    command_summary.map {|c| "#{c[0]}=#{c[1]}"}.join("\n")
+    command_summary.map {|c| "#{c[0]} = #{c[1]}"}.join("\n")
   end
   
   # Send a list of abbreviations for the "primary" groups (primary meaning that)
   # they're important enough to fit into this 160-character string
   def do_list_groups()
-puts "**** Listing groups"
-    Group.primary_group_abbrevs
+    "Some groups: " + Group.primary_group_abbrevs
   end                    
     
 
@@ -125,7 +124,7 @@ puts "**** Listing groups"
       return("sent to #{group.group_name}")
     else
       return( ("Error: no group #{target_group}. Send command 'groups' to list the main ones incl " +
-               do_list_groups)[0..160] )
+               Group.primary_group_abbrevs)[0..160] )
     end
   end
 
