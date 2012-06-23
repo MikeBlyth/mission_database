@@ -6,8 +6,7 @@ include MessagesTestHelper
 describe MessagesController do
 
       before(:each) do
-        @user = Factory(:user, :admin=>true)
-        test_sign_in(@user)
+        test_sign_in_fast
       end
 
   def mock_message(stubs={})

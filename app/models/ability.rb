@@ -20,7 +20,9 @@ puts "No user!"
       return
     else
       can :read, :all
-      can :update, User
+      can :update, [User, Message]
+      can :create, Message
+      can :manage, CalendarEvent
       cannot :manage, [HealthData, PersonnelData]  # Confidential fields
     end
 

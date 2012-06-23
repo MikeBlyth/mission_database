@@ -1,5 +1,10 @@
 
 class MessagesController < ApplicationController
+  include AuthenticationHelper
+  include AuthorizationHelper
+
+load_and_authorize_resource
+
   active_scaffold :message do |config|
     config.list.columns = [:id, :created_at, :user, :body,  :send_sms, :send_email, :to_groups, 
         :sent_messages, :importance, :status_summary]
