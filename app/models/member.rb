@@ -644,6 +644,11 @@ end
     return phone
   end
 
+  def primary_email(options={})
+    contact = self.primary_contact
+    return contact.email_1 || contact.email_2
+  end
+
   def create_contact(options={})
     defaults = {:contact_type_id => Settings.contacts.primary_contact_type_code}
     self.contacts.create(defaults.merge(options))

@@ -78,13 +78,9 @@ class Message < ActiveRecord::Base
   end
 
   def create_sent_messages
-#puts "**** create_sent_messages"
     target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
                      Member.those_in_country
-#puts "**** target_members=#{target_members}"
     self.members = target_members
-#puts "**** target_members=#{target_members}"
-#puts "**** target_members.first.primary_contact=#{target_members.first.primary_contact}"
   end
   
   # Send the messages -- done by creating the sent_message objects, one for each member
@@ -93,12 +89,13 @@ class Message < ActiveRecord::Base
   def deliver(params={})
     puts "**** Message#deliver" if params[:verbose]
     save! if self.new_record?
+    @contact_info = members.map {|m| {:member => m, :phone => m.primary_phone, :email => m.primary_email}}
     if send_email
-      email_addresses = members.map {|m| m.primary_contact.email_1}
+      email_addresses = @contact_info.map {|c| c[:email]}.compact.uniq
       deliver_email(email_addresses)
     end
     if send_sms
-      phone_numbers = members.map { |m| m.primary_phone }.compact
+      phone_numbers = @contact_info.map {|c| c[:phone]}.compact.uniq
       deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
     end
     #*********STUB!***********
@@ -187,6 +184,7 @@ class Message < ActiveRecord::Base
         :bcc => true) # send using bcc:, not to:
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
+#    sent_messages.where("
   end
   
   def assemble_body
