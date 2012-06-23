@@ -15,10 +15,10 @@ module MessagesHelper
   end
 
   def body_column(record)
-    if sms_only && sms_only.size > 50
-      sms_only
+    if record.sms_only && record.sms_only.size > 50
+      record.sms_only
     else
-      body[0..140]
+      record.body[0..140]
     end
   end
   
