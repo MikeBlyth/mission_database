@@ -62,5 +62,10 @@ class Group < ActiveRecord::Base
     abbrev = group_name[0..5].sub(' ','').downcase if abbrev.blank?
     errors.add(:abbrev,'must not include spaces') if abbrev =~ / /
   end
+  
+  def self.primary_group_abbrevs
+     self.where(:primary=>true).map {|g| g.abbrev}.join(' ')
+  end
+
     
 end

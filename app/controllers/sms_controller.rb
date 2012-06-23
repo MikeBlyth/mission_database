@@ -62,15 +62,37 @@ private
     return "Nothing found in your message!" if body.blank?
     command, text = extract_commands(body)[0] # parse to first word=command, rest = text
     return case command.downcase
+           when 'group', 'groups' then do_list_groups
            when 'info' then do_info(text)  
            when 'd' then group_deliver(text)
+           when '?', 'help' then do_help(text)
            when /\A!/ then process_response(command, text)
            # More commands go here ...
            else
              "unknown '#{command}'. Info=" + (do_info(text) if Member.find_with_name(text))
            end
   end
+
+  # Return help
+  # ToDo -- add specific help about commands
+  def do_help(text)
+    command_summary = [ ['d <group>', 'deliver msg to grp'], 
+                        ['groups', 'list main grps'],
+                        ['info <name>', 'get contact info'],
+                        ['!21 <reply>', 'reply to msg 21']
+                      ]
+    command_summary.map {|c| "#{c[0]}=#{c[1]}"}.join("\n")
+  end
   
+  # Send a list of abbreviations for the "primary" groups (primary meaning that)
+  # they're important enough to fit into this 160-character string
+  def do_list_groups()
+puts "**** Listing groups"
+    Group.primary_group_abbrevs
+  end                    
+    
+
+  # Return info about an individual named in text  
   def do_info(text)
     member = Member.find_with_name(text).first  
     if member
@@ -102,7 +124,8 @@ private
       # message.deliver  # Don't forget to deliver!
       return("sent to #{group.group_name}")
     else
-      return("Error: no group #{target_group}")
+      return( ("Error: no group #{target_group}. Send command 'groups' to list the main ones incl " +
+               do_list_groups)[0..160] )
     end
   end
 

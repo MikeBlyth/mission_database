@@ -201,6 +201,32 @@ describe SmsController do
       end # 'when group is found'
       
     end # d (group deliver)
+    
+    describe 'help' do
+      before(:each) do
+      end
+      
+      it 'responds to help by itself' do
+        @params['Body'] = "help"
+        post :create, @params   
+        response.body.should match /get contact info/
+      end
+      it 'responds to ? by itself' do
+        @params['Body'] = "?"
+        post :create, @params   
+        response.body.should match /get contact info/
+      end
+    end  # help
+    
+    describe 'groups' do
+      
+      it 'returns a list of primary groups' do
+        Group.stub(:primary_group_abbrevs).and_return('cat dog zebrafish')
+        @params['Body'] = 'groups'
+        post :create, @params   
+        response.body.should == 'cat dog zebrafish'
+      end
+    end
   
   end # 'handles these commands:'
 
