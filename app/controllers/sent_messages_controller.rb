@@ -2,7 +2,9 @@ class SentMessagesController < ApplicationController
   active_scaffold :sent_message do |config|
     config.list.columns = [:id, :message_id, :member, :msg_status, :confirmed_time, :confirmed_mode, :confirmation_message]
  #   config.subform.columns.exclude :message
-    list.sorting = {:message_id => 'DESC'}
+    list.sorting = {:message_id => 'DESC', :confirmed_time => 'DESC'}
+    config.delete.link = false
+    config.show.link = false
   end
 #  include AuthenticationHelper
 skip_authorize_resource :only => :update_status_clickatell
