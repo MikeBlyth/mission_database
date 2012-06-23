@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120623090700) do
+ActiveRecord::Schema.define(:version => 20120623114943) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -381,6 +381,7 @@ ActiveRecord::Schema.define(:version => 20120623090700) do
     t.boolean  "member"
     t.boolean  "immigration"
     t.boolean  "asst_personnel"
+    t.boolean  "security"
   end
 
   add_index "users", ["name"], :name => "index_users_on_name", :unique => true

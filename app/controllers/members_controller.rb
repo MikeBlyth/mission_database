@@ -48,8 +48,6 @@ class MembersController < ApplicationController
     config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
     config.columns[:ministry].inplace_edit = true
-    config.columns[:groups].form_ui = :select 
-    config.columns[:groups].inplace_edit = true
     config.columns[:status].form_ui = :select 
     config.columns[:status].inplace_edit = true
     config.columns[:child].inplace_edit = true
