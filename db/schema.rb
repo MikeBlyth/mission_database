@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120623114943) do
+ActiveRecord::Schema.define(:version => 20120623163721) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -242,6 +242,7 @@ ActiveRecord::Schema.define(:version => 20120623114943) do
     t.boolean  "send_sms"
     t.integer  "user_id"
     t.string   "subject"
+    t.string   "sms_only"
   end
 
   create_table "ministries", :force => true do |t|

@@ -7,15 +7,20 @@
     #top
       %table{:style=>'width: 300px'}
         %tr
+          %td.for-sms
+            = form.label :sms_only, "SMS Text Message"
+            %br
+            = form.text_area :sms_only, :size => "40x2", :value=>"(from #{@current_user.name})"
+        %tr
           %td.for-email
             = form.label :subject, "Subject (for email only)"
             %br
             = form.text_field :subject
         %tr
           %td
-            = form.label :body, "Message (email and/or SMS)"
+            = form.label :body, "Email Message (or \"More Information\" for SMS)", :id => 'body-label'
             %br
-            = form.text_area :body, :size => "40x3", :maxlength=>"300", :value=>"(from #{@current_user.name})"
+            = form.text_area :body, :size => "40x4", :value=>"(from #{@current_user.name})"
         %tr
           %td
             %table

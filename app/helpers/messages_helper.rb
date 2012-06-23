@@ -13,6 +13,14 @@ module MessagesHelper
   def created_at_column(record)
     to_local_time(record.created_at)
   end
+
+  def body_column(record)
+    if sms_only && sms_only.size > 50
+      sms_only
+    else
+      body[0..140]
+    end
+  end
   
   #  Generate or find the message id tag used to identify confirmation responses
   #  A bit complicated because of using different formats in the subject line and the

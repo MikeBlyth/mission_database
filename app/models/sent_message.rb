@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120623090700
+# Schema version: 20120623163721
 #
 # Table name: sent_messages
 #
@@ -13,8 +13,6 @@
 #  confirmation_message :string(255)
 #  attempts             :integer         default(0)
 #  gateway_message_id   :string(255)
-#  phone                :string(255)
-#  email                :string(255)
 #
 
 class SentMessage < ActiveRecord::Base

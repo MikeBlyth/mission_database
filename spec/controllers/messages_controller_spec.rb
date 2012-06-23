@@ -6,7 +6,8 @@ include MessagesTestHelper
 describe MessagesController do
 
       before(:each) do
-        test_sign_in_fast
+        @user = Factory(:user, :admin=>true)
+        test_sign_in(@user)
       end
 
   def mock_message(stubs={})
@@ -40,7 +41,7 @@ describe MessagesController do
     it 'sends the message' do
       @members = members_w_contacts(1, false)
       AppLog.should_receive(:create)
-      post :create, :record => {:body=>"test", :to_groups=>["1", '2'], :send_sms=>true}
+      post :create, :record => {:sms_only=>"test "*10, :to_groups=>["1", '2'], :send_sms=>true}
     end  
   end
   

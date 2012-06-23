@@ -4,7 +4,7 @@
 // Message page
 
     $(function() { 
-        $("#record_body").charCount({
+        $("#record_sms_only").charCount({
             allowed: 150,	
             warning: 20,
             counterText: 'Characters left for one SMS message: '	

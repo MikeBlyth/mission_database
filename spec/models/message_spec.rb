@@ -5,11 +5,11 @@ include MessagesTestHelper
 
 describe Message do
     before(:each) do
-      @message = Message.new(:body=>'test message')
+      @message = Message.new(:body=>'test message', :sms_only => '#'*50)
       @message.stub(:created_at).and_return(Time.now)
     end
 
-  describe 'initialization' do
+  describe 'initialization and validation' do
     
     it 'sets defaults [NB: adjust tests if you change defaults!]' do
       m = Message.new
@@ -21,7 +21,14 @@ describe Message do
       m.importance.should_not be_nil
       # The names or actual settings might get changed here, so this test may be modified   
     end     
-    
+  
+    it 'catches SMS messages that are too short' do
+      @message.send_sms = true
+      @message.sms_only = 'short'
+      @message.save
+      @message.errors[:sms_only].should_not be_blank
+    end
+      
   end # initialization
 
   describe 'to_groups field' do
@@ -92,7 +99,8 @@ describe Message do
         silence_warnings { AppLog = mock('AppLog').as_null_object }
       # *** Message ***
         @created_at = Time.new(2000,06,07,14,20)
-        @message = Factory.build(:message, :created_at=>@created_at, :subject=>'Subject line')
+        @message = Factory.build(:message, :created_at=>@created_at, :subject=>'Subject line',
+            :sms_only => "#"*40)
     end
 
     describe 'with single addresses' do
@@ -122,8 +130,9 @@ describe Message do
 
       it "Sends an SMS" do
         select_media(:sms=>true)
+        @message.sms_only = "#"*50
         Notifier.should_not_receive(:send_group_message)
-        @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body)
+        @gateway.should_receive(:deliver).with(nominal_phone_number_string, Regexp.new(@message.sms_only))
         @message.deliver(:sms_gateway=>@gateway)
       end
       
@@ -131,7 +140,7 @@ describe Message do
         select_media(:sms=>true)
         @message.response_time_limit = 15
         @message.deliver(:sms_gateway=>@gateway)
-        @message.body.should match Regexp.new("!"+@message.id.to_s)
+        @message.sms_only.should match Regexp.new("!"+@message.id.to_s)
       end
     end # with single addresses
 
@@ -155,8 +164,8 @@ describe Message do
 
       it "Sends an SMS" do
         select_media(:sms=>true)
-        
-        @gateway.should_receive(:deliver).with(nominal_phone_number_string, nominal_body).
+        @message.sms_only = "#"*50
+        @gateway.should_receive(:deliver).with(nominal_phone_number_string, Regexp.new(@message.sms_only)).
           and_return('ID: AAAAAAAA') # return is not used in this test but is needed
         @message.deliver(:sms_gateway=>@gateway)
       end

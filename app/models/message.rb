@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120622210833
+# Schema version: 20120623163721
 #
 # Table name: messages
 #
@@ -20,6 +20,7 @@
 #  send_sms            :boolean
 #  user_id             :integer
 #  subject             :string(255)
+#  sms_only            :string(255)
 #
 
 # == Schema Information
@@ -52,9 +53,10 @@ class Message < ActiveRecord::Base
   belongs_to :user
   validates_numericality_of :confirm_time_limit, :retries, :retry_interval, 
       :expiration, :response_time_limit, :importance, :allow_nil => true
-  validates_presence_of :body, :message=>'You need to write something in your message!'
+  validates_presence_of :body, :if => 'send_email', :message=>'You need to write something in your message!'
   validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
   validate :sending_medium
+  validate :sms_long_enough
   before_save :convert_groups_to_string
   after_save  :create_sent_messages   # each record represents this message for one recipient
   
@@ -74,7 +76,7 @@ class Message < ActiveRecord::Base
   end 
 
   def to_s
-    "#{timestamp}: #{body[0..50]}"
+    "#{timestamp}: #{(body || sms_only)[0..50]}"
   end
 
   def create_sent_messages
@@ -192,9 +194,9 @@ puts sm.inspect
     end
   end
   
-  def assemble_body
+  def assemble_sms
     resp_tag = response_time_limit? ? " !#{self.id}" : ''
-    self.body = body[0..(159-self.timestamp.size-resp_tag.size)] + resp_tag + ' ' + self.timestamp
+    self.sms_only = sms_only[0..(159-self.timestamp.size-resp_tag.size)] + resp_tag + ' ' + self.timestamp
   end
 
   # Deliver text messages to an array of phone members, recording their acceptance at the gateway
@@ -204,10 +206,10 @@ puts sm.inspect
     phone_number_array = params[:phone_numbers]
     phone_numbers = phone_number_array.join(',')
 #puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
-    assemble_body()
+    assemble_sms()
     #******* CONNECT TO GATEWAY AND DELIVER MESSAGES 
     gateway_reply = 
-      sms_gateway.deliver(phone_numbers, body)
+      sms_gateway.deliver(phone_numbers, sms_only)
     #******* PROCESS GATEWAY REPLY (INITIAL STATUSES OF SENT MESSAGES)  
     gtw_msg_id = nil
     if phone_number_array.size == 1
@@ -261,4 +263,13 @@ puts sm.inspect
       errors.add(:base,'Must select a message type (email, SMS, etc.)')
     end
   end
+  
+  def sms_long_enough
+    if send_sms && (sms_only.nil? || sms_only.size < 40 )
+      errors.add(:sms_only, 'too short, maybe you should add a favorite quote :-)')
+    end
+puts "**** errors=#{errors}"
+return false
+  end
+  
 end
