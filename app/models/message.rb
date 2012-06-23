@@ -106,7 +106,7 @@ class Message < ActiveRecord::Base
   end
 
   def timestamp
-    t = created_at.getlocal
+    t = created_at.to_local_time
     hour = t.hour
     if (0..9).include?(hour) || (13..21).include?(hour)
       str = (t.strftime('%e%b')+t.strftime('%l')[1]+t.strftime(':%M%P'))[0..9]
