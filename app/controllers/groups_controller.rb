@@ -10,6 +10,7 @@ class GroupsController < ApplicationController
     list.sorting = {:group_name => 'ASC'}
     config.show.link = false
     config.columns[:group_name].inplace_edit = true
+    config.columns[:abbrev].inplace_edit = true
     config.columns[:type_of_group].inplace_edit = true
     config.columns[:parent_group].inplace_edit = true
     config.columns[:parent_group].form_ui = :select 
