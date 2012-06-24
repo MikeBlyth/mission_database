@@ -15,8 +15,7 @@ describe SmsController do
 #    silence_warnings {AppLog = double('AppLog').as_null_object}
     # Target -- the person being inquired about in info command
     @target = Factory.stub(:member, :last_name=>'Target')  # Request is going to be for this person's info
-    @sender = 5# Factory.stub(:member)
-puts "4 **** @sender=#{@sender}"
+    @sender = Factory.stub(:member)
     @sender.stub(:shorter_name).and_return('V Anderson')
     Member.stub(:find_by_phone).and_return(@sender)
     @from = '+2348030000000'  # This is the number of incoming SMS
@@ -27,7 +26,6 @@ puts "4 **** @sender=#{@sender}"
   describe 'logging' do
 
     describe 'accepted messages' do
-puts "3 **** @sender=#{@sender}"
       before(:each) do
        # Contact.stub(:find_by_phone_1).and_return(true)
        Member.stub(:find_by_phone).and_return(@sender)
@@ -78,7 +76,6 @@ puts "3 **** @sender=#{@sender}"
     describe "'info'" do
 
       describe 'when target name not found' do
-puts "2 **** @sender=#{@sender}"
         it "gives error message" do
           Member.stub(:find_with_name).and_return([])
           @params[:Body] = "info stranger"
@@ -221,15 +218,6 @@ puts "2 **** @sender=#{@sender}"
       end
     end  # help
     
-    describe 'location' do
-puts "**** @sender=#{@sender}"
-      @sender.should_receive(:update_location).with('Cannes')
-      it 'sets member location' do
-        @params['Body'] = 'location Cannes'
-        post :create, @params
-      end
-    end  
-
     describe 'groups' do
       
       it 'returns a list of primary groups' do
@@ -240,6 +228,14 @@ puts "**** @sender=#{@sender}"
       end
     end
   
+    describe 'location' do
+      it 'sets member location' do
+        @sender.should_receive(:update_reported_location).with('Cannes')
+        @params['Body'] = 'location Cannes'
+        post :create, @params
+      end
+    end  
+
   end # 'handles these commands:'
 
   describe 'handles responses to messages' do

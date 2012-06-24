@@ -627,6 +627,10 @@ end
     end         
   end
   
+  def update_reported_location(text)
+    self.update_attributes(:reported_location=>text, :reported_location_date =>Time.now)
+  end  
+  
   # Finds primary contact for this member:
   # * His own contact record marked as primary (arbitrary selection if more than one)
   # * His spouse's contact marked as primary, if he has none himself

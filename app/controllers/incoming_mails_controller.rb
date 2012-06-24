@@ -124,6 +124,11 @@ private
 #puts "****** AFTER DELIVER *********"
   end
 
+  def do_location(text)
+    @sender.update_reported_location(text)
+    Notifier.send_generic(from, 'Your location has been updated to ' + text).deliver
+  end  
+
   def group_deliver(text, command)
     unless text =~ /\A\s*\S+\s+(.*?):\s*(.*)/m  # "d <groups>: <body>..."  (body is multi-line)
       return("I don't understand. To send to groups, separate the group names with spaces" +

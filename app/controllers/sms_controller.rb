@@ -62,9 +62,10 @@ private
     return "Nothing found in your message!" if body.blank?
     command, text = extract_commands(body)[0] # parse to first word=command, rest = text
     return case command.downcase
+           when 'd' then group_deliver(text)
            when 'group', 'groups' then do_list_groups
            when 'info' then do_info(text)  
-           when 'd' then group_deliver(text)
+           when 'location' then do_location(text)  
            when '?', 'help' then do_help(text)
            when /\A!/ then process_response(command, text)
            # More commands go here ...
@@ -79,6 +80,7 @@ private
     command_summary = [ ['d <group>', 'deliver msg to grp'], 
                         ['groups', 'list main grps'],
                         ['info <name>', 'get contact info'],
+                        ['location <place>', 'set current loc'],
                         ['!21 <reply>', 'reply to msg 21']
                       ]
     command_summary.map {|c| "#{c[0]} = #{c[1]}"}.join("\n")
@@ -89,7 +91,11 @@ private
   def do_list_groups()
     "Some groups: " + Group.primary_group_abbrevs
   end                    
-    
+  
+  def do_location(text)
+    @sender.update_reported_location(text)
+    return 'Your location has been updated to ' + text
+  end  
 
   # Return info about an individual named in text  
   def do_info(text)

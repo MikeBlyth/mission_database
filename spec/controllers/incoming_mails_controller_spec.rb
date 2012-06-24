@@ -285,6 +285,16 @@ describe IncomingMailsController do
       end
     end #help
     
+#    describe 'location' do
+#      it 'sends basic help info' do
+#        Contact.stub_chain(:where, :member).and_return(@member)
+#        @member.should_receive(:update_attributes).with('Cannes', instance_of(Date))
+#        Notifier.should_receive(:send_generic).with(/Cannes/)
+#        @params['plain'] = "location Cannes"
+#        post :create, @params
+#      end
+#    end      
+    
   end # handles these commands
    
   describe 'distributes email & sms to groups' do
