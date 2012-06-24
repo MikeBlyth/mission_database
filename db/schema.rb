@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120623215914) do
+ActiveRecord::Schema.define(:version => 20120624072326) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -215,6 +215,9 @@ ActiveRecord::Schema.define(:version => 20120623215914) do
     t.text     "school"
     t.integer  "school_grade"
     t.string   "photo"
+    t.boolean  "in_country"
+    t.string   "reported_location"
+    t.date     "reported_location_date"
   end
 
   add_index "members", ["country_id"], :name => "fk_countries"

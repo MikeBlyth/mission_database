@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120622210833
+# Schema version: 20120624072326
 #
 # Table name: groups
 #
@@ -10,6 +10,7 @@
 #  created_at      :datetime
 #  updated_at      :datetime
 #  abbrev          :string(255)
+#  primary         :boolean
 #
 
 class Group < ActiveRecord::Base
