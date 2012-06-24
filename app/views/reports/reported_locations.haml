@@ -1,0 +1,18 @@
+.active_scaffold
+%h2 #{@title}
+%table.whereis
+  %th Name
+  %th Current Base Location
+  %th Reported Location & time
+  %th Email
+  %th Phone
+  %tbody
+  - @families.each do |f|
+    - formatted = family_data_formatted(f)
+    %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
+      %td= "#{formatted[:couple]}" + (f.status.code == 'field' ? '' : " (#{f.status.description})")
+      %td= "#{f.reported_location}"
+      %td= f.reported_locations
+      %td= smart_join(formatted[:emails], "; ")
+      %td= smart_join(formatted[:phones], "; ")
+

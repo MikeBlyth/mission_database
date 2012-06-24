@@ -11,6 +11,23 @@ module MembersHelper
       super
     end
   end
+  
+  # How many hours since this member's "reported_location" was reported?
+  # Return nil if location or time not defined, or if more than maximum time has elapsed
+  def reported_location_staleness
+    return nil unless reported_location && reported_location_date
+    staleness = (Time.now - reported_location_date)/3600.to_i
+    return  staleness < MaxReportedLocStaleness ? staleness : nil
+  end
+
+  # String for display, with the reported location and time.
+  # First name is added if the person is married, so string can be used on a family line
+  # Nil is returned if more than maximum time has elapsed since report of location
+  def reported_location_w_time(with_name=false)
+    staleness = reported_location_staleness || return
+    reply = with_name ? "#{first_name}: " : ''
+    reply << "#{reported_location} at #{to_local_time(reported_location_date, :date_time_short)}"
+  end
 
   # Needed to suppress the 'Replace with new record' button on edit page
   def column_show_add_new(column, associated, record)

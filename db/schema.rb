@@ -217,7 +217,7 @@ ActiveRecord::Schema.define(:version => 20120624072326) do
     t.string   "photo"
     t.boolean  "in_country"
     t.string   "reported_location"
-    t.date     "reported_location_date"
+    t.datetime "reported_location_date"
   end
 
   add_index "members", ["country_id"], :name => "fk_countries"

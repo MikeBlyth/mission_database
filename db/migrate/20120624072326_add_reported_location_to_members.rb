@@ -2,7 +2,7 @@ class AddReportedLocationToMembers < ActiveRecord::Migration
   def self.up
     add_column :members, :in_country, :boolean
     add_column :members, :reported_location, :string
-    add_column :members, :reported_location_date, :date
+    add_column :members, :reported_location_date, :datetime
   end
 
   def self.down

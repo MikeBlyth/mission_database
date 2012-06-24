@@ -54,5 +54,10 @@ module FamiliesHelper
     return formatted
   end
 
+  def reported_locations
+    loc = [head.reported_location_w_time(head.married)]  # location string; start w first name if married
+    loc << wife.reported_location_w_time if head.married # add wife if there is one
+    loc.compact.join('; ')
+  end
 
 end

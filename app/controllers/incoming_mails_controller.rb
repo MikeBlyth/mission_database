@@ -7,7 +7,7 @@ class IncomingMailsController < ApplicationController
 #puts "IncomingController create: params=#{params}"
     @mail = Mail.new(params[:message]) # May or may not want to use this
     @from_member = from_member()
-puts "**** @from_member=#{@from_member}"
+# puts "**** @from_member=#{@from_member}"
     unless from_member
       render :text => 'Refused--unknown sender', :status => 403, :content_type => Mime::TEXT.to_s
       return

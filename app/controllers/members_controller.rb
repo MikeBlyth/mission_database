@@ -18,7 +18,7 @@ class MembersController < ApplicationController
 
     config.label = "Members"
     list.columns = [:name, :spouse, 
-          :child, :work_location, :ministry, :travels, :field_terms, :status, :contacts, :groups]
+          :child, :work_location, :reported_location, :reported_location_date, :ministry, :travels, :field_terms, :status, :contacts, :groups]
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = update.columns = [:name, :name_override,
@@ -48,6 +48,9 @@ class MembersController < ApplicationController
     config.columns[:sex].form_ui = :select 
     config.columns[:ministry].form_ui = :select 
     config.columns[:ministry].inplace_edit = true
+    config.columns[:reported_location].inplace_edit = true
+    config.columns[:reported_location_date].inplace_edit = true
+    config.columns[:reported_location_date].options[:format] = :date_time_short
     config.columns[:status].form_ui = :select 
     config.columns[:status].inplace_edit = true
     config.columns[:child].inplace_edit = true
