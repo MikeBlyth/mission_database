@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120624072326
+# Schema version: 20120624195751
 #
 # Table name: members
 #
@@ -31,7 +31,8 @@
 #  photo                         :string(255)
 #  in_country                    :boolean
 #  reported_location             :string(255)
-#  reported_location_date        :date
+#  reported_location_time        :datetime
+#  reported_location_expires     :datetime
 #
 
 
@@ -627,8 +628,11 @@ end
     end         
   end
   
-  def update_reported_location(text)
-    self.update_attributes(:reported_location=>text, :reported_location_date =>Time.now)
+  DefaultReportLocationExpirationHours = 6
+  
+  def update_reported_location(text, reported_location_time=Time.now, 
+    expires=Time.now + DefaultReportLocationExpirationHours*3600)
+    self.update_attributes(:reported_location=>text, :reported_location_time =>Time.now)
   end  
   
   # Finds primary contact for this member:

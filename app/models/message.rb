@@ -175,10 +175,6 @@ class Message < ActiveRecord::Base
     end
   end
 
-  # Reported Locations -- where someone has reported being just recently, in past day or two typically
-
-  MaxReportedLocStaleness = 48
-
 #private
 
   # ToDo: clean up this mess and just give Notifier the Message object!

@@ -93,8 +93,20 @@ private
   end                    
   
   def do_location(text)
-    @sender.update_reported_location(text)
-    return 'Your location has been updated to ' + text
+    if text
+      if text =~ /( for|next|for next)?\s([\d]+)/
+        duration = $2  # the number of hours
+        location = $`.strip  # part preceding the match, i.e. the location itself
+      else
+        duration = DefaultReportedLocDuration
+        location = text.strip
+      end
+      @sender.update_reported_location(location, Time.now, Time.now + duration*3600) # last is expiration time, now + duration hours
+      return "Your location has been updated to #{location} for the next #{duration} hours."
+    else
+      return "I don't understand. Say something like \"location JETS next 6 hours\" or " +
+             "\"location office\" or even just \"location HQ 6\". "
+    end
   end  
 
   # Return info about an individual named in text  

@@ -230,7 +230,7 @@ describe SmsController do
   
     describe 'location' do
       it 'sets member location' do
-        @sender.should_receive(:update_reported_location).with('Cannes')
+        @sender.should_receive(:update_reported_location).with('Cannes', instance_of(Time), instance_of(Time))
         @params['Body'] = 'location Cannes'
         post :create, @params
       end

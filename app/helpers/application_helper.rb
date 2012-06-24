@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+  MaxReportedLocStaleness = 24 # 24 hours
+  DefaultReportedLocDuration = 6 # 6 hours
+  
+
+
     def code_with_description
       s = self.code.to_s + ' ' + self.description
       return s
