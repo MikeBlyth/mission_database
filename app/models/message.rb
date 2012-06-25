@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120623163721
+# Schema version: 20120625224303
 #
 # Table name: messages
 #
@@ -21,6 +21,7 @@
 #  user_id             :integer
 #  subject             :string(255)
 #  sms_only            :string(255)
+#  following_up        :integer
 #
 
 include MessagesHelper
@@ -32,7 +33,7 @@ class Message < ActiveRecord::Base
   validates_numericality_of :confirm_time_limit, :retries, :retry_interval, 
       :expiration, :response_time_limit, :importance, :allow_nil => true
   validates_presence_of :body, :if => 'send_email', :message=>'You need to write something in your message!'
-  validates_presence_of :to_groups, :message=>'Select at least one group to receive message.'
+  validates :to_groups, :presence => true, :unless => :following_up #:message=>'Select at least one group to receive message.', 
   validate :sending_medium
   validate :sms_long_enough
   before_save :convert_groups_to_string
@@ -86,7 +87,6 @@ class Message < ActiveRecord::Base
   end
 
   def send_followup(params={})
-    save! if self.new_record?
     contact_info = sent_messages.map do |sm|     # make a list like members_contact_info, including only sent_messages w/o response
       m = sm.member  # member to whom this message was sent
       if m.msg_status < MessagesHelper::MsgDelivered

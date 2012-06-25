@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'mock_clickatell_gateway'
 require 'messages_test_helper'
 include MessagesTestHelper
+include SimTestHelper
 
 describe MessagesController do
 
@@ -45,6 +46,23 @@ describe MessagesController do
     end  
   end
   
+  describe 'Follow up' do
+
+    it 'sends the follow-up msg to those not responding to first msg' do
+      @original_msg = Factory(:message, :send_email => true)
       
+      @fast_responder = build_member_without_family
+      @fast_responder.stub(:primary_email).and_return('fast')
+   #   @fast_responder.stub(:primary_phone).and_return('2')  # Doesn't work
+      @fast_responder.stub_chain(:primary_contact, :phone_1).and_return('2')
+      @slow_responder = build_member_without_family
+      @slow_responder.stub(:primary_email).and_return('slow')
+      @slow_responder.stub_chain(:primary_contact, :phone_1).and_return('3')
+      @original_msg.members << [@fast_responder, @slow_responder]
+      @fast_responder.sent_messages.first.update_attributes(:msg_status => MessagesHelper::MsgResponseReceived)
+      Notifier.should_receive(:send_group_message).with(hash_including(:recipients => 'slow'))
+      post :followup_send, :id => @original_msg.id, :record => {:body=>'reminder', :send_email => true}
+    end    
+  end                        
 
 end

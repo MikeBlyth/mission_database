@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120624072326) do
+ActiveRecord::Schema.define(:version => 20120625224303) do
 
   create_table "app_logs", :force => true do |t|
     t.string   "severity"
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(:version => 20120624072326) do
     t.integer  "user_id"
     t.string   "subject"
     t.string   "sms_only"
+    t.integer  "following_up"
   end
 
   create_table "ministries", :force => true do |t|
