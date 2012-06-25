@@ -96,6 +96,7 @@ private
   end                    
   
   def do_location(text)
+puts "****do_location text=#{text}"
     if text
       if text =~ /( for|next|for next)?\s([\d]+)/
         duration = $2.to_i  # the number of hours
