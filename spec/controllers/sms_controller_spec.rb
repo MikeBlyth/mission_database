@@ -229,11 +229,33 @@ describe SmsController do
     end
   
     describe 'location' do
+      before(:each) {Time.stub(:now).and_return Time.new(2000,01,01,12,00)}
+
       it 'sets member location' do
-        @sender.should_receive(:update_reported_location).with('Cannes', instance_of(Time), instance_of(Time))
+        #  def update_reported_location(text, reported_location_time=Time.now, expires=Time.now+DefaultReportedLocDuration*3600)
+        @sender.should_receive(:update_reported_location).with('Cannes', Time.now, Time.now+DefaultReportedLocDuration*3600)
         @params['Body'] = 'location Cannes'
         post :create, @params
       end
+
+      it 'sets member location w duration' do
+        @sender.should_receive(:update_reported_location).with('Cannes', Time.now, Time.now+6.hours)
+        @params['Body'] = 'location Cannes 6'
+        post :create, @params
+      end
+
+      it 'sets member location w duration long format' do
+        @sender.should_receive(:update_reported_location).with('Cannes', Time.now, Time.now+6.hours)
+        @params['Body'] = 'location Cannes for 6 hours'
+        post :create, @params
+      end
+
+      it 'sets member location "location at Cannes for 6"' do
+        @sender.should_receive(:update_reported_location).with('Cannes', Time.now, Time.now+6.hours)
+        @params['Body'] = 'location at Cannes for 6'
+        post :create, @params
+      end
+
     end  
 
   end # 'handles these commands:'

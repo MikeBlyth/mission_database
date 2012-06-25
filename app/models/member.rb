@@ -628,10 +628,8 @@ end
     end         
   end
   
-  DefaultReportLocationExpirationHours = 6
-  
   def update_reported_location(text, reported_location_time=Time.now, 
-    expires=Time.now + DefaultReportLocationExpirationHours*3600)
+    expires=Time.now + DefaultReportedLocDuration*3600)
     self.update_attributes(:reported_location=>text, :reported_location_time =>Time.now)
   end  
   
