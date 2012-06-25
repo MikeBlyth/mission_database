@@ -45,7 +45,11 @@ load_and_authorize_resource
     @record = Message.find @id
   end
   
-  def followup_send(record)
+  def followup_send
+    @id = parms[:id]
+    message = Message.find @id
+    
+    
   end
 #  def do_edit
 #    super

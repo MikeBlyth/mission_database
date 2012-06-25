@@ -319,7 +319,8 @@ table.children {
 
 #msg-form {
   background-color: #daffcd;
-  width: 500px; }
+  width: 520px;
+  padding: 10px; }
   #msg-form #record_subject {
     width: 300px; }
 
@@ -332,9 +333,15 @@ table.children {
     width: 400px; }
   #msg-followup .note {
     border: 1px solid red;
-    width: 400px;
+    width: 380px;
     padding: 0.5em;
-    margin-bottom: 1em; }
+    margin-bottom: 1em;
+    font-size: smaller; }
+  #msg-followup .msg-quote {
+    border: 1px solid #996666;
+    padding: 0.5em;
+    margin-left: 1em;
+    margin-right: 1em; }
 
 #advanced {
   position: absolute;

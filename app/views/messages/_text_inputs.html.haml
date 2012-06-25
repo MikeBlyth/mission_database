@@ -27,8 +27,9 @@
               = form.label  :send_sms, "Send SMS"
               %br
               = form.check_box  :send_sms         
-            %td 
-              = form.label :retries, :class=>'for-sms'
+            %td &nbsp;
+            %td{:width => '50%', :align=>'right'}
+              = form.label :retries, :class=>'for-sms', :disabled => 'disabled'
               %br
-              = form.select :retries, [['none', 0], ['1',1], ['2',2], ['3',3]], {}, :class=>'for-sms'
+              = form.select :retries, [['none', 0], ['1',1], ['2',2], ['3',3]], {}, :class=>'for-sms', :disabled => 'disabled'
 

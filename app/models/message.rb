@@ -85,25 +85,35 @@ class Message < ActiveRecord::Base
     self.members = target_members
   end
   
+  def members_contact_info
+    members.map {|m| {:member => m, :phone => m.primary_phone, :email => m.primary_email}}
+  end
+
   # Send the messages -- done by creating the sent_message objects, one for each member
   #   members_in_multiple_groups(array) is all the members belonging to these groups and
   #   to_groups_array is the array form of the destination groups for this message
   def deliver(params={})
     puts "**** Message#deliver" if params[:verbose]
     save! if self.new_record?
-    @contact_info = members.map {|m| {:member => m, :phone => m.primary_phone, :email => m.primary_email}}
-    if send_email
-      email_addresses = @contact_info.map {|c| c[:email]}.compact.uniq
-      deliver_email(email_addresses)
-    end
-    if send_sms
-      phone_numbers = @contact_info.map {|c| c[:phone]}.compact.uniq
-      deliver_sms(:sms_gateway=>params[:sms_gateway], :phone_numbers => phone_numbers)
-    end
-    #*********STUB!***********
-#    self.sent_messages.each {|m| m.update_attributes(:gateway_message_id=>'AAAAAAAAAAAAAAAAAAA')}
-#puts "**** email_addresses=#{email_addresses}"
+    contact_info = members_contact_info
+    deliver_email(contact_info) if send_email
+    deliver_sms(:sms_gateway=>params[:sms_gateway], :contact_info => contact_info) if send_sms
   end
+  
+  def send_followup(params={})
+    save! if self.new_record?
+    contact_info = sent_messages.map do |sm|     # make a list like members_contact_info, including only sent_messages w/o response
+      m = sm.member  # member to whom this message was sent
+      if m.msg_status < MsgDelivered
+        {:member => m, :phone => m.primary_phone, :email => m.primary_email} 
+      else
+        nil
+      end
+    end
+    deliver_email(contact_info) if send_email
+    deliver_sms(:sms_gateway=>params[:sms_gateway], :contact_info => contact_info) if send_sms
+  end    
+    
 
   def timestamp
     t = created_at.in_time_zone(SIM::Application.config.time_zone)
@@ -178,8 +188,9 @@ class Message < ActiveRecord::Base
 #private
 
   # ToDo: clean up this mess and just give Notifier the Message object!
-  def deliver_email(emails)
+  def deliver_email(contact_info)
 #puts "**** deliver_email: emails=#{emails}"
+    emails = contact_info.map {|c| c[:email]}.compact.uniq
     self.subject ||= 'Message from SIM Nigeria'
     outgoing = Notifier.send_group_message(:recipients=>emails, :content=>self.body, 
         :subject => subject, :id => id, :response_time_limit => response_time_limit, 
@@ -203,7 +214,7 @@ puts sm.inspect
   # ToDo: refactor so we don't need to get member-phone number correspondance twice
   def deliver_sms(params)
     sms_gateway = params[:sms_gateway]
-    phone_number_array = params[:phone_numbers]
+    phone_number_array = params[:contact_info].map {|c| c[:phone]}.compact.uniq
     phone_numbers = phone_number_array.join(',')
 #puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
     assemble_sms()
