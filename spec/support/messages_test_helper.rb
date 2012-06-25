@@ -46,11 +46,11 @@ module MessagesTestHelper
   end
 
   def nominal_phone_number_string
-    @members.map {|m| m.primary_contact.phone_1.gsub('+','')}.join(',')
+    @members.map {|m| m.primary_phone.gsub('+','')}.join(',')
   end
 
   def nominal_email_array
-    @members.map {|m| m.primary_contact.email_1}
+    @members.map {|m| m.primary_email}
   end
 
   def nominal_body

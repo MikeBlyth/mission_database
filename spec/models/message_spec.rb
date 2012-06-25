@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'mock_clickatell_gateway'
 require 'messages_test_helper'
 include MessagesTestHelper
+include SimTestHelper
 
 describe Message do
     before(:each) do
@@ -153,20 +154,24 @@ describe Message do
       
       it "Sends an email" do
         select_media(:email=>true)
-        Notifier.should_receive(:send_group_message).with(:recipients => nominal_email_array, 
-          :content => @message.body, 
-          :subject => @message.subject, 
-          :id => anything(), 
-          :response_time_limit => @message.response_time_limit,
-          :bcc => true)
+        Notifier.should_receive(:send_group_message) do |params|
+          params[:recipients].should =~ nominal_email_array 
+          params[:content].should == @message.body
+          params[:subject].should == @message.subject
+          params[:response_time_limit].should == @message.response_time_limit
+          params[:bcc].should == true
+        end
         @message.deliver
       end
 
       it "Sends an SMS" do
         select_media(:sms=>true)
         @message.sms_only = "#"*50
-        @gateway.should_receive(:deliver).with(nominal_phone_number_string, Regexp.new(@message.sms_only)).
-          and_return('ID: AAAAAAAA') # return is not used in this test but is needed
+        @gateway.stub(:deliver).and_return('ID: AAAAAAAA') # return is not used in this test but is needed
+        @gateway.should_receive(:deliver) do |phone_numbers, body|
+          phone_numbers.split(',').should =~ @members.map {|m| m.primary_phone}
+          body.should =~ Regexp.new(@message.sms_only)
+        end
         @message.deliver(:sms_gateway=>@gateway)
       end
     end # with multiple addresses
@@ -340,5 +345,35 @@ describe Message do
       @message.process_response(:member => @member, :text => @resp_text, :mode => 'email')
     end
   end # processes responses from recipients
+
+  describe 'lists members not yet having responded' do
+    before(:each) do
+      @message = Factory(:message, :send_email=>true)
+      @fast_responder = build_member_without_family
+      @slow_responder = build_member_without_family
+      @message.members << [@fast_responder, @slow_responder]
+      @sent_messages = @message.sent_messages
+    end
+
+    it 'when one has responded' do
+      @fast_responder.sent_messages.first.update_attributes(:msg_status => MessagesHelper::MsgResponseReceived)
+      @message.members_not_responding.should == [@slow_responder]
+    end
+    
+    it 'when both have responded' do
+      SentMessage.update_all(:msg_status => MessagesHelper::MsgResponseReceived)
+      @message.members_not_responding.should =~ []
+    end
+    
+    it 'when neither have responded' do
+      @message.members_not_responding.should =~ [@fast_responder, @slow_responder]
+    end
+    
+  end   # lists members not yet having responded
+
+
+
+
+
 
 end

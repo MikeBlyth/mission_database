@@ -23,28 +23,6 @@
 #  sms_only            :string(255)
 #
 
-# == Schema Information
-# Schema version: 20120613213558
-#
-# Table name: messages
-#
-#  id                  :integer         not null, primary key
-#  body                :string(255)
-#  from_id             :integer
-#  code                :string(255)
-#  confirm_time_limit  :integer
-#  retries             :integer
-#  retry_interval      :integer
-#  expiration          :integer
-#  response_time_limit :integer
-#  importance          :integer
-#  to_groups           :string(255)
-#  created_at          :datetime
-#  updated_at          :datetime
-#  send_email          :boolean
-#  send_sms            :boolean
-#  user_id             :integer
-#
 include MessagesHelper
 
 class Message < ActiveRecord::Base
@@ -79,10 +57,12 @@ class Message < ActiveRecord::Base
     "#{timestamp}: #{(body || sms_only)[0..50]}"
   end
 
-  def create_sent_messages
+  # Add all addressees who are included in the to_groups
+  # Others can be added before or after this step, which is called by an after_save hook
+  def create_sent_messages  
     target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
                      Member.those_in_country
-    self.members = target_members
+    self.members << target_members
   end
   
   def members_contact_info
@@ -100,11 +80,16 @@ class Message < ActiveRecord::Base
     deliver_sms(:sms_gateway=>params[:sms_gateway], :contact_info => contact_info) if send_sms
   end
   
+  # Array of members who have not yet responded to this message
+  def members_not_responding
+    memb = sent_messages.map { |sm| (sm.msg_status || -1) < MessagesHelper::MsgDelivered ? sm.member : nil }.compact
+  end
+
   def send_followup(params={})
     save! if self.new_record?
     contact_info = sent_messages.map do |sm|     # make a list like members_contact_info, including only sent_messages w/o response
       m = sm.member  # member to whom this message was sent
-      if m.msg_status < MsgDelivered
+      if m.msg_status < MessagesHelper::MsgDelivered
         {:member => m, :phone => m.primary_phone, :email => m.primary_email} 
       else
         nil
@@ -172,7 +157,7 @@ class Message < ActiveRecord::Base
     member=params[:member]
     text=params[:text]
     mode=params[:mode] # (SMS or email)
-  puts "**** process_response: self.id=#{self.id}, member=#{member}, text=#{text}"
+#  puts "**** process_response: self.id=#{self.id}, member=#{member}, text=#{text}"
 #puts "**** sent_messages = #{self.sent_messages}"
     sent_message = self.sent_messages.detect {|m| m.member_id == member.id}
 #puts "**** sent_message=#{sent_message}"
@@ -200,7 +185,6 @@ raise "send_email with nil email produced" if outgoing.nil?
     # Mark all as being sent, but only if they have an email address
     # This is terribly inefficient ... need to find a way to use a single SQL statement
     sent_messages.each do |sm| 
-puts sm.inspect
       sm.update_attributes(:msg_status => MsgSentToGateway) if sm.member.primary_email
     end
   end

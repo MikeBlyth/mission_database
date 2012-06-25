@@ -40,19 +40,19 @@ load_and_authorize_resource
     record.deliver(:sms_gateway => sms_gateway)
   end
 
+  # Send form to user for generating a follow-up on a given message
   def followup
     @id = params[:id]
     @record = Message.find @id
   end
   
+  # Use form from 'followup' to generate new message
   def followup_send
-    @id = parms[:id]
-    message = Message.find @id
-    
-    
+    @id = params[:id]
+    original_message = Message.find @id
+    fu_message = Message.create(params[:record])
+    fu_message.members = original_message.members_not_responding
+    fu_message.deliver(:sms_gateway => sms_gateway)
   end
-#  def do_edit
-#    super
-#    @record.to_groups = @record.to_groups_array # Convert string to integer array
-#  end
+   
 end 
