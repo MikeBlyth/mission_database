@@ -32,7 +32,7 @@ describe SmsController do
       end
       
       it 'creates a log entry for SMS received' do
-        AppLog.should_receive(:create).with({:code => "SMS.received", :description=>"from #{@from}: #{@body}"})
+        AppLog.should_receive(:create).with({:code => "SMS.received", :description=>"from #{@from} (#{@sender.shorter_name}): #{@body}"})
         post :create, @params
       end      
 

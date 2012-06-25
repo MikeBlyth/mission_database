@@ -20,19 +20,22 @@ class SmsController < ApplicationController
 # puts "**** IncomingController create: params=#{params}"
     from = params[:From]  # The phone number of the sender
     body = params[:Body]  # This is the body of the incoming message
+    AppLog.create(:code => "SMS.incoming", :description=>"from=#{from}; body=#{body[0..50]}")
     params.delete 'SmsSid'
     params.delete 'AccountSid'
     params.delete 'SmsMessageSid'
     @sender = from_member(from)  # returns member from this database with matching phone number
     if @sender  # We only accept SMS from registered phone numbers of members
-      AppLog.create(:code => "SMS.received", :description=>"from #{from}: #{body}")
-      resp = process_sms(body)[0..159]    # generate response
-      render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s  # Confirm w incoming gateway that msg received
-      AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}")
-      if SiteSetting[:outgoing_sms].downcase == 'clickatell'  # It's our only gateway so far
-        from = '+2348162522097' if from =~/82591/  # This is only for testing! Remove 
+      begin
+        AppLog.create(:code => "SMS.received", :description=>"from #{from} (#{@sender.shorter_name}): #{body}")
+        resp = process_sms(body)[0..159]    # generate response
+        render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s  # Confirm w incoming gateway that msg received
+        AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}")
         ClickatellGateway.new.deliver(from, resp)
-   #$   send_clickatell('+2348162522097', "Response sent")
+      rescue
+        AppLog.create(:code => "SMS.system_error", :description=>"on create: #{$!}")
+        render :text => "Internal", :status => 500, :content_type => Mime::TEXT.to_s
+        ClickatellGateway.new.deliver(from, "Sorry, there is a bug in my system and I crashed :-(" )
       end
     else  
       AppLog.create(:code => "SMS.rejected", :description=>"from #{from}: #{body}")
