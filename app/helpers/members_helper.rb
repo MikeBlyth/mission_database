@@ -27,6 +27,10 @@ module MembersHelper
     reply = with_name ? "#{first_name}: " : ''
     reply << "#{reported_location} at #{to_local_time(reported_location_time, :date_time_short)}"
   end
+  
+#  def reported_location_time_column(record)
+#    record.reported_location_time#.to_s#(:date_time_short)
+#  end
 
   # Needed to suppress the 'Replace with new record' button on edit page
   def column_show_add_new(column, associated, record)

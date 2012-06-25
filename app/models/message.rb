@@ -268,8 +268,6 @@ puts sm.inspect
     if send_sms && (sms_only.nil? || sms_only.size < 40 )
       errors.add(:sms_only, 'too short, maybe you should add a favorite quote :-)')
     end
-puts "**** errors=#{errors}"
-return false
   end
   
 end

@@ -50,7 +50,8 @@ class MembersController < ApplicationController
     config.columns[:ministry].inplace_edit = true
     config.columns[:reported_location].inplace_edit = true
     config.columns[:reported_location_time].inplace_edit = true
-    config.columns[:reported_location_time].options[:format] = :date_time_short
+    config.columns[:reported_location_time].options[:format] = :date_time
+    config.columns[:reported_location_time].label = 'Rep. Loc. Time'
     config.columns[:status].form_ui = :select 
     config.columns[:status].inplace_edit = true
     config.columns[:child].inplace_edit = true
