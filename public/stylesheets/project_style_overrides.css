@@ -326,6 +326,16 @@ table.children {
 #msg-form #msg-bottom {
   position: relative; }
 
+#msg-followup {
+  width: 400px; }
+  #msg-followup #msg-top, #msg-followup #msg-form {
+    width: 400px; }
+  #msg-followup .note {
+    border: 1px solid red;
+    width: 400px;
+    padding: 0.5em;
+    margin-bottom: 1em; }
+
 #advanced {
   position: absolute;
   top: 0px;

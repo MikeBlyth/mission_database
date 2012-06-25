@@ -42,6 +42,7 @@ load_and_authorize_resource
 
   def followup
     @id = params[:id]
+    @record = Message.find @id
   end
   
   def followup_send(record)
