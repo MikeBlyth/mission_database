@@ -40,6 +40,12 @@ load_and_authorize_resource
     record.deliver(:sms_gateway => sms_gateway)
   end
 
+  def followup
+    @id = params[:id]
+  end
+  
+  def followup_send(record)
+  end
 #  def do_edit
 #    super
 #    @record.to_groups = @record.to_groups_array # Convert string to integer array

@@ -31,5 +31,13 @@ describe MessagesController do
       { :delete => "/messages/1" }.should route_to(:controller => "messages", :action => "destroy", :id => "1")
     end
 
+    it "recognizes and generates #followup" do
+      { :get => "/messages/1/followup" }.should route_to(:controller => "messages", :action => "followup", :id=>'1')
+    end
+
+    it "recognizes and generates #followup_send" do
+      { :post => "/messages/1/followup" }.should route_to(:controller => "messages", :action => "followup_send", :id=>'1')
+    end
+
   end
 end
