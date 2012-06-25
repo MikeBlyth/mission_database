@@ -166,7 +166,7 @@ end
   end
 
   def self.find_by_phone(phone_number)
-    Member.joins(:contacts).where("phone_1 = ? OR phone_2 = ?", phone_number, phone_number).first
+    Member.joins(:contacts).where("phone_1 = ? OR phone_2 = ?", phone_number, phone_number).readonly(false).first
   end
 # *************** End Class methods *************
 
@@ -630,8 +630,10 @@ end
   
   def update_reported_location(text, reported_location_time=Time.now, 
     expires=Time.now + DefaultReportedLocDuration*3600)
-    self.update_attributes(:reported_location=>text, :reported_location_time =>Time.now, 
+puts "**** reported_location_time=#{reported_location_time}, expires=#{expires}, text=#{text}"
+    ok = self.update_attributes(:reported_location=>text, :reported_location_time =>Time.now, 
         :reported_location_expires => expires)
+puts "**** updated: success = #{ok}"
   end  
   
   # Finds primary contact for this member:
