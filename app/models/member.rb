@@ -630,7 +630,8 @@ end
   
   def update_reported_location(text, reported_location_time=Time.now, 
     expires=Time.now + DefaultReportedLocDuration*3600)
-    self.update_attributes(:reported_location=>text, :reported_location_time =>Time.now)
+    self.update_attributes(:reported_location=>text, :reported_location_time =>Time.now, 
+        :reported_location_expires => expires)
   end  
   
   # Finds primary contact for this member:

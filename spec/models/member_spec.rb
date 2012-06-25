@@ -1222,5 +1222,21 @@ describe Member do
       
   end # Export
 
+  describe 'report_location' do
+    
+    it 'performed by update_reported_location' do
+      @member = Factory(:member)
+      @time = Time.new(2000,01,01,12,0)
+      Time.stub(:now).and_return(@time)
+      @member.update_reported_location('Hong Kong')
+      @member.reload.reported_location_time.should == @time
+      @member.reported_location.should == 'Hong Kong'
+      @member.reported_location_expires.should == @time + DefaultReportedLocDuration*3600
+    end
+  end
+      
+      
+      
+
 end
 
