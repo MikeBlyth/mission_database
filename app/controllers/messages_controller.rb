@@ -53,6 +53,7 @@ load_and_authorize_resource
     fu_message = Message.create(params[:record].merge(:following_up => @id))  # a new message object to send the follow up
     fu_message.members = original_message.members_not_responding
     fu_message.deliver
+    flash[:notice] = 'Follow up message sent'
     redirect_to messages_path
   end
    
