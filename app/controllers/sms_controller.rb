@@ -17,7 +17,7 @@ class SmsController < ApplicationController
   # ToDo
   # Remove line for testing; configure for other gateways
   def create  # need the name 'create' to conform with REST defaults, or change routes
- puts "**** IncomingController create: params=#{params}"
+# puts "**** IncomingController create: params=#{params}"
     from = params[:From]  # The phone number of the sender
     body = params[:Body]  # This is the body of the incoming message
     AppLog.create(:code => "SMS.incoming", :description=>"from=#{from}; body=#{body[0..50]}")
@@ -26,7 +26,7 @@ class SmsController < ApplicationController
     params.delete 'SmsMessageSid'
     @possible_senders = from_members(from)  # all members from this database with matching phone number
     @sender = @possible_senders.first # choose one of them
-puts "**** @possible_senders=#{@possible_senders}, @sender=#{@sender}"
+#puts "**** @possible_senders=#{@possible_senders}, @sender=#{@sender}"
     if @sender  # We only accept SMS from registered phone numbers of members
       begin
         AppLog.create(:code => "SMS.received", :description=>"from #{from} (#{@sender.shorter_name}): #{body}")
@@ -159,11 +159,9 @@ private
   def process_response(command, text)
     message_id = command[1..99]
     message = Message.find_by_id(message_id)
-puts "**** command=#{command}, text=#{text}, @sender.id=#{@sender.id}, message=#{message.id}"
-puts message.inspect
+#puts "**** command=#{command}, text=#{text}, @sender.id=#{@sender.id}, message=#{message.id}"
     if message
       @possible_senders.each do |a_member|
-puts "**** processing(#{@sender}, #{a_member}, #{text}, message.id=#{message.id})"
         message.process_response(:member => a_member, :response => text, :mode => 'SMS')
       end
       return("Thanks for your response :-)")

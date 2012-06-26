@@ -157,7 +157,7 @@ class Message < ActiveRecord::Base
     member=params[:member]
     text=params[:text]
     mode=params[:mode] # (SMS or email)
-  puts "**** process_response: self.id=#{self.id}, member=#{member}, text=#{text}"
+#puts "**** process_response: self.id=#{self.id}, member=#{member}, text=#{text}"
 #puts "**** sent_messages = #{self.sent_messages}"
     sent_message = self.sent_messages.detect {|m| m.member_id == member.id}
 #puts "**** sent_message=#{sent_message}"

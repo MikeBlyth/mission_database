@@ -4,11 +4,11 @@ class IncomingMailsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def create  # need the name 'create' to conform with REST defaults, or change routes
-puts "IncomingController create: params=#{params}"
+#puts "IncomingController create: params=#{params}"
     @from_address = params['from']
     @possible_senders = from_member()
-puts "**** Contacts=#{Contact.all.each {|c| c.email_1}.join(' ')}"
-puts "**** @possible_senders=#{@possible_senders}"
+#puts "**** Contacts=#{Contact.all.each {|c| c.email_1}.join(' ')}"
+#puts "**** @possible_senders=#{@possible_senders}"
     @from_member = @possible_senders.first
 # puts "**** @from_member=#{@from_member}"
     if @from_member.nil?
@@ -39,7 +39,7 @@ puts "**** @possible_senders=#{@possible_senders}"
   def process_message_response
     # Is this email confirming receipt of a previous message? 
     msg_id = find_message_id_tag(:subject=>@subject, :body=>@body)
-puts "**** body=#{@body}, msg_id=#{msg_id}"
+#puts "**** body=#{@body}, msg_id=#{msg_id}"
     if msg_id  
       # Does the "confirmed message" id actually match a message?
       message = Message.find_by_id(msg_id)
