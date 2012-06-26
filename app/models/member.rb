@@ -166,9 +166,9 @@ end
   end
 
   def self.find_by_phone(phone_number)
-   matches = Member.joins(:contacts).where("phone_1 = ? OR phone_2 = ?", phone_number, phone_number).readonly(false).all
-   puts "**** matches=#{matches}, class=#{matches.class}"
-   return matches
+    phone_w_plus = "+" + phone_number.sub("+",'')
+    Member.joins(:contacts).where("phone_1 = ? OR phone_2 = ?", phone_w_plus, phone_w_plus).
+      readonly(false).all
   end
 # *************** End Class methods *************
 

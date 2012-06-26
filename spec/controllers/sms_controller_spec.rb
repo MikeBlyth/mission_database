@@ -1,4 +1,4 @@
-#require 'spec_helper'
+require 'spec_helper'
 #include SimTestHelper
 #include ApplicationHelper
 #require '~/sim5/spec/support/messages_test_helper.rb' 
@@ -18,7 +18,7 @@ describe SmsController do
     @target = Factory.stub(:member, :last_name=>'Target')  # Request is going to be for this person's info
     @sender = Factory.stub(:member)
     @sender.stub(:shorter_name).and_return('V Anderson')
-    Member.stub(:find_by_phone).and_return(@sender)
+#    Member.stub(:find_by_phone).and_return([@sender])
     @from = '+2348030000000'  # This is the number of incoming SMS
     @body = "info #{@target.last_name}"
     @params = {:From => @from, :Body => @body}
@@ -29,7 +29,7 @@ describe SmsController do
     describe 'accepted messages' do
       before(:each) do
        # Contact.stub(:find_by_phone_1).and_return(true)
-       Member.stub(:find_by_phone).and_return(@sender)
+       Member.stub(:find_by_phone).and_return([@sender])
       end
       
       it 'creates a log entry for SMS received' do
@@ -45,7 +45,7 @@ describe SmsController do
     
     describe 'rejected messages' do
       it 'creates a log entry for rejected incoming SMS' do
-        Member.stub(:find_by_phone).and_return(nil)
+        Member.stub(:find_by_phone).and_return([])
         AppLog.should_receive(:create).with(hash_including(:code => "SMS.rejected"))
         post :create, @params
       end
@@ -56,12 +56,13 @@ describe SmsController do
   describe 'filters based on member status' do
 
     it 'accepts sms from SIM member (using phone_1)' do
+      Member.stub(:find_by_phone).and_return([@sender])
       post :create, @params
       response.status.should == 200
     end
     
     it 'rejects sms from strangers' do
-      Member.stub(:find_by_phone).and_return(nil)
+      Member.stub(:find_by_phone).and_return([])
       post :create, @params
       response.status.should == 403
     end
@@ -72,6 +73,7 @@ describe SmsController do
   describe 'handles these commands:' do
     before(:each) do
   #    controller.stub(:from_member).and_return(Member.new)   # Just a shortcut to have a contact record that matches from line
+      Member.stub(:find_by_phone).and_return([@sender])
     end      
 
     describe "'info'" do
@@ -270,6 +272,7 @@ describe SmsController do
       # We have to set up a message that the incoming SMS is responding to
       @message = Factory.stub(:message, :send_email => true)
       Message.stub(:find_by_id).and_return(@message)
+      Member.stub(:find_by_phone).and_return([@sender])
       # When a response is received, the sent_message corresponding to the message & user
       #   should be updated to show that it was responded to
       @params['Body'] = "!#{@message.id}"  # e.g. #24 if @message.id is 24
@@ -285,7 +288,7 @@ describe SmsController do
       @member_1.primary_phone.should == @member_2.primary_phone
       @message.members << [@member_1, @member_2]
       @params['Body'] = "!#{@message.id}"  # e.g. #24 if @message.id is 24
- puts "**** @message.id=#{@message.id}"
+      @params[:From] = @member_1.primary_phone
  #     @message.should_receive(:process_response).twice
       post :create, @params
       @message.sent_messages.each {|sm| sm.msg_status.should == MessagesHelper::MsgResponseReceived}
