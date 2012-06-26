@@ -1,6 +1,7 @@
 #require 'spec_helper'
 #include SimTestHelper
 #include ApplicationHelper
+#require '~/sim5/spec/support/messages_test_helper.rb' 
 include MessagesTestHelper  
 
 describe SmsController do
@@ -263,18 +264,32 @@ describe SmsController do
   describe 'handles responses to messages' do
     # Responses are indicated by a command '!nnnn' where nnnn is the message number
     before(:each) do
-      # We have to set up a message that the incoming SMS is responding to
-      @message = Factory.stub(:message, :send_email => true)
-      Message.stub(:find_by_id).and_return(@message)
     end
 
     it 'updates status of sent_message record' do
+      # We have to set up a message that the incoming SMS is responding to
+      @message = Factory.stub(:message, :send_email => true)
+      Message.stub(:find_by_id).and_return(@message)
       # When a response is received, the sent_message corresponding to the message & user
       #   should be updated to show that it was responded to
       @params['Body'] = "!#{@message.id}"  # e.g. #24 if @message.id is 24
       @message.should_receive(:process_response)
       post :create, @params
     end               
+
+    it 'for all members having same phone number' do
+      @message = Message.create(:send_email=>true, :to_groups => '1', :body => 'test')
+      @message.stub(:process_response)
+      @member_1 = Factory(:contact).member  # handy if not most efficient way to make a member with a contact
+      @member_2 = Factory(:contact).member
+      @member_1.primary_phone.should == @member_2.primary_phone
+      @message.members << [@member_1, @member_2]
+      @params['Body'] = "!#{@message.id}"  # e.g. #24 if @message.id is 24
+ puts "**** @message.id=#{@message.id}"
+ #     @message.should_receive(:process_response).twice
+      post :create, @params
+      @message.sent_messages.each {|sm| sm.msg_status.should == MessagesHelper::MsgResponseReceived}
+    end
 
   end # handles responses to messages         
 

@@ -18,13 +18,16 @@ class SmsController < ApplicationController
   # Remove line for testing; configure for other gateways
   def create  # need the name 'create' to conform with REST defaults, or change routes
 # puts "**** IncomingController create: params=#{params}"
+debugger
     from = params[:From]  # The phone number of the sender
     body = params[:Body]  # This is the body of the incoming message
     AppLog.create(:code => "SMS.incoming", :description=>"from=#{from}; body=#{body[0..50]}")
     params.delete 'SmsSid'
     params.delete 'AccountSid'
     params.delete 'SmsMessageSid'
-    @sender = from_member(from)  # returns member from this database with matching phone number
+    @possible_senders = from_members(from)  # all members from this database with matching phone number
+puts "**** @possible_senders=#{@possible_senders}"
+    @sender = @possible_senders.first # choose one of them
     if @sender  # We only accept SMS from registered phone numbers of members
       begin
         AppLog.create(:code => "SMS.received", :description=>"from #{from} (#{@sender.shorter_name}): #{body}")
@@ -96,18 +99,18 @@ private
   end                    
   
   def do_location(text)
-puts "****do_location text=#{text}, @sender=#@sender"
+#puts "****do_location text=#{text}, @sender=#@sender"
     if text
       if text =~ /( for|next|for next)?\s([\d]+)/
         duration = $2.to_i  # the number of hours
         location = $`.strip  # part preceding the match, i.e. the location itself
-puts "****location=#{location}, duration=#{duration}"
+#puts "****location=#{location}, duration=#{duration}"
       else
         duration = DefaultReportedLocDuration
         location = text.strip
       end
       location.sub!(/\A(in |at )/, '')
-puts "**** location after sub=#{location}"
+#puts "**** location after sub=#{location}"
       @sender.update_reported_location(location, Time.now, Time.now + duration*3600) # last is expiration time, now + duration hours
       return "Your location has been updated to #{location} for the next #{duration} hours."
     else
@@ -153,13 +156,17 @@ puts "**** location after sub=#{location}"
     end
   end
 
+  # The user has sent an SMS text confirming response of a previous message
   def process_response(command, text)
     message_id = command[1..99]
     message = Message.find_by_id(message_id)
-#puts "**** command=#{command}, text=#{text}, @sender.id=#{@sender.id}, message=#{message.id}"
+puts "**** command=#{command}, text=#{text}, @sender.id=#{@sender.id}, message=#{message.id}"
+puts message.inspect
     if message
-#puts "**** processing(#{@sender}, #{text})"
-      message.process_response(:member => @sender, :response => text, :mode => 'SMS')
+puts "**** processing(#{@sender}, #{text}, message.id=#{message.id})"
+      @possible_senders.each do |a_member|
+        message.process_response(:member => a_member, :response => text, :mode => 'SMS')
+      end
       return("Thanks for your response :-)")
     else
       return("Thanks for responding, but message number #{message_id} was not found. Check the number again.")
@@ -171,9 +178,8 @@ puts "**** location after sub=#{location}"
     return ''
   end
 
-  def from_member(from) 
-#    return true if from == '+16199282591' # Mike's Google Voice number for testing
-#puts "**** From_member from=#{from}"
+  def from_members(from) 
+debugger
     Member.find_by_phone(from)
   end
 
