@@ -4,15 +4,17 @@ class IncomingMailsController < ApplicationController
   skip_before_filter :verify_authenticity_token
 
   def create  # need the name 'create' to conform with REST defaults, or change routes
-#puts "IncomingController create: params=#{params}"
-    @mail = Mail.new(params[:message]) # May or may not want to use this
-    @from_member = from_member()
+puts "IncomingController create: params=#{params}"
+    @from_address = params['from']
+    @possible_senders = from_member()
+puts "**** Contacts=#{Contact.all.each {|c| c.email_1}.join(' ')}"
+puts "**** @possible_senders=#{@possible_senders}"
+    @from_member = @possible_senders.first
 # puts "**** @from_member=#{@from_member}"
-    unless from_member
+    if @from_member.nil?
       render :text => 'Refused--unknown sender', :status => 403, :content_type => Mime::TEXT.to_s
       return
     end
-    @from_address = params['from']
     @subject = params['subject']
     @body = params['plain']
     process_message_response
@@ -37,7 +39,7 @@ class IncomingMailsController < ApplicationController
   def process_message_response
     # Is this email confirming receipt of a previous message? 
     msg_id = find_message_id_tag(:subject=>@subject, :body=>@body)
-#puts "**** body=#{@body}, msg_id=#{msg_id}"
+puts "**** body=#{@body}, msg_id=#{msg_id}"
     if msg_id  
       # Does the "confirmed message" id actually match a message?
       message = Message.find_by_id(msg_id)
@@ -50,7 +52,9 @@ class IncomingMailsController < ApplicationController
         user_reply = first_nonblank_line(@body)
 #puts "**** user_reply='#{user_reply}'"
         user_reply = user_reply.sub(search_target, ' ').strip if user_reply
-        message.process_response(:member => @from_member, :text => user_reply, :mode => 'email')
+        @possible_senders.each do |a_member|
+          message.process_response(:member => a_member, :text => user_reply, :mode => 'email')
+        end
       else
         msg_tag = message_id_tag(:id => msg_id, :action => :create, :location => :body)
         Notifier.send_generic(@from_address, "Error: It seems you tried to confirm message ##{msg_id}, " +
@@ -63,10 +67,11 @@ class IncomingMailsController < ApplicationController
   # Is this message from someone in our database?
   # (look for a contact record having an email_1 or email_2 matching the message From: header)
   def from_member
-    from = params['from']
-    matching_contact = Contact.where('email_1 = ? OR email_2 = ?', from, from).first 
-puts "**** matching_contact=#{matching_contact}, from=#{params['from']}"
-    @from_member = matching_contact ? matching_contact.member : nil
+    Member.find_by_email(@from_address)
+#    from = params['from']
+#    matching_contact = Contact.where('email_1 = ? OR email_2 = ?', from, from).first 
+#puts "**** matching_contact=#{matching_contact}, from=#{params['from']}"
+#    @from_member = matching_contact ? matching_contact.member : nil
   end  
 
 private
@@ -91,7 +96,7 @@ private
           Notifier.send_test(from, 
              "You sent 'test' with parameter string (#{command[1]})").deliver
         when 'info'
-          do_info(from, from_member, command[1])
+          do_info(from, @from_member, command[1])
         when 'directory'
           @families = Family.those_on_field_or_active.includes(:members, :residence_location).order("name ASC")
           @visitors = Travel.current_visitors
@@ -121,7 +126,6 @@ private
   def do_info(from, from_member, name)
     members = Member.find_with_name(name)
     Notifier.send_info(from, from_member, name, members).deliver
-#puts "****** AFTER DELIVER *********"
   end
 
   def do_location(text)

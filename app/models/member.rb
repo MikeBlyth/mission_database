@@ -170,6 +170,11 @@ end
     Member.joins(:contacts).where("phone_1 = ? OR phone_2 = ?", phone_w_plus, phone_w_plus).
       readonly(false).all
   end
+
+  def self.find_by_email(email)
+    Member.joins(:contacts).where("email_1 = ? OR email_2 = ?", email, email).
+      readonly(false).all
+  end
 # *************** End Class methods *************
 
 # ******* Methods to access associated records (family, personnel_data, health_data ...)

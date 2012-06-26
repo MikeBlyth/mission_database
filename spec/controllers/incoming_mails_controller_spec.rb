@@ -38,7 +38,7 @@ describe IncomingMailsController do
     end
     
     it 'accepts mail from SIM member (stubbed)' do
-      controller.stub(:from_member).and_return(Member.new)  # have a contact record that matches from line
+      controller.stub(:from_member).and_return([Member.new])  # have a contact record that matches from line
       post :create, @params
       response.status.should == 200
     end
@@ -54,7 +54,7 @@ describe IncomingMailsController do
 
   describe 'processes' do
     before(:each) do
-      controller.stub(:from_member).and_return(Member.new)   # have a contact record that matches from line
+      controller.stub(:from_member).and_return([Member.new])   # have a contact record that matches from line
     end      
     
     it 'variety of "command" lines without crashing' do
@@ -103,7 +103,7 @@ describe IncomingMailsController do
 
   describe 'handles these commands:' do
     before(:each) do
-      controller.stub(:from_member).and_return(Member.new)   # have a contact record that matches from line
+      controller.stub(:from_member).and_return([Member.new])   # have a contact record that matches from line
       contact_type = Factory(:contact_type)
     end      
     
@@ -200,7 +200,7 @@ describe IncomingMailsController do
       
         it 'is shown when requested by same member' do
           member = Factory(:member)
-          controller.stub(:from_member).and_return(member)   # indicate that mail originates from same member as being requested
+          controller.stub(:from_member).and_return([member])   # indicate that mail originates from same member as being requested
           contact = Factory(:contact, :member => member, 
                       :email_2 => 'secondary@gmail.com',
                       :phone_2 => '0707-777-7777'.phone_format,
@@ -302,7 +302,7 @@ describe IncomingMailsController do
       @mock_message = mock_model(Message, :deliver=>true)
       Message.stub(:create).and_return(@mock_message)
       @member = Factory.stub(:member)
-      controller.stub(:from_member).and_return(@member)   # have a contact record that matches from line
+      controller.stub(:from_member).and_return([@member])   # have a contact record that matches from line
       @group_1 = Factory(:group)
       @group_2 = Factory(:group)
       @body = 'Test message'
@@ -310,7 +310,7 @@ describe IncomingMailsController do
     end
     
     it '(checks setup)' do
-      controller.from_member.should == @member
+      controller.from_member.should == [@member]
     end
     
     it 'distributes email to groups when groups are found' do
@@ -382,40 +382,58 @@ describe IncomingMailsController do
   end # Distributes email and sms to groups
   
   describe 'handles email responses to group messages' do
-    before(:each) do
-      @responding_to = 25
-      @message = mock_model(Message, :deliver=>true, :process_response => nil)
-      Message.stub(:find_by_id).with(@responding_to).and_return(@message)
-      @member = Factory.stub(:member)
-      contact = mock('contact', :member => @member)
-      Contact.stub(:where).and_return([contact])   # have a contact record that matches from line
-      @subject_with_tag = 'Re: Important ' + 
-        message_id_tag(:id=>@responding_to, :location => :subject, :action=>:generate)
-      @user_reply = "I'm in Kafanchan"
-      @body_with_tag = message_id_tag(:id=>@responding_to, :location => :body, :action=>:confirm_tag) +
-        ' ' + @user_reply
-    end
     
-    it 'ignores messages without msg_id reply tag' do
-      @message.should_not_receive(:process_response)
-      post :create, @params
-    end
+    describe '(unique email addr)' do
+      before(:each) do
+        @responding_to = 25  # This is the id of the message being responded to
+        @message = mock_model(Message, :deliver=>true, :process_response => nil)
+        Message.stub(:find_by_id).with(@responding_to).and_return(@message)
+        @member = Factory.stub(:member)
+        Member.stub(:find_by_email).and_return([@member]) # Just says that this message is from a member
+        contact = mock('contact', :member => @member)
+        Contact.stub(:where).and_return([contact])   # have a contact record that matches from line
+        @subject_with_tag = 'Re: Important ' + 
+          message_id_tag(:id=>@responding_to, :location => :subject, :action=>:generate)
+        @user_reply = "I'm in Kafanchan"
+        @body_with_tag = message_id_tag(:id=>@responding_to, :location => :body, :action=>:confirm_tag) +
+          ' ' + @user_reply
+      end
+      
+      it 'ignores messages without msg_id reply tag' do
+        @message.should_not_receive(:process_response)
+        post :create, @params
+      end
 
-    it 'processes messages with msg_id in subject' do
-      @params[:subject] = @subject_with_tag
-      Message.should_receive(:find_by_id).with(25)
-      @message.should_receive(:process_response).with(:member => @member, :text => @params['plain'], 
-          :mode => 'email')
-      post :create, @params
-    end
+      it 'processes messages with msg_id in subject' do
+        @params[:subject] = @subject_with_tag
+        Message.should_receive(:find_by_id).with(25)
+        @message.should_receive(:process_response).with(:member => @member, :text => @params['plain'], 
+            :mode => 'email')
+        post :create, @params
+      end
 
-    it 'processes messages with msg_id in body' do
-      @params[:plain] = @body_with_tag
-      Message.should_receive(:find_by_id).with(25)
-      @message.should_receive(:process_response).with(:member => @member, :text => @user_reply, 
-          :mode => 'email')
-      post :create, @params
-    end
+      it 'processes messages with msg_id in body' do
+        @params[:plain] = @body_with_tag
+        Message.should_receive(:find_by_id).with(25)
+        @message.should_receive(:process_response).with(:member => @member, :text => @user_reply, 
+            :mode => 'email')
+        post :create, @params
+      end
+      
+    end # (unique email/phone)
 
+    describe '(w duplicate email addr)' do
+
+      it 'for all members having same email' do
+        @message = Message.create(:send_email=>true, :to_groups => '1', :body => 'test')
+        @member_1 = Factory(:contact).member  # handy if not most efficient way to make a member with a contact
+        @member_2 = Factory(:contact).member
+        @message.members << [@member_1, @member_2]
+        @params['plain'] = "!#{@message.id}"  # e.g. #24 if @message.id is 24
+        @params['from'] = @member_1.primary_email
+        post :create, @params
+        @message.sent_messages.each {|sm| sm.msg_status.should == MessagesHelper::MsgResponseReceived}
+      end
+    end # (w duplicate email addr)
   end #    handles email responses to group messages   
 end
