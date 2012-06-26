@@ -15,6 +15,7 @@ load_and_authorize_resource
     config.update.link = false
     config.actions.exclude :update
     list.sorting = {:created_at => 'DESC'}
+    config.action_links.add 'followup', :label => 'Follow up', :type => :member
   end
 
   def do_new

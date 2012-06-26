@@ -177,8 +177,9 @@ class Message < ActiveRecord::Base
 #puts "**** deliver_email: emails=#{emails}"
     emails = contact_info.map {|c| c[:email]}.compact.uniq
     self.subject ||= 'Message from SIM Nigeria'
+    id_for_reply = self.following_up || id  # a follow-up message uses id of the original msg
     outgoing = Notifier.send_group_message(:recipients=>emails, :content=>self.body, 
-        :subject => subject, :id => id, :response_time_limit => response_time_limit, 
+        :subject => subject, :id => id_for_reply , :response_time_limit => response_time_limit, 
         :bcc => true) # send using bcc:, not to:
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
@@ -190,7 +191,8 @@ raise "send_email with nil email produced" if outgoing.nil?
   end
   
   def assemble_sms
-    resp_tag = response_time_limit? ? " !#{self.id}" : ''
+    id_for_reply = self.following_up || id  # a follow-up message uses id of the original msg
+    resp_tag = (following_up || response_time_limit) ? " !#{id_for_reply}" : ''
     self.sms_only = sms_only[0..(159-self.timestamp.size-resp_tag.size)] + resp_tag + ' ' + self.timestamp
   end
 

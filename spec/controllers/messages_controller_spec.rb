@@ -49,16 +49,19 @@ describe MessagesController do
   describe 'Follow up' do
 
     it 'sends the follow-up msg to those not responding to first msg' do  # Would be nice to do this w/o accessing DB!
-      @original_msg = Factory(:message, :send_email => true)
+      @gateway = MockClickatellGateway.new(nil)
+      @original_msg = Factory(:message, :sms_only => '#'*50, :send_email => true, :send_sms => true)
       @fast_responder = Factory(:contact).member  # handy if not most efficient way to make a member with a contact
       @slow_responder = Factory(:contact).member
       @original_msg.members << [@fast_responder, @slow_responder]
       @fast_responder.sent_messages.first.update_attributes(:msg_status => MessagesHelper::MsgResponseReceived)
       @original_msg.members.should =~ [@fast_responder, @slow_responder]
       Notifier.should_receive(:send_group_message).
-          with(hash_including(:recipients => [@slow_responder.primary_email])).
+          with(hash_including(:recipients => [@slow_responder.primary_email],
+                              :id => @original_msg.id)).
           and_return(mock('MailMessage').as_null_object)
-      post :followup_send, :id => @original_msg.id, :record => {:body=>'reminder', :send_email => true}
+      @gateway.should_receive(:deliver).with(anything(), Regexp.new(@original_msg.id.to_s))
+      post :followup_send, :id => @original_msg.id, :record => {:body=>"reminder"*10, :send_email => true}
     end    
   end                        
 
