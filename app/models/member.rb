@@ -650,14 +650,14 @@ puts "**** updated: success = #{ok}"
   end
   
   def primary_phone(options={:with_plus => false})
-    contact = self.primary_contact
+    contact = self.primary_contact || return
     phone = contact.phone_1 || contact.phone_2
     phone = phone[1..20] if phone && !options[:with_plus] && phone[0]='+'
     return phone
   end
 
   def primary_email(options={})
-    contact = self.primary_contact
+    contact = self.primary_contact || return
     return contact.email_1 || contact.email_2
   end
 

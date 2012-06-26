@@ -51,7 +51,6 @@ class Group < ActiveRecord::Base
   # group 3 (or subgroups). Group_ids which do not exist in the database are ignored. 
   def self.members_in_multiple_groups(group_ids)
     return [] if (group_ids || []) == []
-puts "**** group_ids=#{group_ids}"
     members = []  # This is an array of member ids
     group_ids.each do |group_id|
       group = Group.find_by_id group_id

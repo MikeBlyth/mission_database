@@ -52,7 +52,7 @@ class Notifier < ActionMailer::Base
     @subject = params[:subject] + ' ' + message_id_tag(:action=>:generate, :id=>@id)
     @bcc = params[:bcc]
     @recipients = params[:recipients].compact
-puts "**** @recipients=#{@recipients}, @subject=#{@subject}"
+#puts "**** @recipients=#{@recipients}, @subject=#{@subject}"
     mail(
       :to => (@bcc ? '' : @recipients),
       :bcc => (@bcc ? @recipients : ''), 
