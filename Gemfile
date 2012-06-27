@@ -18,6 +18,7 @@ gem 'settingslogic', "2.0.8"
 gem 'sass'
 gem 'twiliolib'
 gem 'httparty'
+gem 'jammit'
 gem "progstr-filer", :require => "progstr-filer"  # File attachment & storage -- experimental
 
 # Bundle gems for the local environment. Make sure to
