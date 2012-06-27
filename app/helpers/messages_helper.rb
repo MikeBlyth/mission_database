@@ -55,7 +55,21 @@ module MessagesHelper
     message_id_tag(:action => :find, :text => params[:subject], :location => :subject) ||
     message_id_tag(:action => :find, :text => params[:body], :location => :body) 
   end  
-      
+  
+  # Given response_time_limit in minutes, using current time 
+  # generate phrase like 'immediately', by '2:43 pm', or
+  # 'by 2:43 PM 24 Jun.' 
+  def respond_by(response_time_limit, html=true)
+    deadline = (Time.now + response_time_limit*60).in_time_zone(SIM::Application.config.time_zone)
+    max_minutes = response_time_limit  # just renaming for convenience
+    formatted = case max_minutes
+    when 0..59 then "<strong>immediately</strong>"
+    when 60..360 then "<strong>by #{deadline.strftime("%l:%M %p")}</strong>"
+    else "by #{deadline.strftime("%l:%M %p %-d %b")}"
+    end
+    formatted.gsub!(/<strong>|<\/strong>/,'') unless html
+    return formatted
+  end
   
   MessageStatuses = {
     -1 => 'Error',
