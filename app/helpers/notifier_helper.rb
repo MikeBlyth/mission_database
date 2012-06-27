@@ -22,7 +22,7 @@ MISSING_CONTACT = '---None on file---'
     else "by #{deadline.strftime("%l:%M %p %-d %b")}"
     end
     formatted.gsub!(/<strong>|<\/strong>/,'') unless html
-    return formatted
+    return formatted.html_safe
   end
   
  
