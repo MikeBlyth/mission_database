@@ -5,7 +5,7 @@ SIM::Application.routes.draw do
   resources :sent_messages do as_routes end
   resources :messages do as_routes end
   get "messages/:id/followup", :to => "messages#followup"
-  match "messages/:id/followup", :to => "messages#followup_send", :via => :post
+  match "messages/:id/followup_send", :to => "messages#followup_send"
 
 # SMS with Twilio 
 

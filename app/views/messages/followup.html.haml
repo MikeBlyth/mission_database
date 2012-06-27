@@ -13,7 +13,7 @@
       the original message #{@id}. You can repeat part of the message and or remind people to
       respond.
     #msg-top
-      = form_for @record, :url => { :action => "followup_send", :method => 'post' } do |f|
+      = form_for @record, :url => { :action => "followup_send" } do |f|
         = render :partial => 'text_inputs'
         = submit_tag('Send')
         

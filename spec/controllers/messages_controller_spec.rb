@@ -69,7 +69,7 @@ describe MessagesController do
                               :id => @original_msg.id)).
           and_return(mock('MailMessage').as_null_object)
       @gateway.should_receive(:deliver).with(anything(), Regexp.new(@original_msg.id.to_s))
-      post :followup_send, :id => @original_msg.id, 
+      get :followup_send, :id => @original_msg.id, 
         :record => {:body=>"reminder",  :sms_only => '#'*50, :send_email => true, :send_sms => true}
     end    
 
