@@ -15,11 +15,13 @@ load_and_authorize_resource
     config.update.link = false
     config.actions.exclude :update
     list.sorting = {:created_at => 'DESC'}
-    config.action_links.add 'followup', :label => 'Follow up', :type => :member, :inline=>false
+    config.action_links.add 'followup', :label => 'Follow up', :type => :member#, :inline=>false
   end
 
   def do_new
     super
+    @record.body = "(from #{@current_user.name})"
+    @record.sms_only = "(#{@current_user.name})"
   end
 
   def before_create_save(record)
@@ -44,7 +46,14 @@ load_and_authorize_resource
   # Send form to user for generating a follow-up on a given message
   def followup
     @id = params[:id]
-    @record = Message.find @id
+    @original_record = Message.find @id
+    @record = Message.new
+    @record.subject = "Following up on message #@id, \"#{@record.subject}\"" 
+    @record.sms_only = "f/u msg ##@id"
+    @record.body = "This is SIMon, the SIM Nigeria database gopher. I haven't seen a reply from you " +
+        "showing that you received message ##{@id}. Could it be in your junk mail folder? We really " +
+        "do want to be sure that you got this message so please make sure you've read it and then " +
+        "just send back a reply."
   end
   
   # Use form from 'followup' to generate new message

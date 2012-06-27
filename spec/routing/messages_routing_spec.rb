@@ -36,7 +36,7 @@ describe MessagesController do
     end
 
     it "recognizes and generates #followup_send" do
-      { :post => "/messages/1/followup" }.should route_to(:controller => "messages", :action => "followup_send", :id=>'1')
+      { :get => "/messages/1/followup_send" }.should route_to(:controller => "messages", :action => "followup_send", :id=>'1')
     end
 
   end
