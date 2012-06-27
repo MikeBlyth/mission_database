@@ -357,3 +357,6 @@ table.children {
   width: 80px; }
 .groups-view #record_type_of_group {
   width: 200px; }
+
+.not-implemented {
+  display: none; }

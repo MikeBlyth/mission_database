@@ -44,6 +44,13 @@ describe MessagesController do
       AppLog.should_receive(:create)
       post :create, :record => {:sms_only=>"test "*10, :to_groups=>["1", '2'], :send_sms=>true}
     end  
+    
+    it 'counts empty response_time_limit as nil' do
+      AppLog.should_receive(:create)
+      post :create, :record => {:sms_only=>"test "*10, :to_groups=>["1", '2'], 
+        :response_time_limit=>'', :send_sms=>true}
+      Message.first.response_time_limit.should == nil
+    end
   end
   
   describe 'Follow up' do
