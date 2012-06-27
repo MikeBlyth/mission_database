@@ -8,12 +8,10 @@ javascripts:
     - public/javascripts/jquery-ui-timepicker-addon.js
     - public/javascripts/application.js
     - public/javascripts/active_scaffold/default/*.js
-    - public/javascripts/calendar_date_select/*.js
    
 stylesheets:
   common:
     - public/stylesheets/active_scaffold/default/*.css
-    - public/stylesheets/calendar_date_select/*.css
     - public/stylesheets/*.css
     - public/stylesheets/jquery*.css
 
