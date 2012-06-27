@@ -112,18 +112,21 @@ describe Message do
         # will have to "save" the message first, to trigger the creation of the sent_message
         # records that tie the message to the members.
         # Note that you can't access sent_message records unless they *are* created.
+        @resp_time_limit = 5
         @members = members_w_contacts(1, false)
         @message.stub(:subject).and_return('Subject line')
         @message.stub(:id).and_return(21)
+        @message.response_time_limit = @resp_time_limit
         @gateway = MockClickatellGateway.new(nil,@members)
       end
       
       it "Sends an email only" do
         select_media(:email=>true)
+        @message.response_time_limit.should == @resp_time_limit
         Notifier.should_receive(:send_group_message).
           with(:recipients => [@members[0].primary_contact.email_1], :content => @message.body, 
           :subject => @message.subject, :id => anything(), 
-          :response_time_limit => @message.response_time_limit,
+          :response_time_limit => @resp_time_limit, #@message.response_time_limit,
           :bcc => true)
         @gateway.should_not_receive(:deliver)
         @message.deliver

@@ -287,8 +287,19 @@ describe Notifier do
     end
 
     it 'adds tag to subject line' do
-      message = Notifier.send_group_message(@params)
-      message.subject.should =~ Regexp.new(@message_id.to_s)
+      email = Notifier.send_group_message(@params)
+      email.subject.should =~ Regexp.new(@message_id.to_s)
+    end
+    
+    it 'includes response info when response_time_limit > 0' do
+      email = Notifier.send_group_message(@params)
+      email.to_s.should =~ /The sender has requested/
+    end
+
+    it 'includes does not include response info when response_time_limit > 0' do
+      email = Notifier.send_group_message(@params.merge(:response_time_limit => nil))
+      email.to_s.should_not =~ /The sender has requested/
+
     end
   end
 end

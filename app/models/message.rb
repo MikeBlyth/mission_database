@@ -75,6 +75,7 @@ class Message < ActiveRecord::Base
   #   to_groups_array is the array form of the destination groups for this message
   def deliver(params={})
     puts "**** Message#deliver" if params[:verbose]
+#puts "**** Message#deliver response_time_limit=#{self.response_time_limit}"
     save! if self.new_record?
     contact_info = members_contact_info
     deliver_email(contact_info) if send_email
@@ -178,6 +179,7 @@ class Message < ActiveRecord::Base
     emails = contact_info.map {|c| c[:email]}.compact.uniq
     self.subject ||= 'Message from SIM Nigeria'
     id_for_reply = self.following_up || id  # a follow-up message uses id of the original msg
+#puts "**** Messages#deliver_email response_time_limit=#{response_time_limit}"
     outgoing = Notifier.send_group_message(:recipients=>emails, :content=>self.body, 
         :subject => subject, :id => id_for_reply , :response_time_limit => response_time_limit, 
         :bcc => true) # send using bcc:, not to:
