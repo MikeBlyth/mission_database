@@ -49,8 +49,9 @@ describe MessagesController do
   describe 'Follow up' do
 
     it 'sends the follow-up msg to those not responding to first msg' do  # Would be nice to do this w/o accessing DB!
-      @gateway = MockClickatellGateway.new(nil)
-      @original_msg = Factory(:message, :sms_only => '#'*50, :send_email => true, :send_sms => true)
+      @gateway = mock('Gateway')
+      MockClickatellGateway.stub(:new => @gateway)
+      @original_msg = Factory(:message,:send_email => true)
       @fast_responder = Factory(:contact).member  # handy if not most efficient way to make a member with a contact
       @slow_responder = Factory(:contact).member
       @original_msg.members << [@fast_responder, @slow_responder]
@@ -61,8 +62,10 @@ describe MessagesController do
                               :id => @original_msg.id)).
           and_return(mock('MailMessage').as_null_object)
       @gateway.should_receive(:deliver).with(anything(), Regexp.new(@original_msg.id.to_s))
-      post :followup_send, :id => @original_msg.id, :record => {:body=>"reminder"*10, :send_email => true}
+      post :followup_send, :id => @original_msg.id, 
+        :record => {:body=>"reminder",  :sms_only => '#'*50, :send_email => true, :send_sms => true}
     end    
+
   end                        
 
 end

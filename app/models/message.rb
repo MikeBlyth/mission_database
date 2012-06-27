@@ -202,11 +202,12 @@ raise "send_email with nil email produced" if outgoing.nil?
     sms_gateway = params[:sms_gateway]
     phone_number_array = params[:contact_info].map {|c| c[:phone]}.compact.uniq
     phone_numbers = phone_number_array.join(',')
-#puts "**** sms_gateway.deliver=#{sms_gateway.deliver}"
     assemble_sms()
+#puts "**** sms_gateway.deliver #{sms_gateway} w #{phone_numbers}: #{sms_only}"
     #******* CONNECT TO GATEWAY AND DELIVER MESSAGES 
     gateway_reply = 
       sms_gateway.deliver(phone_numbers, sms_only)
+#puts "**** gateway_reply=#{gateway_reply}"
     #******* PROCESS GATEWAY REPLY (INITIAL STATUSES OF SENT MESSAGES)  
     gtw_msg_id = nil
     if phone_number_array.size == 1
