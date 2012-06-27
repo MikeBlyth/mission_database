@@ -341,10 +341,13 @@ table.children
 #msg-form #msg-bottom
   position: relative
 
-#msg-followup
+#msg-followup, #msg-form
   width: 400px
-  #msg-top, #msg-form
+  padding: 0.5em
+  #msg-top
     width: 400px
+    padding: 0.5em
+    margin-top: 0.5em
   .note
     border: 1px solid red
     width: 380px
@@ -354,14 +357,19 @@ table.children
   .msg-quote
     border: 1px solid #966
     padding: 0.5em
-    margin-left: 1em
-    margin-right: 1em       
+    margin: 0.5em 1em 0.5em 1em
+
+#msg-followup #msg-top
+  background-color: $background_alt
+
 #advanced
   position: absolute
   top: 0px
   left: 310px
   width: 200px
   padding: 5px 
+
+
 
 #advanced #options
   background-color: $background_alt

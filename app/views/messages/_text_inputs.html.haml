@@ -28,8 +28,9 @@
               %br
               = form.check_box  :send_sms         
             %td &nbsp;
-            %td 
-              = form.label :response_time_limit
-              %br
-              = form.select :response_time_limit, [['no response needed', nil], ['5 minutes', 5], ['10 minutes', 10], ['15 minutes', 15], ['30 minutes', 30], ['1 hour', 60], ['2 hours', 120], ['6 hours', 360], ['12 hours', 720], ['24 hours', 1440]]
+            -unless @record.following_up 
+              %td 
+                = form.label :response_time_limit
+                %br
+                = form.select :response_time_limit, [['no response needed', nil], ['5 minutes', 5], ['10 minutes', 10], ['15 minutes', 15], ['30 minutes', 30], ['1 hour', 60], ['2 hours', 120], ['6 hours', 360], ['12 hours', 720], ['24 hours', 1440]]
 

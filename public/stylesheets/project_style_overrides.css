@@ -327,21 +327,26 @@ table.children {
 #msg-form #msg-bottom {
   position: relative; }
 
-#msg-followup {
-  width: 400px; }
-  #msg-followup #msg-top, #msg-followup #msg-form {
-    width: 400px; }
-  #msg-followup .note {
+#msg-followup, #msg-form {
+  width: 400px;
+  padding: 0.5em; }
+  #msg-followup #msg-top, #msg-form #msg-top {
+    width: 400px;
+    padding: 0.5em;
+    margin-top: 0.5em; }
+  #msg-followup .note, #msg-form .note {
     border: 1px solid red;
     width: 380px;
     padding: 0.5em;
     margin-bottom: 1em;
     font-size: smaller; }
-  #msg-followup .msg-quote {
+  #msg-followup .msg-quote, #msg-form .msg-quote {
     border: 1px solid #996666;
     padding: 0.5em;
-    margin-left: 1em;
-    margin-right: 1em; }
+    margin: 0.5em 1em 0.5em 1em; }
+
+#msg-followup #msg-top {
+  background-color: #aaccaa; }
 
 #advanced {
   position: absolute;

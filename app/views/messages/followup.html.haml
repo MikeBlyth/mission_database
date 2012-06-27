@@ -7,7 +7,7 @@
     %p
       This form is for sending a follow-up for message #{@id}:
     %p.msg-quote
-      #{to_local_time(@original_msg.created_at)}: #{truncate(@original_msg.body, 200}
+      #{to_local_time(@original_msg.created_at)}: #{truncate(@original_msg.body, :length => 200)}
     %p
       This follow-up message will be sent <em>only</em> to people who did not receive (or respond to) 
       the original message #{@id}. You can repeat part of the message and or remind people to
