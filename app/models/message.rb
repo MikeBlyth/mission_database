@@ -182,7 +182,7 @@ class Message < ActiveRecord::Base
 #puts "**** Messages#deliver_email response_time_limit=#{response_time_limit}"
     outgoing = Notifier.send_group_message(:recipients=>emails, :content=>self.body, 
         :subject => subject, :id => id_for_reply , :response_time_limit => response_time_limit, 
-        :bcc => true) # send using bcc:, not to:
+        :bcc => true, :following_up => following_up) # send using bcc:, not to:
 raise "send_email with nil email produced" if outgoing.nil?
     outgoing.deliver
     # Mark all as being sent, but only if they have an email address

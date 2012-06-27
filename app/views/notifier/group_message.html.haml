@@ -6,7 +6,7 @@
     %p= @content 
     %hr
     %p{'style' => "color: #666"}  
-      This is message <strong>##{@id}</strong>. 
+      This is #{"a follow up for " if @following_up}message <strong>##{@id}</strong>. 
     - if @response_time_limit
       %p{'style' => "color: #666"}
         The sender has requested a confirmation #{respond_by(@response_time_limit, true)} 

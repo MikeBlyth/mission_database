@@ -52,6 +52,7 @@ class Notifier < ActionMailer::Base
 # puts "**** Notifier @response_time_limit=#{@response_time_limit}"
     @subject = params[:subject] + ' ' + message_id_tag(:action=>:generate, :id=>@id)
     @bcc = params[:bcc]
+    @following_up = params[:following_up]
     @recipients = params[:recipients].compact
 #puts "**** @recipients=#{@recipients}, @subject=#{@subject}"
     mail(

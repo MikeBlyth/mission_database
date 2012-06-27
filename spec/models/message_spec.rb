@@ -127,7 +127,8 @@ describe Message do
           with(:recipients => [@members[0].primary_contact.email_1], :content => @message.body, 
           :subject => @message.subject, :id => anything(), 
           :response_time_limit => @resp_time_limit, #@message.response_time_limit,
-          :bcc => true)
+          :bcc => true,
+          :following_up => nil)
         @gateway.should_not_receive(:deliver)
         @message.deliver
       end
