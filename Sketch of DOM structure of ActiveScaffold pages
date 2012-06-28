@@ -1,0 +1,79 @@
+Edit travel form
+
+#top
+    #menu
+    #content (covers all but menu)
+        #main
+            .active-scaffold
+                class="update-view travels-view view"  (background for main editing view)
+                    form class="as_form update"
+                        div (no classes), holds the hidden input
+                            h4
+                            div .messages-container
+                        div .active-scaffold
+                            div .new-travel  (this is what col1, col2, and col3 don't cover [right edge)
+                        div .form-footer
+                            (buttons)
+                        
+Member listing with inline edit-contact form
+
+#top
+  #menu
+  #content (covers all but menu)
+    #main
+      #as_members-active-scaffold" class="active-scaffold active-scaffold-as_members members-view default-theme" 
+        .active-scaffold-header
+          .actions               
+            (Links for new, configure, export etc)
+          h2 Members (no class or ID)
+        table (nothing in this one)
+          tbody #as_members-search-container .before-header
+        #as-members-content .as_content
+          table
+            thead
+            tbody .messages  (This is the column headers)
+            tbody #as_members_tbody .records
+              tr #as_members-list-808-row 
+                td class='name-column  sorted'
+                td class='spouse-column empty'
+                ...
+                td class='actions'
+                 ...
+                        td id="as_members-edit-808-link" class="edit_as_action"
+                        
+              tr #as_members_783_contacts-nested--row class="inline-adapter as_adapter"  (has the form background color)
+                td class="inline-adapter-cell" colspan="99" 
+                  div class="index-view contacts-view view"
+                    a class="inline-adapter-close as_cancel
+                    div id="as_members_783_contacts-active-scaffold" class="active-scaffold active-scaffold-as_members_783_contacts contacts-view default-theme"
+                      div class="active-scaffold-header"  (this is the header for the inline list, "Contacts for ...")
+                      table (empty)
+                      <div id="as_members_783_contacts-content" class="as_content">  (where the editing form is)
+                        table
+                          <thead>  (contains the column headings)
+                          <tbody class="messages">
+                          <tbody id="as_members_783_contacts-tbody" class="records">
+                            tr (invisible when editing it using the form)
+                            tr id="as_members_783_contacts-nested-783-row" class="inline-adapter as_adapter" (the form itself)
+                              td class="inline-adapter-cell"
+                                div class="edit-view contacts-view view"
+                                  a class="inline-adapter-close as_cancel" 
+                                  div class="active-scaffold"
+                                    div class="update-view contacts-view view"
+                                        form id="as_members_783_contacts-update-783-form" class="as_form update"
+          #active-scaffold-footer
+          
+CSS for inline adapter form:
+.active-scaffold .active-scaffold td.inline-adapter-cell {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #FFFFBB;
+    border-color: -moz-use-text-color #DDDF37 #DDDF37;
+    border-right: 1px solid #DDDF37;
+    border-style: none solid solid;
+    border-width: medium 1px 1px;
+    padding: 4px;
+}          

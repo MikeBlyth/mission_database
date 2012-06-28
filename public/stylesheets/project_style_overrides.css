@@ -1,5 +1,18 @@
 .active-scaffold .view {
+  background: #bdd4de;
+  border: 1px solid #3f708d; }
+
+.active-scaffold .active-scaffold td.inline-adapter-cell {
   background: #bdd4de; }
+
+.as_form table {
+  background: #efefef; }
+
+.active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell {
+  border: 1px solid #3f708d; }
+
+.active-scaffold h4, .active-scaffold h5 {
+  color: #0066cc; }
 
 div#content {
   min-width: 1000px;
@@ -148,10 +161,10 @@ a.big-link {
 div.new_travel, div.member_form {
   position: relative;
   height: 470px;
-  background-color: #3f5765;
+  background-color: #efefef;
   padding: 20px; }
   div.new_travel div.col_1, div.member_form div.col_1 {
-    background-color: #c2efc2;
+    background-color: #efefef;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -159,7 +172,7 @@ div.new_travel, div.member_form {
     padding: 5px;
     height: 440px; }
   div.new_travel div.col_2, div.member_form div.col_2 {
-    background-color: #aaccaa;
+    background-color: #dfdfdf;
     position: absolute;
     top: 0px;
     left: 310px;
@@ -167,7 +180,7 @@ div.new_travel, div.member_form {
     padding: 5px;
     height: 440px; }
   div.new_travel div.col_3, div.member_form div.col_3 {
-    background-color: #c2efc2;
+    background-color: #efefef;
     position: absolute;
     top: 0px;
     left: 620px;

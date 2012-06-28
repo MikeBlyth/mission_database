@@ -4,9 +4,30 @@ $background_1: #3F5765
 $background_menu: #CCEEFF
 $background_alt: #ACA
 $background_content: #BDD4DE
+$background_form: #EFEFEF
+$background_form_2: #DFDFDF
+$border_1_light: hsl(202,38,70)
+$border_1_dark: hsl(202,38,40)
+$border_2_light: hsl(0,0,90)
+$border_2_dark:  hsl(0,0,50)
+$headers_1_dark: #06c
+$headers_1_light: #80BFFF
 
 .active-scaffold .view
   background: $background_content
+  border: 1px solid $border_1_dark
+
+.active-scaffold .active-scaffold td.inline-adapter-cell
+  background: $background_content
+  
+.as_form table
+  background: $background_form
+
+.active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell
+  border: 1px solid $border_1_dark
+  
+.active-scaffold h4, .active-scaffold h5
+  color: $headers_1_dark
 
 div#content
   min-width: 1000px
@@ -158,10 +179,10 @@ div.new_travel, div.member_form
   position: relative
   $height: 470px
   height: $height
-  background-color: $background_1
+  background-color: $background_form
   padding: 20px
   div.col_1
-    background-color: #C2EFC2
+    background-color: $background_form
     position: absolute
     top: 0px
     left: 0px
@@ -169,7 +190,7 @@ div.new_travel, div.member_form
     padding: 5px 
     height: $height - 30px
   div.col_2
-    background-color: $background_alt
+    background-color: $background_form_2
     position: absolute
     top: 0px
     left: 310px
@@ -177,7 +198,7 @@ div.new_travel, div.member_form
     padding: 5px 
     height: $height - 30px
   div.col_3
-    background-color: #C2EFC2
+    background-color: $background_form
     position: absolute
     top: 0px
     left: 620px
