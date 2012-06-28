@@ -6,6 +6,7 @@ javascripts:
     - public/javascripts/jquery.js
     - public/javascripts/jquery-ui.js
     - public/javascripts/jquery-ui-timepicker-addon.js
+    - public/javascripts/rails_jquery.js
     - public/javascripts/application.js
     - public/javascripts/active_scaffold/default/*.js
    
