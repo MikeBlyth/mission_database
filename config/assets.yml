@@ -1,5 +1,5 @@
 embed_assets: off
-package_assets: always
+package_assets: on
 
 javascripts:
   common:

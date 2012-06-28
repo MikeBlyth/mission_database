@@ -1,8 +1,11 @@
+.active-scaffold .view {
+  background: #bdd4de; }
+
 div#content {
   min-width: 1000px;
   min-height: 800px;
   padding: 5px;
-  background: lightblue; }
+  background: #bdd4de; }
 
 div.countries-view,
 div.cities-view {
@@ -145,7 +148,7 @@ a.big-link {
 div.new_travel, div.member_form {
   position: relative;
   height: 470px;
-  background-color: #daffcd;
+  background-color: #3f5765;
   padding: 20px; }
   div.new_travel div.col_1, div.member_form div.col_1 {
     background-color: #c2efc2;
@@ -318,7 +321,7 @@ table.children {
   padding: 5px 5px 5px 25px; }
 
 #msg-form {
-  background-color: #daffcd;
+  background-color: #3f5765;
   width: 520px;
   padding: 10px; }
   #msg-form #record_subject {
