@@ -1,17 +1,16 @@
-
-$background_1: #DAFFCD
-$background_1: #3F5765
-$background_menu: #CCEEFF
+$background_1: #E6AB11
+$background_menu: #E8D3D7
 $background_alt: #ACA
-$background_content: #BDD4DE
-$background_form: #EFEFEF
-$background_form_2: #DFDFDF
+$background_content: #FFEFC4
+$background_form: #FFE189
+$background_form_2: #E8CC78
 $border_1_light: hsl(202,38,70)
 $border_1_dark: hsl(202,38,40)
 $border_2_light: hsl(0,0,90)
 $border_2_dark:  hsl(0,0,50)
-$headers_1_dark: #06c
-$headers_1_light: #80BFFF
+$headers_1_dark: #40000D
+$headers_1_light: #B44B52
+$links_1: #CB4C52
 
 .active-scaffold .view
   background: $background_content
@@ -26,14 +25,41 @@ $headers_1_light: #80BFFF
 .active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell
   border: 1px solid $border_1_dark
   
-.active-scaffold h4, .active-scaffold h5
+.active-scaffold .as_content
+  margin-top: 4px
+  
+.active-scaffold th, .active-scaffold th a
+  background: #A37C11
+
+.active-scaffold th.sorted
+  background: #82630F
+  a
+    background: #82630F
+
+.active-scaffold h4
+  color: $headers_1_light
+
+.active-scaffold h5, .active-scaffold h2
   color: $headers_1_dark
+  
+.active-scaffold a, .active-scaffold a:visited
+  color: $links_1  
 
 div#content
   min-width: 1000px
   min-height: 800px
-  padding: 5px
+  padding: 0 5px 5px 5px
   background: $background_content
+
+/* Listings */
+.active-scaffold tr.record
+  background-color: $background_form
+.active-scaffold tr.even-record
+  background-color: white
+.active-scaffold tr.record td.sorted  
+  background-color: #DDC277
+.active-scaffold tr.even-record td.sorted  
+  background-color: #EEE
 
 div.countries-view,
 div.cities-view
@@ -197,14 +223,16 @@ div.new_travel, div.member_form
     width: 300px
     padding: 5px 
     height: $height - 30px
+    border-left: 1px solid #FFE28C
   div.col_3
     background-color: $background_form
     position: absolute
     top: 0px
-    left: 620px
+    left: 621px
     width: 300px
     padding: 5px 
     height: $height - 30px
+    border-left: 1px solid #FFE28C
   div.form-footer
     position: absolute
     top: $height - 20px

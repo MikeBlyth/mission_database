@@ -1,24 +1,54 @@
 .active-scaffold .view {
-  background: #bdd4de;
+  background: #ffefc4;
   border: 1px solid #3f708d; }
 
 .active-scaffold .active-scaffold td.inline-adapter-cell {
-  background: #bdd4de; }
+  background: #ffefc4; }
 
 .as_form table {
-  background: #efefef; }
+  background: #ffe189; }
 
 .active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell {
   border: 1px solid #3f708d; }
 
-.active-scaffold h4, .active-scaffold h5 {
-  color: #0066cc; }
+.active-scaffold .as_content {
+  margin-top: 4px; }
+
+.active-scaffold th, .active-scaffold th a {
+  background: #a37c11; }
+
+.active-scaffold th.sorted {
+  background: #82630f; }
+  .active-scaffold th.sorted a {
+    background: #82630f; }
+
+.active-scaffold h4 {
+  color: #b44b52; }
+
+.active-scaffold h5, .active-scaffold h2 {
+  color: #40000d; }
+
+.active-scaffold a, .active-scaffold a:visited {
+  color: #cb4c52; }
 
 div#content {
   min-width: 1000px;
   min-height: 800px;
-  padding: 5px;
-  background: #bdd4de; }
+  padding: 0 5px 5px 5px;
+  background: #ffefc4; }
+
+/* Listings */
+.active-scaffold tr.record {
+  background-color: #ffe189; }
+
+.active-scaffold tr.even-record {
+  background-color: white; }
+
+.active-scaffold tr.record td.sorted {
+  background-color: #ddc277; }
+
+.active-scaffold tr.even-record td.sorted {
+  background-color: #eeeeee; }
 
 div.countries-view,
 div.cities-view {
@@ -73,7 +103,7 @@ div.statuses-view {
   background: yellow; }
 
 #menu {
-  background: #cceeff;
+  background: #e8d3d7;
   min-height: 800px;
   width: 140px;
   position: absolute;
@@ -161,10 +191,10 @@ a.big-link {
 div.new_travel, div.member_form {
   position: relative;
   height: 470px;
-  background-color: #efefef;
+  background-color: #ffe189;
   padding: 20px; }
   div.new_travel div.col_1, div.member_form div.col_1 {
-    background-color: #efefef;
+    background-color: #ffe189;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -172,21 +202,23 @@ div.new_travel, div.member_form {
     padding: 5px;
     height: 440px; }
   div.new_travel div.col_2, div.member_form div.col_2 {
-    background-color: #dfdfdf;
+    background-color: #e8cc78;
     position: absolute;
     top: 0px;
     left: 310px;
     width: 300px;
     padding: 5px;
-    height: 440px; }
+    height: 440px;
+    border-left: 1px solid #ffe28c; }
   div.new_travel div.col_3, div.member_form div.col_3 {
-    background-color: #efefef;
+    background-color: #ffe189;
     position: absolute;
     top: 0px;
-    left: 620px;
+    left: 621px;
     width: 300px;
     padding: 5px;
-    height: 440px; }
+    height: 440px;
+    border-left: 1px solid #ffe28c; }
   div.new_travel div.form-footer, div.member_form div.form-footer {
     position: absolute;
     top: 450px;
@@ -334,7 +366,7 @@ table.children {
   padding: 5px 5px 5px 25px; }
 
 #msg-form {
-  background-color: #3f5765;
+  background-color: #e6ab11;
   width: 520px;
   padding: 10px; }
   #msg-form #record_subject {
