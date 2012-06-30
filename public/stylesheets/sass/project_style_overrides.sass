@@ -11,7 +11,7 @@ $border_1_light: hsl($hue,100,77)
 $border_1_dark: hsl($hue,52,52)
 $border_1_darker: hsl($hue,52,20)
 $border_2_light: hsl(0,0,90)
-$border_2_dark:  hsl(0,0,50)
+$border_2_dark:  hsl(0,0,70)
 $headers_1_dark: hsl($hue_2,100,13)
 $headers_1_light: hsl($hue_2,41,50)
 $links_1: hsl($hue_2,55,55)
@@ -24,6 +24,7 @@ $sorted_column_1: hsl($hue,79,29)
 $column_head: hsl($hue,79,29)
 $column_head_sorted: hsl($hue,75,45)
 $column_head_hover: hsl($hue,87,50)
+$column_head_color: white
 $sorted_column_2: hsl($hue,100,65)
 $sorted_column_2_even: hsl($hue,100,91)
 $alert: red
@@ -44,19 +45,24 @@ $alert: red
 .active-scaffold .as_content
   margin-top: 4px
   
+h1
+  color: $headers_1_dark
+  letter-spacing: 1px
+
 .active-scaffold h3
   color: $headers_1_light
   font-size: 140%
 
-.active-scaffold h4
+h4, .active-scaffold h4
   color: $headers_1_light
   font-size: 120%
   letter-spacing: 0
   margin-top: 8px
   padding-left: 0
   
-.active-scaffold h5
+h5, .active-scaffold h5
   font-size: 100%
+  color: $headers_1_light
 
 .active-scaffold h5, .active-scaffold h2
   color: $headers_1_dark
@@ -66,7 +72,9 @@ $alert: red
 
 .active-scaffold label, .active-scaffold p
   color: $headers_1_dark
-  
+
+.active-scaffold form select
+  border-color: $border_2_dark  
 // main content of tabbed form
 //.active-scaffold form.as_form #tabs.ui-tabs
 //  background-color: $tabbed_form_background  
@@ -91,6 +99,8 @@ div#content
 /* Listings */
 .active-scaffold th, .active-scaffold th a, .active-scaffold th p
   background: $column_head
+  color: $column_head_color
+  font: bold 11px arial,sans-serif
 
 .active-scaffold th a:hover, .active-scaffold th.sorted a:hover
   background: $column_head_hover
@@ -372,9 +382,7 @@ div.temporary_location_dates
 div.list_field_terms, 
 div.status_mismatch
   width: 600px
-  th
-    background: #CCE4FC
-
+  
 
   
 div.contact_updates

@@ -14,19 +14,24 @@
 .active-scaffold .as_content {
   margin-top: 4px; }
 
+h1 {
+  color: #42000b;
+  letter-spacing: 1px; }
+
 .active-scaffold h3 {
   color: #b44b5d;
   font-size: 140%; }
 
-.active-scaffold h4 {
+h4, .active-scaffold h4 {
   color: #b44b5d;
   font-size: 120%;
   letter-spacing: 0;
   margin-top: 8px;
   padding-left: 0; }
 
-.active-scaffold h5 {
-  font-size: 100%; }
+h5, .active-scaffold h5 {
+  font-size: 100%;
+  color: #b44b5d; }
 
 .active-scaffold h5, .active-scaffold h2 {
   color: #42000b; }
@@ -36,6 +41,9 @@
 
 .active-scaffold label, .active-scaffold p {
   color: #42000b; }
+
+.active-scaffold form select {
+  border-color: #b3b3b3; }
 
 .active-scaffold #tabs .ui-widget-content {
   background-color: #e8cc78; }
@@ -52,7 +60,9 @@ div#content {
 
 /* Listings */
 .active-scaffold th, .active-scaffold th a, .active-scaffold th p {
-  background: #846710; }
+  background: #846710;
+  color: white;
+  font: bold 11px arial, sans-serif; }
 
 .active-scaffold th a:hover, .active-scaffold th.sorted a:hover {
   background: #eeb711; }
@@ -332,9 +342,6 @@ div.temporary_location_dates {
 div.list_field_terms,
 div.status_mismatch {
   width: 600px; }
-  div.list_field_terms th,
-  div.status_mismatch th {
-    background: #cce4fc; }
 
 div.contact_updates p.name {
   font-weight: bold;
