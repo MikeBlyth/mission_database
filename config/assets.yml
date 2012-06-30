@@ -15,6 +15,7 @@ stylesheets:
     - public/stylesheets/active_scaffold/default/stylesheet.css
     - public/stylesheets/active_scaffold/default/stylesheet-ie.css
     - public/stylesheets/jquery*.css
+    - public/stylesheets/scaffold.css
     - public/stylesheets/project_style_overrides.css
     
 
