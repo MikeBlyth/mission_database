@@ -14,20 +14,12 @@
 .active-scaffold .as_content {
   margin-top: 4px; }
 
-.active-scaffold th, .active-scaffold th a, .active-scaffold th p {
-  background: #a37c11; }
-
-.active-scaffold th.sorted {
-  background: #846710; }
-  .active-scaffold th.sorted a {
-    background: #846710; }
-
 .active-scaffold h3 {
-  color: #b44b60;
+  color: #b44b5d;
   font-size: 140%; }
 
 .active-scaffold h4 {
-  color: #b44b60;
+  color: #b44b5d;
   font-size: 120%;
   letter-spacing: 0;
   margin-top: 8px;
@@ -37,13 +29,13 @@
   font-size: 100%; }
 
 .active-scaffold h5, .active-scaffold h2 {
-  color: #42000d; }
+  color: #42000b; }
 
 .active-scaffold a, .active-scaffold a:visited {
-  color: #cb4d66; }
+  color: #cb4d62; }
 
 .active-scaffold label, .active-scaffold p {
-  color: #42000d; }
+  color: #42000b; }
 
 .active-scaffold #tabs .ui-widget-content {
   background-color: #e8cc78; }
@@ -59,6 +51,17 @@ div#content {
   background: #fff1c7; }
 
 /* Listings */
+.active-scaffold th, .active-scaffold th a, .active-scaffold th p {
+  background: #846710; }
+
+.active-scaffold th a:hover, .active-scaffold th.sorted a:hover {
+  background: #eeb711; }
+
+.active-scaffold th.sorted {
+  background: #c99e1d; }
+  .active-scaffold th.sorted a {
+    background: #c99e1d; }
+
 .active-scaffold .records tr.record {
   background-color: #ffe28a; }
 
@@ -66,10 +69,10 @@ div#content {
   background-color: white; }
 
 .active-scaffold .records tr.record td.sorted {
-  background-color: #ddc478; }
+  background-color: #ffd24d; }
 
 .active-scaffold .records tr.even-record td.sorted {
-  background-color: #ededed; }
+  background-color: #fff4d1; }
 
 .active-scaffold tr.record td, .active-scaffold tr.record td.sorted {
   border: 1px solid #ffe28a;
@@ -129,18 +132,21 @@ div.statuses-view {
   background: yellow; }
 
 #menu {
-  background: #e8d4d7;
+  background: #ffffe0;
   min-height: 800px;
-  width: 140px;
+  width: 139px;
   position: absolute;
   top: 0px;
   left: 0px;
-  padding: 0px 5px 10px 5px; }
+  padding: 0px 5px 10px 5px;
+  border-right: 1px solid #c4a445; }
   #menu p.user {
     font-size: smaller; }
   #menu a {
-    color: #42000d;
+    color: #42000b;
     text-decoration: none; }
+  #menu a:hover {
+    background-color: #ffe699; }
   #menu ul {
     list-style-position: outside;
     margin-left: -1.5em; }
@@ -456,17 +462,17 @@ table.children {
 .ui-widget-content {
   border: 1px solid #985310;
   background: #e8cc78 url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x;
-  color: #42000d; }
+  color: #42000b; }
   .ui-widget-content a {
-    color: #42000d; }
+    color: #42000b; }
 
 .ui-widget-header {
   border: 1px solid #5d320e;
   background: #d0b267 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x;
-  color: #42000d;
+  color: #42000b;
   font-weight: bold; }
   .ui-widget-header a {
-    color: #42000d; }
+    color: #42000b; }
 
 .active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year {
   background: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") repeat-x scroll 50% 50% #d0b267;
@@ -481,12 +487,12 @@ table.children {
 .active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover {
   background: #e8cc78;
   border-color: red;
-  color: #42000d; }
+  color: #42000b; }
 
 .active-scaffold .submit:active, .ui-datepicker-month:active, .ui-datepicker-year:active {
   background: #e8cc78;
   border: 1px dotted yellow;
-  color: #42000d; }
+  color: #42000b; }
 
 /* Interaction states
  *---------------------------------- */

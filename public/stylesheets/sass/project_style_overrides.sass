@@ -1,23 +1,31 @@
-$background_1: hsl(45,46,89)
-$background_alt: hsl(45,46,100)
-$background_menu: hsl(349,31,87)
-$background_content: hsl(45,100,89)
-$background_form: hsl(45,100,77)
-$background_form_2: hsl(45,71,69)
-$border_1_light: hsl(45,100,77)
-$border_1_dark: hsl(45,52,52)
-$border_1_darker: hsl(45,52,20)
+$hue: 45
+$hue_2: 350
+$background_1: hsl($hue,46,89)
+$background_alt: hsl($hue,46,100)
+$background_menu: hsl(60,100,94)
+$menu_a_hover: hsl($hue,100,80)
+$background_content: hsl($hue,100,89)
+$background_form: hsl($hue,100,77)
+$background_form_2: hsl($hue,71,69)
+$border_1_light: hsl($hue,100,77)
+$border_1_dark: hsl($hue,52,52)
+$border_1_darker: hsl($hue,52,20)
 $border_2_light: hsl(0,0,90)
 $border_2_dark:  hsl(0,0,50)
-$headers_1_dark: hsl(348,100,13)
-$headers_1_light: hsl(348,41,50)
-$links_1: hsl(348,55,55)
-$tabbed_form_background: hsl(45,52,52)
-$widget_header: hsl(45,100,77)
-$widget_content: hsl(45,71,69)
-$sorted_column_1: hsl(45,79,29)
-$sorted_column_2: hsl(45,60,67)
-$sorted_column_2_even: hsl(0,0,93)
+$headers_1_dark: hsl($hue_2,100,13)
+$headers_1_light: hsl($hue_2,41,50)
+$links_1: hsl($hue_2,55,55)
+$tabbed_form_background: hsl($hue,52,52)
+$widget_header: hsl($hue,100,77)
+$widget_content: hsl($hue,71,69)
+$list_odd_row: hsl($hue,100,77)
+$list_even_row: white
+$sorted_column_1: hsl($hue,79,29)
+$column_head: hsl($hue,79,29)
+$column_head_sorted: hsl($hue,75,45)
+$column_head_hover: hsl($hue,87,50)
+$sorted_column_2: hsl($hue,100,65)
+$sorted_column_2_even: hsl($hue,100,91)
 $alert: red
 
 .active-scaffold .view
@@ -36,14 +44,6 @@ $alert: red
 .active-scaffold .as_content
   margin-top: 4px
   
-.active-scaffold th, .active-scaffold th a, .active-scaffold th p
-  background: #A37C11
-
-.active-scaffold th.sorted
-  background: $sorted_column_1
-  a
-    background: $sorted_column_1
-
 .active-scaffold h3
   color: $headers_1_light
   font-size: 140%
@@ -89,6 +89,17 @@ div#content
   background: $background_content
 
 /* Listings */
+.active-scaffold th, .active-scaffold th a, .active-scaffold th p
+  background: $column_head
+
+.active-scaffold th a:hover, .active-scaffold th.sorted a:hover
+  background: $column_head_hover
+
+.active-scaffold th.sorted
+  background: $column_head_sorted
+  a
+    background: $column_head_sorted
+
 .active-scaffold .records tr.record
   background-color: $background_form
 .active-scaffold .records tr.even-record
@@ -158,16 +169,19 @@ div.statuses-view
 #menu 
   background: $background_menu
   min-height: 800px
-  width: 140px
+  width: 139px
   position: absolute
   top: 0px
   left: 0px
-  padding: 0px 5px 10px 5px 
+  padding: 0px 5px 10px 5px
+  border-right: 1px solid $border_1_dark 
   p.user
     font-size: smaller
   a
     color: $headers_1_dark
     text-decoration: none
+  a:hover
+    background-color: $menu_a_hover
   ul 
     list-style-position: outside
     margin-left: -1.5em 
