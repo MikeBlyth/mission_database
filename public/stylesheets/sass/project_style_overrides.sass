@@ -6,6 +6,7 @@ $background_form: hsl(45,100,77)
 $background_form_2: hsl(45,71,69)
 $border_1_light: hsl(45,100,77)
 $border_1_dark: hsl(45,52,52)
+$border_1_darker: hsl(45,52,20)
 $border_2_light: hsl(0,0,90)
 $border_2_dark:  hsl(0,0,50)
 $headers_1_dark: hsl(348,100,13)
@@ -491,19 +492,19 @@ table.children
 .ui-widget-content
   border: 1px solid #985310
   background: #e8cc78 url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x
-  color: #40000d
+  color: $headers_1_dark
   a
-    color: #40000d
+    color: $headers_1_dark
 
 .ui-widget-header
   border: 1px solid #5d320e
   background: #d0b267 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x
-  color: #40000d
+  color: $headers_1_dark
   font-weight: bold
   a
-    color: #40000d
+    color: $headers_1_dark
     
-.active-scaffold .submit, .ui-datepicker-month
+.active-scaffold .submit, .ui-datepicker-month, , .ui-datepicker-year
   background: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") repeat-x scroll 50% 50% #D0B267 
   color: white     
   padding: 2px
@@ -511,8 +512,18 @@ table.children
   -moz-border-radius: 6px
   -webkit-border-radius: 6px
   border-radius: 6px
-  border: 1px solid $border_1_dark
-
+  border: 1px solid $border_1_darker
+  
+.active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover
+  background: $background_form_2
+  border-color: red
+  color: $headers_1_dark
+  
+.active-scaffold .submit:active, .ui-datepicker-month:active, .ui-datepicker-year:active
+  background: $background_form_2
+  border: 1px dotted yellow
+  color: $headers_1_dark
+  
 /* Interaction states
  *---------------------------------- */
 

@@ -456,19 +456,19 @@ table.children {
 .ui-widget-content {
   border: 1px solid #985310;
   background: #e8cc78 url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x;
-  color: #40000d; }
+  color: #42000d; }
   .ui-widget-content a {
-    color: #40000d; }
+    color: #42000d; }
 
 .ui-widget-header {
   border: 1px solid #5d320e;
   background: #d0b267 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x;
-  color: #40000d;
+  color: #42000d;
   font-weight: bold; }
   .ui-widget-header a {
-    color: #40000d; }
+    color: #42000d; }
 
-.active-scaffold .submit, .ui-datepicker-month {
+.active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year {
   background: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") repeat-x scroll 50% 50% #d0b267;
   color: white;
   padding: 2px;
@@ -476,7 +476,17 @@ table.children {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  border: 1px solid #c4a445; }
+  border: 1px solid #4e4018; }
+
+.active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover {
+  background: #e8cc78;
+  border-color: red;
+  color: #42000d; }
+
+.active-scaffold .submit:active, .ui-datepicker-month:active, .ui-datepicker-year:active {
+  background: #e8cc78;
+  border: 1px dotted yellow;
+  color: #42000d; }
 
 /* Interaction states
  *---------------------------------- */
