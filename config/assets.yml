@@ -12,7 +12,9 @@ javascripts:
    
 stylesheets:
   common:
-    - public/stylesheets/active_scaffold/default/*.css
-    - public/stylesheets/*.css
+    - public/stylesheets/active_scaffold/default/stylesheet.css
+    - public/stylesheets/active_scaffold/default/stylesheet-ie.css
     - public/stylesheets/jquery*.css
+    - public/stylesheets/project_style_overrides.css
+    
 
