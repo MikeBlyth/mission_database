@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   ActiveScaffold.set_defaults do |config| 
     config.ignore_columns.add [:created_at, :updated_at, :lock_version]
+    config.theme = :gold
   end
 
   before_filter :require_https, :except => :update_status_clickatell #, :only => [:login, :signup, :change_password] 
