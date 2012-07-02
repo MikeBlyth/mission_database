@@ -1,20 +1,25 @@
 $hue: 45
-$hue_accent: 32
+$hue_accent: $hue - 15
 $hue_2: 350
 $body_text_light: hsl($hue, 100, 10)
 $body_text_dark: hsl($hue, 100, 5)
-$background_1: hsl($hue,46,89)
-$background_alt: hsl($hue,46,100)
+$background_1: hsl($hue,45,90)
+$background_alt: hsl($hue,45,100)
 $background_menu: hsl(60,100,94)
 $menu_a_hover: hsl($hue,100,80)
-$background_content: hsl($hue,100,89)
+$background_content: hsl($hue,100,90)
 $background_form: hsl($hue,100,77)
-$background_form_2: hsl($hue,71,69)
+$background_form_2: hsl($hue,70,70)
+$background_form_3: hsl($hue,50,60)
 $border_1_light: hsl($hue,100,77)
+$border_1_medium: hsl($hue, 75, 33)
 $border_1_dark: hsl($hue,52,52)
 $border_1_darker: hsl($hue,52,20)
 $border_2_light: hsl(0,0,90)
 $border_2_dark:  hsl(0,0,70)
+$border_3_dark: hsl($hue_accent,80,30)
+$border_3_darker: hsl($hue_accent,75,20)
+
 $headers_1_dark: hsl($hue_2,100,13)
 $headers_1_light: hsl($hue_2,41,50)
 $links_1: hsl($hue_2,55,45)
@@ -42,12 +47,12 @@ $notice_text: hsl(0, 0, 93)
 body
   color: $body_text_dark
   
-a, a:visited
-  color: $links_1
-  
-a:hover
-  color: $links_1_hover
-  font-weight: bold 
+a
+  &:visited
+    color: $links_1
+  &:hover
+    color: $links_1_hover
+    font-weight: bold 
 
 .active-scaffold .view
   background: $background_content
@@ -132,8 +137,8 @@ div#content
   border-right: 1px solid $border_1_dark 
   a
     color: $headers_1_dark
-  a:hover
-    background-color: $menu_a_hover
+    &:hover
+      background-color: $menu_a_hover
 
 td.label
   color: blue
@@ -208,6 +213,134 @@ table.children
 
 #content 
   background: $background_alt
+  
+  
+/********* THEME FOR JQUERY-UI WIDGETS (COLOR AND IMAGES ONLY) ********/  
+/********** JQUERY-UI COMPONENTS ******/
+/* Component containers
+ *---------------------------------- */
+
+$widget_content: url(images/ui-bg_flat_75_e8cc78_40x100.png)
+$widget_header: url(images/ui-bg_highlight-soft_75_d0b267_1x100.png)
+$date_picker_selectors: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") 
+
+$state_default_image: url(images/ui-bg_glow-ball_50_fcf4de_600x600.png)
+$state_hover_image: url(images/ui-bg_glass_75_ffd866_1x400.png)
+$state_active_image: url(images/ui-bg_glass_65_f6d9a2_1x400.png)
+$state_highlight_image: url(images/ui-bg_glass_55_fbf9ee_1x400.png)
+$state_error_image: url(images/ui-bg_inset-soft_95_fef1ec_1x100.png)
+
+$widget_borders_1: $border_3_dark
+$widget_borders_2: $border_3_darker
+
+
+.ui-widget-content
+  border: 1px solid $widget_borders_1
+  background: $background_form_2 $widget-content 50% 50% repeat-x
+  color: $headers_1_dark
+  a
+    color: $headers_1_dark
+
+.ui-widget-header
+  border: 1px solid $widget_borders_2
+  background: $background_form_3 $widget_header 50% 50% repeat-x
+  color: $headers_1_dark
+  a
+    color: $headers_1_dark
+    
+.active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year
+  background: $date_picker_selectors repeat-x scroll 50% 50% $background_form_3
+  color: white     
+  border: 1px solid $border_1_darker
+  &:hover
+    background: $background_form_2
+    border-color: red
+    color: $headers_1_dark
+  &:active
+    background: $background_form_2
+    border: 1px dotted yellow
+    color: $headers_1_dark
+  
+/* Interaction states
+ *---------------------------------- */
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
+  border: 1px solid #ddc887
+  background: #fcf4de $state_default_image 50% 50% repeat-x
+  color: #b49f5e
+
+.ui-state-default a
+  color: #b49f5e
+  &:link, &:visited
+    color: #b49f5e
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus
+  border: 1px solid #eaab8b
+  background: #ffd866 $state_hover_image  50% 50% repeat-x
+  color: #212121
+
+.ui-state-hover a
+  color: #212121
+  &:hover
+    color: #212121
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active
+  border: 1px solid #834911
+  background: #f6d9a2 $state_active_image 50% 50% repeat-x
+  color: #40000d
+
+.ui-state-active a
+  color: #40000d
+  &:link, &:visited
+    color: #40000d
+
+/* Interaction Cues
+ *---------------------------------- */
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight
+  border: 1px solid #fcefa1
+  background: #fbf9ee $state_highlight_image 50% 50% repeat-x
+  color: #363636
+
+.ui-state-highlight a, .ui-widget-content a, .ui-widget-header a
+  color: #363636
+
+.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error
+  border: 1px solid #cd0a0a
+  background: #fef1ec $state_error_image 50% bottom repeat-x
+  color: #cd0a0a
+
+.ui-state-error a, .ui-widget-content a, .ui-widget-header a, .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text
+  color: #cd0a0a
+
+/* Icons
+ *----------------------------------
+
+/* icons and icons w state */
+/* Each image is a whole collection of icons with different colors and backgrounds */
+/* Individual icons are sprites within a collection */
+
+.ui-icon
+  background-image: url(images/ui-icons_222222_256x240.png)
+
+.ui-widget-content .ui-icon, .ui-widget-header .ui-icon
+  background-image: url(images/ui-icons_222222_256x240.png)
+
+.ui-state-default .ui-icon
+  background-image: url(images/ui-icons_b49f5e_256x240.png)
+
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon
+  background-image: url(images/ui-icons_454545_256x240.png)
+
+.ui-state-active .ui-icon
+  background-image: url(images/ui-icons_40000d_256x240.png)
+
+.ui-state-highlight .ui-icon
+  background-image: url(images/ui-icons_2e83ff_256x240.png)
+
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon
+  background-image: url(images/ui-icons_cd0a0a_256x240.png)
+
 
 /********** END THEMES ***************/
 
@@ -565,7 +698,7 @@ table.children
 .not-implemented
   display: none    
   
-/********** JQUERY-UI COMPONENTS ******/
+/********** JQUERY-UI COMPONENTS (WITHOUT THEME - color & image - INFO ******/
 /* Component containers
  *---------------------------------- */
 
@@ -578,81 +711,38 @@ table.children
     font-family: Verdana,Arial,sans-serif
     font-size: 1em
 
-.ui-widget-content
-  border: 1px solid #985310
-  background: #e8cc78 url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x
-  color: $headers_1_dark
-  a
-    color: $headers_1_dark
-
-.ui-widget-header
-  border: 1px solid #5d320e
-  background: #d0b267 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x
-  color: $headers_1_dark
-  font-weight: bold
-  a
-    color: $headers_1_dark
-    
 .active-scaffold .submit, .ui-datepicker-month, , .ui-datepicker-year
-  background: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") repeat-x scroll 50% 50% #D0B267 
-  color: white     
   padding: 2px
   margin: 4px
   -moz-border-radius: 6px
   -webkit-border-radius: 6px
   border-radius: 6px
-  border: 1px solid $border_1_darker
-  
-.active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover
-  background: $background_form_2
-  border-color: red
-  color: $headers_1_dark
-  
-.active-scaffold .submit:active, .ui-datepicker-month:active, .ui-datepicker-year:active
-  background: $background_form_2
-  border: 1px dotted yellow
-  color: $headers_1_dark
   
 /* Interaction states
  *---------------------------------- */
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
-  border: 1px solid #ddc887
-  background: #fcf4de url(images/ui-bg_glow-ball_50_fcf4de_600x600.png) 50% 50% repeat-x
   font-weight: normal
-  color: #b49f5e
 
 .ui-state-default a
-  color: #b49f5e
   text-decoration: none
   &:link, &:visited
-    color: #b49f5e
     text-decoration: none
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus
-  border: 1px solid #eaab8b
-  background: #ffd866 url(images/ui-bg_glass_75_ffd866_1x400.png) 50% 50% repeat-x
   font-weight: normal
-  color: #212121
 
 .ui-state-hover a
-  color: #212121
   text-decoration: none
   &:hover
-    color: #212121
     text-decoration: none
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active
-  border: 1px solid #834911
-  background: #f6d9a2 url(images/ui-bg_glass_65_f6d9a2_1x400.png) 50% 50% repeat-x
   font-weight: normal
-  color: #40000d
 
 .ui-state-active a
-  color: #40000d
   text-decoration: none
   &:link, &:visited
-    color: #40000d
     text-decoration: none
 
 .ui-widget :active
@@ -660,22 +750,6 @@ table.children
 
 /* Interaction Cues
  *---------------------------------- */
-
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight
-  border: 1px solid #fcefa1
-  background: #fbf9ee url(images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x
-  color: #363636
-
-.ui-state-highlight a, .ui-widget-content a, .ui-widget-header a
-  color: #363636
-
-.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error
-  border: 1px solid #cd0a0a
-  background: #fef1ec url(images/ui-bg_inset-soft_95_fef1ec_1x100.png) 50% bottom repeat-x
-  color: #cd0a0a
-
-.ui-state-error a, .ui-widget-content a, .ui-widget-header a, .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text
-  color: #cd0a0a
 
 .ui-priority-primary, .ui-widget-content .ui-priority-primary, .ui-widget-header .ui-priority-primary
   font-weight: bold
@@ -698,28 +772,5 @@ table.children
 .ui-icon
   width: 16px
   height: 16px
-  background-image: url(images/ui-icons_222222_256x240.png)
 
-.ui-widget-content .ui-icon, .ui-widget-header .ui-icon
-  background-image: url(images/ui-icons_222222_256x240.png)
-
-.ui-state-default .ui-icon
-  background-image: url(images/ui-icons_b49f5e_256x240.png)
-
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon
-  background-image: url(images/ui-icons_454545_256x240.png)
-
-.ui-state-active .ui-icon
-  background-image: url(images/ui-icons_40000d_256x240.png)
-
-.ui-state-highlight .ui-icon
-  background-image: url(images/ui-icons_2e83ff_256x240.png)
-
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon
-  background-image: url(images/ui-icons_cd0a0a_256x240.png)
-
-/* Date Picker */
-
-.ui-datepicker-month
-//  background: #fcf4de url(images/ui-bg_glow-ball_50_fcf4de_600x600.png) 50% 50% repeat-x
 
