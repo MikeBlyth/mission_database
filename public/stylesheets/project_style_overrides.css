@@ -6,15 +6,15 @@ body {
 a:visited {
   color: #b23449; }
 a:hover {
-  color: #fff1c7;
+  color: #fff2cc;
   font-weight: bold; }
 
 .active-scaffold .view {
-  background: #fff1c7;
+  background: #fff2cc;
   border: 1px solid #c4a445; }
 
 .active-scaffold .active-scaffold td.inline-adapter-cell {
-  background: #fff1c7; }
+  background: #fff2cc; }
 
 .as_form table {
   background: #ffe28a; }
@@ -54,7 +54,7 @@ h5, .active-scaffold h5 {
   border: 1px solid #c4a445; }
 
 div#content {
-  background: #fff1c7; }
+  background: #fff2cc; }
 
 /* Listings */
 .active-scaffold th, .active-scaffold th a, .active-scaffold th p {
@@ -111,7 +111,7 @@ div.new_travel, div.member_form {
   div.new_travel div.col_1, div.member_form div.col_1 {
     background-color: #ffe28a; }
   div.new_travel div.col_2, div.member_form div.col_2 {
-    background-color: #e8cc78;
+    background-color: #e8cd7d;
     border-left: 1px solid #ffe28a; }
   div.new_travel div.col_3, div.member_form div.col_3 {
     background-color: #ffe28a;
@@ -124,7 +124,7 @@ div.new_travel, div.member_form {
   background: white; }
 
 div.crosstab tr.odd {
-  background: #f0e9d6; }
+  background: #f1ebda; }
 div.crosstab tr.even {
   background: white; }
 div.crosstab tr.total {
@@ -164,7 +164,7 @@ div.crosstab tr.total {
   background: white; }
 
 table.children th {
-  background: #e8cc78; }
+  background: #846710; }
 
 #content {
   background: white; }
@@ -173,82 +173,84 @@ table.children th {
 /********* JQUERY-UI COMPONENTS ***** */
 /* Component containers
  *---------------------------------- */
+/******* Images **** */
+/****** Colors ** */
 .ui-widget-content {
   border: 1px solid #8a4d0f;
-  background: #e8cc78 url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x;
+  background: #e8cd7d url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x;
   color: #42000b; }
   .ui-widget-content a {
     color: #42000b; }
 
 .ui-widget-header {
-  border: 1px solid #5d320e;
-  background: #d0b267 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x;
+  border: 1px solid #59330d;
+  background: #ccb366 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x;
   color: #42000b; }
   .ui-widget-header a {
     color: #42000b; }
 
 .active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year {
-  background: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") repeat-x scroll 50% 50% #d0b267;
+  background: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") repeat-x scroll 50% 50% #ccb366;
   color: white;
   border: 1px solid #4e4018; }
   .active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover {
-    background: #e8cc78;
+    background: #e8cd7d;
     border-color: red;
     color: #42000b; }
   .active-scaffold .submit:active, .ui-datepicker-month:active, .ui-datepicker-year:active {
-    background: #e8cc78;
+    background: #e8cd7d;
     border: 1px dotted yellow;
     color: #42000b; }
 
 /* Interaction states
  *---------------------------------- */
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-  border: 1px solid #ddc887;
-  background: #fcf4de url(images/ui-bg_glow-ball_50_fcf4de_600x600.png) 50% 50% repeat-x;
-  color: #b49f5e; }
+  border: 1px solid #ffe28a;
+  background: #fff2cc url(images/ui-bg_glow-ball_50_fcf4de_600x600.png) 50% 50% repeat-x;
+  color: #e8cd7d; }
 
 .ui-state-default a {
-  color: #b49f5e; }
+  color: #bf9f40; }
   .ui-state-default a:link, .ui-state-default a:visited {
-    color: #b49f5e; }
+    color: #bf9f40; }
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  border: 1px solid #eaab8b;
-  background: #ffd866 url(images/ui-bg_glass_75_ffd866_1x400.png) 50% 50% repeat-x;
-  color: #212121; }
+  border: 1px solid #e8a17d;
+  background: #ffd966 url(images/ui-bg_glass_75_ffd866_1x400.png) 50% 50% repeat-x;
+  color: #350d14; }
 
 .ui-state-hover a {
-  color: #212121; }
+  color: #350d14; }
   .ui-state-hover a:hover {
-    color: #212121; }
+    color: #350d14; }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-  border: 1px solid #834911;
-  background: #f6d9a2 url(images/ui-bg_glass_65_f6d9a2_1x400.png) 50% 50% repeat-x;
-  color: #40000d; }
+  border: 1px solid #8a4d0f;
+  background: #f5e0a3 url(images/ui-bg_glass_65_f6d9a2_1x400.png) 50% 50% repeat-x;
+  color: #42000b; }
 
 .ui-state-active a {
-  color: #40000d; }
+  color: #42000b; }
   .ui-state-active a:link, .ui-state-active a:visited {
-    color: #40000d; }
+    color: #42000b; }
 
 /* Interaction Cues
  *---------------------------------- */
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
   border: 1px solid #fcefa1;
-  background: #fbf9ee url(images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x;
-  color: #363636; }
+  background: #faf6eb url(images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x;
+  color: #333333; }
 
 .ui-state-highlight a, .ui-widget-content a, .ui-widget-header a {
-  color: #363636; }
+  color: #333333; }
 
 .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {
-  border: 1px solid #cd0a0a;
-  background: #fef1ec url(images/ui-bg_inset-soft_95_fef1ec_1x100.png) 50% bottom repeat-x;
-  color: #cd0a0a; }
+  border: 1px solid #c20a0a;
+  background: #fee7e7 url(images/ui-bg_inset-soft_95_fef1ec_1x100.png) 50% bottom repeat-x;
+  color: #c20a0a; }
 
 .ui-state-error a, .ui-widget-content a, .ui-widget-header a, .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text {
-  color: #cd0a0a; }
+  color: #c20a0a; }
 
 /* Icons
  *---------------------------------- */

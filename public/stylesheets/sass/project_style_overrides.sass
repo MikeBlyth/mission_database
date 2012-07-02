@@ -1,11 +1,13 @@
 $hue: 45
 $hue_accent: $hue - 15
 $hue_2: 350
+$hue_menu: 60
+$grey_20: hsl(0,0,20)
 $body_text_light: hsl($hue, 100, 10)
 $body_text_dark: hsl($hue, 100, 5)
 $background_1: hsl($hue,45,90)
 $background_alt: hsl($hue,45,100)
-$background_menu: hsl(60,100,94)
+$background_menu: hsl($hue_menu,100,94)
 $menu_a_hover: hsl($hue,100,80)
 $background_content: hsl($hue,100,90)
 $background_form: hsl($hue,100,77)
@@ -19,8 +21,8 @@ $border_2_light: hsl(0,0,90)
 $border_2_dark:  hsl(0,0,70)
 $border_3_dark: hsl($hue_accent,80,30)
 $border_3_darker: hsl($hue_accent,75,20)
-
-$headers_1_dark: hsl($hue_2,100,13)
+$body_text_default: hsl($hue_2,100,13)
+$headers_1_dark: $body_text_default
 $headers_1_light: hsl($hue_2,41,50)
 $links_1: hsl($hue_2,55,45)
 $links_1_hover: $background_content
@@ -39,6 +41,8 @@ $sorted_column_2_even: hsl($hue,100,91)
 $alert: red
 $notice_background: hsl($hue_accent, 100, 35)
 $notice_text: hsl(0, 0, 93)
+$error_text: hsl(0,90,40)
+$error_background: hsl(0,90,95)
 
 
 /*********** THEMES ******************/
@@ -209,7 +213,7 @@ div.crosstab
 
 table.children
   th
-    background: $background_form_2
+    background: $column_head
 
 #content 
   background: $background_alt
@@ -220,6 +224,7 @@ table.children
 /* Component containers
  *---------------------------------- */
 
+/******** Images *****/
 $widget_content: url(images/ui-bg_flat_75_e8cc78_40x100.png)
 $widget_header: url(images/ui-bg_highlight-soft_75_d0b267_1x100.png)
 $date_picker_selectors: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") 
@@ -230,9 +235,18 @@ $state_active_image: url(images/ui-bg_glass_65_f6d9a2_1x400.png)
 $state_highlight_image: url(images/ui-bg_glass_55_fbf9ee_1x400.png)
 $state_error_image: url(images/ui-bg_inset-soft_95_fef1ec_1x100.png)
 
+/******* Colors ***/
+$hue_widget: $hue
 $widget_borders_1: $border_3_dark
 $widget_borders_2: $border_3_darker
-
+$widget_borders_hover: hsl($hue_widget - 25, 70, 70)
+$widget_background_default: $background_content
+$widget_background_active: hsl($hue_widget, 80, 80)
+$widget_background_highlight: hsl($hue_widget, 60, 95)
+$widget_background_hover: hsl(45, 100, 70) // may not want to adjust this automatically w main theme color
+$widget_text: $body_text_default
+$widget_text_inactive: hsl($hue_widget, 50, 50)
+$widget_text_hover: desaturate($body_text_default,40)
 
 .ui-widget-content
   border: 1px solid $widget_borders_1
@@ -265,53 +279,53 @@ $widget_borders_2: $border_3_darker
  *---------------------------------- */
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
-  border: 1px solid #ddc887
-  background: #fcf4de $state_default_image 50% 50% repeat-x
-  color: #b49f5e
+  border: 1px solid $border_1_light
+  background: $widget_background_default $state_default_image 50% 50% repeat-x
+  color: $background_form_2
 
 .ui-state-default a
-  color: #b49f5e
+  color: $widget_text_inactive
   &:link, &:visited
-    color: #b49f5e
+    color: $widget_text_inactive
 
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus
-  border: 1px solid #eaab8b
-  background: #ffd866 $state_hover_image  50% 50% repeat-x
-  color: #212121
+  border: 1px solid $widget_borders_hover
+  background: $widget_background_hover $state_hover_image  50% 50% repeat-x
+  color: $widget_text_hover
 
 .ui-state-hover a
-  color: #212121
+  color: $widget_text_hover
   &:hover
-    color: #212121
+    color: $widget_text_hover
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active
-  border: 1px solid #834911
-  background: #f6d9a2 $state_active_image 50% 50% repeat-x
-  color: #40000d
+  border: 1px solid $border_3_dark
+  background: $widget_background_active $state_active_image 50% 50% repeat-x
+  color: $widget_text
 
 .ui-state-active a
-  color: #40000d
+  color: $widget_text
   &:link, &:visited
-    color: #40000d
+    color: $widget_text
 
 /* Interaction Cues
  *---------------------------------- */
 
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight
   border: 1px solid #fcefa1
-  background: #fbf9ee $state_highlight_image 50% 50% repeat-x
-  color: #363636
+  background: $widget_background_highlight $state_highlight_image 50% 50% repeat-x
+  color: $grey_20
 
 .ui-state-highlight a, .ui-widget-content a, .ui-widget-header a
-  color: #363636
+  color: $grey_20
 
 .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error
-  border: 1px solid #cd0a0a
-  background: #fef1ec $state_error_image 50% bottom repeat-x
-  color: #cd0a0a
+  border: 1px solid $error_text
+  background: $error_background $state_error_image 50% bottom repeat-x
+  color: $error_text
 
 .ui-state-error a, .ui-widget-content a, .ui-widget-header a, .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text
-  color: #cd0a0a
+  color: $error_text
 
 /* Icons
  *----------------------------------
