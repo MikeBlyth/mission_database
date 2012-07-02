@@ -1,5 +1,15 @@
 /********** THEMES ***************** */
 /*** Default **** */
+body {
+  color: #1a1300; }
+
+a, a:visited {
+  color: #b23449; }
+
+a:hover {
+  color: #fff1c7;
+  font-weight: bold; }
+
 .active-scaffold .view {
   background: #fff1c7;
   border: 1px solid #c4a445; }
@@ -29,7 +39,7 @@ h5, .active-scaffold h5 {
   color: #42000b; }
 
 .active-scaffold a, .active-scaffold a:visited {
-  color: #cb4d62; }
+  color: #b23449; }
 
 .active-scaffold label, .active-scaffold p {
   color: #42000b; }
@@ -78,6 +88,88 @@ div#content {
   border-bottom-color: #c4a445;
   border-left-color: #c4a445; }
 
+/* Warning that too many characters have been entered into input box */
+.exceeded {
+  background: yellow; }
+
+#menu {
+  background: #ffffe0;
+  border-right: 1px solid #c4a445; }
+  #menu a {
+    color: #42000b; }
+  #menu a:hover {
+    background-color: #ffe699; }
+
+td.label {
+  color: blue; }
+
+label.required {
+  font-style: italic;
+  color: black; }
+
+div.new_travel, div.member_form {
+  background-color: #ffe28a; }
+  div.new_travel div.col_1, div.member_form div.col_1 {
+    background-color: #ffe28a; }
+  div.new_travel div.col_2, div.member_form div.col_2 {
+    background-color: #e8cc78;
+    border-left: 1px solid #ffe28a; }
+  div.new_travel div.col_3, div.member_form div.col_3 {
+    background-color: #ffe28a;
+    border-left: 1px solid #ffe28a; }
+
+.list_line_odd {
+  background: #ffe28a; }
+
+.list_line_even {
+  background: white; }
+
+div.crosstab tr.odd {
+  background: #f0e9d6; }
+div.crosstab tr.even {
+  background: white; }
+div.crosstab tr.total {
+  background: white; }
+
+#msg-form {
+  background-color: #ffe28a; }
+
+#msg-followup .note, #msg-form .note {
+  border: 1px solid red;
+  margin-bottom: 1em; }
+#msg-followup .msg-quote, #msg-form .msg-quote {
+  border: 1px solid #c4a445; }
+
+#msg-followup #msg-top {
+  background-color: white; }
+
+#advanced #options {
+  background-color: white; }
+
+#notice {
+  border: 1px solid grey;
+  background: #b35f00;
+  color: #ededed; }
+
+.whereis tr.new_location {
+  background: #0080fc; }
+
+.whereis .new_location td {
+  color: white;
+  font-style: italic; }
+
+.list_line_odd {
+  background: #ffe28a; }
+
+.list_line_even {
+  background: white; }
+
+table.children th {
+  background: #e8cc78; }
+
+#content {
+  background: white; }
+
 /********* END THEMES ************** */
 .active-scaffold .as_content {
   margin-top: 4px; }
@@ -97,6 +189,12 @@ h4, .active-scaffold h4 {
 h5, .active-scaffold h5 {
   font-size: 100%; }
 
+.active-scaffold input.text-input, .active-scaffold select {
+  font-size: 1em;
+  font-family: Verdana, Arial;
+  font-weight: normal; }
+
+/******* Sizing *********** */
 div#content {
   min-width: 1000px;
   min-height: 800px;
@@ -115,11 +213,6 @@ div.locations-view,
 div.ministries-view,
 div.statuses-view {
   width: 450px; }
-
-.active-scaffold input.text-input, .active-scaffold select {
-  font-size: 1em;
-  font-family: Verdana, Arial;
-  font-weight: normal; }
 
 .longitude-input, .latitude-input, .code-input, .flight-input,
 .total_passengers-input, .baggage-input, .time-input {
@@ -151,25 +244,21 @@ div.statuses-view {
 .education-input, .ministry_comments {
   width: 270px; }
 
-.exceeded {
-  background: yellow; }
+/******************* GENERAL *************** */
+a, a:visited {
+  text-decoration: none; }
 
 #menu {
-  background: #ffffe0;
   min-height: 800px;
   width: 139px;
   position: absolute;
   top: 0px;
   left: 0px;
-  padding: 0px 5px 10px 5px;
-  border-right: 1px solid #c4a445; }
+  padding: 0px 5px 10px 5px; }
   #menu p.user {
     font-size: smaller; }
   #menu a {
-    color: #42000b;
     text-decoration: none; }
-  #menu a:hover {
-    background-color: #ffe699; }
   #menu ul {
     list-style-position: outside;
     margin-left: -1.5em; }
@@ -180,7 +269,6 @@ div.statuses-view {
   margin-left: 0px; }
 
 #content {
-  background: white;
   position: absolute;
   top: 0px;
   left: 150px;
@@ -189,9 +277,6 @@ div.statuses-view {
 #notice {
   padding: 0.5em;
   margin: 10px;
-  border: 1px solid grey;
-  background: navy;
-  color: #eeeeee;
   font-style: bold;
   font-size: 1.2em; }
 
@@ -212,15 +297,10 @@ div.statuses-view {
   background: blue; }
 
 td.label {
-  color: blue;
   text-align: right; }
 
 .hidden {
   display: none; }
-
-label.required {
-  font-style: italic;
-  color: black; }
 
 table.new_family {
   width: 600px; }
@@ -251,10 +331,8 @@ a.big-link {
 div.new_travel, div.member_form {
   position: relative;
   height: 470px;
-  background-color: #ffe28a;
   padding: 20px; }
   div.new_travel div.col_1, div.member_form div.col_1 {
-    background-color: #ffe28a;
     position: absolute;
     top: 0px;
     left: 0px;
@@ -262,23 +340,19 @@ div.new_travel, div.member_form {
     padding: 5px;
     height: 440px; }
   div.new_travel div.col_2, div.member_form div.col_2 {
-    background-color: #e8cc78;
     position: absolute;
     top: 0px;
     left: 310px;
     width: 300px;
     padding: 5px;
-    height: 440px;
-    border-left: 1px solid #ffe28a; }
+    height: 440px; }
   div.new_travel div.col_3, div.member_form div.col_3 {
-    background-color: #ffe28a;
     position: absolute;
     top: 0px;
     left: 621px;
     width: 300px;
     padding: 5px;
-    height: 440px;
-    border-left: 1px solid #ffe28a; }
+    height: 440px; }
   div.new_travel div.form-footer, div.member_form div.form-footer {
     position: absolute;
     top: 450px;
@@ -338,19 +412,8 @@ div.temporary_location_dates {
 .whereis td, .status_mismatch td {
   padding: 0.1em 0.7em 0.1em 0.4em; }
 
-.whereis tr.new_location {
-  background: #0080fc; }
-
 .whereis .new_location td {
-  color: white;
-  font-style: italic;
   padding-top: 0.5em; }
-
-.list_line_odd {
-  background: #ffe28a; }
-
-.list_line_even {
-  background: white; }
 
 div.list_field_terms,
 div.status_mismatch {
@@ -373,17 +436,11 @@ div.crosstab p.title {
 div.crosstab th {
   text-align: left;
   padding: 0px 10px 0px 10px; }
-div.crosstab tr.odd {
-  background: #f0e9d6; }
-div.crosstab tr.even {
-  background: white; }
 div.crosstab td {
   padding: 0px 30px 0px 10px;
   text-align: right; }
 div.crosstab td.row_label {
   text-align: left; }
-div.crosstab tr.total {
-  background: white; }
 
 .school-input {
   width: 70px; }
@@ -398,8 +455,6 @@ table.children {
     width: 90px; }
   table.children .employment_status-input {
     width: 100px; }
-  table.children th {
-    background: #e8cc78; }
   table.children th.idx {
     width: 30px; }
   table.children th.name {
@@ -420,7 +475,6 @@ table.children {
   padding: 5px 5px 5px 25px; }
 
 #msg-form {
-  background-color: #ffe28a;
   width: 520px;
   padding: 10px; }
   #msg-form #record_subject {
@@ -437,18 +491,13 @@ table.children {
     padding: 0.5em;
     margin-top: 0.5em; }
   #msg-followup .note, #msg-form .note {
-    border: 1px solid red;
     width: 380px;
     padding: 0.5em;
     margin-bottom: 1em;
     font-size: smaller; }
   #msg-followup .msg-quote, #msg-form .msg-quote {
-    border: 1px solid #c4a445;
     padding: 0.5em;
     margin: 0.5em 1em 0.5em 1em; }
-
-#msg-followup #msg-top {
-  background-color: white; }
 
 #advanced {
   position: absolute;
@@ -456,9 +505,6 @@ table.children {
   left: 200px;
   width: 200px;
   padding: 5px; }
-
-#advanced #options {
-  background-color: red; }
 
 .groups-view #record_abbrev {
   width: 80px; }
@@ -468,6 +514,7 @@ table.children {
 .not-implemented {
   display: none; }
 
+/********* JQUERY-UI COMPONENTS ***** */
 /* Component containers
  *---------------------------------- */
 .ui-widget {

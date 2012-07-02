@@ -1,5 +1,8 @@
 $hue: 45
+$hue_accent: 32
 $hue_2: 350
+$body_text_light: hsl($hue, 100, 10)
+$body_text_dark: hsl($hue, 100, 5)
 $background_1: hsl($hue,46,89)
 $background_alt: hsl($hue,46,100)
 $background_menu: hsl(60,100,94)
@@ -14,7 +17,8 @@ $border_2_light: hsl(0,0,90)
 $border_2_dark:  hsl(0,0,70)
 $headers_1_dark: hsl($hue_2,100,13)
 $headers_1_light: hsl($hue_2,41,50)
-$links_1: hsl($hue_2,55,55)
+$links_1: hsl($hue_2,55,45)
+$links_1_hover: $background_content
 $tabbed_form_background: hsl($hue,52,52)
 $widget_header: hsl($hue,100,77)
 $widget_content: hsl($hue,71,69)
@@ -28,10 +32,22 @@ $column_head_color: white
 $sorted_column_2: hsl($hue,100,65)
 $sorted_column_2_even: hsl($hue,100,91)
 $alert: red
+$notice_background: hsl($hue_accent, 100, 35)
+$notice_text: hsl(0, 0, 93)
 
 
 /*********** THEMES ******************/
 /**** Default *****/
+
+body
+  color: $body_text_dark
+  
+a, a:visited
+  color: $links_1
+  
+a:hover
+  color: $links_1_hover
+  font-weight: bold 
 
 .active-scaffold .view
   background: $background_content
@@ -168,6 +184,31 @@ div.crosstab
 #advanced #options
   background-color: $background_alt
 
+#notice 
+  border: 1px solid grey
+  background: $notice_background
+  color: $notice_text
+
+.whereis tr.new_location
+  background: #0080FC
+
+.whereis .new_location td
+  color: white
+  font-style: italic
+  
+.list_line_odd
+  background: $background_form  
+
+.list_line_even
+  background: white  
+
+table.children
+  th
+    background: $background_form_2
+
+#content 
+  background: $background_alt
+
 /********** END THEMES ***************/
 
 .active-scaffold .as_content
@@ -194,30 +235,7 @@ h5, .active-scaffold h5
     font-family: Verdana, Arial
     font-weight: normal
                            
-#content 
-  background: $background_alt
 
-#notice 
-  border: 1px solid grey
-  background: navy
-  color: #eee
-
-.whereis tr.new_location
-  background: #0080FC
-
-.whereis .new_location td
-  color: white
-  font-style: italic
-  
-.list_line_odd
-  background: $background_form  
-
-.list_line_even
-  background: white  
-
-table.children
-  th
-    background: $background_form_2
 /******** Sizing ************/ 
 
 div#content
@@ -269,6 +287,10 @@ div.statuses-view
 .education-input, .ministry_comments 
   width: 270px
 
+/******************** GENERAL ****************/
+
+a, a:visited
+  text-decoration: none
 
 #menu 
   min-height: 800px
@@ -543,6 +565,7 @@ table.children
 .not-implemented
   display: none    
   
+/********** JQUERY-UI COMPONENTS ******/
 /* Component containers
  *---------------------------------- */
 
