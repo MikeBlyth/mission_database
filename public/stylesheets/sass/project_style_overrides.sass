@@ -1,7 +1,9 @@
+@import "compass"
 $hue: 45
 $hue_accent: $hue - 15
-$hue_2: 350
-$hue_menu: 60
+$hue_2: $hue - 0
+$hue_menu: $hue + 15
+$hue_links: 225
 $grey_20: hsl(0,0,20)
 $body_text_light: hsl($hue, 100, 10)
 $body_text_dark: hsl($hue, 100, 5)
@@ -23,8 +25,8 @@ $border_3_dark: hsl($hue_accent,80,30)
 $border_3_darker: hsl($hue_accent,75,20)
 $body_text_default: hsl($hue_2,100,13)
 $headers_1_dark: $body_text_default
-$headers_1_light: hsl($hue_2,41,50)
-$links_1: hsl($hue_2,55,45)
+$headers_1_light: hsl($hue_2,40,30)
+$links_1: hsl($hue_links, 75, 50)
 $links_1_hover: $background_content
 $tabbed_form_background: hsl($hue,52,52)
 $widget_header: hsl($hue,100,77)
@@ -94,13 +96,6 @@ h5, .active-scaffold h5
 
 .active-scaffold form select
   border-color: $border_2_dark  
-
-.active-scaffold #tabs .ui-widget-content 
-  background-color: $widget_content
-    
-.ui-widget-header
-  background: $widget_header
-  border: 1px solid $border_1_dark
 
 div#content
   background: $background_content
@@ -225,15 +220,15 @@ table.children
  *---------------------------------- */
 
 /******** Images *****/
-$widget_content: url(images/ui-bg_flat_75_e8cc78_40x100.png)
-$widget_header: url(images/ui-bg_highlight-soft_75_d0b267_1x100.png)
-$date_picker_selectors: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") 
+$widget_content:        url(images/ui-bg_flat_75_e8cc78_40x100.png)
+$widget_header:         url(images/ui-bg_highlight-soft_75_d0b267_1x100.png)
+$date_picker_selectors: url(images/ui-bg_highlight-hard_70_ca3d16_1x100.png) 
 
-$state_default_image: url(images/ui-bg_glow-ball_50_fcf4de_600x600.png)
-$state_hover_image: url(images/ui-bg_glass_75_ffd866_1x400.png)
-$state_active_image: url(images/ui-bg_glass_65_f6d9a2_1x400.png)
+$state_default_image:   url(images/ui-bg_glow-ball_50_fcf4de_600x600.png)
+$state_hover_image:     url(images/ui-bg_glass_75_ffd866_1x400.png)
+$state_active_image:    url(images/ui-bg_glass_65_f6d9a2_1x400.png)
 $state_highlight_image: url(images/ui-bg_glass_55_fbf9ee_1x400.png)
-$state_error_image: url(images/ui-bg_inset-soft_95_fef1ec_1x100.png)
+$state_error_image:     url(images/ui-bg_inset-soft_95_fef1ec_1x100.png)
 
 /******* Colors ***/
 $hue_widget: $hue
@@ -241,11 +236,12 @@ $widget_borders_1: $border_3_dark
 $widget_borders_2: $border_3_darker
 $widget_borders_hover: hsl($hue_widget - 25, 70, 70)
 $widget_background_default: $background_content
+$widget_tab_background: $background_form
 $widget_background_active: hsl($hue_widget, 80, 80)
 $widget_background_highlight: hsl($hue_widget, 60, 95)
 $widget_background_hover: hsl(45, 100, 70) // may not want to adjust this automatically w main theme color
 $widget_text: $body_text_default
-$widget_text_inactive: hsl($hue_widget, 50, 50)
+$widget_text_inactive: hsl($hue_widget, 50, 40)
 $widget_text_hover: desaturate($body_text_default,40)
 
 .ui-widget-content
@@ -261,6 +257,11 @@ $widget_text_hover: desaturate($body_text_default,40)
   color: $headers_1_dark
   a
     color: $headers_1_dark
+    
+.ui-tabs-panel
+  background: transparent
+  table
+    background: transparent
     
 .active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year
   background: $date_picker_selectors repeat-x scroll 50% 50% $background_form_3
@@ -281,7 +282,7 @@ $widget_text_hover: desaturate($body_text_default,40)
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
   border: 1px solid $border_1_light
   background: $widget_background_default $state_default_image 50% 50% repeat-x
-  color: $background_form_2
+  color: $widget_text_inactive
 
 .ui-state-default a
   color: $widget_text_inactive
@@ -335,25 +336,25 @@ $widget_text_hover: desaturate($body_text_default,40)
 /* Individual icons are sprites within a collection */
 
 .ui-icon
-  background-image: url(images/ui-icons_222222_256x240.png)
+  background-image: url(images/ui-icons-base-grey.png)
 
 .ui-widget-content .ui-icon, .ui-widget-header .ui-icon
-  background-image: url(images/ui-icons_222222_256x240.png)
+  background-image: url(images/ui-icons-base-grey.png)
 
 .ui-state-default .ui-icon
-  background-image: url(images/ui-icons_b49f5e_256x240.png)
+  background-image: url(images/ui-icons-gold-default.png)
 
 .ui-state-hover .ui-icon, .ui-state-focus .ui-icon
-  background-image: url(images/ui-icons_454545_256x240.png)
+  background-image: url(images/ui-icons-gold-hover.png)
 
 .ui-state-active .ui-icon
-  background-image: url(images/ui-icons_40000d_256x240.png)
+  background-image: url(images/ui-icons-gold-active.png)
 
 .ui-state-highlight .ui-icon
-  background-image: url(images/ui-icons_2e83ff_256x240.png)
+  background-image: url(images/ui-icons-gold-highlight.png)
 
 .ui-state-error .ui-icon, .ui-state-error-text .ui-icon
-  background-image: url(images/ui-icons_cd0a0a_256x240.png)
+  background-image: url(images/ui-icons-base-error.png)
 
 
 /********** END THEMES ***************/

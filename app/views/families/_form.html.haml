@@ -23,7 +23,7 @@ $( "#tabs" ).tabs();
 </ul>
 = form_for :record do |main_form|
   #tabs-head
-    %h4 Information for the individual or <em>head</em> of family
+    %h5 Information for the individual or <em>head</em> of family
     = fields_for :head do |member|
       %table.new_family
         %tr
@@ -150,7 +150,7 @@ $( "#tabs" ).tabs();
   - if @wife
     #tabs-wife(class=wifeclass)
       = fields_for :wife do |member|
-        %h4 Information for the wife (leave blank if single)
+        %h5 Information for the wife (leave blank if single)
         = fields_for :wife do |member|
           %table.new_family
             %tr
@@ -266,7 +266,7 @@ $( "#tabs" ).tabs();
                 = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
               
   #tabs-children
-    %h4 Information for the children
+    %h5 Information for the children
     %table.children
       %th.name First name
       %th.name Middle name
@@ -297,7 +297,7 @@ $( "#tabs" ).tabs();
               
         
   #tabs-family
-    %h4 Information for the family
+    %h5 Information for the family
     %table.new_family
       %tr
         %td
@@ -335,7 +335,7 @@ $( "#tabs" ).tabs();
           = hidden_field :next_term, :id
           = text_field :next_term, :start_date, :class => 'active_date-input date_picker ' 
   #tabs-tasks
-    %h4 Personnel Tasks
+    %h5 Personnel Tasks
     -#= fields_for tasks, :index=>child.id do |child_form|
     %table
       - @pers_tasks.each do |task_type|

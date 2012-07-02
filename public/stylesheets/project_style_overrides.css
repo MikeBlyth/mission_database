@@ -1,693 +1,84 @@
-/********** THEMES ***************** */
-/*** Default **** */
-body {
-  color: #1a1300; }
-
-a:visited {
-  color: #b23449; }
-a:hover {
-  color: #fff2cc;
-  font-weight: bold; }
-
-.active-scaffold .view {
-  background: #fff2cc;
-  border: 1px solid #c4a445; }
-
-.active-scaffold .active-scaffold td.inline-adapter-cell {
-  background: #fff2cc; }
-
-.as_form table {
-  background: #ffe28a; }
-
-.active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell {
-  border: 1px solid #c4a445; }
-
-.active-scaffold h3 {
-  color: #b44b5d; }
-
-h1 {
-  color: #42000b; }
-
-h4, .active-scaffold h4 {
-  color: #b44b5d; }
-
-h5, .active-scaffold h5 {
-  color: #b44b5d; }
-
-.active-scaffold h5, .active-scaffold h2 {
-  color: #42000b; }
-
-.active-scaffold a, .active-scaffold a:visited {
-  color: #b23449; }
-
-.active-scaffold label, .active-scaffold p {
-  color: #42000b; }
-
-.active-scaffold form select {
-  border-color: #b3b3b3; }
-
-.active-scaffold #tabs .ui-widget-content {
-  background-color: #e8cc78; }
-
-.ui-widget-header {
-  background: #ffe28a;
-  border: 1px solid #c4a445; }
-
-div#content {
-  background: #fff2cc; }
-
-/* Listings */
-.active-scaffold th, .active-scaffold th a, .active-scaffold th p {
-  background: #846710;
-  color: white;
-  font: bold 11px arial, sans-serif; }
-
-.active-scaffold th a:hover, .active-scaffold th.sorted a:hover {
-  background: #eeb711; }
-
-.active-scaffold th.sorted {
-  background: #c99e1d; }
-  .active-scaffold th.sorted a {
-    background: #c99e1d; }
-
-.active-scaffold .records tr.record {
-  background-color: #ffe28a; }
-
-.active-scaffold .records tr.even-record {
-  background-color: white; }
-
-.active-scaffold .records tr.record td.sorted {
-  background-color: #ffd24d; }
-
-.active-scaffold .records tr.even-record td.sorted {
-  background-color: #fff4d1; }
-
-.active-scaffold tr.record td, .active-scaffold tr.record td.sorted {
-  border: 1px solid #ffe28a;
-  border-bottom-color: #c4a445;
-  border-left-color: #c4a445; }
-
-/* Warning that too many characters have been entered into input box */
-.exceeded {
-  background: yellow; }
-
-#menu {
-  background: #ffffe0;
-  border-right: 1px solid #c4a445; }
-  #menu a {
-    color: #42000b; }
-    #menu a:hover {
-      background-color: #ffe699; }
-
-td.label {
-  color: blue; }
-
-label.required {
-  font-style: italic;
-  color: black; }
-
-div.new_travel, div.member_form {
-  background-color: #ffe28a; }
-  div.new_travel div.col_1, div.member_form div.col_1 {
-    background-color: #ffe28a; }
-  div.new_travel div.col_2, div.member_form div.col_2 {
-    background-color: #e8cd7d;
-    border-left: 1px solid #ffe28a; }
-  div.new_travel div.col_3, div.member_form div.col_3 {
-    background-color: #ffe28a;
-    border-left: 1px solid #ffe28a; }
-
-.list_line_odd {
-  background: #ffe28a; }
-
-.list_line_even {
-  background: white; }
-
-div.crosstab tr.odd {
-  background: #f1ebda; }
-div.crosstab tr.even {
-  background: white; }
-div.crosstab tr.total {
-  background: white; }
-
-#msg-form {
-  background-color: #ffe28a; }
-
-#msg-followup .note, #msg-form .note {
-  border: 1px solid red;
-  margin-bottom: 1em; }
-#msg-followup .msg-quote, #msg-form .msg-quote {
-  border: 1px solid #c4a445; }
-
-#msg-followup #msg-top {
-  background-color: white; }
-
-#advanced #options {
-  background-color: white; }
-
-#notice {
-  border: 1px solid grey;
-  background: #b35900;
-  color: #ededed; }
-
-.whereis tr.new_location {
-  background: #0080fc; }
-
-.whereis .new_location td {
-  color: white;
-  font-style: italic; }
-
-.list_line_odd {
-  background: #ffe28a; }
-
-.list_line_even {
-  background: white; }
-
-table.children th {
-  background: #846710; }
-
-#content {
-  background: white; }
-
-/******** THEME FOR JQUERY-UI WIDGETS (COLOR AND IMAGES ONLY) ******* */
-/********* JQUERY-UI COMPONENTS ***** */
-/* Component containers
- *---------------------------------- */
-/******* Images **** */
-/****** Colors ** */
-.ui-widget-content {
-  border: 1px solid #8a4d0f;
-  background: #e8cd7d url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x;
-  color: #42000b; }
-  .ui-widget-content a {
-    color: #42000b; }
-
-.ui-widget-header {
-  border: 1px solid #59330d;
-  background: #ccb366 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x;
-  color: #42000b; }
-  .ui-widget-header a {
-    color: #42000b; }
-
-.active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year {
-  background: url("images/ui-bg_highlight-hard_70_ca3d16_1x100.png") repeat-x scroll 50% 50% #ccb366;
-  color: white;
-  border: 1px solid #4e4018; }
-  .active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover {
-    background: #e8cd7d;
-    border-color: red;
-    color: #42000b; }
-  .active-scaffold .submit:active, .ui-datepicker-month:active, .ui-datepicker-year:active {
-    background: #e8cd7d;
-    border: 1px dotted yellow;
-    color: #42000b; }
-
-/* Interaction states
- *---------------------------------- */
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-  border: 1px solid #ffe28a;
-  background: #fff2cc url(images/ui-bg_glow-ball_50_fcf4de_600x600.png) 50% 50% repeat-x;
-  color: #e8cd7d; }
-
-.ui-state-default a {
-  color: #bf9f40; }
-  .ui-state-default a:link, .ui-state-default a:visited {
-    color: #bf9f40; }
-
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  border: 1px solid #e8a17d;
-  background: #ffd966 url(images/ui-bg_glass_75_ffd866_1x400.png) 50% 50% repeat-x;
-  color: #350d14; }
-
-.ui-state-hover a {
-  color: #350d14; }
-  .ui-state-hover a:hover {
-    color: #350d14; }
-
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-  border: 1px solid #8a4d0f;
-  background: #f5e0a3 url(images/ui-bg_glass_65_f6d9a2_1x400.png) 50% 50% repeat-x;
-  color: #42000b; }
-
-.ui-state-active a {
-  color: #42000b; }
-  .ui-state-active a:link, .ui-state-active a:visited {
-    color: #42000b; }
-
-/* Interaction Cues
- *---------------------------------- */
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-  border: 1px solid #fcefa1;
-  background: #faf6eb url(images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x;
-  color: #333333; }
-
-.ui-state-highlight a, .ui-widget-content a, .ui-widget-header a {
-  color: #333333; }
-
-.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {
-  border: 1px solid #c20a0a;
-  background: #fee7e7 url(images/ui-bg_inset-soft_95_fef1ec_1x100.png) 50% bottom repeat-x;
-  color: #c20a0a; }
-
-.ui-state-error a, .ui-widget-content a, .ui-widget-header a, .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text {
-  color: #c20a0a; }
-
-/* Icons
- *---------------------------------- */
-/* icons and icons w state */
-/* Each image is a whole collection of icons with different colors and backgrounds */
-/* Individual icons are sprites within a collection */
-.ui-icon {
-  background-image: url(images/ui-icons_222222_256x240.png); }
-
-.ui-widget-content .ui-icon, .ui-widget-header .ui-icon {
-  background-image: url(images/ui-icons_222222_256x240.png); }
-
-.ui-state-default .ui-icon {
-  background-image: url(images/ui-icons_b49f5e_256x240.png); }
-
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {
-  background-image: url(images/ui-icons_454545_256x240.png); }
-
-.ui-state-active .ui-icon {
-  background-image: url(images/ui-icons_40000d_256x240.png); }
-
-.ui-state-highlight .ui-icon {
-  background-image: url(images/ui-icons_2e83ff_256x240.png); }
-
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {
-  background-image: url(images/ui-icons_cd0a0a_256x240.png); }
-
-/********* END THEMES ************** */
-.active-scaffold .as_content {
-  margin-top: 4px; }
-
-h1 {
-  letter-spacing: 1px; }
-
-.active-scaffold h3 {
-  font-size: 140%; }
-
-h4, .active-scaffold h4 {
-  font-size: 120%;
-  letter-spacing: 0;
-  margin-top: 8px;
-  padding-left: 0; }
-
-h5, .active-scaffold h5 {
-  font-size: 100%; }
-
-.active-scaffold input.text-input, .active-scaffold select {
-  font-size: 1em;
-  font-family: Verdana, Arial;
-  font-weight: normal; }
-
-/******* Sizing *********** */
-div#content {
-  min-width: 1000px;
-  min-height: 800px;
-  padding: 0 5px 5px 5px; }
-
-div.countries-view,
-div.cities-view {
-  width: 600px; }
-
-div.states-view,
-div.bloodtypes-view,
-div.contact_types-view,
-div.educations-view,
-div.employment_statuses-view,
-div.locations-view,
-div.ministries-view,
-div.statuses-view {
-  width: 450px; }
-
-.longitude-input, .latitude-input, .code-input, .flight-input,
-.total_passengers-input, .baggage-input, .time-input {
-  width: 50px; }
-
-.state-input, .date-input, .datepicker, .date_picker, .birth_date-input, .date_active-input,
-.start_date-input, .end_date-input, .est_start_date-input, .sex-input,
-.est_end_date-input, .return_date-input, .confirmed-input,
-.origin-input, .destination-input, .guesthouse-input,
-.driver_accom-input {
-  width: 100px; }
-
-.date_picker_smaller {
-  width: 80px; }
-
-.first_name-input, .last_name-input, .middle_name-input, .phone-input,
-.short_name-input, .qualifications-input, .employment_status-input, .medium-input {
-  width: 120px; }
-
-.name-input, .family-input, .spouse-input, .wide-input, .ministry-input, .country-input,
-.ministry_location-input {
-  width: 180px; }
-
-#tabs-wife.wife_hidden, #wife-tab.wife_hidden {
-  display: none; }
-
-.status-input,
-.ministry_comment-input, .temporary_location-input, .location-input,
-.education-input, .ministry_comments {
-  width: 270px; }
-
-/******************* GENERAL *************** */
-a, a:visited {
-  text-decoration: none; }
-
-#menu {
-  min-height: 800px;
-  width: 139px;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  padding: 0px 5px 10px 5px; }
-  #menu p.user {
-    font-size: smaller; }
-  #menu a {
-    text-decoration: none; }
-  #menu ul {
-    list-style-position: outside;
-    margin-left: -1.5em; }
-  #menu li {
-    font-size: 80%; }
-
-#links {
-  margin-left: 0px; }
-
-#content {
-  position: absolute;
-  top: 0px;
-  left: 150px;
-  padding-left: 10px; }
-
-#notice {
-  padding: 0.5em;
-  margin: 10px;
-  font-style: bold;
-  font-size: 1.2em; }
-
-.contact_form {
-  max-width: 700px; }
-
-.family_info p {
-  padding-top: 0.3em; }
-
-.family_members h5, .add_family_members h5 {
-  margin-top: 1em; }
-
-.sim_id-input {
-  width: 60px; }
-
-.test {
-  color: red;
-  background: blue; }
-
-td.label {
-  text-align: right; }
-
-.hidden {
-  display: none; }
-
-table.new_family {
-  width: 600px; }
-  table.new_family tbody {
-    vertical-align: top; }
-  table.new_family td {
-    width: 25%;
-    padding-right: 20px; }
-    table.new_family td .date-input, table.new_family td .date_active-input, table.new_family td .date_picker {
-      width: 120px; }
-
-.family_summary table tbody, .travel_reminders table tbody {
-  vertical-align: top; }
-.family_summary table td.name, .travel_reminders table td.name {
-  font-weight: bold; }
-
-.travel_reminders table {
-  width: 600px; }
-.travel_reminders span.name {
-  font-weight: bold; }
-.travel_reminders p {
-  width: 600px;
-  padding: 0.5em; }
-
-a.big-link {
-  font: bold 14px arial, sans-serif; }
-
-div.new_travel, div.member_form {
-  position: relative;
-  height: 470px;
-  padding: 20px; }
-  div.new_travel div.col_1, div.member_form div.col_1 {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 300px;
-    padding: 5px;
-    height: 440px; }
-  div.new_travel div.col_2, div.member_form div.col_2 {
-    position: absolute;
-    top: 0px;
-    left: 310px;
-    width: 300px;
-    padding: 5px;
-    height: 440px; }
-  div.new_travel div.col_3, div.member_form div.col_3 {
-    position: absolute;
-    top: 0px;
-    left: 621px;
-    width: 300px;
-    padding: 5px;
-    height: 440px; }
-  div.new_travel div.form-footer, div.member_form div.form-footer {
-    position: absolute;
-    top: 450px;
-    left: 0px; }
-  div.new_travel table, div.new_travel td, div.member_form table, div.member_form td {
-    border-collapse: collapse;
-    border: 0px solid red;
-    border-bottom: 0px solid red;
-    border-left: 0px solid red; }
-
-div.member_form {
-  padding: 5px;
-  height: 340px; }
-  div.member_form div.col_1 {
-    height: 340px; }
-  div.member_form div.col_2 {
-    height: 340px; }
-  div.member_form div.col_3 {
-    height: 340px; }
-
-.active-scaffold .active-scaffold td {
-  border-bottom: 0px;
-  border-left: 0px;
-  background-color: transparent; }
-
-div.passengers {
-  padding-left: 10px; }
-
-div.travel_category, div.spouse_kids, div.total_passengers,
-div.other_travelers {
-  margin-top: 0.8em; }
-
-div.traveler_names select {
-  height: 180px; }
-
-div.spouse_kids table {
-  width: 80%; }
-
-div.with_children {
-  padding-left: 10px; }
-
-div.with_spouse {
-  padding-left: 10px; }
-
-div.travel_date {
-  padding: 0px;
-  margin: 0px; }
-
-div.temporary_location_dates {
-  padding-left: 1em; }
-
-#as_calendar_events-tbody .date-column {
-  width: 20%; }
-
-.whereis th, .status_mismatch th {
-  text-align: left; }
-.whereis td, .status_mismatch td {
-  padding: 0.1em 0.7em 0.1em 0.4em; }
-
-.whereis .new_location td {
-  padding-top: 0.5em; }
-
-div.list_field_terms,
-div.status_mismatch {
-  width: 600px; }
-
-div.contact_updates p.name {
-  font-weight: bold;
-  margin-top: 0.6em; }
-div.contact_updates .contact_type, div.contact_updates .contact_info {
-  margin-left: 1em; }
-div.contact_updates .contact_type {
-  font-style: italic; }
-div.contact_updates .footer {
-  font-style: italic;
-  margin-top: 0.6em; }
-
-div.crosstab p.title {
-  font-weight: bold;
-  font-size: 1.3em; }
-div.crosstab th {
-  text-align: left;
-  padding: 0px 10px 0px 10px; }
-div.crosstab td {
-  padding: 0px 30px 0px 10px;
-  text-align: right; }
-div.crosstab td.row_label {
-  text-align: left; }
-
-.school-input {
-  width: 70px; }
-
-.grade-input {
-  width: 50px; }
-
-table.children {
-  table-layout: fixed;
-  width: 500px; }
-  table.children .first_name-input {
-    width: 90px; }
-  table.children .employment_status-input {
-    width: 100px; }
-  table.children th.idx {
-    width: 30px; }
-  table.children th.name {
-    width: 100px; }
-  table.children th.birth_date {
-    width: 90px; }
-  table.children th.sex {
-    width: 80px; }
-  table.children th.school {
-    width: 80px; }
-  table.children th.grade {
-    width: 60px; }
-  table.children th.status {
-    width: 100px; }
-
-.active-scaffold-header div.actions a.export {
-  background-image: url(images/export.png);
-  padding: 5px 5px 5px 25px; }
-
-#msg-form {
-  width: 520px;
-  padding: 10px; }
-  #msg-form #record_subject {
-    width: 300px; }
-
-#msg-form #msg-bottom {
-  position: relative; }
-
-#msg-followup, #msg-form {
-  width: 400px;
-  padding: 0.5em; }
-  #msg-followup #msg-top, #msg-form #msg-top {
-    width: 400px;
-    padding: 0.5em;
-    margin-top: 0.5em; }
-  #msg-followup .note, #msg-form .note {
-    width: 380px;
-    padding: 0.5em;
-    margin-bottom: 1em;
-    font-size: smaller; }
-  #msg-followup .msg-quote, #msg-form .msg-quote {
-    padding: 0.5em;
-    margin: 0.5em 1em 0.5em 1em; }
-
-#advanced {
-  position: absolute;
-  top: 0px;
-  left: 200px;
-  width: 200px;
-  padding: 5px; }
-
-.groups-view #record_abbrev {
-  width: 80px; }
-.groups-view #record_type_of_group {
-  width: 200px; }
-
-.not-implemented {
-  display: none; }
-
-/********* JQUERY-UI COMPONENTS (WITHOUT THEME - color & image - INFO ***** */
-/* Component containers
- *---------------------------------- */
-.ui-widget {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 1.1em; }
-  .ui-widget .ui-widget {
-    font-size: 1em; }
-  .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-    font-family: Verdana, Arial, sans-serif;
-    font-size: 1em; }
-
-.active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year {
-  padding: 2px;
-  margin: 4px;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  border-radius: 6px; }
-
-/* Interaction states
- *---------------------------------- */
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-  font-weight: normal; }
-
-.ui-state-default a {
-  text-decoration: none; }
-  .ui-state-default a:link, .ui-state-default a:visited {
-    text-decoration: none; }
-
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  font-weight: normal; }
-
-.ui-state-hover a {
-  text-decoration: none; }
-  .ui-state-hover a:hover {
-    text-decoration: none; }
-
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-  font-weight: normal; }
-
-.ui-state-active a {
-  text-decoration: none; }
-  .ui-state-active a:link, .ui-state-active a:visited {
-    text-decoration: none; }
-
-.ui-widget :active {
-  outline: none; }
-
-/* Interaction Cues
- *---------------------------------- */
-.ui-priority-primary, .ui-widget-content .ui-priority-primary, .ui-widget-header .ui-priority-primary {
-  font-weight: bold; }
-
-.ui-priority-secondary, .ui-widget-content .ui-priority-secondary, .ui-widget-header .ui-priority-secondary {
-  opacity: 0.7;
-  filter: Alpha(Opacity=70);
-  font-weight: normal; }
-
-.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
-  opacity: 0.35;
-  filter: Alpha(Opacity=35);
-  background-image: none; }
-
-/* Icons
- *---------------------------------- */
-/* states and images */
-.ui-icon {
-  width: 16px;
-  height: 16px; }
+/*
+Syntax error: File to import not found or unreadable: compass.
+              Load path: /home/mike/sim5/public/stylesheets/sass
+        on line 1 of /home/mike/sim5/public/stylesheets/sass/project_style_overrides.sass
+
+1: @import "compass"
+2: $hue: 45
+3: $hue_accent: $hue - 15
+4: $hue_2: $hue - 0
+5: $hue_menu: $hue + 15
+6: $hue_links: 225
+
+Backtrace:
+/home/mike/sim5/public/stylesheets/sass/project_style_overrides.sass:1
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/import_node.rb:64:in `rescue in import'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/import_node.rb:42:in `import'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/import_node.rb:25:in `imported_file'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:148:in `rescue in visit_import'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:153:in `visit_import'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:18:in `visit'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/base.rb:53:in `map'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:27:in `block in visit_children'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:39:in `with_environment'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:26:in `visit_children'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:47:in `visit_root'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/base.rb:37:in `visit'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:18:in `visit'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/visitors/perform.rb:7:in `visit'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/tree/root_node.rb:20:in `render'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/engine.rb:291:in `_render'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/engine.rb:239:in `block in render'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/util.rb:298:in `silence_sass_warnings'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/engine.rb:239:in `render'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin/compiler.rb:319:in `update_stylesheet'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin/compiler.rb:181:in `block (2 levels) in update_stylesheets'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin/compiler.rb:175:in `each'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin/compiler.rb:175:in `block in update_stylesheets'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin/compiler.rb:173:in `each'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin/compiler.rb:173:in `update_stylesheets'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin.rb:81:in `update_stylesheets'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin.rb:54:in `check_for_updates'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/sass-3.1.1/lib/sass/plugin/rack.rb:51:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/best_standards_support.rb:17:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/head.rb:14:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/rack-1.2.2/lib/rack/methodoverride.rb:24:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/params_parser.rb:21:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/flash.rb:182:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/session/abstract_store.rb:149:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/cookies.rb:302:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/activerecord-3.0.7/lib/active_record/query_cache.rb:32:in `block in call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/activerecord-3.0.7/lib/active_record/connection_adapters/abstract/query_cache.rb:28:in `cache'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/activerecord-3.0.7/lib/active_record/query_cache.rb:12:in `cache'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/activerecord-3.0.7/lib/active_record/query_cache.rb:31:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/activerecord-3.0.7/lib/active_record/connection_adapters/abstract/connection_pool.rb:354:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/callbacks.rb:46:in `block in call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/activesupport-3.0.7/lib/active_support/callbacks.rb:416:in `_run_call_callbacks'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/callbacks.rb:44:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/rack-1.2.2/lib/rack/sendfile.rb:107:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/remote_ip.rb:48:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/show_exceptions.rb:47:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/railties-3.0.7/lib/rails/rack/logger.rb:13:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/rack-1.2.2/lib/rack/runtime.rb:17:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/activesupport-3.0.7/lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/rack-1.2.2/lib/rack/lock.rb:11:in `block in call'
+<internal:prelude>:10:in `synchronize'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/rack-1.2.2/lib/rack/lock.rb:11:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/actionpack-3.0.7/lib/action_dispatch/middleware/static.rb:30:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/railties-3.0.7/lib/rails/application.rb:168:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/railties-3.0.7/lib/rails/application.rb:77:in `method_missing'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/railties-3.0.7/lib/rails/rack/log_tailer.rb:14:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/rack-1.2.2/lib/rack/content_length.rb:13:in `call'
+/home/mike/.rvm/gems/ruby-1.9.2-p0/gems/rack-1.2.2/lib/rack/handler/webrick.rb:52:in `service'
+/home/mike/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/1.9.1/webrick/httpserver.rb:111:in `service'
+/home/mike/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/1.9.1/webrick/httpserver.rb:70:in `run'
+/home/mike/.rvm/rubies/ruby-1.9.2-p0/lib/ruby/1.9.1/webrick/server.rb:183:in `block in start_thread'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: File to import not found or unreadable: compass.\A               Load path: /home/mike/sim5/public/stylesheets/sass\A         on line 1 of /home/mike/sim5/public/stylesheets/sass/project_style_overrides.sass\A \A 1: @import \"compass\"\A 2: $hue: 45\A 3: $hue_accent: $hue - 15\A 4: $hue_2: $hue - 0\A 5: $hue_menu: $hue + 15\A 6: $hue_links: 225"; }
