@@ -1,4 +1,5 @@
-@import "compass"
+//@import "compass"
+@import 'bourbon/bourbon'
 $hue: 45
 $hue_accent: $hue - 15
 $hue_2: $hue - 0
@@ -132,9 +133,11 @@ div#content
   background: #FF0
 
 #menu 
-  background: $background_menu
+//  background: $background_menu
+  @include linear-gradient(#1e5799, #2989d8)
   border-right: 1px solid $border_1_dark 
   a
+    @include button
     color: $headers_1_dark
     &:hover
       background-color: $menu_a_hover
