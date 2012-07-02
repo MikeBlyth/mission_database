@@ -46,6 +46,8 @@ GEM
     arel (2.0.9)
     autotest (4.4.6)
       ZenTest (>= 4.4.1)
+    bourbon (2.1.1)
+      sass (>= 3.1)
     builder (2.1.2)
     cancan (1.6.5)
     capybara (0.4.1.2)
@@ -237,6 +239,7 @@ DEPENDENCIES
   active_scaffold_vho
   annotate-models
   autotest
+  bourbon
   cancan
   capybara (= 0.4.1.2)
   chronic
