@@ -10,8 +10,8 @@
     = yield :javascripts
     = csrf_meta_tag 
     = yield :head
-%body
-  #top{:class => "theme-#{current_user.theme.downcase}"}
+%body{:class => "theme-#{current_user.theme.downcase}"}
+  #top
     #menu
       = render 'shared/side_menu' 
     #content
