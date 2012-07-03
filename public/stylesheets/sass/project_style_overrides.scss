@@ -1,18 +1,27 @@
 //@import "compass"
 @import "bourbon/bourbon";
 
+/*** MOST OF THE COLOR STYLE VARIATIONS CAN BE ACCOMPLISHED BY CHANGING THE FOLLOWING FEW LINES
+     AS THE REST OF THE COLOR DEFINITIONS ARE BASED ON THEM.
+     
+     IMAGES WILL STILL HAVE TO BE CREATED FOR EACH COLOR SCHEME IF NECESSARY      */
+
 $hue: 45;
 $s: 50; /* base saturation to make it easy to change all at once */
 $l: 50;
 $base: hsl($hue, $s, $l);
-$hue_button: $hue;
-//$hue_2: $hue - 0;
 $background_menu: ($hue + 15, 100, 94);
 $text_base: hsl($hue, 100, 5);
 $text_accent: hsl($hue, 50, 10);
 $accent_base: hsl($hue - 15, 50, 50);  // not the same as text accent
 $links_base: hsl(225, 75, 50);
+/* Button for submit etc. */
+$background_button: hsl(40, 70, 60);
+/******* Images **** */
+$widget-content: url(images/ui-bg-gold-textured.png);
 
+
+/**  THE REST OF THE STYLESHEET ONLY NEEDS TO BE EDITED IF TWEAKING IS REQUIRED ****/
 /*** Main Listings ***/
 /** Based on the light background, how much to darken and/or desaturate the odd rows? 
     A gradient is used, so values are specified for the top and bottom of the odd rows **/
@@ -30,8 +39,6 @@ $grey_20: hsl(0, 0, 20);
 $alert: red;
 $error_background: hsl(0, 90, 95);
 
-/* Button for submit etc. */
-$background_button: hsl($hue_button, 60, 70);
 /* Backgrounds */
 $background_1: desaturate(lighten($base, 40), 5);    //hsl($hue, 45, 90);
 $background_alt: lighten(desaturate($base, 5), 50);    //hsl($hue, 45, 100);
@@ -144,10 +151,18 @@ div#content {
 .active-scaffold th a:hover, .active-scaffold th.sorted a:hover {
   background: $column_head_hover; }
 
-.active-scaffold th.sorted {
-  background: $column_head_sorted;
-  a {
-    background: $column_head_sorted; } }
+.active-scaffold th.asc a, .active-scaffold th.desc a:hover {
+    background: url("../images/active_scaffold/default/arrow_up.gif") no-repeat scroll right 50%;
+}
+    
+.active-scaffold th.desc a, .active-scaffold th.desc a:hover {
+    background: url("../images/active_scaffold/default/arrow_down.gif") no-repeat scroll right 50%;
+}
+    
+//.active-scaffold th.sorted {
+//  background: $column_head_sorted;
+//  a {
+//    background: $column_head_sorted; } }
 
 .active-scaffold .records tr.record {
   background-color: $background_form;
@@ -244,8 +259,6 @@ table.children {
 /* Component containers
  *---------------------------------- */
 
-/******* Images **** */
-$widget-content: url(images/ui-bg-gold-textured.png);
 
 /****** Colors ** */
 $hue_widget: $hue;
@@ -831,6 +844,12 @@ table.children {
 
 /* states and images */
 
-.ui-icon {
-  width: 16px;
-  height: 16px; }
+.ui-icon { width: 16px; height: 16px; background-image: url(images/ui-icons-gold-default.png); }
+.ui-widget-content .ui-icon {background-image: url(images/ui-icons-base-grey.png); }
+.ui-widget-header .ui-icon {background-image: url(images/ui-icons-base-grey.png); }
+.ui-state-default .ui-icon { background-image: url(images/ui-icons-gold-default.png); }
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(images/ui-icons-gold-hover.png); }
+.ui-state-active .ui-icon {background-image: url(images/ui-icons-gold-active.png); }
+.ui-state-highlight .ui-icon {background-image: url(images/ui-icons-gold-highlight.png); }
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(images/ui-icons-base-error.png); }
+

@@ -1,9 +1,15 @@
+/*** MOST OF THE COLOR STYLE VARIATIONS CAN BE ACCOMPLISHED BY CHANGING THE FOLLOWING FEW LINES
+     AS THE REST OF THE COLOR DEFINITIONS ARE BASED ON THEM.
+     
+     IMAGES WILL STILL HAVE TO BE CREATED FOR EACH COLOR SCHEME IF NECESSARY      */
 /* base saturation to make it easy to change all at once */
+/* Button for submit etc. */
+/******* Images **** */
+/**  THE REST OF THE STYLESHEET ONLY NEEDS TO BE EDITED IF TWEAKING IS REQUIRED ****/
 /*** Main Listings ***/
 /** Based on the light background, how much to darken and/or desaturate the odd rows? 
     A gradient is used, so values are specified for the top and bottom of the odd rows **/
 /** How much further should the *sorted* column be darkened and/or desaturated? **/
-/* Button for submit etc. */
 /* Backgrounds */
 /* Text */
 /* -- widgets -- */
@@ -79,10 +85,11 @@ div#content {
 .active-scaffold th a:hover, .active-scaffold th.sorted a:hover {
   background: #eeb711; }
 
-.active-scaffold th.sorted {
-  background: #c99e1d; }
-  .active-scaffold th.sorted a {
-    background: #c99e1d; }
+.active-scaffold th.asc a, .active-scaffold th.desc a:hover {
+  background: url("../images/active_scaffold/default/arrow_up.gif") no-repeat scroll right 50%; }
+
+.active-scaffold th.desc a, .active-scaffold th.desc a:hover {
+  background: url("../images/active_scaffold/default/arrow_down.gif") no-repeat scroll right 50%; }
 
 .active-scaffold .records tr.record {
   background-color: #ffe28a;
@@ -185,7 +192,6 @@ table.children th {
 /********* JQUERY-UI COMPONENTS ***** */
 /* Component containers
  *---------------------------------- */
-/******* Images **** */
 /****** Colors ** */
 .ui-widget-content, #msg-form {
   border: 1px solid #8a4d0f;
@@ -213,13 +219,13 @@ table.children th {
     background: transparent; }
 
 .active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year {
-  background-color: #e0c985;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e0c985), color-stop(100%, #cca633));
-  background-image: -webkit-linear-gradient(top, #e0c985, #cca633);
-  background-image: -moz-linear-gradient(top, #e0c985, #cca633);
-  background-image: -ms-linear-gradient(top, #e0c985, #cca633);
-  background-image: -o-linear-gradient(top, #e0c985, #cca633);
-  background-image: linear-gradient(top, #e0c985, #cca633);
+  background-color: #e0b152;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e0b152), color-stop(100%, #ad7e1f));
+  background-image: -webkit-linear-gradient(top, #e0b152, #ad7e1f);
+  background-image: -moz-linear-gradient(top, #e0b152, #ad7e1f);
+  background-image: -ms-linear-gradient(top, #e0b152, #ad7e1f);
+  background-image: -o-linear-gradient(top, #e0b152, #ad7e1f);
+  background-image: linear-gradient(top, #e0b152, #ad7e1f);
   color: white;
   border: 1px solid #4d4019; }
   .active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover {
@@ -752,4 +758,26 @@ table.children {
 /* states and images */
 .ui-icon {
   width: 16px;
-  height: 16px; }
+  height: 16px;
+  background-image: url(images/ui-icons-gold-default.png); }
+
+.ui-widget-content .ui-icon {
+  background-image: url(images/ui-icons-base-grey.png); }
+
+.ui-widget-header .ui-icon {
+  background-image: url(images/ui-icons-base-grey.png); }
+
+.ui-state-default .ui-icon {
+  background-image: url(images/ui-icons-gold-default.png); }
+
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {
+  background-image: url(images/ui-icons-gold-hover.png); }
+
+.ui-state-active .ui-icon {
+  background-image: url(images/ui-icons-gold-active.png); }
+
+.ui-state-highlight .ui-icon {
+  background-image: url(images/ui-icons-gold-highlight.png); }
+
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {
+  background-image: url(images/ui-icons-base-error.png); }

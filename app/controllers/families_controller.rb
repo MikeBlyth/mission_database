@@ -12,7 +12,7 @@ class FamiliesController < ApplicationController
     update.columns.exclude :members 
     update.columns.exclude :members, :first_name, :last_name, :middle_name 
     create.columns.exclude :members
-    list.columns.exclude  :name_override, :first_name, :last_name, :middle_name
+    list.columns.exclude  :name_override, :first_name, :last_name, :middle_name, :sim_id
     update.columns << :head
     config.columns[:head].form_ui = :select
     config.columns[:status].inplace_edit = true
