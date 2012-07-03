@@ -1,3 +1,16 @@
+/* base saturation to make it easy to change all at once */
+/*** Main Listings ***/
+/** Based on the light background, how much to darken and/or desaturate the odd rows? 
+    A gradient is used, so values are specified for the top and bottom of the odd rows **/
+/** How much further should the *sorted* column be darkened and/or desaturated? **/
+/* Button for submit etc. */
+/* Backgrounds */
+/* Text */
+/* -- widgets -- */
+/* -- tabular lists -- */
+/* -- menu -- */
+/* -- other backgrounds -- */
+/* Borders */
 /********** THEMES ***************** */
 /*** Default **** */
 body {
@@ -6,21 +19,20 @@ body {
 a:visited {
   color: #2050df; }
 a:hover {
-  color: #fff2cc;
-  font-weight: bold; }
+  color: #fcf1cf; }
 
 .active-scaffold .view {
-  background: #fff2cc;
-  border: 1px solid #c4a445; }
+  background: #fcf1cf;
+  border: 1px solid #bf9f40; }
 
 .active-scaffold .active-scaffold td.inline-adapter-cell {
-  background: #fff2cc; }
+  background: #fcf1cf; }
 
 .as_form table {
   background: #ffe28a; }
 
 .active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell {
-  border: 1px solid #c4a445; }
+  border: 1px solid #bf9f40; }
 
 .active-scaffold h3 {
   color: #6b5c2e; }
@@ -47,19 +59,22 @@ h5, .active-scaffold h5 {
   border-color: #b3b3b3; }
 
 div#content {
-  background: #fff2cc; }
+  background: #fcf1cf; }
 
 /* Listings */
-.active-scaffold th, .active-scaffold th a, .active-scaffold th p {
-  background-color: #c99d18;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #c99d18), color-stop(100%, #846710));
-  background-image: -webkit-linear-gradient(top, #c99d18, #846710);
-  background-image: -moz-linear-gradient(top, #c99d18, #846710);
-  background-image: -ms-linear-gradient(top, #c99d18, #846710);
-  background-image: -o-linear-gradient(top, #c99d18, #846710);
-  background-image: linear-gradient(top, #c99d18, #846710);
+.active-scaffold th {
+  background-color: #cfa117;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #cfa117), color-stop(100%, #8a6b0f));
+  background-image: -webkit-linear-gradient(top, #cfa117, #8a6b0f);
+  background-image: -moz-linear-gradient(top, #cfa117, #8a6b0f);
+  background-image: -ms-linear-gradient(top, #cfa117, #8a6b0f);
+  background-image: -o-linear-gradient(top, #cfa117, #8a6b0f);
+  background-image: linear-gradient(top, #cfa117, #8a6b0f);
   color: white;
   font: bold 11px arial, sans-serif; }
+
+.active-scaffold th a, .active-scaffold th p {
+  background: transparent; }
 
 .active-scaffold th a:hover, .active-scaffold th.sorted a:hover {
   background: #eeb711; }
@@ -71,35 +86,41 @@ div#content {
 
 .active-scaffold .records tr.record {
   background-color: #ffe28a;
-  background-color: #ffe28a;
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffe28a), color-stop(100%, #ffdb70));
-  background-image: -webkit-linear-gradient(top, #ffe28a, #ffdb70);
-  background-image: -moz-linear-gradient(top, #ffe28a, #ffdb70);
-  background-image: -ms-linear-gradient(top, #ffe28a, #ffdb70);
-  background-image: -o-linear-gradient(top, #ffe28a, #ffdb70);
-  background-image: linear-gradient(top, #ffe28a, #ffdb70); }
+  background-color: #f5e0a3;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5e0a3), color-stop(100%, #f0d175));
+  background-image: -webkit-linear-gradient(top, #f5e0a3, #f0d175);
+  background-image: -moz-linear-gradient(top, #f5e0a3, #f0d175);
+  background-image: -ms-linear-gradient(top, #f5e0a3, #f0d175);
+  background-image: -o-linear-gradient(top, #f5e0a3, #f0d175);
+  background-image: linear-gradient(top, #f5e0a3, #f0d175); }
 
 .active-scaffold .records tr.even-record {
   background: white; }
 
 .active-scaffold .records tr.record td.sorted {
-  background-color: #ffd24d; }
+  background-color: #efd78f;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #efd78f), color-stop(100%, #e9c763));
+  background-image: -webkit-linear-gradient(top, #efd78f, #e9c763);
+  background-image: -moz-linear-gradient(top, #efd78f, #e9c763);
+  background-image: -ms-linear-gradient(top, #efd78f, #e9c763);
+  background-image: -o-linear-gradient(top, #efd78f, #e9c763);
+  background-image: linear-gradient(top, #efd78f, #e9c763); }
 
 .active-scaffold .records tr.even-record td.sorted {
-  background-color: #fff4d1; }
+  background: #fff2cc; }
 
 .active-scaffold tr.record td, .active-scaffold tr.record td.sorted {
   border: 1px solid #ffe28a;
-  border-bottom-color: #c4a445;
-  border-left-color: #c4a445; }
+  border-bottom-color: #bf9f40;
+  border-left-color: #bf9f40; }
 
 /* Warning that too many characters have been entered into input box */
 .exceeded {
   background: yellow; }
 
 #menu {
-  background: #ffffe0;
-  border-right: 1px solid #c4a445; }
+  background: 60, 100, 94;
+  border-right: 1px solid #bf9f40; }
   #menu a {
     color: #423200; }
     #menu a:hover {
@@ -136,21 +157,6 @@ div.crosstab tr.even {
 div.crosstab tr.total {
   background: white; }
 
-#msg-form {
-  background-color: #ffe28a; }
-
-#msg-followup .note, #msg-form .note {
-  border: 1px solid red;
-  margin-bottom: 1em; }
-#msg-followup .msg-quote, #msg-form .msg-quote {
-  border: 1px solid #c4a445; }
-
-#msg-followup #msg-top {
-  background-color: white; }
-
-#advanced #options {
-  background-color: white; }
-
 #notice {
   border: 1px solid grey;
   background: #b35900;
@@ -170,7 +176,7 @@ div.crosstab tr.total {
   background: white; }
 
 table.children th {
-  background: #846710; }
+  background: #8a6b0f; }
 
 #content {
   background: white; }
@@ -181,16 +187,22 @@ table.children th {
  *---------------------------------- */
 /******* Images **** */
 /****** Colors ** */
-.ui-widget-content {
+.ui-widget-content, #msg-form {
   border: 1px solid #8a4d0f;
-  background: #e8cd7d url(images/ui-bg_flat_75_e8cc78_40x100.png) 50% 50% repeat-x;
+  background: #e8cd7d url(images/ui-bg-gold-textured.png) 0 0 repeat;
   color: #423200; }
-  .ui-widget-content a {
+  .ui-widget-content a, #msg-form a {
     color: #423200; }
 
 .ui-widget-header {
   border: 1px solid #59330d;
-  background: #ccb366 url(images/ui-bg_highlight-soft_75_d0b267_1x100.png) 50% 50% repeat-x;
+  background-color: #ccb366;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ccb366), color-stop(100%, #86702d));
+  background-image: -webkit-linear-gradient(top, #ccb366, #86702d);
+  background-image: -moz-linear-gradient(top, #ccb366, #86702d);
+  background-image: -ms-linear-gradient(top, #ccb366, #86702d);
+  background-image: -o-linear-gradient(top, #ccb366, #86702d);
+  background-image: linear-gradient(top, #ccb366, #86702d);
   color: #423200; }
   .ui-widget-header a {
     color: #423200; }
@@ -201,9 +213,15 @@ table.children th {
     background: transparent; }
 
 .active-scaffold .submit, .ui-datepicker-month, .ui-datepicker-year {
-  background: url(images/ui-bg_highlight-hard_70_ca3d16_1x100.png) repeat-x scroll 50% 50% #ccb366;
+  background-color: #e0c985;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e0c985), color-stop(100%, #cca633));
+  background-image: -webkit-linear-gradient(top, #e0c985, #cca633);
+  background-image: -moz-linear-gradient(top, #e0c985, #cca633);
+  background-image: -ms-linear-gradient(top, #e0c985, #cca633);
+  background-image: -o-linear-gradient(top, #e0c985, #cca633);
+  background-image: linear-gradient(top, #e0c985, #cca633);
   color: white;
-  border: 1px solid #4e4018; }
+  border: 1px solid #4d4019; }
   .active-scaffold .submit:hover, .ui-datepicker-month:hover, .ui-datepicker-year:hover {
     background: #e8cd7d;
     border-color: red;
@@ -213,43 +231,76 @@ table.children th {
     border: 1px dotted yellow;
     color: #423200; }
 
+/****** Include message form here as it will be styled like the tabbed family form widget */
+#msg-followup .note, #msg-form .note {
+  border: 1px solid red;
+  margin-bottom: 1em; }
+#msg-followup .msg-quote, #msg-form .msg-quote {
+  border: 1px solid #bf9f40; }
+
+#msg-followup #msg-top {
+  background-color: white; }
+
+#advanced #options {
+  background-color: white; }
+
+.as_form #msg-form table {
+  background: transparent; }
+
 /* Interaction states
  *---------------------------------- */
+/* Background for things like "headers/selectors" for non-selected tabs, non-selected dates on calendar */
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
   border: 1px solid #ffe28a;
-  background: #fff2cc url(images/ui-bg_glow-ball_50_fcf4de_600x600.png) 50% 50% repeat-x;
-  color: #998033; }
+  background: #f7eed4;
+  color: #cca224; }
 
 .ui-state-default a {
-  color: #998033; }
+  color: #cca224; }
   .ui-state-default a:link, .ui-state-default a:visited {
-    color: #998033; }
+    color: #cca224; }
 
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+/*html body div#top div#content div#main div.active-scaffold div.create-view form#as_families-create--form.as_form div div#tabs.ui-tabs ul.ui-tabs-nav li.ui-state-hover a {
+background: red
+}*/
+.ui-state-hover, .ui-state-hover a, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
   border: 1px solid #e8a17d;
-  background: #ffd966 url(images/ui-bg_glass_75_ffd866_1x400.png) 50% 50% repeat-x;
-  color: #352b0d; }
+  background-color: #ffe28a;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffe28a), color-stop(50%, #ccb366), color-stop(100%, #ffe28a));
+  background-image: -webkit-linear-gradient(top, #ffe28a, #ccb366, #ffe28a);
+  background-image: -moz-linear-gradient(top, #ffe28a, #ccb366, #ffe28a);
+  background-image: -ms-linear-gradient(top, #ffe28a, #ccb366, #ffe28a);
+  background-image: -o-linear-gradient(top, #ffe28a, #ccb366, #ffe28a);
+  background-image: linear-gradient(top, #ffe28a, #ccb366, #ffe28a);
+  color: #1c1b17; }
 
 .ui-state-hover a {
-  color: #352b0d; }
+  color: #1c1b17; }
   .ui-state-hover a:hover {
-    color: #352b0d; }
+    color: #1c1b17; }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
   border: 1px solid #8a4d0f;
-  background: #f5e0a3 url(images/ui-bg_glass_65_f6d9a2_1x400.png) 50% 50% repeat-x;
-  color: #423200; }
+  background-color: #ccb366;
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ccb366), color-stop(100%, #ffe28a));
+  background-image: -webkit-linear-gradient(top, #ccb366, #ffe28a);
+  background-image: -moz-linear-gradient(top, #ccb366, #ffe28a);
+  background-image: -ms-linear-gradient(top, #ccb366, #ffe28a);
+  background-image: -o-linear-gradient(top, #ccb366, #ffe28a);
+  background-image: linear-gradient(top, #ccb366, #ffe28a);
+  color: #26200d; }
 
 .ui-state-active a {
-  color: #423200; }
+  color: #26200d; }
   .ui-state-active a:link, .ui-state-active a:visited {
-    color: #423200; }
+    color: #26200d; }
 
 /* Interaction Cues
  *---------------------------------- */
+/* Use of this state includes highlighting today's date on the calendar. Anything else?? */
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-  border: 1px solid #fcefa1;
-  background: #faf6eb url(images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x;
+  border: 1px solid #736026;
+  background: #e8cd7d;
   color: #333333; }
 
 .ui-state-highlight a, .ui-widget-content a, .ui-widget-header a {
@@ -257,7 +308,7 @@ table.children th {
 
 .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {
   border: 1px solid #c20a0a;
-  background: #fee7e7 url(images/ui-bg_inset-soft_95_fef1ec_1x100.png) 50% bottom repeat-x;
+  background: #fee7e7;
   color: #c20a0a; }
 
 .ui-state-error a, .ui-widget-content a, .ui-widget-header a, .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text {
@@ -593,12 +644,6 @@ table.children {
   background-image: url(images/export.png);
   padding: 5px 5px 5px 25px; }
 
-#msg-form {
-  width: 520px;
-  padding: 10px; }
-  #msg-form #record_subject {
-    width: 300px; }
-
 #msg-form #msg-bottom {
   position: relative; }
 
@@ -617,6 +662,12 @@ table.children {
   #msg-followup .msg-quote, #msg-form .msg-quote {
     padding: 0.5em;
     margin: 0.5em 1em 0.5em 1em; }
+
+.as_form .msg-caveat {
+  border: 1px solid red;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  width: 400px; }
 
 #advanced {
   position: absolute;
