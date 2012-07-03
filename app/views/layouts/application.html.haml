@@ -11,7 +11,7 @@
     = csrf_meta_tag 
     = yield :head
 %body
-  #top
+  #top{:class => "theme-#{current_user.theme.downcase}"}
     #menu
       = render 'shared/side_menu' 
     #content

@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
 
   ActiveScaffold.set_defaults do |config| 
     config.ignore_columns.add [:created_at, :updated_at, :lock_version]
-    config.theme = :gold
+#    config.theme = :gold
   end
 
   before_filter :require_https, :except => :update_status_clickatell #, :only => [:login, :signup, :change_password] 
@@ -55,6 +55,15 @@ class ApplicationController < ActionController::Base
     end  
   end
   
+  def set_theme
+    new_theme = params[:theme]
+#    ActiveScaffold.set_defaults do |config| 
+#      config.theme = new_theme
+#    end
+    current_user.update_attributes(:theme => new_theme)
+    redirect_to(request.referer)
+  end
+
   def set_travel_filter
     filter = params[:travel_filter] ||= []
     session[:travel_filter] = filter

@@ -117,6 +117,7 @@ SIM::Application.routes.draw do
   # Keep in mind you can assign values other than :controller and :action
 match 'application/set_member_filter' => 'application#set_member_filter', :as=>'set_member_filter'
 match 'application/set_travel_filter' => 'application#set_travel_filter', :as=>'set_travel_filter'
+match 'application/theme' => 'application#set_theme', :as=>'theme'
 
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase

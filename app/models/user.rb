@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 20120623114943
+# Schema version: 20120703140222
 #
 # Table name: users
 #
@@ -19,11 +19,12 @@
 #  immigration           :boolean
 #  asst_personnel        :boolean
 #  security              :boolean
+#  theme                 :string(255)
 #
 
 class User < ActiveRecord::Base
   attr_accessor :password, :password_confirmation
-  attr_accessible :name, :email, :password, :password_confirmation
+  attr_accessible :name, :email, :password, :password_confirmation, :theme
   has_many :messages
   # should password be protected attribute? Since only the user or admin can edit
   #   the user object at all, and both should be able to change the password, there

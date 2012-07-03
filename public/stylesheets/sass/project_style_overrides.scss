@@ -88,8 +88,7 @@ $border_dark_grey: hsl(0, 0, 70);
 $border_3_dark: darken(saturate($accent_base, 30), 20);    //hsl($hue_accent, 80, 30);
 $border_3_darker: darken(saturate($accent_base, 25), 30);    //hsl($hue_accent, 75, 20);
 
-/********** THEMES ***************** */
-/*** Default **** */
+/********** Color info for CSS ***************** */
 
 body {
   color: $body_text_dark; }
@@ -159,11 +158,6 @@ div#content {
     background: url("../images/active_scaffold/default/arrow_down.gif") no-repeat scroll right 50%;
 }
     
-//.active-scaffold th.sorted {
-//  background: $column_head_sorted;
-//  a {
-//    background: $column_head_sorted; } }
-
 .active-scaffold .records tr.record {
   background-color: $background_form;
   @include linear-gradient($odd_gradient_top, $odd_gradient_bottom);

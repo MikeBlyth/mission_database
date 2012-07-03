@@ -34,6 +34,12 @@
           %li= link_to 'Include past', set_travel_filter_path(:travel_filter => :all_dates)
       %li= link_to "Edit your user info", edit_user_path(current_user)
       %li= link_to "Sign out", signout_path, :method => :delete       
+    %h5 Change theme (look & feel)
+    <form accept-charset="UTF-8" action="/application/theme" method="get">
+    %select{:name=>'theme', :id=>'theme'}
+      %option Gold
+      %option Blue
+    = submit_tag("Select")        
     %hr
     %ul.links
       %h5 Option Tables
