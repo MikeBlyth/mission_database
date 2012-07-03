@@ -278,6 +278,9 @@ div.crosstab td.row_label {
 .grade-input {
   width: 50px; }
 
+#tabs p.form-footer {
+  margin: 0.5em; }
+
 table.children {
   table-layout: fixed;
   width: 500px; }
@@ -312,7 +315,7 @@ table.children {
   padding: 0.5em; }
   #msg-followup #msg-top, #msg-form #msg-top {
     width: 400px;
-    padding: 0.5em;
+    padding: 0;
     margin-top: 0.5em; }
   #msg-followup .note, #msg-form .note {
     width: 380px;
@@ -323,7 +326,7 @@ table.children {
     padding: 0.5em;
     margin: 0.5em 1em 0.5em 1em; }
 
-.as_form .msg-caveat {
+.view .msg-caveat {
   border: 1px solid red;
   padding: 0.5em;
   margin-bottom: 1em;

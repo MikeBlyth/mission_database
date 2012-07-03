@@ -91,7 +91,8 @@
     background-image: -ms-linear-gradient(top, #3c8cdd, #1f66ad);
     background-image: -o-linear-gradient(top, #3c8cdd, #1f66ad);
     background-image: linear-gradient(top, #3c8cdd, #1f66ad);
-    font: bold 11px arial, sans-serif; }
+    font: bold 11px arial, sans-serif;
+    color: white; }
   .theme-blue .active-scaffold th a, .theme-blue .active-scaffold th p {
     background: transparent;
     color: white; }

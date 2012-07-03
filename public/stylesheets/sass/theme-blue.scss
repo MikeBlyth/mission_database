@@ -150,7 +150,8 @@ div#content {
 /* Listings */
 .active-scaffold th {
   @include linear-gradient(lighten($column_head,15), $column_head);
-  font: bold 11px arial, sans-serif; }
+  font: bold 11px arial, sans-serif; 
+  color: white;}
   
 .active-scaffold th a, .active-scaffold th p  { background: transparent;
   color: $column_head_color;

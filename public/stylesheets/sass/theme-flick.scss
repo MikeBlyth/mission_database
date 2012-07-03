@@ -18,13 +18,16 @@ $hue: 0;
 $s: 0; /* base saturation to make it easy to change all at once */
 $l: 90;
 $base: hsl($hue, $s, $l);
-$background_menu: ($hue + 15, 100, 94);
+$background_menu: (0,0 , 80);
 $text_base: hsl($hue, 100, 5);
-$text_accent: hsl($hue, 50, 10);
+$text_accent: #ff0084;
 $accent_base: hsl($hue - 15, 50, 50);  // not the same as text accent
 $links_base: hsl(225, 75, 50);
+$headers_1_light: hsl(211, 100%, 46%);    //hsl($hue_2, 40, 30);
+$headers_1_dark: darken($headers_1_light, 0); 
+
 /* Button for submit etc. */
-$background_button: hsl(40, 70, 60);
+$background_button: hsl(0, 0, 80);
 /******* Images **** */
 $widget-content: url(images/ui-bg-gold-textured.png);
 
@@ -33,14 +36,13 @@ $widget-content: url(images/ui-bg-gold-textured.png);
 /*** Main Listings ***/
 /** Based on the light background, how much to darken and/or desaturate the odd rows? 
     A gradient is used, so values are specified for the top and bottom of the odd rows **/
-$odd_top_darken: 10;
-$odd_top_desaturate: 10;
-$odd_bottom_darken: 20;
-$odd_bottom_desaturate: 10;
-$odd_gradient: 10;
+$odd_top_darken: 5;
+$odd_top_desaturate: 0;
+$odd_bottom_darken: 15;
+$odd_bottom_desaturate: 0;
 /** How much further should the *sorted* column be darkened and/or desaturated? **/
 $sorted_darken: 5;
-$sorted_desaturate: 5;
+$sorted_desaturate: 0;
 
 
 $grey_20: hsl(0, 0, 20);
@@ -48,26 +50,24 @@ $alert: red;
 $error_background: hsl(0, 90, 95);
 
 /* Backgrounds */
-$background_1: desaturate(lighten($base, 40), 5);    //hsl($hue, 45, 90);
-$background_alt: lighten(desaturate($base, 5), 50);    //hsl($hue, 45, 100);
-$background_content: lighten(saturate($base, 40), 40);    //hsl($hue, 90, 90);
-$background_form: lighten(saturate($base, 50), 27);    //hsl($hue, 100, 77);
-$background_form_2: lighten(saturate($base, 20), 20);    //hsl($hue, 70, 70);
-$background_form_3: lighten(desaturate($base, 0), 10);    //hsl($hue, 50, 60);
+$background_1: lighten($base, 40);    //hsl($hue, 45, 90);
+$background_alt: lighten($base, 50);    //hsl($hue, 45, 100);
+$background_content: lighten($base, 40);    //hsl($hue, 90, 90);
+$background_form: #F7F7F7;    //hsl($hue, 100, 77);
+$background_form_2: $base;    //hsl($hue, 70, 70);
+$background_form_3: lighten($base, 10);    //hsl($hue, 50, 60);
 /* Text */
 $body_text_default: $text_accent;   
 $body_text_light: lighten($text_base, 5);
 $body_text_dark: $text_base;
 $links_1: $links_base;
 $links_1_hover: $background_content;
-$headers_1_dark: lighten(saturate($text_accent, 50), 3);    //hsl($hue_2, 100, 13); 
-$headers_1_light: lighten(desaturate($text_accent, 10), 20);    //hsl($hue_2, 40, 30);
 $column_head_color: white;
 $notice_text: hsl(0, 0, 93);
 $error_text: hsl(0, 90, 40);
 /* -- widgets -- */
 $tabbed_form_background: $base;
-$widget_header: lighten(saturate($base, 50), 27);    //hsl($hue, 100, 77);
+$widget_header: lighten($base, 27);    //hsl($hue, 100, 77);
 /* -- tabular lists -- */
 $list_odd_row: lighten(saturate($base, 50), 27);    //hsl($hue, 100, 77);
 $list_even_row: white;
@@ -270,7 +270,7 @@ $hue_widget: $hue;
 $widget_borders_1: $border_3_dark;
 $widget_borders_2: $border_3_darker;
 $widget_borders_hover: hsl($hue_widget - 25, 70, 70);
-$widget_background_default: desaturate($background_content,20);
+$widget_background_default: darken($background_content,10);
 $widget_background: $background_form;  // ??
 $widget_background_2: $background_form_2;
 $widget_background_3: $background_form_3;
@@ -281,17 +281,25 @@ $widget_text: $body_text_default;
 $widget_text_inactive: darken(desaturate($widget_background, 30), 30);
 $widget_text_hover: desaturate($body_text_default, 40);
 
-.ui-widget-content, #msg-form {
+#msg-form {
   border: 1px solid $widget_borders_1;
-  background: $widget_background_2 $widget-content 0 0 repeat;
+  background: $widget_background;
   color: $headers_1_dark;
   a {
     color: $headers_1_dark; } }
 
+.ui-widget-content, #msg-form {
+  background: $widget_background;
+  color: $headers_1_dark;
+  a {
+    color: $headers_1_dark; } }
+
+#msg-form {  border: 1px solid $widget_borders_1;}
+
 .ui-widget-header {
-  border: 1px solid $widget_borders_2;
+  border: 2px solid white;
 //  background: $background_form_3 $widget_header 50% 50% repeat-x;
-  @include linear-gradient($widget_background_3, darken($widget_background_3,25));
+  @include linear-gradient($widget_background_3, darken($widget_background_3,15));
   color: $headers_1_dark;
   a {
     color: $headers_1_dark; } }
@@ -326,7 +334,7 @@ $widget_text_hover: desaturate($body_text_default, 40);
     border: 1px solid $border_1_dark; } }
 
 #msg-followup #msg-top {
-  background-color: $background_alt; }
+  background-color: transparent}
 
 #advanced #options {
   background-color: $background_alt; }
@@ -337,15 +345,22 @@ $widget_text_hover: desaturate($body_text_default, 40);
  *---------------------------------- */
 
 /* Background for things like "headers/selectors" for non-selected tabs, non-selected dates on calendar */
-.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-  border: 1px solid $border_1_light;
-  background: $widget_background_default ;
-  color: $widget_text_inactive; }
+.ui-state-default, .ui-widget-content .ui-state-default {
+  border: 2px solid $border_1_light;
+  background: $widget_background ;
+ }
+ 
+#tabs.ui-widget-header .ui-state-default {
+border-bottom: none
+}
 
+.ui-widget-header .ui-state-default {
+border: none
+}
 .ui-state-default a {
   color: $widget_text_inactive;
   &:link, &:visited {
-    color: $widget_text_inactive; } }
+    color: $headers_1_light; } }
 
 /*html body div#top div#content div#main div.active-scaffold div.create-view form#as_families-create--form.as_form div div#tabs.ui-tabs ul.ui-tabs-nav li.ui-state-hover a {
 background: red
@@ -363,7 +378,7 @@ background: red
     color: $widget_text_hover; } }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
-  border: 1px solid $border_3_dark;
+  border: 1px solid white;
 //  background: $widget_background_active $state_active_image 50% 50% repeat-x;
   @include linear-gradient($widget_background_3, $widget_background);
   color: $widget_text; }

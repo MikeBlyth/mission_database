@@ -292,6 +292,8 @@ div.crosstab {
 .grade-input {
   width: 50px; }
 
+#tabs p.form-footer {margin: 0.5em; }
+
 table.children {
   table-layout: fixed;
   width: 500px;
@@ -326,7 +328,7 @@ table.children {
   padding: 0.5em;
   #msg-top {
     width: 400px;
-    padding: 0.5em;
+    padding: 0;
     margin-top: 0.5em; }
   .note {
     width: 380px;
@@ -338,7 +340,7 @@ table.children {
     margin: 0.5em 1em 0.5em 1em; }
     }
 
-.as_form .msg-caveat { border: 1px solid red; padding: 0.5em; margin-bottom: 1em; width: 400px}
+.view .msg-caveat { border: 1px solid red; padding: 0.5em; margin-bottom: 1em; width: 400px}
 
 #advanced {
   position: absolute;

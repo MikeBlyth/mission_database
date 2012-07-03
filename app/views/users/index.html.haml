@@ -6,8 +6,10 @@
       %th Name
       %th Email
       %th Admin
+      %th{:colspan => '3'}
+        Actions
     - @users.each do |user|
-      %tr
+      %tr{:class=> cycle('list_line_odd' , 'list_line_even' )}
         %td= user.name
         %td= user.email
         %td= user.admin
