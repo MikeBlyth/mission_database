@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
 #  before_filter :authenticate #, :only => [:edit, :update]
   include AuthenticationHelper
+  include ApplicationHelper
   load_and_authorize_resource
 
   
@@ -15,6 +16,9 @@ class GroupsController < ApplicationController
     config.columns[:type_of_group].inplace_edit = true
     config.columns[:parent_group].inplace_edit = true
     config.columns[:parent_group].form_ui = :select 
+    config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
+       :confirm=>'This will download all the Groups data (most fields) for ' + 
+         'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
   end
 
   def attach_group_members
@@ -63,5 +67,11 @@ class GroupsController < ApplicationController
     super
     puts "**** parent_group_id=#{parent_group_id}"
   end
+
+  def export(params={})
+     columns = delimited_string_to_array(Settings.export.group_fields)
+     send_data Group.export(columns), :filename => "groups.csv"
+  end
+
 
 end
