@@ -4,28 +4,41 @@
       .col_1
         .passengers
           %h5 Travelers
-          - if @record.member_id.nil?
-            .traveler_names
-              = render 'shared/error_messages', :object => @record
-              = form.label :member,"Persons in this database:", :class=>'required'
-              %br
+          .traveler_names
+            = render 'shared/error_messages', :object => @record
+            = form.label :member,"Persons in this database:", :class=>'required'
+            %br
+            - if @new
               = form.collection_select(:member_id, 
                 Member.select("last_name, first_name, middle_name, short_name, name, id").order("name"), 
-                :id, :name, {}, :multiple => !@editing)    
-              %p You can select multiple travelers if they all have exactly the same |
-                trip details. Be sure to review the results. |
-          - else
-            %p= @record.member.full_name_short
+                :id, :name, {:include_blank=>"--none--"}, :multiple => 'multiple', :class=>'multiple')    
+              %p 
+                You can select multiple travelers if they all have exactly the same
+                trip details. Be sure to review the results. 
+            - else
+              - if @record.member_id
+                %p= "Already assigned to #{@record.member.full_name_short}"
+              - else
+                = form.collection_select(:member_id, 
+                  Member.select("last_name, first_name, middle_name, short_name, name, id").order("name"), 
+                  :id, :name, :include_blank=>"--none--") 
+                %p 
+                  Since there is no <em>member</em> listed on this travel record, you may
+                  assign one if you want. You should do this if the "other traveler" is actually
+                  a member found in the database (also remove the member from the "other traveler"
+                  box if that is the case).
           .spouse_kids
             %table
               %tr
                 %td
+                  - spouse_disabled = "disabled" if (@record.member && !@record.member.is_married?)
                   .with_spouse      
-                    = form.check_box :with_spouse, :class => 'with_spouse-input'
+                    = form.check_box :with_spouse, :class => "with_spouse-input", :disabled => spouse_disabled
                     = form.label :with_spouse
                 %td
+                  - children_disabled = "disabled" if @record.member && @record.member.children.empty?
                   .with_children      
-                    = form.check_box :with_children, :class => 'with_children-input'
+                    = form.check_box :with_children, :class => "with_children-input", :disabled => children_disabled
                     = form.label :with_children
           .other_travelers
             = form.label :other_travelers, "Travelers not listed above (separate with \";\")"

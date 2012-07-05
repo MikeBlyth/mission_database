@@ -215,7 +215,7 @@ div.travel_category, div.spouse_kids, div.total_passengers,
 div.other_travelers {
   margin-top: 0.8em; }
 
-div.traveler_names select {
+div.traveler_names select.multiple {
   height: 180px; }
 
 div.spouse_kids table {

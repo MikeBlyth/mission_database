@@ -119,14 +119,19 @@ class TravelsController < ApplicationController
     return selector
   end
  
-  def do_edit
-    @editing = true  # pass to the form, because an existing travel record only has a single
+  def do_new
+    @new = true  # pass to the form, because an existing travel record only has a single
                      # member, so we can't use multiple select
     super
   end
 
-  def do_update
-puts "**** params[:member_id]=#{params[:member_id]}"
-    super
+  def before_update_save(record)
+    # This is just to save a changed member_id, because I cannot figure out why AS won't save
+    # it as part of the normal update!
+    # Note that when a travel record is _updated_, it can only have a single member_id.
+    # Also, once a record has a member_id, it can't be changed. So the only time this method
+    # will be used is when updating a record that has an "other traveler" but no member.
+    member = params[:record][:member_id]
+    record.member_id = member.to_i if member
   end
 end 
