@@ -12,6 +12,10 @@ module MembersHelper
     end
   end
   
+  def members_column(family)
+    family_data_formatted(family, :include_contacts => false)[:first_names]
+  end
+  
 #  def reported_location_time_column(record)
 #    record.reported_location_time#.to_s#(:date_time_short)
 #  end

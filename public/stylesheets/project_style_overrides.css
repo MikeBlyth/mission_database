@@ -94,6 +94,8 @@ a, a:visited {
     margin-left: -1.5em; }
   #menu li {
     font-size: 80%; }
+  #menu form select, #menu form input {
+    font-size: 80%; }
 
 #links {
   margin-left: 0px; }

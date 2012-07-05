@@ -97,7 +97,10 @@ a, a:visited {
     list-style-position: outside;
     margin-left: -1.5em; }
   li {
-    font-size: 80%; } }
+    font-size: 80%; } 
+  form select, form input {
+    font-size: 80%;}
+     }
 
 #links {
   margin-left: 0px; }

@@ -21,14 +21,18 @@ module FamiliesHelper
   #   :email => 'mike.blyth@sim.org\nmjblyth@gmail.com'.
   # Private data will be masked unless show_private is true
   # Perhaps would be better to make phone & email arrays?
-  def family_data_formatted(f, show_private=false)
+  def family_data_formatted(f, options={:show_private=>false, :include_contacts=>true})
     formatted = {}
     head = f.head
     wife = f.wife
     phones = []
     emails = []
     formatted[:couple]= head.last_name_first(:short=>true, :middle=>false) + (wife ? " & #{wife.short}" : '')
-    formatted[:children] = smart_join(f.children_names)
+    children_names = smart_join(f.children_names)
+    formatted[:children] = children_names
+    formatted[:first_names] = head.short + (wife ? " & #{wife.short}" : '') 
+    formatted[:first_names] << "; #{children_names}" unless children_names.empty?
+    return formatted unless options[:include_contacts]
     primary_contact_type_code = Settings.contacts.primary_contact_type_code  # which is primary contact?
     # Get the contact record for head, using primary contact type e.g. "on field"
     contact_head = head.primary_contact
