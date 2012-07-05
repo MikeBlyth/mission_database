@@ -11,6 +11,7 @@ class WhereIsTable < Prawn::Document
     location_string = case options[:location]
       when 'long' then  "\n<i>" +  f.current_location + "</i>"
       when 'short' then " (#{f.residence_location})"
+      when 'modifiers' then "\n<i>" +  f.current_location(:with_residence=>false, :with_work=>false) + "</i>"
       else              ''  # when nil, don't include location at all
     end
     name_column = formatted[:couple] + 
@@ -50,7 +51,7 @@ class WhereIsTable < Prawn::Document
         displayed_location = ''  # not a new location, so don't show it in the location column (but what about top of page!?)
       end
       if location_col
-        table_data << [displayed_location] + family_data_line(f, options.merge({:location=>nil}))
+        table_data << [displayed_location] + family_data_line(f, options.merge({:location=>'modifiers'}))
           # (we don't want locations displayed with each family in this part since they're displayed separately)
       else
         table_data << family_data_line(f, options.merge({:location=>nil}))
