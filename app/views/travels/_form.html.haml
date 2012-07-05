@@ -4,15 +4,18 @@
       .col_1
         .passengers
           %h5 Travelers
-          .traveler_names
-            = render 'shared/error_messages', :object => @record
-            = form.label :member,"Persons in this database:", :class=>'required'
-            %br
-            = form.collection_select(:member_id, 
-              Member.select("last_name, first_name, middle_name, short_name, name, id").order("name"), 
-              :id, :name, {}, :multiple=>true)    
-            %p You can select multiple travelers if they all have exactly the same |
-              trip details. Be sure to review the results. |
+          - if @record.member_id.nil?
+            .traveler_names
+              = render 'shared/error_messages', :object => @record
+              = form.label :member,"Persons in this database:", :class=>'required'
+              %br
+              = form.collection_select(:member_id, 
+                Member.select("last_name, first_name, middle_name, short_name, name, id").order("name"), 
+                :id, :name, {}, :multiple => !@editing)    
+              %p You can select multiple travelers if they all have exactly the same |
+                trip details. Be sure to review the results. |
+          - else
+            %p= @record.member.full_name_short
           .spouse_kids
             %table
               %tr
@@ -36,8 +39,9 @@
                   %br
                   = form.text_field :total_passengers, :class => 'total_passengers-input'
                 %td
-                  %p If selecting multiple members, enter "1" since each member will have his own |
-                    trip generated. |
+                  - unless @record.member_id
+                    %p If selecting multiple members, enter "1" since each member will have his own |
+                      trip generated. |
       .col_2
         .date_route
           %h5 Trip Information

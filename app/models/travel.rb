@@ -118,39 +118,6 @@ class Travel < ActiveRecord::Base
   # Visitors are those with current incoming travel who are not "on field" as well
   # as any listed in the other_travelers field. Only those in the database can have a
   # contact information.
-#  def self.current_visitors -- OLD!
-#    # travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
-#    travels = self.current_arrivals.delete_if {|t| t.member && t.member.on_field && t.other_travelers.blank?}
-#    visitors = []
-#    travels.each do |t|
-#      # Add contact info if there is a (database) member as a visitor
-#      if t.member && t.member.primary_contact
-#        contact = t.member.primary_contact
-#        # Include the name only if there are other travelers to be distinguished
-#        contacts_name = t.other_travelers ? "#{t.member.full_name_short}: " : ''
-#        contacts = contacts_name + smart_join(
-#                                         [format_phone(contact.phone_1),
-#                                          t.member.primary_contact.email_1 ])
-#      else
-#        contacts = ''
-#      end
-
-#      # If the traveler is a (database) member with on-field status, then don't count her as a visitor
-#      if t.member && t.member.on_field
-#        visitor_names = t.other_travelers # just the other travelers since primary one has on-field status
-#      else
-#        visitor_names = t.travelers  # formatted string with primary & other travelers
-#      end
-
-#      visitors << {:names => visitor_names,
-#                   :arrival_date => t.date,
-#                   :departure_date => t.return_date,
-#                   :contacts => contacts
-#                   }
-#    end
-#    return visitors
-#  end 
-
   def self.current_visitors
     # travels = self.current_arrivals.where("(members.status_id NOT IN (?)) OR other_travelers > ''", Status.field_statuses)
     visitor_list = self.current_travel_status_hash.delete_if { |traveler, hash| 

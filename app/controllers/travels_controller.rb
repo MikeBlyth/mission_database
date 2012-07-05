@@ -118,5 +118,15 @@ class TravelsController < ApplicationController
     end
     return selector
   end
-  
+ 
+  def do_edit
+    @editing = true  # pass to the form, because an existing travel record only has a single
+                     # member, so we can't use multiple select
+    super
+  end
+
+  def do_update
+puts "**** params[:member_id]=#{params[:member_id]}"
+    super
+  end
 end 
