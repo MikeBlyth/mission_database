@@ -270,6 +270,7 @@ $( "#tabs" ).tabs();
     %table.children
       %th.name First name
       %th.name Middle name
+      %th.name Short name
       %th.birth_date Birthdate
       %th.sex Sex
       %th.school Schooling
@@ -282,6 +283,8 @@ $( "#tabs" ).tabs();
               = child_form.text_field :first_name, :class => 'first_name-input'
             %td 
               = child_form.text_field :middle_name, :class => 'first_name-input'
+            %td 
+              = child_form.text_field :short_name, :class => 'first_name-input'
             %td 
               = child_form.text_field :birth_date, :class => 'active_date-input date_picker_smaller '
             %td

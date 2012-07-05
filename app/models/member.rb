@@ -590,7 +590,7 @@ end
   # Return nil if location or time not defined, or if more than maximum time has elapsed
   def reported_location_current
     reported_location_expires && 
-      reported_location_expires + MaxReportedLocStaleness*3600 < Time.now
+      reported_location_expires + MaxReportedLocStaleness*3600 > Time.now
   end
 
   # String for display, with the reported location and time.

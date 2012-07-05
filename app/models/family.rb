@@ -115,7 +115,7 @@ class Family < ActiveRecord::Base
   # Array of children's first names sorted oldest to youngest
   def children_names
     names = []
-    self.children.each {|child| names << child.first_name}
+    self.children.each {|child| names << child.short}
     return names
   end
   

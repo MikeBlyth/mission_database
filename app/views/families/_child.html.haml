@@ -7,6 +7,8 @@
   %td 
     = form.text_field :middle_name, :class => 'first_name-input', :name=>"child_#{child.id}[middle_name]", :id=>"child_#{child.id}_middle_name"
   %td 
+    = form.text_field :short_name, :class => 'first_name-input', :name=>"child_#{child.id}[short_name]", :id=>"child_#{child.id}_short_name"
+  %td 
     = form.text_field :birth_date, :class => 'active_date-input date_picker_smaller ', :name=>"child_#{child.id}[birth_date]", :id=>"child_#{child.id}_birth_date"
   %td
     %label
