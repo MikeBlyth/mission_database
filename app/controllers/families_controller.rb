@@ -250,7 +250,6 @@ class FamiliesController < ApplicationController
 # Generate a filter string for use in Family.where(conditions_for_collection)...
   def conditions_for_collection
     Status.filter_condition_for_group('families',session[:filter])
-puts "**** #{Status.filter_condition_for_group('families',session[:filter])}"
   end   # conditions_for_collection
 
 end
