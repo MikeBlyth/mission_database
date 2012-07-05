@@ -257,7 +257,6 @@ private
     merged = {}
     h = husband.current_location_hash
     w = wife.current_location_hash
-   
     merged[:residence] = merge_one_location_param(h, w, :residence)
     merged[:work] = merge_one_location_param(h, w, :work)
     merged[:travel] = merge_one_location_param(h, w, :travel)

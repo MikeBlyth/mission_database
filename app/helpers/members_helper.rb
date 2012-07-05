@@ -12,22 +12,6 @@ module MembersHelper
     end
   end
   
-  # How many hours since this member's "reported_location" expired (given the reported_location_expires time)?
-  # Return nil if location or time not defined, or if more than maximum time has elapsed
-  def reported_location_staleness
-    return nil unless reported_location && reported_location_expires && reported_location_expires < Time.now
-    staleness = (Time.now - reported_location_expires)/3600.to_i
-  end
-
-  # String for display, with the reported location and time.
-  # First name is added if the person is married, so string can be used on a family line
-  # Nil is returned if more than maximum time has elapsed since report of location
-  def reported_location_w_time(with_name=false)
-    return if reported_location_staleness > MaxReportedLocStaleness
-    reply = with_name ? "#{first_name}: " : ''
-    reply << "#{reported_location} at #{to_local_time(reported_location_time, :date_time_short)}"
-  end
-  
 #  def reported_location_time_column(record)
 #    record.reported_location_time#.to_s#(:date_time_short)
 #  end

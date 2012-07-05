@@ -11,7 +11,7 @@ class WhereIsTable < Prawn::Document
     location_string = case options[:location]
       when 'long' then  "\n<i>" +  f.current_location + "</i>"
       when 'short' then " (#{f.residence_location})"
-      else              ''
+      else              ''  # when nil, don't include location at all
     end
     name_column = formatted[:couple] + 
                   (f.status.code == 'field' ? '' : " (#{f.status.description})") +

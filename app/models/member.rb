@@ -547,13 +547,27 @@ end
      return time_human((Date.today - self.birth_date) * SECONDS_PER_DAY)
   end
   
+#******************** LOCATION METHODS **********************************
+# current_location_hash -> {:residence=>Location, :work=>Location, :travel=>String, :temp=>String}
+# current_location is formatted string like "Challenge (Gyero) (traveled, returns 15 Jun)"
+# reported_location is string, the place the person reported as current location
+# reported_location_w_time: "Mike: office at 6 pm"
+# visiting_field? -- person with off field status who is currently visiting field
+# travel_location is formatted string like "left field 25 Jun, returns 27 Jul"
+# temp_location is formatted string using temporary_location with its dates, to give 
+#   something like "temporary location: Miango from 25 Jun to 27 Jul"
+#
+# Note that there is a separate current_location method for families
+#*************************************************************************
 
+# current_location_hash -> {:residence=>Location, :work=>Location, :travel=>String, :temp=>String}
   def current_location_hash(options={})
     answer = {
         :residence => description_or_blank(self.residence_location, options[:missing] || '?'),
         :work => description_or_blank(work_location, options[:missing] || nil),
         :travel => travel_location,
-        :temp => temp_location
+        :temp => temp_location,
+        :reported_location => reported_location_w_time
         }
     return answer
   end     
@@ -568,7 +582,24 @@ end
     answer += " (#{cur_loc_hash[:work]})" if !cur_loc_hash[:work].blank? && (cur_loc_hash[:work] != cur_loc_hash[:residence])
     answer += " (#{cur_loc_hash[:travel]})" if cur_loc_hash[:travel]
     answer += " (#{cur_loc_hash[:temp]})" if cur_loc_hash[:temp]
+    answer += " (reported #{cur_loc_hash[:reported_location]})" if cur_loc_hash[:reported_location]
     return answer
+  end
+
+  # How many hours since this member's "reported_location" expired (given the reported_location_expires time)?
+  # Return nil if location or time not defined, or if more than maximum time has elapsed
+  def reported_location_current
+    reported_location_expires && 
+      reported_location_expires + MaxReportedLocStaleness*3600 < Time.now
+  end
+
+  # String for display, with the reported location and time.
+  # First name is added if the person is married, so string can be used on a family line
+  # Nil is returned if more than maximum time has elapsed since report of location
+  def reported_location_w_time(with_name=false)
+    return unless reported_location && reported_location_current
+    reply = with_name ? "#{first_name}: " : ''
+    reply << "#{reported_location} at #{to_local_time(reported_location_time, :date_time_short)}"
   end
 
   # Returns true for people with off-field status (alumni, retired...) who are on a current trip to the field.
@@ -586,6 +617,9 @@ end
 #    return ! current_travel.nil?
   end  
 
+# Use travel schedule to find current location, such as 
+#   "left field 25 Jun, returns 27 Jul"
+#   "arrived on field 17 Nov, leaves 30 Nov"
   def travel_location
 #puts "travel_location, member=#{self.attributes}, status=#{status_id}, on_field=#{status.on_field if status}"
 
