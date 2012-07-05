@@ -250,16 +250,8 @@ class FamiliesController < ApplicationController
 # Generate a filter string for use in Family.where(conditions_for_collection)...
   def conditions_for_collection
     Status.filter_condition_for_group('families',session[:filter])
+puts "**** #{Status.filter_condition_for_group('families',session[:filter])}"
   end   # conditions_for_collection
-
-#  def create_respond_to_html 
-##puts "create_respond_to_html: @record=#{@record}, valid=#{@record.valid?}, path=#{edit_member_path @record.head}"
-#   redirect_to edit_member_path @record.head if @record.valid?
-#  end  
-
-#  def create_respond_to_js
-#   redirect_to edit_member_path @record.head if @record.valid?
-#  end  
 
 end
 
