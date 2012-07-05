@@ -186,16 +186,25 @@ class Family < ActiveRecord::Base
     head_current_location_hash = head.current_location_hash
     return head_current_location_hash unless married_couple?    # If single, just use head's current_location_hash
     spouse_current_location_hash = spouse.current_location_hash
-    return head_current_location_hash if head_current_location_hash == spouse_current_location_hash  # if identical, use 1
+#    if head_current_location_hash == spouse_current_location_hash  # if identical, use 1
+#      return pluralize_verbs(head_current_location_hash) 
+#    else
+#      return current_locations_merged_hash
+#    end
     return current_locations_merged_hash
   end 
 
-  def current_location(options={})
+  def current_location(options={:with_residence=>true, :with_work=>true})
     cur_loc_hash = current_location_hash(options)
-    answer = cur_loc_hash[:residence]
-    answer += " (#{cur_loc_hash[:work]})" if !cur_loc_hash[:work].blank? && (cur_loc_hash[:work] != cur_loc_hash[:residence])
+    answer = options[:with_residence] ? cur_loc_hash[:residence]  : ' '
+    if  options[:with_work] && 
+        !cur_loc_hash[:work].blank? && 
+        (cur_loc_hash[:work] != cur_loc_hash[:residence])
+      answer += " (#{cur_loc_hash[:work]})" 
+    end
     answer += " (#{cur_loc_hash[:travel]})" if !cur_loc_hash[:travel].blank?
     answer += " (#{cur_loc_hash[:temp]})" if !cur_loc_hash[:temp].blank?
+    answer += " (#{cur_loc_hash[:reported_location]})" if !cur_loc_hash[:reported_location].blank?
     return answer
   end
 
@@ -242,9 +251,13 @@ class Family < ActiveRecord::Base
 
 private
 
+  def pluralize_verbs(s)
+    s.sub(/returns /,'return ').sub(/arrives /, 'arrive ') if s
+  end
+
   def merge_one_location_param(h, w, param)
     if h[param] == w[param]
-      return h[param]
+      return pluralize_verbs(h[param])
     else
       his = h[param].blank? ? '' : husband.short + '--' + h[param]
       hers = w[param].blank? ? '' : wife.short + '--' + w[param]
@@ -257,11 +270,12 @@ private
     merged = {}
     h = husband.current_location_hash
     w = wife.current_location_hash
+puts "******merging"    
     merged[:residence] = merge_one_location_param(h, w, :residence)
     merged[:work] = merge_one_location_param(h, w, :work)
     merged[:travel] = merge_one_location_param(h, w, :travel)
     merged[:temp] = merge_one_location_param(h, w, :temp)
-
+    merged[:reported_location] = merge_one_location_param(h, w, :reported_location)
     return merged
   end
 

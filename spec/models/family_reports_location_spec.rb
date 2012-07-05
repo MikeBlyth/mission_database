@@ -1,9 +1,6 @@
 require 'spec_helper'
 include SimTestHelper
 
-### THIS SPEC MUST BE RUN SEPARATELY OR LAST BECAUSE IT CHANGES THE current_location METHOD
-#   OF MEMBER CLASS; RSPEC DOES NOT RESTORE THE ORIGINAL METHOD DURING A GIVEN RUN.
-
 describe Family do
   describe "reports current location" do
     before(:each) do
@@ -14,25 +11,15 @@ describe Family do
     end    
     
     it "of single member", :separate=> true do 
-      # This creates a Fake of sorts so that we can define the current_location & _hash of members
-      # without having to set up all the travel, status, and so on.
-      # We do this because Family.current_location uses Member.current_location and not the base data,
-      # and we test Member.current_location separately. As it stands, we have to do the method 
-      # overrides for each example ... is there a simpler way?
-#      class Member
-#        def current_location_hash
-#          return {:residence=>'Home', :work=>'work'}
-#        end
-#      end
       @head.stub(:current_location_hash).and_return({:residence=>'Home', :work=>'work'})
       @head.stub(:spouse).and_return(nil) # before(:each) creates couple, so must make single for test
       @family.current_location_hash.should == @head.current_location_hash
-
     end
 
     it "of couple when identical", :separate=> true do 
-      @head.stub(:current_location_hash).and_return({:residence=>'Home', :work=>'work', :temp=>'temp', :travel=>'travel'})
-      @spouse.stub(:current_location_hash).and_return({:residence=>'Home', :work=>'work', :temp=>'temp', :travel=>'travel'})
+      @head.stub(:current_location_hash).
+        and_return({:residence=>'Home', :work=>'work', :temp=>'temp', :travel=>'travel', :reported_location=>nil})
+      @spouse.stub(:current_location_hash).and_return(@head.current_location_hash)
       @family.current_location_hash.should == @head.current_location_hash
     end
 

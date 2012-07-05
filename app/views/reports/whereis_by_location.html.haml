@@ -17,7 +17,7 @@
           %td= "#{location}"
         - else
           %td= ""
-        %td= "#{formatted[:couple]}" + (f.status.code == 'field' ? '' : " (#{f.status.description})") + f.current_location
+        %td= "#{formatted[:couple]}" + (f.status.code == 'field' ? '' : " (#{f.status.description})") + f.current_location(:with_residence=>false)
         %td= smart_join(formatted[:emails], "; ")
         %td= smart_join(formatted[:phones], "; ")
 
