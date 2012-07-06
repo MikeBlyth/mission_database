@@ -14,7 +14,7 @@
   #menu_toggle
     %a.show_menu
       %img(src="stylesheets/images/arrows-4-icon.png")
-      Show Menu
+      %span#show_hide Show Menu
     #signed_in
       = signed_in? ? "Signed in as #{current_user.name}" : "Not signed in" 
   %div 

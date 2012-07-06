@@ -3,13 +3,15 @@
 
 // Toggle Menu Visibility
     $(function() {
-      $("#hide_menu").click(function() {
-        $("#menu").hide('500');
-        });
       $(".show_menu").click(function() {
         $("#menu").toggle('500');
+        if ($("#menu").is(':visible')) {
+          $('#show_hide').val('Hide menu');
+          }
+        else
+          $('#show_hide').val('Show menu');
         });
-      });  
+    });
 
 // Message page
 
