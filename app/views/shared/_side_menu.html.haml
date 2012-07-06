@@ -1,66 +1,68 @@
-#links
-  %h5 Main Menu
-  %p.user= signed_in? ? "Signed in as #{current_user.name}" : "Not signed in" 
-  - if signed_in? 
-    %ul.links
-      %li= link_to 'Families', families_path 
-      %li= link_to 'Members', members_path 
-      =# %li= link_to "User Settings", edit_user_path(current_user)       
-      %li= link_to 'Travel', travels_path 
-      %li= link_to 'Contacts', contacts_path 
-      %li= link_to 'Field terms', field_terms_path 
-      %li= link_to 'Groups', groups_path
-      %li= link_to 'Reports', reports_path      
-      %li= link_to 'Calendar events', calendar_events_path      
-      - if can? :create, User
-        %li= link_to 'Users',users_path 
-      %li= link_to 'Messages', messages_path
-      %li 
-        Set member filter
-        %ul
-          %li= link_to 'Active only', set_member_filter_path(:filter => :active) 
-          %li= link_to 'On field only', set_member_filter_path(:filter => :on_field) 
-          %li= link_to 'Home assignment',  set_member_filter_path(:filter => :home_assignment) 
-          %li= link_to 'HA or leave',  set_member_filter_path(:filter => :home_assignment_or_leave) 
-          %li= link_to 'Pipeline',  set_member_filter_path(:filter => :pipeline) 
-          %li= link_to 'Other',  set_member_filter_path(:filter => :other) 
-          %li= link_to 'Clear filter',  set_member_filter_path(:filter => :all) 
-      %li 
-        Set travel filter
-        %ul
-          %li= link_to 'All current travel', set_travel_filter_path(:travel_filter => :current)
-          %li= link_to 'Current arrivals', set_travel_filter_path(:travel_filter => :arrivals)
-          %li= link_to 'Current departures', set_travel_filter_path(:travel_filter => :departures)
-          %li= link_to 'Include past', set_travel_filter_path(:travel_filter => :all_dates)
-      %li= link_to "Edit your user info", edit_user_path(current_user)
-      %li= link_to "Sign out", signout_path, :method => :delete       
-    %h5 Change theme (look & feel)
-    -# This little form needs some DRYing & prettification if we go beyond a few themes
-    -# It's in plain HTML as I had trouble getting the Rails helpers to work
-    %form{'accept-charset'=>"UTF-8", 'action'=>"/application/theme", 'method'=>"get"}
-      - @theme = current_user.theme
-      %select{:name=>'theme', :id=>'theme'}
-        %option{:selected => (@theme == 'Gold'), :value => 'Gold'} 
-          Gold
-        %option{:value => 'Blue', :selected=>('selected' if @theme == 'Blue')}
-          Blue
-        %option{:value => 'Flick', :selected => (@theme == 'Flick')} 
-          Flick
-      = submit_tag("Select")        
+%h5 
+  Main Menu
+- if signed_in? 
+  %ul.links
+    %li= link_to 'Families', families_path 
+    %li= link_to 'Members', members_path 
+    =# %li= link_to "User Settings", edit_user_path(current_user)       
+    %li= link_to 'Travel', travels_path 
+    %li= link_to 'Contacts', contacts_path 
+    %li= link_to 'Field terms', field_terms_path 
+    %li= link_to 'Groups', groups_path
+    %li= link_to 'Reports', reports_path      
+    %li= link_to 'Calendar events', calendar_events_path      
+    - if can? :create, User
+      %li= link_to 'Users',users_path 
+    %li= link_to 'Messages', messages_path
+    %li 
+      Set member filter
+      %ul
+        %li= link_to 'Active only', set_member_filter_path(:filter => :active) 
+        %li= link_to 'On field only', set_member_filter_path(:filter => :on_field) 
+        %li= link_to 'Home assignment',  set_member_filter_path(:filter => :home_assignment) 
+        %li= link_to 'HA or leave',  set_member_filter_path(:filter => :home_assignment_or_leave) 
+        %li= link_to 'Pipeline',  set_member_filter_path(:filter => :pipeline) 
+        %li= link_to 'Other',  set_member_filter_path(:filter => :other) 
+        %li= link_to 'Clear filter',  set_member_filter_path(:filter => :all) 
+    %li 
+      Set travel filter
+      %ul
+        %li= link_to 'All current travel', set_travel_filter_path(:travel_filter => :current)
+        %li= link_to 'Current arrivals', set_travel_filter_path(:travel_filter => :arrivals)
+        %li= link_to 'Current departures', set_travel_filter_path(:travel_filter => :departures)
+        %li= link_to 'Include past', set_travel_filter_path(:travel_filter => :all_dates)
+    %li= link_to "Edit your user info", edit_user_path(current_user)
+    %li= link_to "Sign out", signout_path, :method => :delete       
+  %h5 Change theme (look & feel)
+  -# This little form needs some DRYing & prettification if we go beyond a few themes
+  -# It's in plain HTML as I had trouble getting the Rails helpers to work
+  %form{'accept-charset'=>"UTF-8", 'action'=>"/application/theme", 'method'=>"get"}
+    - @theme = current_user.theme
+    %select{:name=>'theme', :id=>'theme'}
+      %option{:selected => (@theme == 'Gold'), :value => 'Gold'} 
+        Gold
+      %option{:value => 'Blue', :selected=>('selected' if @theme == 'Blue')}
+        Blue
+      %option{:value => 'Flick', :selected => (@theme == 'Flick')} 
+        Flick
+    = submit_tag("Select")        
+  %hr
+  %h5 Option Tables
+  %ul.links
+    %li= link_to 'Bloodtypes', bloodtypes_path 
+    %li= link_to 'Cities', cities_path 
+    %li= link_to 'Contact types', contact_types_path 
+    %li= link_to 'Countries', countries_path 
+    %li= link_to 'Education codes', educations_path 
+    %li= link_to 'Employment status codes', employment_statuses_path 
+    %li= link_to 'Locations', locations_path 
+    %li= link_to 'Ministry codes', ministries_path 
+    %li= link_to 'States', states_path 
+    %li= link_to 'Status codes', statuses_path 
+  - if current_user_admin?
     %hr
+    %h5 Admin tasks
     %ul.links
-      %h5 Option Tables
-      %li= link_to 'Bloodtypes', bloodtypes_path 
-      %li= link_to 'Cities', cities_path 
-      %li= link_to 'Contact types', contact_types_path 
-      %li= link_to 'Countries', countries_path 
-      %li= link_to 'Education codes', educations_path 
-      %li= link_to 'Employment status codes', employment_statuses_path 
-      %li= link_to 'Locations', locations_path 
-      %li= link_to 'Ministry codes', ministries_path 
-      %li= link_to 'States', states_path 
-      %li= link_to 'Status codes', statuses_path 
-    - if current_user_admin?
       %li= link_to 'Log', '/app_logs'
       %li= link_to 'Settings', site_settings_path
       %li= link_to 'Clean database', clean_database_path 
@@ -68,10 +70,10 @@
       %li= link_to 'Send travel reminders', travel_reminders_path
       %li= link_to 'Send travel update notices', travel_updates_path
       %li= link_to 'Send contact updates', contact_updates_path
-      %hr
-  - else 
-    %p Please sign in 
-    = link_to "Sign in", signin_path
-  .clear
-  
+  %hr
+- else 
+  %p Please sign in 
+  = link_to "Sign in", signin_path
+.clear
+
 

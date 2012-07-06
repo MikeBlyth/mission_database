@@ -1,6 +1,16 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+// Toggle Menu Visibility
+    $(function() {
+      $("#hide_menu").click(function() {
+        $("#menu").hide('500');
+        });
+      $(".show_menu").click(function() {
+        $("#menu").toggle('500');
+        });
+      });  
+
 // Message page
 
     $(function() { 

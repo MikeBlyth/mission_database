@@ -2,6 +2,8 @@
    file. 
    This file is for positioning, sizing, etc. */
 
+body {margin: 0}
+
 .active-scaffold .as_content {
   margin-top: 4px; }
 
@@ -29,7 +31,7 @@ h5, .active-scaffold h5 {
 /******* Sizing *********** */
 
 div#content {
-  min-width: 1000px;
+  min-width: 800px;
   min-height: 800px;
   padding: 0 5px 5px 5px; }
 
@@ -85,10 +87,12 @@ a, a:visited {
 #menu {
   min-height: 800px;
   width: 139px;
-  position: absolute;
-  top: 0px;
-  left: 0px;
+//  position: absolute;
+  float: left;
+//  top: 0px;
+//  left: 0px;
   padding: 0px 5px 10px 5px;
+  h5 {margin: 0 0 2px 0;}
   p.user {
     font-size: smaller; }
   a {
@@ -102,13 +106,46 @@ a, a:visited {
     font-size: 80%;}
      }
 
-#links {
-  margin-left: 0px; }
+/*
+a.show_menu {
+  font-size: smaller;
+  background-image: url("images/arrows-4-icon.png");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+    }     
+*/
+
+#menu_toggle {
+  margin-bottom: -7px;
+  margin-top: -2px;
+    }
+
+#signed_in {
+  font-size: smaller;
+  float: right;
+  }
+
+a.show_menu {
+  font-size: smaller;
+  &:hover {
+  background: yellow;
+  color: inherit;
+  }
+  img {
+    position: relative;
+    left: 2px;
+    top: 4px;
+    }     
+  }
+
+
+ul.links {
+  margin-top: 0px; }
 
 #content {
-  position: absolute;
+//  position: absolute;
   top: 0px;
-  left: 150px;
+//  left: 150px;
   padding-left: 10px; }
 
 #notice {
@@ -347,7 +384,9 @@ table.children {
 
 #advanced {
   position: absolute;
-  top: 0px;
+  top: 0px;  background-attachment: fixed;
+  background-repeat: no-repeat;
+
   left: 200px;
   width: 200px;
   padding: 5px; }
@@ -361,3 +400,7 @@ table.children {
 .not-implemented {
   display: none; }
 
+#main .active-scaffold > table {
+  width: auto;
+  background: red;
+  }
