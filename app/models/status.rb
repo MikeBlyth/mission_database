@@ -91,7 +91,6 @@ class Status < ActiveRecord::Base
     end
     
     def self.filter_condition_for_group(table, target_group)
-debugger
       target_statuses = self.statuses_by_group(target_group)
       if target_statuses.is_a?(Array)
         return ["#{table}.status_id IN (?)", target_statuses]
