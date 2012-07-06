@@ -4,12 +4,13 @@
 // Toggle Menu Visibility
     $(function() {
       $(".show_menu").click(function() {
-        $("#menu").toggle('500');
         if ($("#menu").is(':visible')) {
-          $('#show_hide').val('Hide menu');
+          $('#show_hide').text('Show menu');
           }
-        else
-          $('#show_hide').val('Show menu');
+        else {
+          $('#show_hide').text('Hide menu');
+          }
+      $("#menu").toggle('500');
         });
     });
 
