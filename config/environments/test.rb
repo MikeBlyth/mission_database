@@ -35,6 +35,8 @@ SIM::Application.configure do
 
   config.autoload_paths += %W(#{Rails.root}/spec/support)
 
-config.gem 'factory_girl'
+  config.gem 'factory_girl'
+  
+  require 'ruby-debug'
 
 end
