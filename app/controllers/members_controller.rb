@@ -119,8 +119,23 @@ class MembersController < ApplicationController
     hash.delete key
   end
     
+  def do_update
+    puts "**** do_update"
+    puts "**** do_update params=#{params}"
+    params[:record][:country] = params[:record][:country_id]
+    super
+  end
+
     
   def before_update_save(record)
+puts "**** before_update params=#{params}"
+    updates = params[:record]
+    record.country_id = updates[:country_id]
+    record.status_id = updates[:status_id]
+    record.work_location_id = updates[:work_location_id]
+    record.ministry_id = updates[:ministry_id]
+    record.personnel_data.update_attributes(updates[:personnel_data])
+    record.health_data.update_attributes(updates[:health_data])
     contact_info = params[:contact]
     #  from Family tab. These _override_ any changes made on the head or wife pages
     update_field_terms(record, params[:current_term])

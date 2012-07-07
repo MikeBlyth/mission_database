@@ -14,6 +14,7 @@ def seed_statuses
 end
 
 describe MembersController do
+include SimTestHelper
   
   before(:each) do
   #  @family = Factory(:family)
@@ -268,16 +269,23 @@ describe MembersController do
 #        @user = Factory(:user, :admin=>true)
 #        test_sign_in(@user)
         test_sign_in_fast
+        @member = Factory(:member_without_family)
       end
     
     it 'updates personnel & health data' do
-      @member = Factory(:member_without_family)
       @params = {:first_name => 'New', :health_data=>{:allergies => 'snow'}, :personnel_data=>{:comments => 'Good'}} 
       post :update, :id => @member.id, :record => @params
       @member.reload.first_name.should == 'New'
       @member.health_data.allergies.should == 'snow'
       @member.personnel_data.comments.should == 'Good'
     end
+    
+    it 'updates country' do
+      seed_tables
+puts "**** Country.find(1).name=#{Country.find(1).name}"
+      post :update, :id => @member.id, :record => {:country_id => '1'}
+      @member.reload.country_id.should == 1
+    end  
   end # misc
      
 end

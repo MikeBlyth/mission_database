@@ -50,7 +50,6 @@ include SimTestHelper
       select 'On field'
       select 'Ministry'
       fill_in 'Ministry comment', :with=> "ministry comment"
-#*      select 'Site', :from=>'record_residence_location'
       select 'Site', :from=>'Ministry location'
       fill_in 'Temporary location', :with=> "out of town"
       fill_in "record_temporary_location_from_date", :with => temp_loc_from.strftime("%F")
@@ -66,7 +65,7 @@ include SimTestHelper
       fill_in "health_data_comments", :with => "good"
       select 'AB+'
       select 'Educ'
-      fill_in "Qualifications", :with=> "Very qualified"
+      fill_in "record[personnel_data][qualifications]", :with=> "Very qualified"
       select 'Career'
       fill_in "Date active", :with => date_active.strftime("%F")
       fill_in "record_pers_comments", :with => "What a lot of info to fill in."
