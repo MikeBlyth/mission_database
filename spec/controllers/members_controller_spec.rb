@@ -169,27 +169,27 @@ describe MembersController do
       
     it 'updates the member' do
 #        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
-      updates = {:head=>{:first_name=>'Gordon'}}
+      updates = {:record=>{:first_name=>'Gordon'}}
       put :update, @params.merge(updates)
       @head.reload.first_name.should == 'Gordon'
     end  
     
     it 'updates the personnel data' do
 #        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
-      updates = {:head_pers=>{:qualifications=>'Wonderful'}}
+      updates = {:record => {:personnel_data => {:qualifications=>'Wonderful'}}}
       put :update, @params.merge(updates)
       @head.reload.personnel_data.qualifications.should == 'Wonderful'
     end  
     
     it 'updates the health data' do
 #        lambda {put :update, :id=>@family.id, :record=>{}}.should change(Member, :count).by(0)
-      updates = {:health_data=>{:issues=>'sick'}}
+      updates = {:record => {:health_data=>{:issues=>'sick'}}}
       put :update, @params.merge(updates)
       @head.reload.health_data.issues.should == 'sick'
     end  
     
     it 'updates phone numbers and email for head' do
-      updates = {:head_contact => {:phone_1 => '+2348088888888', :phone_2 => '0802 222 2222',
+      updates = {:contact => {:phone_1 => '+2348088888888', :phone_2 => '0802 222 2222',
                                 :email_1 => 'x@y.com', :email_2 => 'cat@dog.com'}}
       post :update, @params.merge(updates)
       @head.reload
@@ -245,7 +245,7 @@ describe MembersController do
       @member = Factory.create(:member)
       @a = Factory.create(:group)
       @b = Factory.create(:group)
-      put :update, :id=>@member.id, :head=>{:group_ids=>[@a.id.to_s, @b.id.to_s]}
+      put :update, :id=>@member.id, :record=>{:group_ids=>[@a.id.to_s, @b.id.to_s]}
       @member.reload.group_ids.sort.should == [@a.id, @b.id].sort
     end
   end    
@@ -262,5 +262,22 @@ describe MembersController do
       response.headers['Content-Disposition'].should include("filename=\"members.csv\"")
     end
   end # Export
+     
+  describe 'Assoc' do
+      before(:each) do
+#        @user = Factory(:user, :admin=>true)
+#        test_sign_in(@user)
+        test_sign_in_fast
+      end
+    
+    it 'updates personnel & health data' do
+      @member = Factory(:member_without_family)
+      @params = {:first_name => 'New', :health_data=>{:allergies => 'snow'}, :personnel_data=>{:comments => 'Good'}} 
+      post :update, :id => @member.id, :record => @params
+      @member.reload.first_name.should == 'New'
+      @member.health_data.allergies.should == 'snow'
+      @member.personnel_data.comments.should == 'Good'
+    end
+  end # misc
      
 end

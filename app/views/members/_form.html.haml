@@ -3,11 +3,7 @@ $(function() {
 $( "#tabs" ).tabs();
 });
 </script>
-- @member = @record
-- @head = @member
-- @head_pers = @member.personnel_data || PersonnelData.new
-- @health_data = @member.health_data || HealthData.new
-- child = @member.child
+- child = @record.child
 <div >
 #tabs
   %ul
@@ -21,7 +17,7 @@ $( "#tabs" ).tabs();
       %li <a href="#tabs-health">Health</a>
     %li <a href="#tabs-groups">Groups</a>
 
-  = form_for :head do |member|
+  = form_for :record do |member|
     #tabs-member
       %table.new_family
         %tr
@@ -55,7 +51,7 @@ $( "#tabs" ).tabs();
             .country
               = member.label :country_id
               %br
-              - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
+              - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @record[:country_id])
               = member.select(:country_id, choices, {:include_blank => true }, :class=>'wide-input')    
         %tr
           %td
@@ -65,9 +61,9 @@ $( "#tabs" ).tabs();
             %br
             %p.description Must be unique
             %td
-              = label_tag :head_status_id, "Field status"
+              = label_tag :record_status_id, "Field status"
               %br
-              - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @head[:status_id])
+              - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @record[:status_id])
               = member.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
           %tr
           - if child
@@ -76,12 +72,12 @@ $( "#tabs" ).tabs();
             %td
               = member.label :ministry_id, "Ministry"
               %br
-              - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
+              - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @record[:ministry_id])
               = member.select(:ministry_id, choices, {:include_blank => true }, :class=>'wide-input')    
             %td
               = member.label :work_location_id, "Ministry location"
               %br
-              - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
+              - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @record[:work_location_id])
               = member.select(:work_location_id, choices, {:include_blank => true }, :class=>'ministry_location-input')    
             %td{:colspan=>'2'}
               = member.label :ministry_comment, "Ministry comments"
@@ -89,26 +85,26 @@ $( "#tabs" ).tabs();
               = member.text_field :ministry_comment, :class=>'ministry_comments'   
         %tr
           %td
-            = label :head_contact, :phone_1, "Phone on field"
+            = label :contact, :phone_1, "Phone on field"
             %br
-            = text_field :head_contact, :phone_1, :class=>'phone-input'
+            = text_field :contact, :phone_1, :class=>'phone-input'
           %td
-            = label :head_contact, :email_1, "Email 1"
+            = label :contact, :email_1, "Email 1"
             %br
-            = text_field :head_contact, :email_1
+            = text_field :contact, :email_1
           %td{:colspan=>'2'}
             = member.label :temporary_location, "Temporary location"
             %br
             = member.text_field :temporary_location, :class=>'temporary_location-input'
         %tr
           %td
-            = label :head_contact, :phone_2, "Phone 2"
+            = label :contact, :phone_2, "Phone 2"
             %br
-            = text_field :head_contact, :phone_2, :class=>'phone-input'
+            = text_field :contact, :phone_2, :class=>'phone-input'
           %td
-            = label :head_contact, :email_2, "Email 2"
+            = label :contact, :email_2, "Email 2"
             %br
-            = text_field :head_contact, :email_2
+            = text_field :contact, :email_2
           %td
             = member.label :temporary_location_from_date, "Temp. loc. start date"
             %br
@@ -117,7 +113,7 @@ $( "#tabs" ).tabs();
             = member.label :temporary_location_until_date, "Until"
             %br
             = member.text_field :temporary_location_until_date, :class => 'active_date-input date_picker '
-    - if @member.child
+    - if @record.child
       #tabs-school
         = member.label :school
         %br
@@ -130,39 +126,40 @@ $( "#tabs" ).tabs();
     - else
       - if can? :read, PersonnelData
         #tabs-personnel
-          %table.new_family
-            %tr
-              %td
-                = label_tag :head_pers_date_active, "Date active with SIM"
-                %br
-                = text_field :head_pers,  :date_active, :class => 'date_active-input date_picker '
-              %td
-                = label_tag :head_pers_est_end_of_service, "Est. end of service"
-                %br
-                = text_field :head_pers,  :est_end_of_service, :class => 'active_date-input date_picker '
-              %td
-                = label_tag :head_pers_employment_status_id, "Employment status"
-                %br
-                - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
-                = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
-            %tr
-              %td
-                .education
-                  = label :head_pers, :education_id
+          = fields_for :record_pers do |pers|
+            %table.new_family
+              %tr
+                %td
+                  = pers.label :date_active, "Date active with SIM"
                   %br
-                  - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
-                  = select(:head_pers, :education_id, choices, {:include_blank => true }, :class=>'medium-input')    
-              %td
-                .qualifications
-                  = label :head_pers, :qualifications
+                  = text_field :record_pers, :date_active, :class => 'date_active-input date_picker ', :name=>'record[personnel_data][date_active]'
+                %td
+                  = pers.label :est_end_of_service, "Est. end of service"
                   %br
-                  = text_field :head_pers, :qualifications, :class=> 'medium-input'
-            %tr
-              %td{:colspan=>'3'}
-                = label_tag :head_pers_comments, "Personnel comments"
-                %br
-                = text_area :head_pers, :comments, :cols=>80, :rows=>5
-            
+                  = text_field :record_pers, :est_end_of_service, :class => 'active_date-input date_picker ', :name=>'record[personnel_data][date_active]'
+                %td
+                  = pers.label :employment_status_id, "Employment status"
+                  %br
+                  - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @record_pers[:employment_status_id])
+                  = select(:record_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input', :name=>'record[personnel_data][employment_status_id]')    
+              %tr
+                %td
+                  .education
+                    = pers.label :education_id
+                    %br
+                    - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @record_pers[:education_id])
+                    = select(:record_pers, :education_id, choices, {:include_blank => true }, :class=>'medium-input', :name=>'record[personnel_data][education_id]')    
+                %td
+                  .qualifications
+                    = pers.label :qualifications
+                    %br
+                    = text_field :record_pers, :qualifications, :class=> 'medium-input', :name=>'record[personnel_data][qualifications]'
+              %tr
+                %td{:colspan=>'3'}
+                  = pers.label :comments, "Personnel comments"
+                  %br
+                  = text_area :record_pers, :comments, :cols=>80, :rows=>5, :name=>'record[personnel_data][qualifications]'
+              
     - if can? :read, HealthData
       #tabs-health
         %table.new_family
@@ -170,25 +167,25 @@ $( "#tabs" ).tabs();
             %td
               = label_tag :health_data_bloodtype_id, "Blood type"
               %br
-              = collection_select(:health_data, :bloodtype_id, Bloodtype.all, :id, :full, {:include_blank => true }, :class=>'medium-input')    
+              = collection_select(:health_data, :bloodtype_id, Bloodtype.all, :id, :full, {:include_blank => true }, :class=>'medium-input', :name=>'record[health_data][bloodtype_id]')    
             %td
               = label_tag :health_data_current_meds, "Current medications"
               %br
-              = text_field :health_data, :current_meds
+              = text_field :health_data, :current_meds, :name=>'record[health_data][current_meds]'
           %tr
             %td
               = label_tag :health_data_issues, "Health issues"
               %br
-              = text_field :health_data, :issues
+              = text_field :health_data, :issues, :name=>'record[health_data][issues]'
             %td
               = label_tag :health_data_allergies, "Allergies"
               %br
-              = text_field :health_data, :allergies
+              = text_field :health_data, :allergies, :name=>'record[health_data][allergies]'
           %tr
             %td{:colspan=>'2'}
               = label_tag :health_data_comments
               %br
-              = text_area :health_data, :comments, :cols=>80, :rows=>5
+              = text_area :health_data, :comments, :cols=>80, :rows=>5, :name=>'record[health_data][comments]'
     #tabs-groups
       = member.label :group_ids, "Groups"
       %br

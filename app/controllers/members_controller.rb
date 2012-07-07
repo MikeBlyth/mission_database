@@ -97,20 +97,19 @@ class MembersController < ApplicationController
     field_term.update_attributes(params)
   end
   
-  def attach_groups
-    @head.update_attributes(:group_ids=>params[:head][:group_ids]) if params[:head] && params[:head][:group_ids]
+  def attach_groups(record)
+    record.update_attributes(:group_ids=>params[:record][:group_ids]) if params[:record] && params[:record][:group_ids]
   end
 
   def do_edit
     super
 #puts "**** @record.attributes=#{@record.attributes}"
 #puts "**** @record.head=#{@record.head}"
-    @head = @record
-    @head_contact = @head.primary_contact
-    @head_pers = @head.personnel_data
-    @current_term = @head.most_recent_term || FieldTerm.new(:member=>@head)
-    @next_term = @head.pending_term || FieldTerm.new(:member=>@head)
-    @head_health = @head.health_data
+    @contact = @record.primary_contact
+    @record_pers = @record.personnel_data  || PersonnelData.new
+    @current_term = @record.most_recent_term || FieldTerm.new(:member=>@record)
+    @next_term = @record.pending_term || FieldTerm.new(:member=>@record)
+    @health_data = @record.health_data || HealthData.new
   end
 
   # add "_id" to the key in hash (AS update seems to not require the _id but we do)
@@ -120,30 +119,21 @@ class MembersController < ApplicationController
     hash.delete key
   end
     
-  def update
-# puts "\n**** Full params=#{params}, id=#{params[:id]}"
-    @head = Member.find(params[:id])
-#    params.delete[:health_data] unless can? :update HealthData
-    @error_records = []  # Keep list of the model records that had errors when updated
-      @head, @head_pers, @head_contact, @health_data = 
-        update_one_member(@head, params[:head], params[:head_pers], params[:head_contact],
-           params[:health_data], @error_records)
-    # Apply to head and spouse any changes to current_term.end_date or next_term.start_date
-    #  from Family tab. These _override_ any changes made on the head or wife pages
-    update_field_terms(@head, params[:current_term])
-    update_field_terms(@head, params[:next_term])
-    attach_groups
     
-    if @error_records.empty?
-      redirect_to members_path
-    else  # send back to user to try again
-      @record = @head
-      remove_unneeded_keys(params)
-      respond_to do |format|
-        format.js {render :on_update_err, :locals => {:xhr => true}}
-        format.html {render :update}
-      end
-    end      
+  def before_update_save(record)
+    contact_info = params[:contact]
+    #  from Family tab. These _override_ any changes made on the head or wife pages
+    update_field_terms(record, params[:current_term])
+    update_field_terms(record, params[:next_term])
+    attach_groups(record)
+    if contact_info
+      record.primary_contact || record.contacts << Contact.new(:is_primary=>true)
+      record.primary_contact.update_attributes(:phone_1 => contact_info[:phone_1], 
+        :phone_2 => contact_info[:phone_2],
+        :email_1 => contact_info[:email_1],
+        :email_2 => contact_info[:email_2]
+        )
+    end
   end   
   
   def new
