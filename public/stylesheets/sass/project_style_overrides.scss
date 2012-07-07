@@ -30,10 +30,25 @@ h5, .active-scaffold h5 {
 
 /******* Sizing *********** */
 
+$top_bar_height: 15px;
+$menu_width: 140px;
+
+div#menu {
+  min-height: 800px;
+  width: $menu_width;
+  position: absolute;
+  top: $top_bar_height;
+  left: 0px;
+}
+
 div#content {
+  position: absolute;
+  top: $top_bar_height;
+  left: $menu_width+11;
   min-width: 800px;
   min-height: 800px;
-  padding: 0 5px 5px 5px; }
+  padding: 0px 5px 5px 8px;
+   }
 
 div.countries-view,
 div.cities-view {
@@ -85,12 +100,6 @@ a, a:visited {
   text-decoration: none; }
 
 #menu {
-  min-height: 800px;
-  width: 139px;
-//  position: absolute;
-  float: left;
-//  top: 0px;
-//  left: 0px;
   padding: 0px 5px 10px 5px;
   h5 {margin: 0 0 2px 0;}
   p.user {
@@ -141,12 +150,6 @@ a.show_menu {
 
 ul.links {
   margin-top: 0px; }
-
-#content {
-//  position: absolute;
-  top: 0px;
-//  left: 150px;
-  padding-left: 10px; }
 
 #notice {
   padding: 0.5em;
@@ -402,5 +405,10 @@ table.children {
 
 #main .active-scaffold > table {
   width: auto;
-  background: red;
+  width: 100%;
   }
+  
+/************* WORKAROUNDS ETC. ******************/
+
+/* this is needed b/o bug in jquery-ui, to get tabs widget to work next to the floated menu */
+.ui-helper-clearfix { display:block; min-width: 0; overflow: hidden; }  
