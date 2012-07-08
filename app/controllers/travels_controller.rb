@@ -48,7 +48,7 @@ class TravelsController < ApplicationController
     config.list.label = "Travel schedule"
  #   config.list.pagination = false
     config.columns[:confirmed].inplace_edit = true
-    config.list.sorting = { :date => :asc, :id => :asc }
+    config.list.sorting = [{ :date => :asc}, {:id => :asc}]
 
     # Searching
     config.actions.exclude :search

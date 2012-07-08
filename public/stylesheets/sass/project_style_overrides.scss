@@ -147,6 +147,13 @@ a.show_menu {
     }     
   }
 
+p.filtered-message:before {
+  content:"List is filtered for";
+  }
+
+p.filtered-message {
+  font-weight: bold;
+  }
 
 ul.links {
   margin-top: 0px; }

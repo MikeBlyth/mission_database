@@ -17,8 +17,10 @@ class MembersController < ApplicationController
     config.actions.exclude :create
 
     config.label = "Members"
-    list.columns = [:name, :spouse, 
+    list_columns = [:name, :spouse, 
           :child, :work_location, :reported_location, :reported_location_time, :ministry, :travels, :field_terms, :status, :contacts, :groups]
+    list.columns = list_columns
+    config.config_list.default_columns = list_columns - [:ministry, :reported_location, :reported_location_time, :groups] 
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = update.columns = [:name, :name_override,
@@ -67,8 +69,7 @@ class MembersController < ApplicationController
    config.actions.exclude :search
    config.actions.add :field_search
    config.field_search.human_conditions = true
-   config.field_search.columns = [:last_name]#, :residence_location, :birth_date, :bloodtype, :status]
-
+   config.field_search.columns = [:last_name, :residence_location, :birth_date, :child, :status]
    config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
      :confirm=>'This will download all the member data (most fields) for ' + 
        'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
@@ -121,7 +122,6 @@ class MembersController < ApplicationController
   end
     
   def update
- puts "\n**** Full params=#{params}, id=#{params[:id]}"
     @head = Member.find(params[:id])
 #    params.delete[:health_data] unless can? :update HealthData
     @error_records = []  # Keep list of the model records that had errors when updated
