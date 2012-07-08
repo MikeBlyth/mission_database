@@ -5,12 +5,15 @@
     $(function() {
       $(".show_menu").click(function() {
         if ($("#menu").is(':visible')) {
+          $("#menu").hide('500');
+          $('#content').css('left','0');            
           $('#show_hide').text('Show menu');
           }
         else {
+          $("#menu").show('500');
+          $('#content').css('left','156px');            
           $('#show_hide').text('Hide menu');
           }
-      $("#menu").toggle('500');
         });
     });
 
