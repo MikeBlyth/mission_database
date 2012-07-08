@@ -24,3 +24,7 @@
         %br
         = form.select :member_ids, Member.those_active_adults.order('name').collect {|x| [x.name, x.id]}, {:include_blank=>"--none--"}, 
           :multiple => true, :size=>15
+      %td(colspan=3)
+        %p 
+          If this new group is to be a container for sub-groups, you should just add members to the sub-groups.
+          They will automatically be included in this parent group.

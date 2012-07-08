@@ -27,6 +27,10 @@ class Group < ActiveRecord::Base
     group_name
   end
 
+  def group_members
+    self.members.map {|m| m.full_name_short}.join(", ")
+  end
+
   # Return a list of all the members who are in this group *or* its subgroups.
   def members_with_subgroups
     belong = self.member_ids

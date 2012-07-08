@@ -4,8 +4,7 @@ $( "#tabs" ).tabs();
 });
 </script>
 - @member = @record
-- @head = @member
-- @head_pers = @member.personnel_data || PersonnelData.new
+- @member_pers = @member.personnel_data || PersonnelData.new
 - @health_data = @member.health_data || HealthData.new
 - child = @member.child
 <div >
@@ -55,7 +54,7 @@ $( "#tabs" ).tabs();
             .country
               = member.label :country_id
               %br
-              - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @head[:country_id])
+              - choices = options_from_collection_for_select(Country.where('include_in_selection').select('id, name').order('name'), :id, :name, @member[:country_id])
               = member.select(:country_id, choices, {:include_blank => true }, :class=>'wide-input')    
         %tr
           %td
@@ -67,8 +66,13 @@ $( "#tabs" ).tabs();
             %td
               = label_tag :head_status_id, "Field status"
               %br
-              - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @head[:status_id])
+              - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @member[:status_id])
               = member.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+            %td
+              = label_tag :head_status_id, "Employment status"
+              %br
+              - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @member_pers[:employment_status_id])
+              = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
           %tr
           - if child
             Child stuff here
@@ -76,12 +80,12 @@ $( "#tabs" ).tabs();
             %td
               = member.label :ministry_id, "Ministry"
               %br
-              - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @head[:ministry_id])
+              - choices = options_from_collection_for_select(Ministry.select('id, description').order('description'), :id, :description, @member[:ministry_id])
               = member.select(:ministry_id, choices, {:include_blank => true }, :class=>'wide-input')    
             %td
               = member.label :work_location_id, "Ministry location"
               %br
-              - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @head[:work_location_id])
+              - choices = options_from_collection_for_select(Location.select('id, description').order('description'), :id, :description, @member[:work_location_id])
               = member.select(:work_location_id, choices, {:include_blank => true }, :class=>'ministry_location-input')    
             %td{:colspan=>'2'}
               = member.label :ministry_comment, "Ministry comments"
@@ -143,14 +147,14 @@ $( "#tabs" ).tabs();
               %td
                 = label_tag :head_pers_employment_status_id, "Employment status"
                 %br
-                - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @head_pers[:employment_status_id])
+                - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @member_pers[:employment_status_id])
                 = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
             %tr
               %td
                 .education
                   = label :head_pers, :education_id
                   %br
-                  - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @head_pers[:education_id])
+                  - choices = options_from_collection_for_select(Education.select('id, description').order('description'), :id, :description, @member_pers[:education_id])
                   = select(:head_pers, :education_id, choices, {:include_blank => true }, :class=>'medium-input')    
               %td
                 .qualifications

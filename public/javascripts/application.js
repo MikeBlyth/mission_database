@@ -17,6 +17,12 @@
         });
     });
 
+// Hide any ActiveScaffold links we don't want
+
+    $(function() {
+        $('a#as_field_terms-new--link.new').hide();
+    });
+
 // Message page
 
     $(function() { 

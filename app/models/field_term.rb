@@ -12,8 +12,8 @@
 #  end_date                 :date
 #  created_at               :datetime
 #  updated_at               :datetime
-#  beginning_travel_id      :integer
-#  ending_travel_id         :integer
+#  beginning_travel_id      :integer  # Not in Use
+#  ending_travel_id         :integer  # Not in Use
 #  end_estimated            :boolean
 #  start_estimated          :boolean
 #

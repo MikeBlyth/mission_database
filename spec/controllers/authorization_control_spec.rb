@@ -37,7 +37,7 @@ controllers = [
                 [TravelsController, :travel],
               ]  
   
-controllers.each { |controller, obj_sym| generic(controller, obj_sym) }
+controllers.each { |controller, obj_sym| puts "#{controller}:#{obj_sym}"; generic(controller, obj_sym) }
 
 
 

@@ -22,7 +22,7 @@ class FieldTermsController < ApplicationController
     config.columns[:employment_status].inplace_edit = true
 
     # Searching
-    config.actions.exclude :search
+    config.actions.exclude :search, :update, :show
     config.actions.add :field_search
     config.field_search.columns = :member, :start_date, :end_date, :ministry, :primary_work_location, :employment_status
 
