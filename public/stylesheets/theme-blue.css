@@ -52,6 +52,8 @@
   /* Individual icons are sprites within a collection */ }
   .theme-blue body {
     color: #000d1a; }
+  .theme-blue div#menu_toggle {
+    background: #b3d9ff; }
   .theme-blue a:visited {
     color: #2050df; }
   .theme-blue a:hover {
@@ -130,7 +132,7 @@
   .theme-blue .exceeded {
     background: yellow; }
   .theme-blue #menu {
-    background: 225, 100, 94;
+    background: #e0e8ff;
     border-right: 1px solid #7099c2; }
     .theme-blue #menu a {
       color: #002142; }

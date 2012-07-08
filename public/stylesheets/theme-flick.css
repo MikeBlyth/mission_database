@@ -52,6 +52,8 @@
   /* icons and icons w state */
   /* Each image is a whole collection of icons with different colors and backgrounds */
   /* Individual icons are sprites within a collection */ }
+  .theme-flick div#menu_toggle {
+    background: #ffd6d6; }
   .theme-flick body {
     color: #1a0000; }
   .theme-flick a:visited {
@@ -86,13 +88,13 @@
   .theme-flick div#content {
     background: white; }
   .theme-flick .active-scaffold th {
-    background-color: #e4cdcd;
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e4cdcd), color-stop(100%, #c99c9c));
-    background-image: -webkit-linear-gradient(top, #e4cdcd, #c99c9c);
-    background-image: -moz-linear-gradient(top, #e4cdcd, #c99c9c);
-    background-image: -ms-linear-gradient(top, #e4cdcd, #c99c9c);
-    background-image: -o-linear-gradient(top, #e4cdcd, #c99c9c);
-    background-image: linear-gradient(top, #e4cdcd, #c99c9c);
+    background-color: #e0b8b8;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e0b8b8), color-stop(100%, #c98282));
+    background-image: -webkit-linear-gradient(top, #e0b8b8, #c98282);
+    background-image: -moz-linear-gradient(top, #e0b8b8, #c98282);
+    background-image: -ms-linear-gradient(top, #e0b8b8, #c98282);
+    background-image: -o-linear-gradient(top, #e0b8b8, #c98282);
+    background-image: linear-gradient(top, #e0b8b8, #c98282);
     font: bold 11px arial, sans-serif; }
   .theme-flick .active-scaffold th a, .theme-flick .active-scaffold th p {
     background: transparent;
@@ -131,7 +133,7 @@
   .theme-flick .exceeded {
     background: yellow; }
   .theme-flick #menu {
-    background: 0, 0, 80;
+    background: #cccccc;
     border-right: 1px solid #b3b3b3; }
     .theme-flick #menu a {
       color: #0071eb; }
@@ -176,7 +178,7 @@
   .theme-flick .list_line_even {
     background: white; }
   .theme-flick table.children th {
-    background: #c99c9c; }
+    background: #c98282; }
   .theme-flick #content {
     background: white; }
   .theme-flick #msg-form {

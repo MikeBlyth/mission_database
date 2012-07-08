@@ -32,12 +32,12 @@ div#menu {
   min-height: 800px;
   width: 140px;
   position: absolute;
-  top: 15px;
+  top: 19px;
   left: 0px; }
 
 div#content {
   position: absolute;
-  top: 15px;
+  top: 19px;
   left: 151px;
   min-width: 800px;
   min-height: 800px;

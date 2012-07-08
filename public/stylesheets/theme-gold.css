@@ -30,6 +30,9 @@
 body {
   color: #1a1300; }
 
+div#menu_toggle {
+  background: #ffecb3; }
+
 a:visited {
   color: #2050df; }
 a:hover {
@@ -134,7 +137,7 @@ div#content {
   background: yellow; }
 
 #menu {
-  background: 60, 100, 94;
+  background: #ffffe0;
   border-right: 1px solid #bf9f40; }
   #menu a {
     color: #423200; }

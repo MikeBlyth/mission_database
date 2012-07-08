@@ -18,7 +18,8 @@ $hue: 210;
 $s: 40; /* base saturation to make it easy to change all at once */
 $l: 60;
 $base: hsl($hue, $s, $l);
-$background_menu: ($hue + 15, 100, 94);
+$background_menu: hsl($hue + 15, 100, 94);
+$background_top_bar: hsl($hue, 100, 85);
 $text_base: hsl($hue, 100, 5);
 $text_accent: hsl($hue, 50, 10);
 $accent_base: hsl($hue - 15, 50, 50);  // not the same as text accent
@@ -100,6 +101,10 @@ $border_3_darker: darken(saturate($accent_base, 25), 30);    //hsl($hue_accent, 
 .theme-blue {
 body {
   color: $body_text_dark; }
+
+div#menu_toggle {
+    background: $background_top_bar;
+    }
 
 a {
   &:visited {
