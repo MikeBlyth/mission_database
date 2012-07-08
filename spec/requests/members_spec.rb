@@ -67,7 +67,8 @@ include SimTestHelper
       select 'AB+'
       select 'Educ'
       fill_in "Qualifications", :with=> "Very qualified"
-      select 'Career'
+save_and_open_page
+      select 'Career', :from => 'Employment status'
       fill_in "Date active", :with => date_active.strftime("%F")
       fill_in "head_pers[comments]", :with => "What a lot of info to fill in."
       click_button "Update"

@@ -69,10 +69,7 @@ $( "#tabs" ).tabs();
               - choices = options_from_collection_for_select(Status.select('id, description').order('description'), :id, :description, @member[:status_id])
               = member.select(:status_id, choices, {:include_blank => true }, :class=>'medium-input')    
             %td
-              = label_tag :head_status_id, "Employment status"
-              %br
-              - choices = options_from_collection_for_select(EmploymentStatus.where('current_use AND (child = ? OR child is ?)', false, nil).select('id, description').order('description'), :id, :description, @member_pers[:employment_status_id])
-              = select(:head_pers, :employment_status_id, choices, {:include_blank => true }, :class=>'medium-input')    
+              %label Employment status: see in Personnel tab
           %tr
           - if child
             Child stuff here

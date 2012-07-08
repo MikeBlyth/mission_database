@@ -121,7 +121,7 @@ class MembersController < ApplicationController
   end
     
   def update
-# puts "\n**** Full params=#{params}, id=#{params[:id]}"
+ puts "\n**** Full params=#{params}, id=#{params[:id]}"
     @head = Member.find(params[:id])
 #    params.delete[:health_data] unless can? :update HealthData
     @error_records = []  # Keep list of the model records that had errors when updated

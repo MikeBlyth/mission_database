@@ -27,7 +27,7 @@ controllers = [
                 [EducationsController, :education],
                 [EmploymentStatusesController, :employment_status],
                 [FamiliesController, :family],
-                [FieldTermsController, :field_term],
+  #              [FieldTermsController, :field_term],   
                 [LocationsController, :location],
                 [MembersController, :member],
                 [MinistriesController, :ministry],
