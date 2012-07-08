@@ -46,8 +46,9 @@ class TravelsController < ApplicationController
     config.columns[:total_passengers].inplace_edit = true
   #  config.columns[:total_passengers].label = 'Psgrs'
     config.list.label = "Travel schedule"
+ #   config.list.pagination = false
     config.columns[:confirmed].inplace_edit = true
-    config.list.sorting = { :date => :asc }
+    config.list.sorting = { :date => :asc, :id => :asc }
 
     # Searching
     config.actions.exclude :search
@@ -131,6 +132,7 @@ class TravelsController < ApplicationController
     # Note that when a travel record is _updated_, it can only have a single member_id.
     # Also, once a record has a member_id, it can't be changed. So the only time this method
     # will be used is when updating a record that has an "other traveler" but no member.
+    return unless params[:member_id]
     member = params[:record][:member_id]
     record.member_id = member.to_i if member
   end
