@@ -147,7 +147,7 @@ private
       sender_name = @sender.shorter_name
       body = body[0..148-sender_name.size] + '-' + sender_name  # Truncate msg and add sender's name
       message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group.id, :body=>body)
-      # message.deliver  # Don't forget to deliver!
+      message.deliver  # Don't forget to deliver!
       return("sent to #{group.group_name}")
     else
       return( ("Error: no group #{target_group}. Send command 'groups' to list the main ones incl " +

@@ -87,8 +87,15 @@ class Message < ActiveRecord::Base
     memb = sent_messages.map { |sm| (sm.msg_status || -1) < MessagesHelper::MsgDelivered ? sm.member : nil }.compact
   end
 
+  # Send messages to those not responding or not receiving the SMS message.
+  # This should be clarified. Currently, with "if m.msg_status < MessagesHelper::MsgDelivered", 
+  # all SMS are considered OK (not needing follow up) if it's shown that they were delivered. That is, 
+  # it seems this will not send a follow up to those who have received the message but not responded. 
+  # We may want to distinguish two groups: (1) those who have not received message (error status, pending, etc) and
+  # (2) those who have not responded. (1) would be useful to overcome transient errors, while (2) would only be used
+  # when we have specifically requested a response.
   def send_followup(params={})
-    contact_info = sent_messages.map do |sm|     # make a list like members_contact_info, including only sent_messages w/o response
+    contact_info = sent_messages.map do |sm|  # make a list like members_contact_info, including only sent_messages w/o response
       m = sm.member  # member to whom this message was sent
       if m.msg_status < MessagesHelper::MsgDelivered
         {:member => m, :phone => m.primary_phone, :email => m.primary_email} 
