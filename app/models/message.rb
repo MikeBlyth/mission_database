@@ -35,7 +35,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :body, :if => 'send_email', :message=>'You need to write something in your message!'
   validates :to_groups, :presence => true, :unless => :following_up #:message=>'Select at least one group to receive message.', 
   validate :sending_medium
-  validate :sms_long_enough
+#  validate :sms_long_enough
   before_save :convert_groups_to_string
   after_save  :create_sent_messages   # each record represents this message for one recipient
   
