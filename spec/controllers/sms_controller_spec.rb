@@ -171,7 +171,7 @@ describe SmsController do
         @group = Factory(:group, :group_name=>@group_name)
         @params['Body'] = "d #{@group_name} #{@body}"
         @message = Message.new
-        Message.stub(:new)
+ #       Message.stub(:new)
       end
       
       describe 'when group is found' do
@@ -179,7 +179,9 @@ describe SmsController do
         it 'delivers a group message' do
           nominal_body = @body+"-#{@sender.shorter_name}"
           Message.should_receive(:new).with(hash_including(
-              :send_email=>true, :send_sms=>true, :to_groups=>@group.id, :body=>nominal_body))          
+              :send_sms=>true, :to_groups=>@group.id, :sms_only=>nominal_body)).and_return(@message)
+          @message.should_receive(:deliver)              
+#          @gateway.should_receive(:deliver).with(@from, '')
           post :create, @params   # i.e. sends 'd testgroup test message'
         end
 

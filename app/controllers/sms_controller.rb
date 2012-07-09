@@ -34,10 +34,10 @@ class SmsController < ApplicationController
         render :text => resp, :status => 200, :content_type => Mime::TEXT.to_s  # Confirm w incoming gateway that msg received
         AppLog.create(:code => "SMS.reply", :description=>"to #{from}: #{resp}")
         ClickatellGateway.new.deliver(from, resp)
-      rescue
-        AppLog.create(:code => "SMS.system_error", :description=>"on create: #{$!}")
-        render :text => "Internal", :status => 500, :content_type => Mime::TEXT.to_s
-        ClickatellGateway.new.deliver(from, "Sorry, there is a bug in my system and I crashed :-(" )
+#      rescue
+#        AppLog.create(:code => "SMS.system_error", :description=>"on create: #{$!}")
+#        render :text => "Internal", :status => 500, :content_type => Mime::TEXT.to_s
+#        ClickatellGateway.new.deliver(from, "Sorry, there is a bug in my system and I crashed :-(" )
       end
     else  
       AppLog.create(:code => "SMS.rejected", :description=>"from #{from}: #{body}")
@@ -146,7 +146,8 @@ private
     if group   # if we found the group requested by the sender
       sender_name = @sender.shorter_name
       body = body[0..148-sender_name.size] + '-' + sender_name  # Truncate msg and add sender's name
-      message = Message.new(:send_sms=>true, :send_email=>true, :to_groups=>group.id, :body=>body)
+      message = Message.new(:send_sms=>true, :to_groups=>group.id, :sms_only=>body)
+#debugger
       message.deliver  # Don't forget to deliver!
       return("sent to #{group.group_name}")
     else

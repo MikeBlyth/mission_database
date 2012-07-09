@@ -51,6 +51,8 @@ class Message < ActiveRecord::Base
   def convert_groups_to_string
     if self.to_groups.is_a? Array
       self.to_groups = self.to_groups.map {|g| g.to_i}.join(",")
+    else
+      self.to_groups = self.to_groups.to_s
     end
   end 
 
@@ -79,7 +81,7 @@ class Message < ActiveRecord::Base
     save! if self.new_record?
     contact_info = members_contact_info
     deliver_email(contact_info) if send_email
-    deliver_sms(:sms_gateway=>params[:sms_gateway], :contact_info => contact_info) if send_sms
+    deliver_sms(:sms_gateway=>params[:sms_gateway] || default_sms_gateway, :contact_info => contact_info) if send_sms
   end
   
   # Array of members who have not yet responded to this message
@@ -208,6 +210,7 @@ raise "send_email with nil email produced" if outgoing.nil?
   # Deliver text messages to an array of phone members, recording their acceptance at the gateway
   # ToDo: refactor so we don't need to get member-phone number correspondance twice
   def deliver_sms(params)
+puts "**** params=#{params}"
     sms_gateway = params[:sms_gateway]
     phone_number_array = params[:contact_info].map {|c| c[:phone]}.compact.uniq
     phone_numbers = phone_number_array.join(',')

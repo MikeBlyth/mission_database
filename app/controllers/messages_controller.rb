@@ -35,12 +35,7 @@ load_and_authorize_resource
   end
   
   def deliver_message(record)
-    if Rails.env == 'production'
-      sms_gateway = ClickatellGateway.new
-    else
-      sms_gateway = MockClickatellGateway.new
-    end
-    record.deliver(:sms_gateway => sms_gateway)
+    record.deliver(:sms_gateway => default_sms_gateway)
   end
 
   # Send form to user for generating a follow-up on a given message

@@ -23,12 +23,12 @@ describe Message do
       # The names or actual settings might get changed here, so this test may be modified   
     end     
   
-    it 'catches SMS messages that are too short' do
-      @message.send_sms = true
-      @message.sms_only = 'short'
-      @message.save
-      @message.errors[:sms_only].should_not be_blank
-    end
+#    it 'catches SMS messages that are too short' do
+#      @message.send_sms = true
+#      @message.sms_only = 'short'
+#      @message.save
+#      @message.errors[:sms_only].should_not be_blank
+#    end
       
   end # initialization
 
