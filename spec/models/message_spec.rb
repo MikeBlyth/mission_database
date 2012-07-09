@@ -59,7 +59,8 @@ describe Message do
             
   describe 'generates sent_message records' do
     before(:each) do
-      @members = members_w_contacts(2)
+      @members = members_w_contacts(2) # creates two members and arranges for them to appear as the targets for this message
+                                       # See in messages_test_helper.rb
       @message = Factory.build(:message, :created_at=>@created_at, :send_email=>true)
     end
     
@@ -248,16 +249,54 @@ describe Message do
         end
     
         it "does not include empty phone numbers" do
+          #NB: The message w contact list is already formed by all the before(:all) blocks. In order to test a message
+          #    going to someone without a phone number, we need to recreate the message after deleting the phone numbers.
           @members[1].primary_contact.update_attributes(:phone_1 => nil, :phone_2 => nil)
+          @message.save
           @message.deliver(:sms_gateway=>@gateway)
-          @gateway.numbers.should == [@members[0].primary_contact.phone_1.sub('+', '')]
+          @gateway.numbers.should == [@members[0].primary_contact.phone_1.sub('+', '')] # i.e., should only include 1 number
         end          
 
-        it "does not include empty phone numbers" do
-          @members[1].primary_contact.update_attributes(:phone_1 => '', :phone_2 => '')
+        it "does not include duplicate phone numbers" do
+          #NB: See above
+          @members[1].primary_contact.update_attributes(:phone_1 => @members[0].primary_contact.phone_1, :phone_2 => nil)
+          @members[1].primary_contact.phone_1.should == @members[0].primary_contact.phone_1
+          @message.create_sent_messages
           @message.deliver(:sms_gateway=>@gateway)
-          @gateway.numbers.should == [@members[0].primary_contact.phone_1.sub('+', '')]
-        end          
+          @gateway.numbers.should == [@members[0].primary_contact.phone_1.sub('+', '')] # i.e., should only include 1 number
+        end
+        
+        it 'does not create sent_message record for SMS person without phone' do
+          @members[1].primary_contact.update_attributes(:phone_1 => nil, :phone_2 => nil)
+          @message.stub(:send_sms => true)
+          @message.stub(:send_email => false)
+          @message.create_sent_messages
+          @message.members.should == [@members[0]]
+        end
+                            
+        it '*does* create sent_message record for emailing person without phone' do
+          @members[1].primary_contact.update_attributes(:phone_1 => nil, :phone_2 => nil)
+          @message.stub(:send_sms => false)
+          @message.stub(:send_email => true)
+          @message.create_sent_messages
+          @message.members.should == [@members[0], @members[1]]
+        end
+                            
+        it 'does not create sent_message record for email person without address' do
+          @members[1].primary_contact.update_attributes(:email_1 => nil, :email_2 => nil)
+          @message.stub(:send_sms => false)
+          @message.stub(:send_email => true)
+          @message.create_sent_messages
+          @message.members.should == [@members[0]]
+        end
+                            
+        it 'does not create sent_message record someone w no phone or email' do
+          @members[1].primary_contact.update_attributes(:email_1 => nil, :email_2 => nil, :phone_1=>nil, :phone_2=>nil)
+          @message.stub(:send_sms => true)
+          @message.stub(:send_email => true)
+          @message.create_sent_messages
+          @message.members.should == [@members[0]]
+        end
 
       end # with multiple phone numbers
     end # message id and status

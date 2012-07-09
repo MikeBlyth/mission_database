@@ -30,6 +30,8 @@ module MessagesTestHelper
     return member
   end    
 
+  # This creates one or members with contact records, then stubs Group and Member#those_in_country so that the 
+  # list of addressees will be these same members.
   def members_w_contacts(n=1, use_stub=true)
     all = []
     n.times { all << member_w_contact(use_stub)}

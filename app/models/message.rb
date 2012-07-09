@@ -60,18 +60,31 @@ class Message < ActiveRecord::Base
     "#{timestamp}: #{(body || sms_only)[0..50]}"
   end
 
-  # Add all addressees who are included in the to_groups
-  # Others can be added before or after this step, which is called by an after_save hook
+  # (1) Add any Group members to the addressees (self.members) when groups are specified
+  # (2) Generate @contact_info hash
+  # (3) Remove any addressees who don't have the needed contact info, so that they won't count as
+  #     errors in delivery and subject to automatic follow up.
+  # This method is run automatically after save but also must be run if the addressees or sending methods
+  # (email or SMS) are changed after the initial creation and before calling deliver.
   def create_sent_messages  
-    target_members = Group.members_in_multiple_groups(to_groups_array) & # an array of users
-                     Member.those_in_country
-    self.members << target_members
+    target_members = self.members +
+                     (Group.members_in_multiple_groups(to_groups_array) & # an array of users
+                      Member.those_in_country)
+    @contact_info = target_members.map {|m| {:member => m, :phone => m.primary_phone, :email => m.primary_email}}
+    # Remove members from @contact_info if they do not have the needed contact info (phone or email)
+    # We may want to keep track of those people since they _should_ get the message but we don't have
+    # the necessary info to get it to them by the specified routes (phone or email).
+    case
+    when self.send_sms && !self.send_email
+      @contact_info.delete_if {|c| c[:phone].nil?}
+    when !self.send_sms && self.send_email
+      @contact_info.delete_if {|c| c[:email].nil?}
+    when self.send_sms && self.send_email
+      @contact_info.delete_if {|c| c[:email].nil? && c[:phone].nil?}
+    end
+    self.members = @contact_info.map {|c| c[:member]}
   end
   
-  def members_contact_info
-    members.map {|m| {:member => m, :phone => m.primary_phone, :email => m.primary_email}}
-  end
-
   # Send the messages -- done by creating the sent_message objects, one for each member
   #   members_in_multiple_groups(array) is all the members belonging to these groups and
   #   to_groups_array is the array form of the destination groups for this message
@@ -79,9 +92,8 @@ class Message < ActiveRecord::Base
     puts "**** Message#deliver" if params[:verbose]
 #puts "**** Message#deliver response_time_limit=#{self.response_time_limit}"
     save! if self.new_record?
-    contact_info = members_contact_info
-    deliver_email(contact_info) if send_email
-    deliver_sms(:sms_gateway=>params[:sms_gateway] || default_sms_gateway, :contact_info => contact_info) if send_sms
+    deliver_email() if send_email
+    deliver_sms(:sms_gateway=>params[:sms_gateway] || default_sms_gateway) if send_sms
   end
   
   # Array of members who have not yet responded to this message
@@ -97,7 +109,7 @@ class Message < ActiveRecord::Base
   # (2) those who have not responded. (1) would be useful to overcome transient errors, while (2) would only be used
   # when we have specifically requested a response.
   def send_followup(params={})
-    contact_info = sent_messages.map do |sm|  # make a list like members_contact_info, including only sent_messages w/o response
+    @contact_info = sent_messages.map do |sm|  # including only sent_messages w/o response
       m = sm.member  # member to whom this message was sent
       if m.msg_status < MessagesHelper::MsgDelivered
         {:member => m, :phone => m.primary_phone, :email => m.primary_email} 
@@ -105,8 +117,8 @@ class Message < ActiveRecord::Base
         nil
       end
     end
-    deliver_email(contact_info) if send_email
-    deliver_sms(:sms_gateway=>params[:sms_gateway], :contact_info => contact_info) if send_sms
+    deliver_email if send_email
+    deliver_sms(:sms_gateway=>params[:sms_gateway]) if send_sms
   end    
     
 
@@ -183,9 +195,9 @@ class Message < ActiveRecord::Base
 #private
 
   # ToDo: clean up this mess and just give Notifier the Message object!
-  def deliver_email(contact_info)
+  def deliver_email
 #puts "**** deliver_email: emails=#{emails}"
-    emails = contact_info.map {|c| c[:email]}.compact.uniq
+    emails = @contact_info.map {|c| c[:email]}.compact.uniq
     self.subject ||= 'Message from SIM Nigeria'
     id_for_reply = self.following_up || id  # a follow-up message uses id of the original msg
 #puts "**** Messages#deliver_email response_time_limit=#{response_time_limit}"
@@ -212,7 +224,7 @@ raise "send_email with nil email produced" if outgoing.nil?
   def deliver_sms(params)
 #puts "**** Message#deliver_sms; params=#{params}"
     sms_gateway = params[:sms_gateway]
-    phone_number_array = params[:contact_info].map {|c| c[:phone]}.compact.uniq
+    phone_number_array = @contact_info.map {|c| c[:phone]}.compact.uniq
     phone_numbers = phone_number_array.join(',')
     assemble_sms()
 #puts "**** sms_gateway.deliver #{sms_gateway} w #{phone_numbers}: #{sms_only}"
@@ -238,6 +250,7 @@ raise "send_email with nil email produced" if outgoing.nil?
     else
       # MULTIPLE PHONE NUMBERS
       # Get the Clickatell reply and parse into array of hash like {:id=>'asebi9xxke...', :phone => '2345552228372'}
+#puts "**** gateway_reply=#{gateway_reply}"
       msg_statuses = gateway_reply.split("\n").map do |s|
         if s =~ /ID:\s+(\w+)\s+To:\s+([0-9]+)/
           {:id => $1, :phone => $2}    
@@ -249,6 +262,7 @@ raise "send_email with nil email produced" if outgoing.nil?
       @member_phones = self.members.map {|m| {:phone => m.primary_phone, :member => m} }
       # Update the sent_message records to indicate which have been accepted at Gateway  
       msg_statuses.each do |s|
+#puts "**** s[:id]=#{s[:id]}, s[:phone]=#{s[:phone]}"
         if s[:id] && s[:phone]
           # Find the right member by matching phone numbers
           member = @member_phones.find{|m| m[:phone]==s[:phone]}[:member]

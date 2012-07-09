@@ -58,6 +58,10 @@ load_and_authorize_resource
     original_message = Message.find @id
     fu_message = Message.create(params[:record].merge(:following_up => @id))  # a new message object to send the follow up
     fu_message.members = original_message.members_not_responding
+    fu_message.create_sent_messages # Sigh, we need this because contact list is generated upon _save_, and unless we
+                                    # call create_sent_messages again (or use another tactic), the specified members
+                                    # will not be included
+#puts "**** fu_message.members =#{fu_message.members[0].last_name}, #{fu_message.members[0].primary_email}"
     deliver_message(fu_message)
     flash[:notice] = 'Follow up message sent'
     redirect_to messages_path
