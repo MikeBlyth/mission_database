@@ -65,7 +65,7 @@ class GroupsController < ApplicationController
 
   def do_create_save
     super
-    puts "**** parent_group_id=#{parent_group_id}"
+ #   puts "**** parent_group_id=#{parent_group_id}"
   end
 
   def export(params={})

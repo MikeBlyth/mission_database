@@ -5,7 +5,7 @@ class MockClickatellGateway < ClickatellGateway
   # Set mock_response to literally what you want it to be or
   # Set members to an array of members (who must have primary_contacts defined)
   #   and the response will be generated based on the phone numbers of those members
-  attr_accessor :mock_response, :members
+  attr_accessor :mock_response, :members, :options
   def initialize(response=nil, members=[], options={})
     super()
     @mock_response = response
@@ -32,9 +32,7 @@ class MockClickatellGateway < ClickatellGateway
   end
 
   def deliver(numbers=@numbers, body=@body)
-    if @options[:verbose]
-      puts "****MockClickatellDeliver numbers=#{numbers}, body=#{body}"
-    end
+#puts "****MockClickatellGateway#Deliver numbers=#{numbers}, body=#{body}"
     if numbers.is_a? String
       @numbers = numbers.gsub("+","").split(/,\s*/)
     else

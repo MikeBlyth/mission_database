@@ -17,7 +17,7 @@ class SmsController < ApplicationController
   # ToDo
   # Remove line for testing; configure for other gateways
   def create  # need the name 'create' to conform with REST defaults, or change routes
-# puts "**** IncomingController create: params=#{params}"
+ #puts "**** IncomingController create: params=#{params}"
     from = params[:From]  # The phone number of the sender
     body = params[:Body]  # This is the body of the incoming message
     AppLog.create(:code => "SMS.incoming", :description=>"from=#{from}; body=#{body[0..50]}")
@@ -140,6 +140,7 @@ private
   end
 
   def group_deliver(text)
+#puts "**** group_deliver"    
     target_group, body = text.sub(' ',"\x0").split("\x0") # just a way of stripping the first word as the group name
     group = Group.find(:first, 
       :conditions => [ "lower(group_name) = ? OR lower(abbrev) = ?", target_group.downcase, target_group.downcase])
@@ -147,7 +148,6 @@ private
       sender_name = @sender.shorter_name
       body = body[0..148-sender_name.size] + '-' + sender_name  # Truncate msg and add sender's name
       message = Message.new(:send_sms=>true, :to_groups=>group.id, :sms_only=>body)
-#debugger
       message.deliver  # Don't forget to deliver!
       return("sent to #{group.group_name}")
     else

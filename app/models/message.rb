@@ -210,7 +210,7 @@ raise "send_email with nil email produced" if outgoing.nil?
   # Deliver text messages to an array of phone members, recording their acceptance at the gateway
   # ToDo: refactor so we don't need to get member-phone number correspondance twice
   def deliver_sms(params)
-puts "**** params=#{params}"
+#puts "**** Message#deliver_sms; params=#{params}"
     sms_gateway = params[:sms_gateway]
     phone_number_array = params[:contact_info].map {|c| c[:phone]}.compact.uniq
     phone_numbers = phone_number_array.join(',')

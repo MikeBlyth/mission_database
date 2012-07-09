@@ -671,10 +671,10 @@ end
   
   def update_reported_location(text, reported_location_time=Time.now, 
     expires=Time.now + DefaultReportedLocDuration*3600)
-puts "**** reported_location_time=#{reported_location_time}, expires=#{expires}, text=#{text}"
+#puts "**** reported_location_time=#{reported_location_time}, expires=#{expires}, text=#{text}"
     ok = self.update_attributes(:reported_location=>text, :reported_location_time =>Time.now, 
         :reported_location_expires => expires)
-puts "**** updated: success = #{ok}"
+#puts "**** updated: success = #{ok}"
   end  
   
   # Finds primary contact for this member:

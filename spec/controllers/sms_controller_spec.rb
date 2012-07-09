@@ -1,5 +1,5 @@
 require 'spec_helper'
-#include SimTestHelper
+include SimTestHelper
 #include ApplicationHelper
 #require '~/sim5/spec/support/messages_test_helper.rb' 
 include MessagesTestHelper  
@@ -166,17 +166,24 @@ describe SmsController do
 
     describe 'd (group deliver)' do
       before(:each) do
-        @group_name = 'testgroup'
         @body = 'xtest messagex'
-        @group = Factory(:group, :group_name=>@group_name)
+        @group_name = 'testgroup'
         @params['Body'] = "d #{@group_name} #{@body}"
         @message = Message.new
- #       Message.stub(:new)
       end
       
       describe 'when group is found' do
-        
-        it 'delivers a group message' do
+        before(:each) do
+          
+          @httyparty = HTTParty
+          silence_warnings{HTTParty = mock('HTTParty')}
+          @group = Factory(:group, :group_name=>@group_name)
+        end
+        after(:each) do       
+          silence_warnings{HTTParty = @httyparty}
+        end
+             
+       it 'delivers a group message' do
           nominal_body = @body+"-#{@sender.shorter_name}"
           Message.should_receive(:new).with(hash_including(
               :send_sms=>true, :to_groups=>@group.id, :sms_only=>nominal_body)).and_return(@message)
