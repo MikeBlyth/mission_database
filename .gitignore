@@ -10,4 +10,6 @@ heroku.logs
 test.pdf
 config/initializers/secret_token.rb
 database.yml
+temporary_backup.dump
 .env
+*~

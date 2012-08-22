@@ -261,7 +261,7 @@ FactoryGirl.define do
   end    
 
   factory :pers_task do
-    task 'something'
+    after_build {|m| m.task = 'some_task'}
   end
 
   factory :state do

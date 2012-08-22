@@ -17,7 +17,26 @@ describe Travel do
     @object.should_not be_valid
   end
   
-  it {finds_recent(Travel)}
+  describe 'finds recent' do
+#    it {finds_recent(Travel)} # This worked as a method in previous version of RSpec but no longer
+    before(:each) do
+			member = Factory(:member_without_family)
+			@old = Factory(:travel, :member=>member, :updated_at=>Date.today-100.days)
+			@new = Factory(:travel, :member=>member, :updated_at=>Date.today)
+			Travel.count.should == 2
+		end
+
+		it 'with specified duration' do
+			Travel.recently_updated(10).all.should == [@new]
+			Travel.recently_updated(120).all.should =~ [@new, @old]
+		end
+
+		it 'with default duration' do
+			Travel.recently_updated.all.should == [@new]
+		end
+
+  end #finds recent
+
 
   describe "with guest travelers" do
 

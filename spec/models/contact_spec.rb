@@ -36,8 +36,25 @@ describe Contact do
   
  
   describe 'finds recent' do
-    it {finds_recent(Contact)}
-  end
+#    it {finds_recent(Contact)} # This worked as a method in previous version of RSpec but no longer
+    before(:each) do
+			member = Factory(:member_without_family)
+			@old = Factory(:contact, :member=>member, :updated_at=>Date.today-100.days)
+			@new = Factory(:contact, :member=>member, :updated_at=>Date.today)
+			Contact.count.should == 2
+		end
+
+		it 'with specified duration' do
+			Contact.recently_updated(10).all.should == [@new]
+			Contact.recently_updated(120).all.should =~ [@new, @old]
+		end
+
+		it 'with default duration' do
+			Contact.recently_updated.all.should == [@new]
+		end
+
+  end #finds recent
+
 
   # TODO: Consolidate with phone_format tests in incoming_mails_controller and notifier specs
   describe "phone_format" do

@@ -39,7 +39,7 @@ base_url:
 
 birthday_prefix: 
   name: Prefix to show on calendar for birthdays
-  default: BD 
+  default: BD
   type: string
     
 outgoing_sms:
@@ -96,7 +96,7 @@ travel_update_recipients:
 travel_update_window:
   name: Travel Update Default Window (Days)
   default: 10
-  type: integer  
+  type: integer
     
     
   

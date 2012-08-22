@@ -1,5 +1,3 @@
-#require Rails.root.join('spec/factories')
-#require Rails.root.join('spec/spec_helper')
 puts "**** INCLUDING SIMTESTHELPER ***"
 module SimTestHelper
 

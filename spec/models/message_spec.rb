@@ -159,13 +159,14 @@ describe Message do
       
       it "Sends an email" do
         select_media(:email=>true)
+        
         Notifier.should_receive(:send_group_message) do |params|
           params[:recipients].should =~ nominal_email_array 
           params[:content].should == @message.body
           params[:subject].should == @message.subject
           params[:response_time_limit].should == @message.response_time_limit
           params[:bcc].should == true
-        end
+        end.and_return(mock('Message', :deliver => true))
         @message.deliver
       end
 
@@ -176,7 +177,7 @@ describe Message do
         @gateway.should_receive(:deliver) do |phone_numbers, body|
           phone_numbers.split(',').should =~ @members.map {|m| m.primary_phone}
           body.should =~ Regexp.new(@message.sms_only)
-        end
+        end.and_return('')
         @message.deliver(:sms_gateway=>@gateway)
       end
     end # with multiple addresses

@@ -12,7 +12,7 @@ describe PersTask do
 
   it 'returns hash of tasks' do
     result = PersTask.tasks_w_finished_marked('')
-    result[0][:type].should == :pipeline
+    result[0][:type].should == 'pipeline'
     result_tasks = result[0][:tasks]
     result_tasks.should include @t1
     result_tasks.should include @t2
