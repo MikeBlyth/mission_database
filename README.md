@@ -52,7 +52,7 @@ Mission Database is a web-based personnel database and message broadcast system 
 Technical Overview
 ------------------
 
-Framework: Ruby on Rails version 3.2, with ActiveScaffold.
+Framework: Ruby on Rails version 3.0.7, with ActiveScaffold.
 
 Database: PostgreSQL 
 
