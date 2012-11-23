@@ -102,28 +102,29 @@ puts "#{message}"
     redirect_to reports_path
   end
  
-   # Blood Type Reports
-   def bloodtypes
-     selected = Member.select("family_id, last_name, first_name, middle_name, status_id, id, child")
-#selected.each {|x| puts ">> #{x.first_name}, #{x.status.description}, #{x.on_field}, #{x.health_data.bloodtype_id}, #{x.health_data.bloodtype}" }
-     # Delete members we don't want on the report
-     selected = selected.delete_if{|x| 
-                                    !x.on_field || 
-                                    x.health_data.nil? || 
-                                    x.child || 
-                                    x.health_data.bloodtype.nil? || 
-                                    x.health_data.bloodtype_id == UNSPECIFIED
-                                    } 
+  # Blood Type Reports
+  # This is hard coded to select only adults on the field,
+  def bloodtypes
+    selected = Member.select("family_id, last_name, first_name, middle_name, status_id, id, child")
+    #selected.each {|x| puts ">> #{x.first_name}, #{x.status.description}, #{x.on_field}, #{x.health_data.bloodtype_id}, #{x.health_data.bloodtype}" }
+    # Delete members we don't want on the report
+    selected = selected.delete_if{|x| 
+                                  !x.on_field || 
+                                  x.health_data.nil? || 
+                                  x.child || 
+                                  x.health_data.bloodtype.nil? || 
+                                  x.health_data.bloodtype_id == UNSPECIFIED
+                                  } 
 
-     respond_to do |format|
-       format.pdf do
-         output = BloodtypeReport.new(:page_size=>Settings.reports.page_size).
-              to_pdf(selected,"Includes only those currently on the field")
-         send_data output, :filename => "bloodtypes.pdf", 
-                          :type => "application/pdf"
-       end
-     end
-   end
+    respond_to do |format|
+      format.pdf do
+        output = BloodtypeReport.new(:page_size=>Settings.reports.page_size).
+            to_pdf(selected,"Includes only those currently on the field")
+       send_data output, :filename => "bloodtypes.pdf", 
+                        :type => "application/pdf"
+      end
+    end
+  end
 
   # Birthday reports
    def birthdays
@@ -159,7 +160,7 @@ puts "#{message}"
     end
   end
 
-  # Travedl reports
+  # Travel reports
    def travel_schedule
     starting_date = Date::today
     selected = Travel.where("date >= ?", starting_date).order("date ASC")
@@ -181,27 +182,8 @@ puts "#{message}"
    # 
    # TODO Does this actually have to be here duplicating the one in members_controller?
    def conditions_for_collection
-    status_groups = {'active' => %w( field home_assignment mkfield),
-                'field' => %w( field mkfield visitor),
-                'home_assignment' => %w( home_assignment ),
-                'home_assignment_or_leave' => %w( home_assignment leave),
-                'pipeline' => %w( pipeline ),
-                'visitor' => %w( visitor visitor_past ),
-                'other' => %w( alumni college mkadult retired deceased mkalumni unspecified )
-                }
-      # The groups reflect the status codes matched by the various filters. So, for example,
-      #   the filter "active" (or :active) should trigger a selection string that includes the statuses with codes
-      #   'field', 'home_assignment', and 'mkfield'
-
-    target_statuses = status_groups[session[:filter]]
-    return "TRUE" if target_statuses.nil?
-    # Find all status records that match that filter
-    matches = [] # This will be the list of matching status ids. 
-    Status.where("statuses.code IN (?)", target_statuses).each do |status|
-      matches << status.id 
-    end
-    return ['members.status_id IN (?)', matches]
-  end
+     Status.filter_condition_for_group('members', session[:filter])
+   end
   
   # Return starting date for calendar. If the date is not specified in params,
   #    use the first of the next month.
@@ -249,77 +231,6 @@ puts "#{message}"
     end
   end
  
-#  def birthday_travel_calendar
-#    # Set up the calendar form for right month (page size, titles, etc.)
-#    calendar = calendar_setup
-#       
-#    # Select the people born this month and to put on the calendar
-#    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
-
-#    # Select the people born this month and to put on the calendar
-#    travel_data = travel_calendar_data({:date=>date_for_calendar})
-
-#    # Actually print the strings
-#    merged = merge_calendar_data([travel_data, birthday_data])
-
-#    respond_to do |format|
-#      format.pdf do
-#        calendar.put_data_into_days(merged)
-#        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
-#                          :type => "application/pdf"
-#      end
-#    end
-#  end
-# 
-#  def travel_calendar
-#    # Set up the calendar form for right month (page size, titles, etc.)
-#    calendar = calendar_setup
-#       
-#    # Select the people traveling this month to put on the calendar
-#    travel_data = travel_calendar_data({:date=>date_for_calendar})
-#puts "**** travel_data=#{travel_data}"
-#puts "**** date_for_calendar=#{date_for_calendar}"
-#    # Actually print the strings
-
-#    respond_to do |format|
-#      format.pdf do
-#        calendar.put_data_into_days(travel_data)
-#        send_data calendar.render, :filename => "travel_calendar.pdf", 
-#                          :type => "application/pdf"
-#      end
-#    end
-#  end
-
-#  def birthday_calendar
-#    # Set up the calendar form for right month (page size, titles, etc.)
-#    calendar = calendar_setup
-#       
-#    # Select the people born this month and to put on the calendar
-#    birthday_data = birthday_calendar_data({:month=>date_for_calendar.month})
-
-#    # Actually print the strings
-
-#    respond_to do |format|
-#      format.pdf do
-#        calendar.put_data_into_days(birthday_data)
-#        send_data calendar.render, :filename => "birthday_travel_calendar.pdf", 
-#                          :type => "application/pdf"
-#      end
-#    end
-#  end
-
-#  # Test showing how to use multi-column layout with Prawn and our own (temporary?) flow_in_columns method
-#   def multi_col_test
-#    output = MultiColumnTest.new.to_pdf()
-
-#    respond_to do |format|
-#      format.pdf do
-#        send_data output, :filename => "test.pdf", 
-#                          :type => "application/pdf"
-#      end
-#    end
-#  end
-
 private
 
   # Generate data structure for birthdays to insert into calendar
@@ -327,10 +238,10 @@ private
     prefix = Settings.reports.birthday_calendar.birthday_prefix # Something like "BD: " or icon of a cake, to precede each name
     month = params[:month] || 1
     selected = Member.where(conditions_for_collection).select("family_id, last_name, first_name, middle_name, birth_date, short_name, status_id")
-
     # Make a hash like { 1 => {:text=>"BD: John Doe\nBD: Mary Smith"}, 8 => {:text=>"BD: Adam Smith\n"}}
     # Using the inner hash leaves us room to add options/parameters in the future
     data = {} 
+#binding.pry
     selected.each do |m|
       if m.birth_date && (m.birth_date.month == month ) # Select people who were born in this month
         data[m.birth_date.day] ||= {:text=>''}

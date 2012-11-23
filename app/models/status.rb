@@ -82,7 +82,7 @@ class Status < ActiveRecord::Base
     # any changes in status categories. 
     def self.statuses_by_group(target_group)
       existing_groups = %w(active leave on_field home_assignment home_assignment_or_leave pipeline other)
-      return 'true' unless existing_groups.include?(target_group.to_s) # to match everything
+      return nil unless existing_groups.include?(target_group.to_s) # to match everything
       if target_group == 'other'  # treat separately since won't work in Status#statuses_by_category
         target_statuses = self.other_statuses
       else
@@ -92,10 +92,10 @@ class Status < ActiveRecord::Base
     
     def self.filter_condition_for_group(table, target_group)
       target_statuses = self.statuses_by_group(target_group)
-      if target_statuses.is_a?(Array)
+      if target_statuses
         return ["#{table}.status_id IN (?)", target_statuses]
       else
-        return target_statuses
+        return 'true'
       end
     end      
 

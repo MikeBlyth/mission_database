@@ -40,8 +40,16 @@ describe ReportsController do
       merged[4][:align].should == birthdays[4][:align]
     end
  
-    it "indicates when couple and/or kids traveling with member" do
-      pending
+    it "selects birthdays according to current member filter" do
+      retired = Factory(:status, :active=>false, :on_field=>false)
+      on_field = Factory(:status, :active=>true, :on_field=>true)
+      Nov_1 = Factory(:member_without_family, :birth_date => '1980-11-01', :status=>on_field)
+      Nov_2 = Factory(:member_without_family, :birth_date => '1980-11-02',  :status=>on_field )
+      Nov_3 = Factory(:member_without_family, :birth_date => '1980-11-03', :status=>retired)
+      Dec_15 = Factory(:member_without_family, :birth_date => '1980-12-15')
+      session[:filter]='on_field'
+      selected = controller.send(:birthday_calendar_data, :month=>11)
+      selected.keys.should eq [1,2  ]
     end
     
   end # describe "calendar reports"  
@@ -105,8 +113,6 @@ describe ReportsController do
       mail.to_s.should =~ Regexp.new(member.last_name)
       mail.to_s.should =~ Regexp.new(contact.email_1)
     end
-
-
 
   end # contact updates
 
