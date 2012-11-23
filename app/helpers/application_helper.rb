@@ -182,6 +182,10 @@ class NilClass
   def strip
     nil
   end
+
+  def to_label
+    ''
+  end
 end
 
 class String

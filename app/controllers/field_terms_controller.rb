@@ -22,7 +22,9 @@ class FieldTermsController < ApplicationController
     config.columns[:employment_status].inplace_edit = true
 
     # Searching
-    config.actions.exclude :search, :update, :show
+    config.actions.exclude :search, :show
+    config.update.link = false
+    config.create.link = false
     config.actions.add :field_search
     config.field_search.columns = :member, :start_date, :end_date, :ministry, :primary_work_location, :employment_status
 
@@ -30,7 +32,6 @@ class FieldTermsController < ApplicationController
        :confirm=>'This will download all the field_term data (most fields) for ' + 
          'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
   end
-
 
   # Export CSV file. Exports ALL records, so will have to be modified if a subset is desired
   # No params currently in effect
