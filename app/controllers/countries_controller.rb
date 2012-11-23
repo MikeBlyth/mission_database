@@ -5,11 +5,11 @@ class CountriesController < ApplicationController
   include AuthenticationHelper
   
   active_scaffold :country do |config|
-    config.columns = [:name, :nationality, :code]
+    config.columns = [:name, :nationality, :include_in_selection]
     config.show.link = false
+    config.columns[:include_in_selection].inplace_edit = :true
     config.update.link.confirm = "Are you sure you want to change this country?"
     list.sorting = {:name => 'ASC'}
-    config.subform.columns.exclude :nationality, :code, :members
     config.subform.columns.exclude :nationality, :code, :members
   end
 
