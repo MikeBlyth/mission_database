@@ -17,6 +17,16 @@
         });
     });
 
+// Apply Multiselect
+$(document).ready(function(){
+   $(".multiselect").multiselect();
+});
+
+$(document).on('as:action_success', '.members-view a.new, .members-view a.edit', function(e, action_link) {
+  jQuery(".multiselect").multiselect().multiselectfilter();
+});
+
+
 // Hide any ActiveScaffold links we don't want
 
     $(function() {

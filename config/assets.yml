@@ -8,6 +8,8 @@ javascripts:
     - public/javascripts/jquery-ui-timepicker-addon.js
     - public/javascripts/rails_jquery.js
     - public/javascripts/application.js
+    - public/javascripts/jquery.multiselect.js
+    - public/javascripts/jquery.multiselect.filter.js
     - public/javascripts/active_scaffold/default/*.js
    
 stylesheets:
