@@ -17,10 +17,45 @@
         });
     });
 
+// Message page
+
+    $(function() { 
+        $("#record_sms_only").charCount({
+            allowed: 150,	
+            warning: 20,
+            counterText: 'Characters left for one SMS message: '	
+            });      
+        $('<div id="msg-count-para"><p class="msg-info for-sms">About <span id="msg-count">0</span> SMS messages will be sent</p></div>')
+        .appendTo('#group_select');
+     toggle_sms_display();  
+     toggle_email_display();  
+     $('#as_messages-create--form .submit').val('Send message');
+     });
+
 // Apply Multiselect
 $(document).ready(function(){
-   $(".multiselect").multiselect();
+   $(".multiselect").multiselect({
+     selectedList: 3
+   });
 });
+
+$(function(){
+   jQuery(".multiselect_groups").multiselect({
+//    autoOpen: true,
+    noneSelectedText: 'Choose groups',
+    selectedList: '2',
+//    minWidth: '250',
+    beforeclose: function(){return(false);}
+   }).multiselectfilter();
+   $(".multiselect_groups").multiselect("open");
+    v = $(".multiselect_groups").multiselect('widget');
+    b = $(".multiselect_groups").multiselect('button');
+    v.remove();
+    v.insertBefore($('#msg-count-para'));
+    v.css({top: '5px', left: '0px', position: 'relative'});
+});
+
+
 
 $(document).on('as:action_success', '.members-view a.new, .members-view a.edit', function(e, action_link) {
   jQuery(".multiselect").multiselect().multiselectfilter();
@@ -32,21 +67,6 @@ $(document).on('as:action_success', '.members-view a.new, .members-view a.edit',
     $(function() {
         $('a#as_field_terms-new--link.new').hide();
     });
-
-// Message page
-
-    $(function() { 
-        $("#record_sms_only").charCount({
-            allowed: 150,	
-            warning: 20,
-            counterText: 'Characters left for one SMS message: '	
-            });      
-        $('<div><p class="msg-info for-sms">About <span id="msg-count">0</span> SMS messages will be sent</p></div>')
-        .insertAfter('#record_to_groups');
-     toggle_sms_display();  
-     toggle_email_display();  
-     $('#as_messages-create--form .submit').val('Send message');
-     });
 
 // Email Selection
     $('#record_send_email').live("change", function(){
@@ -101,18 +121,32 @@ console.log(display);
 
     $('#as_messages-create--messages .submit').text('Send message')
 
-    $('#record_to_groups').live("change", function(){
- //       alert("Selected groups = " + $(this).val());
-        $.getJSON("../groups/member_count.js", 
-            {to_groups: $(this).val()
-            },
-        function(data) {
- //       alert('Those groups include ' + data + ' members' );
-        $('#msg-count').text(data);                
-        }            
-   
-        ); 
-      });
+//    $('#record_to_groups').live("change", function(){
+//        alert("Selected groups = " + $(this).val());
+//        $.getJSON("../groups/member_count.js", 
+//            {to_groups: $(this).val()
+//            },
+//        function(data) {
+//        alert('Those groups include ' + data + ' members' );
+//        $('#msg-count').text(data);                
+//        }            
+//   
+//        ); 
+//      });
+
+$('#group_select').live("change", function(){
+       alert("Selected groups = " + $(this).val());
+    $.getJSON("../groups/member_count.js", 
+        {to_groups: $(this).val()},
+    function(data) {
+//      $('#msg-count').text(data);                
+      $('#record_to_groups + button').css('font-size', '0.8em');                
+      $('#record_to_groups + button').text('About ' + data + ' messages will be sent.');                
+    }            
+    ); 
+});
+  
+
       
 
 // ****************** DATEPICKER **************************************  

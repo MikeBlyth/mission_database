@@ -8,7 +8,8 @@ gem 'pg'
 #gem 'pdf-inspector', :git => "git://github.com/sandal/pdf-inspector.git"
 gem 'prawn', "0.11.1"# , :git => "git://github.com/sandal/prawn" #, :submodules => true
 gem 'haml' 
-gem 'jrails'
+gem 'jquery-rails'
+#gem 'jrails'
 gem 'cancan'
 #gem "meta_where"  # Last officially released gem
 gem 'chronic'

@@ -231,15 +231,9 @@ div.new_travel, div.member_form {
     border-bottom: 0px solid red;
     border-left: 0px solid red; }
 
-div.member_form {
+div.member_form #tabs{
   padding: 5px;
-  height: 340px; }
-  div.member_form div.col_1 {
-    height: 340px; }
-  div.member_form div.col_2 {
-    height: 340px; }
-  div.member_form div.col_3 {
-    height: 340px; }
+  min-height: 340px; }
 
 .active-scaffold .active-scaffold td {
   border-bottom: 0px;
@@ -350,19 +344,24 @@ table.children {
 
 #msg-followup, #msg-form {
   width: 400px;
-  padding: 0.5em; }
-  #msg-followup #msg-top, #msg-form #msg-top {
+  padding: 0.5em;
+  min-height: 600px;
+  #msg-top {
     width: 400px;
     padding: 0;
     margin-top: 0.5em; }
-  #msg-followup .note, #msg-form .note {
+  .note {
     width: 380px;
     padding: 0.5em;
     margin-bottom: 1em;
     font-size: smaller; }
-  #msg-followup .msg-quote, #msg-form .msg-quote {
+  .msg-quote {
     padding: 0.5em;
     margin: 0.5em 1em 0.5em 1em; }
+    }
+  #msg-count-para{
+    margin-top: 5px
+    }
 
 .view .msg-caveat {
   border: 1px solid red;

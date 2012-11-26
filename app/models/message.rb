@@ -27,7 +27,7 @@
 include MessagesHelper
 
 class Message < ActiveRecord::Base
-  has_many :sent_messages
+  has_many :sent_messages, :dependent => :delete_all
   has_many :members, :through => :sent_messages  # May not be needed, 
   belongs_to :user
   validates_numericality_of :confirm_time_limit, :retries, :retry_interval, 

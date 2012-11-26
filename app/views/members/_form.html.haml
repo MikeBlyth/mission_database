@@ -7,7 +7,7 @@ $( "#tabs" ).tabs();
 - @member_pers = @member.personnel_data || PersonnelData.new
 - @health_data = @member.health_data || HealthData.new
 - child = @member.child
-<div >
+<div class='member_form'>
 #tabs
   %ul
     %li <a href="#tabs-member">Person</a>
@@ -191,9 +191,9 @@ $( "#tabs" ).tabs();
               %br
               = text_area :health_data, :comments, :cols=>80, :rows=>5
     #tabs-groups
-      = member.label :group_ids, "Groups"
+      = member.label :group_ids, "Groups to which this person belongs"
       %br
-      = member.select :group_ids, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15          
+      = member.select :group_ids, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15, :class=>'multiselect multiselect-group'
 %div
   %p(style='font-size: smaller') 
     Note: if you have opened this form from within the members sub-list of the families main list, this form may
