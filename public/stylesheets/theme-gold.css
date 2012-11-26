@@ -45,7 +45,7 @@ a:hover {
 .active-scaffold .active-scaffold td.inline-adapter-cell {
   background: #fcf1cf; }
 
-.as_form table {
+.as_form table, #groups-form {
   background: #ffe28a; }
 
 .active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell {

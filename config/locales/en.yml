@@ -1,10 +1,450 @@
 # Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
-  time:
+  date:
     formats:
-      default: "%a, %d %b %Y %H:%M:%S"
-      date_time_short: "%-1e %b %H:%M"
-      date_time: "%-1e %b %y %H:%M"
+      default: "%-1e %b %y"# 9 Mar 11
+  Admin_tasks: Admin tasks
+  both_have_phone: "(both)"
+  by_deadline: "by %{deadline}"
+  click_to_show_more_columns: Click to show more columns
+  click_to_hide_some_columns: Click to hide some columns
+  cancan_forbidden: Sorry, that action is not available to you.
+  Choose: Choose
+  Directory: Directory
+  download: Download
+  email: Email
+  email_address: Email address
+  english: English
+  error:
+    one: 1 error
+    other: '%{count} errors'
+  error_msg:
+    auth_failed: "Sorry, but that didn't work!
+        Sometimes it takes the program just a bit longer to get started, so try once more."
+    email_commands_not_recogized: Email commands not recogized
+    group_deliver_not_allowed: "Sorry, you are not allowed to send messages directly to groups,
+        but your message is being forwarded to the moderator(s)."
+    invalid_confirmation: "Error: It seems you tried to confirm message #%{id}
+           but you don't seem to have a message with that ID. Maybe you should 
+           contact the sender in person to confirm that you received the 
+           message, if that is what you meant to do."
+    login_not_authorized: "Sorry, that login is not authorized to use this application
+        because we don't have that email address on record for you.
+        Please try another or contact the system administrator
+        to have your Facebook or Gmail login credentials added."
+    no_groups_found: "You sent the \"%{command}\" command, which means to forward the message to groups, but
+          no valid group names or abbreviations found in \"%{group_names_string}.\" "
+    nothing_in_message: "Error: nothing found in your message \"%{body}\""    
+    unparsable_group_deliver: "I don't understand. To send to groups, separate the group names with spaces
+               and be sure to follow the group or groups with a colon (':').
+               \n\nFor example, \"email admin: This is a message for admin.\"
+               \n\nWhat I got was \"%{text}.\""
+  export: Export
+  export_confirm: "This will download all the %{model} data (most fields) for 
+         use in your own spreadsheet or database, and may take a minute or 
+         two. Is this what you want to do?"
+  Female: "Female"
+  first_name: First name              
+  follow_up: Follow up
+  follow_up_message_sent: Follow up message sent
+  french: French
+  group_msg_sent_conf: "CONFIRMATION\n\nYour message: \n\n%{body} \n\nwas sent to groups %{groups}."
+  generic_subject_line: Message from Joslink ReachOut
+  hello: Hello
+  help_subject_line: Joslink ReachOut Help
+  hide_menu: Hide menu
+  'hide advanced options': Hide advanced options
+  hour:
+    one: 1 hour
+    other: '%{count} hours'
+  immediately: immediately
+  info_request_subject_line: Your request for info
+  last_name: Last name               
+  latest_system_notices: Latest notices
+  location: Location
+  Log: Log
+  Main_Menu: Main Menu
+  Male: Male
+  Members: Members
+  Member: Member
+  member_summary_subject_line: Your personal information as listed on %{site}
+  message_is_being_delivered: Message is being delivered
+  message_status_summary: "deliv=%{deliv}, pend=%{pend}, reply=%{reply}, err=%{err}"
+  minutes: minutes
+  MISSING: '*** MISSING ***'
+  MISSING_CONTACT: '---None on file---'
+  missing_group_warning: "Group %{invalid_groups} was not found, so did not receive message."
+  missing_groups_warning: "Groups %{invalid_groups} were not found, so did not receive message."
+  Moderators: Moderators
+  Moderator: Moderator
+  msg_status:
+    Error: Error
+    Pending: Pending
+    Delivered: Delivered
+    Sent: Sent
+    Responded: Responded
+  name: Name
+  "Not signed in": Not signed in
+  "No": "No"
+  no_response_needed: no reponse needed
+  none: none
+  None: None
+  only_moderators_can: "Sorry, only moderators can %{action} at this time."
+  Option_tables: Option tables
+  or: or
+  Page: Page       # For page numbering
+  passport_country: Passport country
+  phone: Phone
+  "Please log in": Please sign in
+  previous_system_notices: View all notices
+  printed_on_date: Printed on
+  private_data: "**private**"
+  private_dir: "---"     # Filler for private data in reports
+  'Refused unknown sender': 'Refused: unknown sender'
+  Rejected: Rejected
+  return: return
+  second_email_address: Second email address
+  Save: Save
+  Send: Send
+  send_info:
+    emails: "  email:  %{emails}"
+    first_line: "Here is the info you requested (info %{request}):\n\n"
+    location: "  location: %{location}"
+    no_contacts: No matching members found. Try with first or last name only. Check spelling.
+    phones: "  phone:  %{phones}"
+    privacy_note: "Note that private info is shown because you are requesting your own 
+                    information. It is not shown when others request your information."
+    private: (private!)
+  Sent_Messages: Sent Messages
+  settings: Settings
+  show_menu: Show menu
+  "Signed in as": Signed in as
+  sms:
+    help:
+      "d <group> = deliver msg to grp": d <group> = deliver msg to grp
+      "groups = list main grps": groups = list main grps
+      "info <name> = get contact info": info <name> = get contact info
+      "report = post update": report = post update
+      "updates = get updates": updates = get updates
+      "!21 <reply> = reply to msg 21": !21 <reply> = reply to msg 21
+    forwarded: "I forwarded your msg to %{to}. It would be better to contact him/her
+              directly at %{number}."
+    message_being_sent: "Your message #%{id} 
+        is being sent to %{group_name} (%{count} recipients)"
+    name_not_found: "%{name} not found in database"
+    no_groups: "Error: no group %{target_group}. Send command 'groups' to list the main ones 
+               incl %{primary_groups}"
+    no_new_updates_with_keyword: "No new updates with keyword(s) '%{keyword}'. 
+              The last one or two updates are being sent." 
+    no_updates_found: No new updates found. Contact your organization if you need more information.
+    nothing_in_message: Nothing found in your message!
+    sending_updates: "Sending %{count} updates"
+    some_groups: Some groups
+    thanks_but_not_found: "Thanks for responding, but message number %{id} was not found.
+              Check the number again."
+    thanks_for_response: Thanks for your response :-)
+    unknown_command: "Unknown command '%{command}'. Send HELP for instructions. If u want to 
+        reply to a msg u received, pls contact the sender directly. Don't use this number."
+    update_saved: "Your news update, \"%{text},\" has been saved. It will expire in %{exp_time}."
+  sms_length_warning: "Only the first 150 characters at most of your message 
+        were sent by SMS so recipients will see at most the portion above."
+  success: Success
+  system_notes_prompt: "Create a new entry if you find a bug or problem or just have a suggestion. 
+        Category is optional and status is for developer use."
+  Thank_you: Thank you
+  Title: Title
+  unspecified_location: "Location not listed"
+  Use: Use
+  via: via
+  Yes: "Yes"
+  activerecord:
+    models:
+      message: Messages
+      bloodtype: Blood types
+      city: Cities
+      country: Countries
+      group: Groups
+      location: Locations
+      member: Members
+      settings: Settings
+      system_note: System Notes
+    attributes:
+      group:
+        group_name: Group name
+        abbrev: Abbrev
+        primary: Primary?
+        user_selectable: User selectable?
+        administrator: Admin?
+        moderator: Moderator?
+        member: Member?
+        limited: Limited?
+        parent_group: Parent group
+      member:
+        last_name: Last name               
+        first_name: First name              
+        middle_name: Middle name             
+        name: Full name                    
+        country: Country              
+        emergency_contact_phone: Emergency contact phone
+        emergency_contact_email: Emergency contact email
+        emergency_contact_name: Emergency contact name  
+        phone_1: Phone 1
+        phone_2: Phone 2                 
+        email_1: Email 1                 
+        email_2: Email 2                 
+        location: Location             
+        location_detail: Location detail         
+        arrival_date: Arrival date
+        departure_date: Departure date
+        blood_donor: Blood donor?
+        bloodtype: Blood type
+        created_at: Created at
+        updated_at: Updated at
+        phone_private: Phone private?
+        email_private: Email private?
+        in_country: On location
+        comments: Comments 
+        short_name: Short name
+        wife: Wife                 
+        sex: Sex
+      message:
+        user: User
+        body: Email text
+        importance: Importance
+        keywords: Keywords
+        sms_only: SMS text
+        send_sms: Send SMS
+        send_email: Send email
+        response_time_limit: Response time limit
+        to_groups: Dest. groups
+  side_menu:
+    edit_your_user_info: Edit your user info
+    sign_out: Sign out
+    members: Members
+    create_new_message: Create new message
+    reports: Reports
+    system_notices: System notices
+    message_list: Message list
+    groups: Groups
+    log: Log
+    blood_types: Blood types
+    cities: Cities
+    countries: Countries
+    locations: Locations
+    settings: Settings
+  messages:
+    be_sure_to_follow_up: "Note: Be sure to follow up any critical messages you 
+              send."
+    destination_groups: Destination groups
+    email_body_label: 'Email Message (or "More Information" for SMS)'
+    subject_label: "Email subject"
+    send_email: "Send email"
+    send_sms: "Send SMS"
+    sms_only: "SMS body"
+    news_update: "News update"
+    private_label: "Private"
+    sms_text_message_label: "SMS Text Message"
+    followup:
+      form_descr_1: "This form is for sending a follow-up for message #%{id}."
+      form_descr_2: "This follow-up message will be sent only to people who 
+              did not receive (or respond to) the original message %{id}. 
+              You can repeat part of the message and or remind people to respond."
+      subject_line: "Following up on message #%{id}: %{subject}"
+      sms_line: "f/u msg #%{id}"
+      body_content: "This is Josie, the Joslink database gopher. I haven't 
+            seen a reply from you showing that you received message #%{id}, \"%{subject}.\" 
+            Could it be in your junk mail folder? We really do want to be sure that 
+            you got this message so please make sure you've read it and then 
+            just reply to this message or the original one."
+    options:
+      expiration: Expiration (only affects news updates) 
+      keywords: Keywords (useful for searching)
+  members:
+    show:
+      name: Full name
+    form:
+      contact_info: Contact Info
+      other: Other
+      name_and_country: Name & Country
+      Emergency_Contact_Information: Emergency Contact Information
+      passport_country: Passport country
+    import:
+      description: "This will import members from a comma-separated (CSV) file 
+                   on your computer."
+      file_to_upload: File to upload
+      import_members: Import new members
+      notice: "Be sure to back up your database before importing new members. The
+               import feature is still experimental."
+  groups:
+    form:
+      abbrev: Abbreviation
+      notice: "If this new group is to be a container for sub-groups, you should just add 
+              members to the sub-groups. They will automatically be included in this parent group." 
+  outgoing:
+    confirmation_request: "The sender has requested confirmation within %{time_limit}
+        that you have received this
+        message. Simply reply to the message leaving the subject line unchanged. 
+        If the sender asked you to reply with some information, just type that 
+        on the first line of your reply and it will be recorded. You can also confirm 
+        that you have received this message by sending '!%{id}' as a text 
+        message to the database number, %{sms_number}."
+    this_is_message_id_html: This is message <strong>#%{id}</strong>.      
+    this_is_message_id: This is message #%{id}.      
+  reports:
+    directory:
+      asterisk: Asterisk (*) means presently out of the country.
+      title: Mission Contacts 
+      'Location not listed': Location not listed
+    directory_by_location:
+      asterisk: Asterisk (*) means presently out of the country.
+      title: Mission Contacts 
+      'Location not listed': Location not listed
+    index:
+      header: Directory (names, phone numbers and email addresses)
+      by_family: By family (HTML)
+      by_location: By location (HTML)
+      font_size: Font size
+      printable: Printable (PDF)
+      reports: Reports
+      report_sorted_by_name: Report sorted by name
+      report_sorted_by_location: Report sorted by location
+      view_in_browser: View in Browser
+  safe_page_text: "Please select one of the options from the menu. 
+          If you are having problems, try signing out and then
+          signing in again."
+  sessions:
+    new:
+      facebook_disclaimer: "(Our using Facebook for login does not mean we endorse it 
+         or recommend your using it. It is simply an easy way to securely identify users.)"
+      get_google: Get a Google/Gmail account
+      get_facebook: Sign up for Facebook
+      instructions_1: Use your existing account on FaceBook or Google/Gmail to log in. 
+      instructions_2: "Your main email address listed on Facebook or Google must 
+        match one of your addresses listed in this directory. If you do not have one of
+        those then you will need to get one or the other and ask the moderator of this
+        site to add it to your listing."
+      connect_facebook: Connect using your Facebook account
+      connect_google: Connect using your Google account
+  setup_1: "The member database is empty, so presumably you want to set up
+      a new installation. You will be added as an administrator.
+      Please enter your email below. Note that at least one of the
+      email addresses must one you use to log in with Facebook or
+      Google, since that is how authentication is done by this
+      system."
+  setup_2: "Note: Once you have been added to the database, you will no longer be 
+      able to access this page, so be sure that the email you enter is correct or 
+      you will not be able to log in and will have to re-start the installation."
+
+  setup_title: Initial Setup
+  site_settings:
+    edit:
+      auto_update_in_country_status: Auto update in-country status?
+      auto_update_instructions: "If auto-update in-country status is selected, the system will check 
+         members' arrival and departure dates, if any, and adjust their in_country status accordingly. 
+         This is done daily (in the early morning)."
+      be_sure_to_save: Be sure to click the save button after making any changes.
+      cleanup_instructions: "Messages and log entries are removed from the system according
+         to the settings below. None of these items are required for the system to work,
+         and are only kept for archival or debugging purposes."
+      clickatell_user_name: Clickatell user name
+      clickatell_password: Clickatell password
+      contact_updates: Contact Updates
+      contact_update_instructions: "Specify who will receive various notifications from this program, 
+        and when they will be sent. Include email addresses only (no names), separated by commas."
+      contact_update_recipients: Contact update recipients
+      default_outgoing_sms_gateway: Default outgoing SMS gateway
+      alternate_outgoing_sms_gateway: Alternate outgoing SMS gateway
+      log_explanation: The log stores system notices of events including errors and warnings.
+      log_max_records: Maximum log entries to keep
+      log_retention_period: Maximum days to keep log
+      message_log_explanation: "Message entries include the message text, date & time, kind of message
+        (email, SMS, news update), and target groups."
+      messages_max_records: Maximum messages to keep
+      messages_retention_period: Maximum days to keep messages
+      maintenance tasks: Maintenance tasks
+      sendgrid_instructions: Fill in these settings if the site uses SendGrid for outgoing email.
+      sms_text_messaging: SMS Text Messaging
+      sendgrid_user_name: Sendgrid user name
+      sendgrid_password: Sendgrid password
+      sent_messages_max_records: Maximum sent_messages to keep
+      sent_messages_retention_period: Maximum days to keep sent_messages
+      sent_message_log_explanation: "Sent Message records link a message to a 
+         given phone number or email address, recording when the message was sent
+         to that person, along with any error status."
+      tab-sms: SMS
+      tab-email: Email
+      tab-maint: Maintenance
+      tab-notifications: Notifications
+      tab-other: Other
+      title: Site Settings
+      twilio_account_sid: Twilio account SID
+      twilio_auth_token: Twilio authorization token
+      twilio_api_version: Twilio API version
+      twilio_phone_number: Twilio incoming phone number
+      twilio_background: Twilio background service
+  help_email: |
+    Accessing the Joslink/Josalerts Database by Email
+
+    The database can be accessed online from your web browser at https://joslink.herokuapp.com.
+    However, you can also request information and perform actions via email.
+
+    Database requests should go in the body of the email, one command per line.
+    Commands include:
+
+    info <Name> 
+       Get contact information on people matching <Name>. 
+       You can use just about any format for the name, examples:
+       
+       info Donald Duck
+       info Don
+       info Duck
+       info Duck, Don
+       info Duc
+       
+       Only one <Name> can be requested per line, but you can use multiple
+       lines and will receive one email for each request.
+       
+    BROADCASTING MESSAGE TO GROUPS 
+
+    d group another_group: This is the message to be sent out to people...
+      
+      The 'd' command sends messages *by SMS* to the specified groups. 
+      Remember that an SMS message sent by this system is limited to roughly
+      145 characters.
+      
+    email group another_group: This is the message to be sent out to people...
+
+      The 'email' command sends messages by EMAIL to the specified groups.
+      Email messages are not limited in length, but they are not formatted at 
+      all so are best suited for fairly short communications.
+
+    d+email group another_group: This is the message to be sent out to people...
+      
+      The 'd+email' command, naturally, sends both SMS and email. The SMS message is
+      still cut off after at most 150 characters. 'email+d' works the same as 'd+email'.
+
+    If you have any questions or this information appears to be out-of-date, please
+    contact a system administrator.
+  summary_header: |
+    Your %{organization} Database Information
+
+    Please take a minute to review the information we have for you on the %{organization}  
+    database. We're trying to make sure everything is accurate. Contact information is
+    particularly important since in case of crisis or emergency we need to be able
+    to contact you. 
+
+    Confidentiality
+
+    Information marked with an asterisk "*" could appear in the %{organization} directory, 
+    calendars, or other lists. You may request your email, phone numbers, and Skype 
+    name to be private if you wish. Other contact information may appear in the directory.
+        
+  member_summary_core: |
+    *Name: %{name}
+    *Location: %{location}
+    Citizenship: %{passport_country}
+    Contact information
+    %{contact_summary}
+

@@ -194,9 +194,4 @@ $( "#tabs" ).tabs();
       = member.label :group_ids, "Groups to which this person belongs"
       %br
       = member.select :group_ids, Group.order('group_name').collect {|x| [x.group_name, x.id]}, {}, :multiple => true, :size=>15, :class=>'multiselect multiselect-group'
-%div
-  %p(style='font-size: smaller') 
-    Note: if you have opened this form from within the members sub-list of the families main list, this form may
-    not close after you have clicked "update," even though the spinning "loading" indicator disappears. 
-    If that happens, just click on the cancel link.      
 

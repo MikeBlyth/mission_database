@@ -76,10 +76,10 @@ $(document).on('as:action_success', '.members-view a.new, .members-view a.edit',
     function toggle_email_display() {
         if ($('#record_send_email').is(':checked')) {
    //       $('.for-email').css('display','inline')
-          $('.for-email').show('blind', 500)
+          $('.for-email').removeAttr('disabled') 
           }
         else {
-          $('.for-email').effect('blind', 500)
+          $('.for-email').attr('disabled','disabled')
 //          $('.for-email').css('display','none')
         } 
     } ;
@@ -87,23 +87,17 @@ $(document).on('as:action_success', '.members-view a.new, .members-view a.edit',
 // SMS Selection
     $('#record_send_sms').live("change", function(){
         if ($(this).is(':checked')) {
-          $('.counter').css('display','block')
-          $('.for-sms').css('display','inline')
-          }
+          $(".for-sms").removeAttr('disabled')          }
         else {
-          $('.counter').css('display','none')
-          $('.for-sms').css('display','none')
+          $('.for-sms').attr('disabled','disabled')
         }  
       });
 
     function toggle_sms_display() {
         if ($('#record_send_sms').is(':checked')) {
-          $('.counter').css('display','block')
-          $('.for-sms').css('display','inline')
-          }
+          $(".for-sms").removeAttr('disabled')          }
         else {
-          $('.counter').css('display','none')
-          $('.for-sms').css('display','none')
+          $('.for-sms').attr('disabled','disabled')
         } 
     } ;
 

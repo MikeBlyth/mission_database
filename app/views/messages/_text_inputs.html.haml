@@ -2,19 +2,19 @@
   %table{:style=>'width: 300px'}
     %tr
       %td
-        = form.label :sms_only, t('messages.sms_text_message_label', :id => @record.id)
+        = form.label :sms_only, t('messages.sms_text_message_label'), :id => @record.id, :class => 'for-sms'
         %br
-        = form.text_area :sms_only, :size => "40x2"
+        = form.text_area :sms_only, :size => "40x2", :class => 'for-sms'
     %tr
       %td
-        = form.label :subject, t('messages.subject_label')
+        = form.label :subject, t('messages.subject_label'), :class => 'for-email'
         %br
-        = form.text_field :subject
+        = form.text_field :subject, :class => 'for-email'
     %tr
       %td
-        = form.label :body, t('messages.email_body_label'), :id => 'body-label'
+        = form.label :body, t('messages.email_body_label'), :id => 'body-label', :class => 'for-email'
         %br
-        = form.text_area :body, :size => "40x4"
+        = form.text_area :body, :size => "40x4", :class => 'for-email'
     %tr
       %td
         %table

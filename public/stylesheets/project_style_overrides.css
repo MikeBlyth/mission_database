@@ -382,6 +382,17 @@ table.children {
   width: 80px; }
 .groups-view #record_type_of_group {
   width: 200px; }
+  
+#groups-form {
+  min-height: 375px;
+  td {
+     padding-top: 15px;
+    }
+  }
+
+#groups-form td {
+   padding-top: 15px;
+  }
 
 .not-implemented {
   display: none; }
