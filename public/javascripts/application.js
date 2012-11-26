@@ -316,11 +316,11 @@ $(function(){
     beforeclose: function(){return(false);}
    }).multiselectfilter();
 //   $(".multiselect-groups").multiselect("open");
-    v = $(".multiselect-groups").multiselect('widget');
-    b = $(".multiselect-groups").multiselect('button');
-    v.remove();
-    v.insertBefore($('#msg-count-para'));
-    v.css({top: '5px', left: '0px', position: 'relative'});
+//    v = $(".multiselect-groups").multiselect('widget');
+//    b = $(".multiselect-groups").multiselect('button');
+//    v.remove();
+//    v.insertBefore($('#msg-count-para'));
+//    v.css({top: '5px', left: '0px', position: 'relative'});
 });
 
 
