@@ -7,7 +7,7 @@ class TravelsController < ApplicationController
   
   active_scaffold :travel do |config|
 
-    config.actions << :config_list
+#    config.actions << :config_list
 
     #  config.columns[:member].actions_for_association_links = [:show]
     config.subform.layout = :vertical

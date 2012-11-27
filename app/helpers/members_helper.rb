@@ -12,7 +12,7 @@ module MembersHelper
     end
   end
   
-  def members_column(family)
+  def members_column(family, column)
     family_data_formatted(family, :include_contacts => false)[:first_names]
   end
   
@@ -31,7 +31,7 @@ module MembersHelper
 #  end
 
 
-  def spouse_column(record)
+  def spouse_column(record, column)
     if record.spouse
       record.spouse.short_name || record.spouse.first_name
     else

@@ -72,7 +72,6 @@ class MembersController < ApplicationController
    config.actions.add :field_search
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name, :residence_location, :birth_date, :child, :status]
-config.list.pagination = false
 
    config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
      :confirm=>'This will download all the member data (most fields) for ' + 
