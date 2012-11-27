@@ -12,7 +12,7 @@ class MembersController < ApplicationController
   active_scaffold :member do |config|
 
     # Enable user-configurable listing (user can select and order columns)
-    config.actions << :config_list
+#    config.actions << :config_list
     # We will not be creating any members through ActiveScaffold
     config.actions.exclude :create
 
@@ -20,7 +20,9 @@ class MembersController < ApplicationController
     list_columns = [:name, :spouse, 
           :child, :work_location, :reported_location, :reported_location_time, :ministry, :travels, :field_terms, :status, :contacts, :groups]
     list.columns = list_columns
-    config.config_list.default_columns = list_columns - [:ministry, :reported_location, :reported_location_time, :groups] 
+# The following is for the config_list plugin
+#    config.config_list.default_columns = list_columns - [:ministry, :reported_location, :reported_location_time, :groups] 
+    config.list.columns = list_columns - [:ministry, :reported_location, :reported_location_time, :groups] 
     config.columns[:name].sort_by :sql
     config.list.sorting = {:name => 'ASC'}
     show.columns = update.columns = [:name, :name_override,
@@ -70,6 +72,8 @@ class MembersController < ApplicationController
    config.actions.add :field_search
    config.field_search.human_conditions = true
    config.field_search.columns = [:last_name, :residence_location, :birth_date, :child, :status]
+config.list.pagination = false
+
    config.action_links.add 'export', :label => 'Export', :page => true, :type => :collection, 
      :confirm=>'This will download all the member data (most fields) for ' + 
        'use in your own spreadsheet or database, and may take a minute or two. Is this what you want to do?'
