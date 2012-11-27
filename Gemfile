@@ -10,7 +10,7 @@ gem 'pg'
 #gem 'pdf-inspector', :git => "git://github.com/sandal/pdf-inspector.git"
 gem 'prawn', "0.11.1"# , :git => "git://github.com/sandal/prawn" #, :submodules => true
 gem 'haml' 
-gem 'jquery-rails'
+#gem 'jquery-rails'
 #gem 'render_component_vho'
 #gem 'active_scaffold_vho'
 #gem 'jrails'
@@ -58,6 +58,7 @@ group :test do
   gem "factory_girl", "2.0.0.beta1"
   gem "factory_girl_rails", "1.1.beta1"
   gem "rspec-rails"
+  gem 'xpath' # Should not be needed but for now capybara chokes without it.
   gem "capybara"
   gem "cucumber-rails", ">=1.1.1"
   gem "autotest"

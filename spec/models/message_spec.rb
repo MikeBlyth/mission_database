@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'mock_clickatell_gateway'
-require 'messages_test_helper'
+require '~/simjos/spec/support/mock_clickatell_gateway'
+require '~/simjos/spec/support/messages_test_helper'
 include MessagesTestHelper
 include SimTestHelper
 

@@ -10,10 +10,10 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 //
-//= require active_scaffold
 //= require jquery-ui
+//= require jquery
+//= require active_scaffold
 //= require jquery.multiselect
 //= require jquery.multiselect.filter
 //= require mission_db
-//= require_tree .
 

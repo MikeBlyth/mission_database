@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'sim_test_helper'
+require '~/simjos/spec/support/sim_test_helper.rb'
 
 def seed_statuses
   Status.create(:description => 'On the field', :code => 'on_field', :active => true, :on_field => true,

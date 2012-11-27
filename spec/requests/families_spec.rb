@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'sim_test_helper'
+require '~/simjos/spec/support/sim_test_helper'
 
 describe "Families" do
 include SimTestHelper

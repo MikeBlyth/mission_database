@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'sim_test_helper'
+require '~/simjos/spec/support/sim_test_helper'
 
 def select_second_option(id)
 # from Jason Neylon's Blog http://bit.ly/gIPq1R
