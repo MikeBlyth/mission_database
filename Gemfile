@@ -1,9 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'rails', '= 3.1.3'
+gem 'rails', '~> 3.2'
 #gem "active_scaffold_vho"
 #gem 'active_scaffold_config_list_vho'
-#gem 'active_scaffold', :git => 'git://github.com/activescaffold/active_scaffold.git'
+gem 'active_scaffold', :git => 'git://github.com/activescaffold/active_scaffold.git'
 
 
 gem 'pg'
@@ -11,8 +11,8 @@ gem 'pg'
 gem 'prawn', "0.11.1"# , :git => "git://github.com/sandal/prawn" #, :submodules => true
 gem 'haml' 
 gem 'jquery-rails'
-gem 'render_component_vho'
-gem 'active_scaffold_vho'
+#gem 'render_component_vho'
+#gem 'active_scaffold_vho'
 #gem 'jrails'
 gem 'cancan'
 #gem "meta_where"  # Last officially released gem
@@ -30,9 +30,9 @@ gem 'thin', :platforms => :ruby
 gem "escape_utils" # I think this is a temp fix. See http://crimpycode.brennonbortz.com/?p=42
 
 group :assets do
-  gem 'sass-rails',   "~> 3.1.5"
-  gem 'coffee-rails', "~> 3.1.1"
-  gem 'uglifier',     ">= 1.0.3"
+  gem 'sass-rails'#,   "~> 3.1.5"
+  gem 'coffee-rails'#, "~> 3.1.1"
+  gem 'uglifier'#,     ">= 1.0.3"
 end
 
 # Bundle gems for the local environment. Make sure to
