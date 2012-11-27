@@ -21,6 +21,7 @@ gem 'twiliolib'
 gem 'httparty'
 gem 'jammit'
 gem 'rake'
+#gem 'thin', :platforms => :ruby
 #gem "progstr-filer", :require => "progstr-filer"  # File attachment & storage -- experimental
 gem "escape_utils" # I think this is a temp fix. See http://crimpycode.brennonbortz.com/?p=42
 

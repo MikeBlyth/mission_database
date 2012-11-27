@@ -16,17 +16,33 @@ include SimTestHelper
 
     before(:each) do
       integration_test_sign_in(:admin=>true)
-      @head = factory_member_basic
-      @family = @head.family
     end  
     
     it 'avoids "ambiguous status_id" bug', :slow=>true do  # make a controller test if we need this
+      @head = factory_member_basic
       visit root_path
       click_link "Active only"
     end
 
+    it 'allows inline editing in list view' do
+#      @family = factory_family_full(:couple => true)
+#      @head = @family.head
+      head = Factory(:member_with_details)
+      location2 = Factory(:location, :description=>'second location')
+      visit root_path
+#      find('.child-column input[type=checkbox]').click
+      check('record[child]')
+      find('td.work_location-column span').click
+      select('second location')
+      click_on('inplace_save')
+      save_and_open_page
+      page.should have_content(head.name)
+    end
+
     it "editing user should change all values correctly" do
 #puts "Start editing: #{Time.now}"
+      @head = factory_member_basic
+      @family = @head.family
       seed_tables
       phone_1 = '+2348887771111'
       phone_2 = '+2348887772222'

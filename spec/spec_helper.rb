@@ -84,7 +84,7 @@ end # Spork.prefork
 
 Spork.each_run do
 puts "SPORK EACH_RUN ..."
-#load 'sim_test_helper.rb'
+load 'sim_test_helper.rb'
 #load 'messages_test_helper.rb'
 #load 'secret_credentials.rb'
 #>  load Rails.root+'app/helpers/application_helper.rb'

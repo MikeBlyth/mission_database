@@ -49,7 +49,8 @@ module SimTestHelper
     
   def create_spouse(member)
     spouse = Factory(:member, :spouse=>member, :last_name=> member.last_name, 
-          :first_name=> "Honey", :family=>member.family, :sex=>member.other_sex, :child=>false,
+          :first_name=> "Honey", :short_name=> "Honey", :family=>member.family, :sex=>member.other_sex, 
+          :child=>false,
           :country=>member.country )
     spouse.personnel_data.update_attribute(:employment_status, member.employment_status)
     member.update_attribute(:spouse, spouse)
@@ -69,7 +70,7 @@ module SimTestHelper
   
   def create_couple(f=nil)
     family ||= Factory(:family)
-    husband = Factory(:member, :family=>family)
+    husband = Factory(:member, :family=>family, :short_name=>'Hubby')
     family.update_attribute(:head, husband)
     wife = create_spouse(husband)
     return husband
@@ -106,7 +107,8 @@ module SimTestHelper
     family = Factory(:family)
     head = Factory(:member, {:family=>family}.merge(params))
     family.update_attribute(:head, head)
-    return head
+#    family.head.update_attributes(params) if params.any?  # THIS HAS NOT BEEN CHECKED!
+    return family.head
   end    
 
   # A member that can be saved without saving a family
@@ -123,7 +125,8 @@ module SimTestHelper
     head = factory_member_basic
     family = head.family
     if params[:couple]
-      spouse = Factory(:member_with_details, :family=>family, :spouse=>head, :sex=>'F')
+      spouse = Factory(:member_with_details, :family=>family, :first_name=> "Honey", 
+         :short_name=> "Honey", :spouse=>head, :sex=>'F')
       head.spouse = spouse
     end
     add_details(head, {:personnel_data_create=>true, 
@@ -222,7 +225,7 @@ module SimTestHelper
   def add_details(member, params={})
     location = params[:location] || Location.first || Factory(:location)
     member.update_attributes(:middle_name => 'Midname',
-            :short_name => 'Shorty',
+            :short_name => member.short_name || 'Shorty',
             :sex => params[:sex] || 'M',
             :birth_date => params[:birth_date] || '1980-01-01',
             :country => params[:country] || Country.first || Factory(:country),
