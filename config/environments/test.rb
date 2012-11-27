@@ -39,4 +39,11 @@ SIM::Application.configure do
   
   require 'ruby-debug'
 
+############ ADDED FOR RAILS 3.1 ####################
+# Configure static asset server for tests with Cache-Control for performance
+config.serve_static_assets = true
+config.static_cache_control = "public, max-age=3600"
+######################################################
+
+
 end

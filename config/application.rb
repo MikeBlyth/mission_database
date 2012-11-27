@@ -48,13 +48,16 @@ module SIM
 #    config.autoload_paths << "#{RAILS_ROOT}/vendor/prawn/lib"
     config.autoload_paths << "#{Rails.root}/app/reports"
 
-    ### Part of a Spork hack. See http://bit.ly/arY19y
-    if Rails.env.test?
-      initializer :after => :initialize_dependency_mechanism do
-        # Work around initializer in railties/lib/rails/application/bootstrap.rb
-        ActiveSupport::Dependencies.mechanism = :load
-      end
-    end
+    config.assets.enabled = true
+    config.assets.version = '1.0'
+
+#    ### Part of a Spork hack. See http://bit.ly/arY19y
+#    if Rails.env.test?
+#      initializer :after => :initialize_dependency_mechanism do
+#        # Work around initializer in railties/lib/rails/application/bootstrap.rb
+#        ActiveSupport::Dependencies.mechanism = :load
+#      end
+#    end
 
   end
 end

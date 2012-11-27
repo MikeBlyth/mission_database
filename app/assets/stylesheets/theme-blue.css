@@ -1,0 +1,295 @@
+/* This file is for generating CSS theme files. At present, themes only vary in color (not in
+   fonts, arrangement, sizing, etc. Thus you can create the color theme and leave it intact even
+   if the main CSS override file (project_style_overrides.scss) needs to be changed.
+   
+   Probably the best approach is to develop one color theme using this SASS file, then "freeze" 
+   the generated CSS file, renaming it, e.g., 'giraffe-theme.css' or whatever. (You should probably
+   save a copy of this file as 'giraffe-theme.scss' as well, in case it's needed for tweaking
+   the theme.) 
+
+   MOST OF THE COLOR STYLE VARIATIONS CAN BE ACCOMPLISHED BY CHANGING THE FOLLOWING FEW LINES
+   AS THE REST OF THE COLOR DEFINITIONS ARE BASED ON THEM.
+ 
+   IMAGES WILL STILL HAVE TO BE CREATED FOR EACH COLOR SCHEME IF NECESSARY      */
+/* base saturation to make it easy to change all at once */
+/* Button for submit etc. */
+/******* Images **** */
+/**  THE REST OF THE STYLESHEET ONLY NEEDS TO BE EDITED IF TWEAKING IS REQUIRED ****/
+/*** Main Listings ***/
+/** Based on the light background, how much to darken and/or desaturate the odd rows? 
+    A gradient is used, so values are specified for the top and bottom of the odd rows **/
+/** How much further should the *sorted* column be darkened and/or desaturated? **/
+/* Backgrounds */
+/* Text */
+/* -- widgets -- */
+/* -- tabular lists -- */
+/* -- menu -- */
+/* -- other backgrounds -- */
+/* Borders */
+/********** Color info for CSS ***************** */
+.theme-blue {
+  /* Listings */
+  /* Warning that too many characters have been entered into input box */
+  /******** THEME FOR JQUERY-UI WIDGETS (COLOR AND IMAGES ONLY) ******* */
+  /********* JQUERY-UI COMPONENTS ***** */
+  /* Component containers
+   *---------------------------------- */
+  /****** Colors ** */
+  /****** Include message form here as it will be styled like the tabbed family form widget */
+  /* Interaction states
+   *---------------------------------- */
+  /* Background for things like "headers/selectors" for non-selected tabs, non-selected dates on calendar */
+  /*html body div#top div#content div#main div.active-scaffold div.create-view form#as_families-create--form.as_form div div#tabs.ui-tabs ul.ui-tabs-nav li.ui-state-hover a {
+  background: red
+  }*/
+  /* Interaction Cues
+   *---------------------------------- */
+  /* Use of this state includes highlighting today's date on the calendar. Anything else?? */
+  /* Icons
+   *---------------------------------- */
+  /* icons and icons w state */
+  /* Each image is a whole collection of icons with different colors and backgrounds */
+  /* Individual icons are sprites within a collection */ }
+  .theme-blue body {
+    color: #000d1a; }
+  .theme-blue div#menu_toggle {
+    background: #b3d9ff; }
+  .theme-blue a:visited {
+    color: #2050df; }
+  .theme-blue a:hover {
+    color: white; }
+  .theme-blue .active-scaffold .view {
+    background: white;
+    border: 1px solid #7099c2; }
+  .theme-blue .active-scaffold .active-scaffold td.inline-adapter-cell {
+    background: white; }
+  .theme-blue .as_form table {
+    background: #c0defc; }
+  .theme-blue .active-scaffold .active-scaffold .active-scaffold td.inline-adapter-cell {
+    border: 1px solid #7099c2; }
+  .theme-blue .active-scaffold h3 {
+    color: #2e4c6b; }
+  .theme-blue h1 {
+    color: #002142; }
+  .theme-blue h4, .theme-blue .active-scaffold h4 {
+    color: #2e4c6b; }
+  .theme-blue h5, .theme-blue .active-scaffold h5 {
+    color: #2e4c6b; }
+  .theme-blue .active-scaffold h5, .theme-blue .active-scaffold h2 {
+    color: #002142; }
+  .theme-blue .active-scaffold a, .theme-blue .active-scaffold a:visited {
+    color: #2050df; }
+  .theme-blue .active-scaffold label, .theme-blue .active-scaffold p {
+    color: #002142; }
+  .theme-blue .active-scaffold form select {
+    border-color: #b3b3b3; }
+  .theme-blue div#content {
+    background: white; }
+  .theme-blue .active-scaffold th {
+    background-color: #3c8cdd;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3c8cdd), color-stop(100%, #1f66ad));
+    background-image: -webkit-linear-gradient(top, #3c8cdd, #1f66ad);
+    background-image: -moz-linear-gradient(top, #3c8cdd, #1f66ad);
+    background-image: -ms-linear-gradient(top, #3c8cdd, #1f66ad);
+    background-image: -o-linear-gradient(top, #3c8cdd, #1f66ad);
+    background-image: linear-gradient(top, #3c8cdd, #1f66ad);
+    font: bold 11px arial, sans-serif;
+    color: white; }
+  .theme-blue .active-scaffold th a, .theme-blue .active-scaffold th p {
+    background: transparent;
+    color: white; }
+  .theme-blue .active-scaffold th:hover, .theme-blue .active-scaffold th a:hover, .theme-blue .active-scaffold th.sorted a:hover {
+    background: #4a99e8; }
+  .theme-blue .active-scaffold th.asc a, .theme-blue .active-scaffold th.desc a:hover {
+    background: url("../images/active_scaffold/default/arrow_up.gif") no-repeat scroll right 50%; }
+  .theme-blue .active-scaffold th.desc a, .theme-blue .active-scaffold th.desc a:hover {
+    background: url("../images/active_scaffold/default/arrow_down.gif") no-repeat scroll right 50%; }
+  .theme-blue .active-scaffold .records tr.record {
+    background-color: #c0defc;
+    background-color: #d4e5f7;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #d4e5f7), color-stop(100%, #a8ccf0));
+    background-image: -webkit-linear-gradient(top, #d4e5f7, #a8ccf0);
+    background-image: -moz-linear-gradient(top, #d4e5f7, #a8ccf0);
+    background-image: -ms-linear-gradient(top, #d4e5f7, #a8ccf0);
+    background-image: -o-linear-gradient(top, #d4e5f7, #a8ccf0);
+    background-image: linear-gradient(top, #d4e5f7, #a8ccf0); }
+  .theme-blue .active-scaffold .records tr.even-record {
+    background: white; }
+  .theme-blue .active-scaffold .records tr.record td.sorted {
+    background-color: #c0d9f2;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #c0d9f2), color-stop(100%, #96bfe9));
+    background-image: -webkit-linear-gradient(top, #c0d9f2, #96bfe9);
+    background-image: -moz-linear-gradient(top, #c0d9f2, #96bfe9);
+    background-image: -ms-linear-gradient(top, #c0d9f2, #96bfe9);
+    background-image: -o-linear-gradient(top, #c0d9f2, #96bfe9);
+    background-image: linear-gradient(top, #c0d9f2, #96bfe9); }
+  .theme-blue .active-scaffold .records tr.even-record td.sorted {
+    background: white; }
+  .theme-blue .active-scaffold tr.record td, .theme-blue .active-scaffold tr.record td.sorted {
+    border: 1px solid #c0defc;
+    border-bottom-color: #7099c2;
+    border-left-color: #7099c2; }
+  .theme-blue .exceeded {
+    background: yellow; }
+  .theme-blue #menu {
+    background: #e0e8ff;
+    border-right: 1px solid #7099c2; }
+    .theme-blue #menu a {
+      color: #002142; }
+      .theme-blue #menu a:hover {
+        background-color: #cfe5fc; }
+  .theme-blue td.label {
+    color: blue; }
+  .theme-blue label.required {
+    font-style: italic;
+    color: black; }
+  .theme-blue div.new_travel, .theme-blue div.member_form {
+    background-color: #c0defc; }
+    .theme-blue div.new_travel div.col_1, .theme-blue div.member_form div.col_1 {
+      background-color: #c0defc; }
+    .theme-blue div.new_travel div.col_2, .theme-blue div.member_form div.col_2 {
+      background-color: #adcceb;
+      border-left: 1px solid #c0defc; }
+    .theme-blue div.new_travel div.col_3, .theme-blue div.member_form div.col_3 {
+      background-color: #c0defc;
+      border-left: 1px solid #c0defc; }
+  .theme-blue .list_line_odd {
+    background: #c0defc; }
+  .theme-blue .list_line_even {
+    background: white; }
+  .theme-blue div.crosstab tr.odd {
+    background: white; }
+  .theme-blue div.crosstab tr.even {
+    background: white; }
+  .theme-blue div.crosstab tr.total {
+    background: white; }
+  .theme-blue #notice {
+    border: 1px solid grey;
+    background: #0086b3;
+    color: #ededed; }
+  .theme-blue .whereis tr.new_location {
+    background: #0080fc; }
+  .theme-blue .whereis .new_location td {
+    color: white;
+    font-style: italic; }
+  .theme-blue .list_line_odd {
+    background: #c0defc; }
+  .theme-blue .list_line_even {
+    background: white; }
+  .theme-blue table.children th {
+    background: #1f66ad; }
+  .theme-blue #content {
+    background: white; }
+  .theme-blue .ui-widget-content, .theme-blue #msg-form {
+    border: 1px solid #0f6b8a;
+    background: #adcceb url(images/ui-bg-blue-textured.png) 0 0 repeat;
+    color: #002142; }
+    .theme-blue .ui-widget-content a, .theme-blue #msg-form a {
+      color: #002142; }
+  .theme-blue .ui-widget-header {
+    border: 1px solid #0d4659;
+    background-color: #94b2d1;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #94b2d1), color-stop(100%, #4573a1));
+    background-image: -webkit-linear-gradient(top, #94b2d1, #4573a1);
+    background-image: -moz-linear-gradient(top, #94b2d1, #4573a1);
+    background-image: -ms-linear-gradient(top, #94b2d1, #4573a1);
+    background-image: -o-linear-gradient(top, #94b2d1, #4573a1);
+    background-image: linear-gradient(top, #94b2d1, #4573a1);
+    color: #002142; }
+    .theme-blue .ui-widget-header a {
+      color: #002142; }
+  .theme-blue .ui-tabs-panel {
+    background: transparent; }
+    .theme-blue .ui-tabs-panel table {
+      background: transparent; }
+  .theme-blue .active-scaffold .submit, .theme-blue .ui-datepicker-month, .theme-blue .ui-datepicker-year {
+    background-color: #5269e0;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5269e0), color-stop(100%, #1f36ad));
+    background-image: -webkit-linear-gradient(top, #5269e0, #1f36ad);
+    background-image: -moz-linear-gradient(top, #5269e0, #1f36ad);
+    background-image: -ms-linear-gradient(top, #5269e0, #1f36ad);
+    background-image: -o-linear-gradient(top, #5269e0, #1f36ad);
+    background-image: linear-gradient(top, #5269e0, #1f36ad);
+    color: white;
+    border: 1px solid #2e4c6b; }
+    .theme-blue .active-scaffold .submit:hover, .theme-blue .ui-datepicker-month:hover, .theme-blue .ui-datepicker-year:hover {
+      background: #adcceb;
+      border-color: red;
+      color: #002142; }
+    .theme-blue .active-scaffold .submit:active, .theme-blue .ui-datepicker-month:active, .theme-blue .ui-datepicker-year:active {
+      background: #adcceb;
+      border: 1px dotted yellow;
+      color: #002142; }
+  .theme-blue #msg-followup .note, .theme-blue #msg-form .note {
+    border: 1px solid red;
+    margin-bottom: 1em; }
+  .theme-blue #msg-followup .msg-quote, .theme-blue #msg-form .msg-quote {
+    border: 1px solid #7099c2; }
+  .theme-blue #msg-followup #msg-top {
+    background-color: white; }
+  .theme-blue #advanced #options {
+    background-color: white; }
+  .theme-blue .as_form #msg-form table {
+    background: transparent; }
+  .theme-blue .ui-state-default, .theme-blue .ui-widget-content .ui-state-default, .theme-blue .ui-widget-header .ui-state-default {
+    border: 1px solid #c0defc;
+    background: white;
+    color: #5091d3; }
+  .theme-blue .ui-state-default a {
+    color: #5091d3; }
+    .theme-blue .ui-state-default a:link, .theme-blue .ui-state-default a:visited {
+      color: #5091d3; }
+  .theme-blue .ui-state-hover, .theme-blue .ui-state-hover a, .theme-blue .ui-widget-content .ui-state-hover, .theme-blue .ui-widget-header .ui-state-hover, .theme-blue .ui-state-focus, .theme-blue .ui-widget-content .ui-state-focus, .theme-blue .ui-widget-header .ui-state-focus {
+    border: 1px solid #7ddfe8;
+    background-color: #c0defc;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #c0defc), color-stop(50%, #94b2d1), color-stop(100%, #c0defc));
+    background-image: -webkit-linear-gradient(top, #c0defc, #94b2d1, #c0defc);
+    background-image: -moz-linear-gradient(top, #c0defc, #94b2d1, #c0defc);
+    background-image: -ms-linear-gradient(top, #c0defc, #94b2d1, #c0defc);
+    background-image: -o-linear-gradient(top, #c0defc, #94b2d1, #c0defc);
+    background-image: linear-gradient(top, #c0defc, #94b2d1, #c0defc);
+    color: #17191c; }
+  .theme-blue .ui-state-hover a {
+    color: #17191c; }
+    .theme-blue .ui-state-hover a:hover {
+      color: #17191c; }
+  .theme-blue .ui-state-active, .theme-blue .ui-widget-content .ui-state-active, .theme-blue .ui-widget-header .ui-state-active {
+    border: 1px solid #0f6b8a;
+    background-color: #94b2d1;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #94b2d1), color-stop(100%, #c0defc));
+    background-image: -webkit-linear-gradient(top, #94b2d1, #c0defc);
+    background-image: -moz-linear-gradient(top, #94b2d1, #c0defc);
+    background-image: -ms-linear-gradient(top, #94b2d1, #c0defc);
+    background-image: -o-linear-gradient(top, #94b2d1, #c0defc);
+    background-image: linear-gradient(top, #94b2d1, #c0defc);
+    color: #0d1926; }
+  .theme-blue .ui-state-active a {
+    color: #0d1926; }
+    .theme-blue .ui-state-active a:link, .theme-blue .ui-state-active a:visited {
+      color: #0d1926; }
+  .theme-blue .ui-state-highlight, .theme-blue .ui-widget-content .ui-state-highlight, .theme-blue .ui-widget-header .ui-state-highlight {
+    border: 1px solid #3d668f;
+    background: #adcceb;
+    color: #333333; }
+  .theme-blue .ui-state-highlight a, .theme-blue .ui-widget-content a, .theme-blue .ui-widget-header a {
+    color: #333333; }
+  .theme-blue .ui-state-error, .theme-blue .ui-widget-content .ui-state-error, .theme-blue .ui-widget-header .ui-state-error {
+    border: 1px solid #c20a0a;
+    background: #fee7e7;
+    color: #c20a0a; }
+  .theme-blue .ui-state-error a, .theme-blue .ui-widget-content a, .theme-blue .ui-widget-header a, .theme-blue .ui-state-error-text, .theme-blue .ui-widget-content .ui-state-error-text, .theme-blue .ui-widget-header .ui-state-error-text {
+    color: #c20a0a; }
+  .theme-blue .ui-icon {
+    background-image: url(images/ui-icons-base-grey.png); }
+  .theme-blue .ui-widget-content .ui-icon, .theme-blue .ui-widget-header .ui-icon {
+    background-image: url(images/ui-icons-base-grey.png); }
+  .theme-blue .ui-state-default .ui-icon {
+    background-image: url(images/ui-icons-gold-default.png); }
+  .theme-blue .ui-state-hover .ui-icon, .theme-blue .ui-state-focus .ui-icon {
+    background-image: url(images/ui-icons-gold-hover.png); }
+  .theme-blue .ui-state-active .ui-icon {
+    background-image: url(images/ui-icons-gold-active.png); }
+  .theme-blue .ui-state-highlight .ui-icon {
+    background-image: url(images/ui-icons-gold-highlight.png); }
+  .theme-blue .ui-state-error .ui-icon, .theme-blue .ui-state-error-text .ui-icon {
+    background-image: url(images/ui-icons-base-error.png); }

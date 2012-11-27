@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'spork'
 
 Spork.prefork do
@@ -75,16 +74,11 @@ puts "SPORK PREFORK ..."
   # in seeds.rb. It takes a long time to run seeds, so it should not be included in ordinary testing.
   #  require "#{Rails.root}/db/seeds.rb"  
 
-load 'sim_test_helper.rb'
-load 'messages_test_helper.rb'
-load 'secret_credentials.rb'
- 
-
 end # Spork.prefork
 
 Spork.each_run do
 puts "SPORK EACH_RUN ..."
-load 'sim_test_helper.rb'
+#load 'sim_test_helper.rb'
 #load 'messages_test_helper.rb'
 #load 'secret_credentials.rb'
 #>  load Rails.root+'app/helpers/application_helper.rb'

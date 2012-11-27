@@ -1,15 +1,11 @@
-!!! html
 !!!
 %html
   %head
     %title= @title ||= 'SIM' 
     %meta{ 'http-equiv' => "content-type", 'content'=> "text/html;charset=UTF-8"}
-    = include_stylesheets :common, :media => 'all'
-    = yield :stylesheets
-    = include_javascripts :common
-    = yield :javascripts
-    = csrf_meta_tag 
-    = yield :head
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
 %body{:class => (current_user ? "theme-#{(current_user.theme || '').downcase}" : '') }
   #menu_toggle
     %a.show_menu

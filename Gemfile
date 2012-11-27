@@ -23,11 +23,17 @@ gem 'sass'
 gem 'bourbon'
 gem 'twiliolib'
 gem 'httparty'
-gem 'jammit'
+#gem 'jammit'
 gem 'rake'
 gem 'thin', :platforms => :ruby
 #gem "progstr-filer", :require => "progstr-filer"  # File attachment & storage -- experimental
 gem "escape_utils" # I think this is a temp fix. See http://crimpycode.brennonbortz.com/?p=42
+
+group :assets do
+  gem 'sass-rails',   "~> 3.1.5"
+  gem 'coffee-rails', "~> 3.1.1"
+  gem 'uglifier',     ">= 1.0.3"
+end
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -42,7 +48,7 @@ group :development, :test do
 end
 
 group :test do
-  gem "spork", '= 0.9.2'
+  gem "spork"
 #  gem 'cover_me'
 #  gem "shoulda-matchers"
 
