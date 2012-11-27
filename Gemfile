@@ -1,8 +1,7 @@
 source 'http://rubygems.org'
 
-gem 'rails', '= 3.0.7'
-gem "active_scaffold_vho"
-gem 'active_scaffold_config_list_vho'
+gem 'rails', '>= 3.2'
+gem 'active_scaffold', :git => 'git://github.com/activescaffold/active_scaffold.git'
 
 gem 'pg'
 #gem 'pdf-inspector', :git => "git://github.com/sandal/pdf-inspector.git"
