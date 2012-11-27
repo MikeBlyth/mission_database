@@ -24,7 +24,7 @@ class FieldTermsController < ApplicationController
     # Searching
     config.actions.exclude :search, :show
     config.update.link = false
-    config.create.link = false
+#    config.create.link = false
     config.actions.add :field_search
     config.field_search.columns = :member, :start_date, :end_date, :ministry, :primary_work_location, :employment_status
 
