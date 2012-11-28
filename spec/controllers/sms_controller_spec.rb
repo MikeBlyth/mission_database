@@ -193,6 +193,7 @@ describe SmsController do
         end
 
         it 'confirms to sender' do
+          @gateway.should_receive(:deliver).and_return('')
           @gateway.should_receive(:deliver).with(@from,  /sent/)
           post :create, @params   # i.e. sends 'd testgroup test message'
         end

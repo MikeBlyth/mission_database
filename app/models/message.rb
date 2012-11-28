@@ -38,8 +38,9 @@ class Message < ActiveRecord::Base
 #  validate :sms_long_enough
   before_save :convert_groups_to_string
   after_save  :create_sent_messages   # each record represents this message for one recipient
+  after_initialize  :set_defaults
   
-  def after_initialize
+  def set_defaults
     [:confirm_time_limit, :retries, :retry_interval, :expiration, :response_time_limit, :importance].each do |setting|
       self.send "#{setting}=", Settings.messages[setting] if (self.send setting).nil?
     end

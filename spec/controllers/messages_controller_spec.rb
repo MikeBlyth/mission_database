@@ -17,11 +17,10 @@ describe MessagesController do
 
   describe 'New' do
     
-    it 'sets defaults from Settings' do
+    it 'sets user signature' do
       put :new
-      settings_with_default = [:confirm_time_limit, :retries, :retry_interval, :expiration, 
-                               :response_time_limit, :importance]
-      settings_with_default.each {|setting| assigns(:record)[setting].should == Settings.messages[setting]}
+      assigns(:record)[:body].should match("from #{@user.name}")
+      assigns(:record)[:sms_only].should match("#{@user.name}")
     end
   end
 

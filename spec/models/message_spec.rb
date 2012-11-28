@@ -13,13 +13,12 @@ describe Message do
   describe 'initialization and validation' do
     
     it 'sets defaults [NB: adjust tests if you change defaults!]' do
+      settings_with_default = [:confirm_time_limit, :retries, :retry_interval, :expiration, 
+                               :response_time_limit, :importance]
       m = Message.new
-      m.retries.should_not be_nil
-      m.confirm_time_limit.should_not be_nil
-      m.retry_interval.should_not be_nil
-      m.expiration.should_not be_nil
-      m.response_time_limit.should be_nil
-      m.importance.should_not be_nil
+      settings_with_default.each do |setting| 
+         m.send(setting).should == Settings.messages[setting]
+      end
       # The names or actual settings might get changed here, so this test may be modified   
     end     
   
