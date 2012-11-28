@@ -8,6 +8,7 @@
 
 module AuthSpecHelper
   def check_authentication(object)
+puts object.to_s
     # First check without signed-in user -- should be able to do nothing
     get :new
     response.should redirect_to(signin_path)

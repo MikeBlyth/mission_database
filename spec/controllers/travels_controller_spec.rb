@@ -84,10 +84,10 @@ describe TravelsController do
 #        test_sign_in(@user)
         test_sign_in_fast
         @member = Factory(:member)
-        @attr = {:member=>"#{@member.id}", :date=>Date.today, :arrival=>false, 
+        @attr = {:member=>"#{@member.id}", :date=>Date.today.to_s(:long), :arrival=>false, 
               :time => Time.new(1,1,1,5,15,0,"+01:00"),
               :return_time => Time.new(1,1,1,6,45,0,"+01:00"),
-              :confirmed=>Date.today}
+              :confirmed=>Date.today.to_s(:long)}
     end
     
     it "should not be created when new travel has no return date" do
@@ -97,12 +97,12 @@ describe TravelsController do
     end
  
     it "should be created when new travel has return date" do
-        @attr[:return_date] = Date.today + 1.month
+        @attr[:return_date] = (Date.today + 1.month).to_s(:long)
         lambda do
           post :create, :record=>@attr
         end.should change(Travel, :count).by(2)
         return_trip = Travel.last
-        return_trip.date.should == @attr[:return_date]
+        return_trip.date.should == @attr[:return_date].to_date
         return_trip.return_date.should == nil
         return_trip.origin.should == @attr[:destination]
         return_trip.destination.should == @attr[:origin]

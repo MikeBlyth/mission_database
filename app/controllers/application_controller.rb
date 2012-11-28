@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     if !signed_in? 
       redirect_to signin_path
     else  
-      redirect_to request.referer, :alert => exception.message
+      redirect_to request.referer || '/', :alert => exception.message
     end
   end
 

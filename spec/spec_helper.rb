@@ -81,7 +81,7 @@ puts "SPORK EACH_RUN ..."
 #load 'sim_test_helper.rb'
 #load 'messages_test_helper.rb'
 #load 'secret_credentials.rb'
-#>  load Rails.root+'app/helpers/application_helper.rb'
+load Rails.root+'app/helpers/application_helper.rb'
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by
         # signing out before this group of tests.

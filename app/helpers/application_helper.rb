@@ -137,9 +137,14 @@ module ApplicationHelper
   
   # Update a "record" with paramater hash "update_params". If there are errors, add "record" to
   # the list "error_recs". This will be used by the built-in error-message-creator
+  # ToDo: Refactor? Awkward having to handle both new and existing records?
   def update_and_check(record, update_params, error_recs)
-    return unless record   # ignore empty records
-    unless record.update_attributes(update_params)
+    return if record.nil?   # ignore empty records
+#    unless record.update_attributes(update_params)
+#      error_recs << record
+#    end
+    record.assign_attributes(update_params)   # May be new record so can't say update_attribuets
+    unless record.save
       error_recs << record
     end
   end
@@ -149,13 +154,17 @@ module ApplicationHelper
   # Save any error-generating records in error_recs
   # Return the updated records since they'll be used to fill the forms if they need to be sent back
   #   to the user because of errors.
+  # ToDo: Needs Refactoring, along with #update_and_check above!
   def update_one_member(member, member_params, pers_params, contact_params, health_params, error_recs)
     update_and_check(member, member_params, error_recs)
     pers_rec = member.personnel_data || PersonnelData.new
     update_and_check(pers_rec, pers_params, error_recs)
 #puts "**** pers_rec.attributes=#{pers_rec.attributes}"
-    contact_rec = member.primary_contact || member.contacts.new
-    update_and_check(contact_rec, contact_params, error_recs)
+    contact_rec = member.primary_contact   # || member.contacts.new
+    unless contact_params.blank? && contact_rec.nil?
+      contact_rec ||= member.contacts.new
+      update_and_check(contact_rec, contact_params, error_recs) 
+    end
     health_rec = member.health_data
     update_and_check(health_rec, health_params, error_recs)
     return [member, pers_rec, contact_rec, health_rec]

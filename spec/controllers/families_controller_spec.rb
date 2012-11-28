@@ -178,6 +178,7 @@ include SimTestHelper
 
     describe 'when unsuccessful' do
       before(:each) do
+        # User forgot to enter last name of head of family
         @params={:record=>{:last_name=>"Last", :first_name=>"First", :name=>"AllName"},
                  :head=>{:last_name=>nil, :first_name=>"First", :name=>"AllName"},
                  :wife=>{:last_name=>"Last", :first_name=>"Mary", :name=>"MaryName"},
