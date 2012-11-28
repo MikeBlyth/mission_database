@@ -77,7 +77,7 @@ describe Contact do
 
   it 'standardizes phone numbers on save' do
     phone = "0803 333 3333"
-    contact = Factory(:contact, :phone_1 => phone, :phone_2 => phone, :member=>Factory.stub(:member))
+    contact = Factory(:contact, :phone_1 => phone, :phone_2 => phone, :member=>Factory(:member))
     contact.reload.phone_1.should == phone.phone_std
     contact.reload.phone_2.should == phone.phone_std
   end

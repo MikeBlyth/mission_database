@@ -87,25 +87,26 @@ describe Member do
   
   end # deletion protect
 
-  describe 'creates associated records' do
-    before(:each) do
-      @family = Factory.stub(:family)
-      @head = Member.new(:first_name=>'A', :name=>'A', :family => @family)
-#  @head.should be_valid
-#  @head.personnel_data.should_not be_nil
-#      @head = mock(Member)
-#      @head.should_receive(:save).and_return(true)
-#      @head.stub(:id).and_return(100)
-    end    
+# This isn't needed, is it?
+#  describe 'creates associated records' do
+#    before(:each) do
+#      @family = Factory.stub(:family)
+#      @head = Member.new(:first_name=>'A', :name=>'A', :family => @family)
+##  @head.should be_valid
+##  @head.personnel_data.should_not be_nil
+##      @head = mock(Member)
+##      @head.should_receive(:save).and_return(true)
+##      @head.stub(:id).and_return(100)
+#    end    
 
-    it '--health data' do
-      lambda {@head.save}.should change(PersonnelData, :count).by(1)
-    end
+#    it '--health data' do
+#      lambda {@head.save}.should change(PersonnelData, :count).by(1)
+#    end
 
-    it '--personnel data' do
-      lambda {@head.save}.should change(HealthData, :count).by(1)
-    end
-  end
+#    it '--personnel data' do
+#      lambda {@head.save}.should change(HealthData, :count).by(1)
+#    end
+#  end
 
   describe 'inheritance: ' do
     before(:each) do
@@ -356,8 +357,8 @@ describe Member do
 
   describe "primary_contact" do
     before(:each) do
-      @member=Factory.stub(:member)
-      @contact = Factory.build(:contact, :member=>@member)
+      @member=Factory(:member)
+      @contact = Factory(:contact, :member=>@member)
     end
     
     it 'identifies contact record with is_primary==true' do
@@ -372,7 +373,7 @@ describe Member do
     end
 
     it "returns child's parent's primary_contact if child has none" do
-      head = @member.family.head = Factory.stub(:member, :family=>@member.family)
+      head = @member.family.head = Factory(:member, :family=>@member.family)
       @member.should_not == head # 'cause we'll use member as the child
       @member.stub(:child).and_return(true)
       @contact.member = head  # making contact belong to the family head
@@ -393,7 +394,7 @@ describe Member do
     end
 
     it "returns spouse's own contact if she has one" do
-      spouse = Factory.stub(:member, :spouse=>@member)
+      spouse = Factory(:member, :spouse=>@member)
       @contact.save
       spouse_contact = Factory(:contact, :member=>spouse)
       spouse.primary_contact.should == spouse_contact
@@ -634,9 +635,9 @@ describe Member do
       @wife = Factory.stub(:member, :last_name=>'Last', :first_name=>'Wife', :family=>@family, :sex=>'F')
       @husband.spouse = @wife
       @wife.spouse = @husband
-      @member = Factory.stub(:member, :first_name=>'Member', :last_name=>'Last', :family => @family)
-      @dep_mk = Factory.stub(:employment_status, :code=>'mk_dependent')
-      @adult_mk = Factory.stub(:employment_status, :code=>'adult_mk')
+      @member = Factory(:member, :first_name=>'Member', :last_name=>'Last', :family => @family)
+      @dep_mk = Factory(:employment_status, :code=>'mk_dependent')
+      @adult_mk = Factory(:employment_status, :code=>'adult_mk')
     end
     
     it "is true for head of family" do
@@ -649,7 +650,7 @@ describe Member do
     
     it "is true for child" do
       @member.child = true
-      @member.personnel_data = Factory.build(:personnel_data, :employment_status=>@dep_mk)
+      @member.personnel_data = Factory(:personnel_data, :employment_status=>@dep_mk)
       @member.dependent.should be_true
     end
     

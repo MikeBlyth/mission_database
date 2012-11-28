@@ -114,8 +114,9 @@ describe Message do
         # Note that you can't access sent_message records unless they *are* created.
         @resp_time_limit = 5
         @members = members_w_contacts(1, false)
-        @message.stub(:subject).and_return('Subject line')
-        @message.stub(:id).and_return(21)
+#        @message.stub(:subject).and_return('Subject line')
+#        @message.stub(:id).and_return(21)
+        @message.subject = 'Subject line'
         @message.response_time_limit = @resp_time_limit
         @gateway = MockClickatellGateway.new(nil,@members)
       end
