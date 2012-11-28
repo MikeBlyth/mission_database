@@ -209,7 +209,7 @@ describe Notifier do
 
   describe 'travel_reminder' do
     before(:each) do
-      @travel = Factory.stub(:travel, :arrival=>true, :time=>sixpm, :personal=>true,
+      @travel = Factory(:travel, :arrival=>true, :time=>sixpm, :personal=>true,
         :return_date=>nil, :return_time=>nil)
       Factory(:contact, :member=>@travel.member)
     end

@@ -4,9 +4,15 @@ describe "Travels" do
 
   describe "By administrator" do
   
-    before(:each) { integration_test_sign_in(:admin=>true)}
+#    before(:each) { integration_test_sign_in(:admin=>true)}
 
     it "should add a travel record for an existing member" do
+      @user = Factory.create(:user, :admin=>true)
+      visit signin_path
+      fill_in "Name",    :with => @user.name
+      fill_in "Password", :with => @user.password
+      click_button "Sign in"
+
       lambda do
         member = Factory(:member)
         visit new_travel_path

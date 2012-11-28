@@ -20,6 +20,7 @@ include SimTestHelper
       @family = factory_family_bare :couple=>false, :child=>false
       birth_date = Date.new(2080,1,1)
       visit edit_family_path(@family)
+save_and_open_page
       fill_in "Birth date", :with => birth_date.strftime("%F")
       click_button "Update"
 #      puts page.driver.body
