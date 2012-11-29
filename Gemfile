@@ -59,7 +59,7 @@ group :test do
   gem "factory_girl_rails", "1.1.beta1"
   gem "rspec-rails"
   gem 'xpath' # Should not be needed but for now capybara chokes without it.
-  gem "capybara"
+  gem "capybara", '1.1.2'
   gem "cucumber-rails", ">=1.1.1"
   gem "autotest"
   gem "redgreen"
@@ -68,6 +68,7 @@ group :test do
   gem "ruby_gntp"
   gem 'guard-livereload'  # https://github.com/guard/guard-livereload
   gem 'guard-spork' 
+#  gem 'capybara-webkit'
 end
 
 # gem "unobtrusive_date_picker", :git => "git://github.com/scambra/unobtrusive_date_picker.git"

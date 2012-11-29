@@ -4,15 +4,9 @@ describe "Travels" do
 
   describe "By administrator" do
   
-#    before(:each) { integration_test_sign_in(:admin=>true)}
+    before(:each) { integration_test_sign_in(:admin=>true)}
 
     it "should add a travel record for an existing member" do
-      @user = Factory.create(:user, :admin=>true)
-      visit signin_path
-      fill_in "Name",    :with => @user.name
-      fill_in "Password", :with => @user.password
-      click_button "Sign in"
-
       lambda do
         member = Factory(:member)
         visit new_travel_path
@@ -26,6 +20,7 @@ describe "Travels" do
       lambda do
         member = Factory(:member)
         visit new_travel_path
+save_and_open_page
         fill_in "Date", :with => '2020-01-01'
         fill_in "record[other_travelers]", :with => 'Santa Claus'
         click_button "Create"
@@ -62,6 +57,7 @@ describe "Travels" do
       r = Travel.last   # Return trip
       # Values common to each
       [t, r].each do |x|
+binding.pry
         x.member.should == member
         x.other_travelers.should == 'Santa Claus'
         x.with_spouse.should be_true
