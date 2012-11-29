@@ -225,6 +225,20 @@ class String
   end
 end
 
+class Array
+  def nonblank!
+    self.delete_if {|x| x.blank?}
+  end
+
+  def nonblank
+    self.clone.nonblank!
+  end
+  
+  def nonblank?
+    !self.nonblank.empty?
+  end
+end
+
 # Add to_ordinal method to Fixnums, so we get 1.to_ordinal is 1st and so on
 class Fixnum
   def to_ordinal

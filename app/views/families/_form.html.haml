@@ -277,7 +277,7 @@ $( "#tabs" ).tabs();
       %th.grade Grade
       %th.status Status
       - @children.each do |child|
-        = fields_for child, :index=>child.id do |child_form|
+        = main_form.fields_for child, :index=>child.id do |child_form|
           %tr
             %td 
               = child_form.text_field :first_name, :class => 'first_name-input'

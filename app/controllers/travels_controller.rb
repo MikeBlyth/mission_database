@@ -62,13 +62,19 @@ class TravelsController < ApplicationController
     
   end
 
+  # ToDo TRAVEL IS CRYING OUT FOR REFACTORING!!
   def do_create
+#binding.pry
+#puts "**** params[:record][:member]=#{params[:record][:member]}"
     # Are we making travel record for a guest rather than an existing member?
     if params[:guest] || params[:record][:member] == UNSPECIFIED.to_s
       params[:record].delete(:member)
     end  
     members = params[:record][:member]  # Might be array, might be singleton
-    if members.class != Array
+    if members.class == Array
+      # For some reason we may get blanks from form -- have to remove them unless there are no members listed
+      members.delete_if{|x| x.blank?} if members.size > 1
+    else
       members = [members]  # Convert to an array if it's a singleton
     end
 

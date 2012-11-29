@@ -20,7 +20,6 @@ describe "Travels" do
       lambda do
         member = Factory(:member)
         visit new_travel_path
-save_and_open_page
         fill_in "Date", :with => '2020-01-01'
         fill_in "record[other_travelers]", :with => 'Santa Claus'
         click_button "Create"
@@ -57,7 +56,6 @@ save_and_open_page
       r = Travel.last   # Return trip
       # Values common to each
       [t, r].each do |x|
-binding.pry
         x.member.should == member
         x.other_travelers.should == 'Santa Claus'
         x.with_spouse.should be_true
