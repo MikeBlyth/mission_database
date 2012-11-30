@@ -405,7 +405,7 @@ include SimTestHelper
     end      
 
     it 'adds child' do
-      updates = {:member=>{10000000001.to_s=>{:first_name=>'Zinger'} } }
+      updates = {:record=>{:member=>{10000000001.to_s=>{:first_name=>'Zinger'} } }}
       lambda {put :update, @params.merge(updates)}.should change(Member, :count).by(1)
       @family.reload.children.first.first_name.should == 'Zinger'
     end            

@@ -135,7 +135,7 @@ class FamiliesController < ApplicationController
     end  
     # Update the children
     children = params[:record].delete(:member) #.nonblank # for now, this is how children are listed (:member)
-    if children.any?  
+    if children && children.any?
       children.each do |id, child_data|
         if id.to_i > 1000000000  # i.e. if this is definition of a new child
           if !child_data[:first_name].empty?  # and has data (as opposed to being just the blank line being returned

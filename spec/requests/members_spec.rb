@@ -27,16 +27,15 @@ include SimTestHelper
     it 'allows inline editing in list view' do
 #      @family = factory_family_full(:couple => true)
 #      @head = @family.head
-      head = Factory(:member_with_details)
-      location2 = Factory(:location, :description=>'second location')
-      visit root_path
-#      find('.child-column input[type=checkbox]').click
-      check('record[child]')
-      find('td.work_location-column span').click
-      select('second location')
-      click_on('inplace_save')
-      save_and_open_page
-      page.should have_content(head.name)
+      pending "Testing with JS -- need to be able to log in"
+#      head = Factory(:member_with_details)
+#      location2 = Factory(:location, :description=>'second location')
+#      visit root_path
+#      check('record[child]')
+#      find('td.work_location-column span').click
+#      select('second location')
+#      click_on('inplace_save')
+#      page.should have_content(head.name)
     end
 
     it "editing user should change all values correctly" do

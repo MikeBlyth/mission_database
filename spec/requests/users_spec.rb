@@ -14,7 +14,7 @@ describe "Users" do
           fill_in "Email",        :with => ""
           fill_in "Password",     :with => ""
           fill_in "Confirmation", :with => ""
-          click_button "user_submit"
+          click_button "Create User"
 #            page.should have_content("Email can't be blank")
           page.should have_content("Email can't be blank")
           page.should have_content("Name can't be blank")
