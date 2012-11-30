@@ -257,6 +257,7 @@ include SimTestHelper
   # Tests requiring JS
   describe 'Inline editing' do
     before(:each) do
+#      User.stub(:authenticate => Factory.build(:user))
       js_test_sign_in(:admin)
       seed_tables
     end  
@@ -264,13 +265,11 @@ include SimTestHelper
     it 'is logged in', :js => true do
       visit families_path
       page.should have_content("Signed in as")
-#save_and_open_page
     end
 
     it 'updates residence location', :js => true do
       family = Factory(:family)
       visit families_path
-#binding.pry
 #save_and_open_page
     end
 

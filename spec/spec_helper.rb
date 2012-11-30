@@ -31,7 +31,7 @@ puts "SPORK PREFORK ..."
     config.mock_with :rspec
 
     # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-    config.fixture_path = "#{::Rails.root}/spec/fixtures"
+    # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
@@ -44,31 +44,36 @@ puts "SPORK PREFORK ..."
     ActiveSupport::Dependencies.clear
 
     # This section needed since JS drivers for RSpec/Capybara don't handle transactions
-#    config.before(:suite) do
-##      DatabaseCleaner.strategy = :transaction
-#      DatabaseCleaner.clean_with(:truncation)
-#    end
-
-#    config.before(:each) do
-#      DatabaseCleaner.strategy = if example.metadata[:js]
-#        :truncation
-#      else
-#        :transaction
-#      end
-#      DatabaseCleaner.start
-#    end
-
-#    config.after(:each) do
-#      DatabaseCleaner.clean
-#    end
 DatabaseCleaner.strategy = :truncation
+#config.use_transactional_fixtures = false
+    config.before(:suite) do
+#      DatabaseCleaner.strategy = :transaction
+      DatabaseCleaner.clean_with(:truncation)
+    end
+
+    config.before(:each) do
+      DatabaseCleaner.strategy = if example.metadata[:js]
+        :truncation
+      else
+        :transaction
+      end
+      DatabaseCleaner.start
+    end
+
+    config.after(:each) do
+      DatabaseCleaner.clean
+    end
+
+#DatabaseCleaner.strategy = :truncation
 config.use_transactional_fixtures = false
-config.before :each do
-  DatabaseCleaner.start
-end
-config.after :each do
-  DatabaseCleaner.clean
-end
+#config.before :each do
+#  DatabaseCleaner.start
+#end
+#config.after :each do
+#  DatabaseCleaner.clean
+#end
+
+
   end   # Rspec.configure
 
   # Define a helper to directly sign in a test user
@@ -119,7 +124,7 @@ Spork.each_run do
 puts "SPORK EACH_RUN ..."
 #load 'sim_test_helper.rb'
 #load 'messages_test_helper.rb'
-#load 'secret_credentials.rb'
+load Rails.root+'spec/support/secret_credentials.rb'
 load Rails.root+'app/helpers/application_helper.rb'
   # This code will be run each time you run your specs.
           # Default in most controller tests is for user to be signed in, since all views are protected. Test the protection by

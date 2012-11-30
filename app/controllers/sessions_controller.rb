@@ -7,7 +7,6 @@ class SessionsController < ApplicationController
     flash[:errors] = "No Users!" unless User.count > 0
     user = User.authenticate(params[:session][:name],
                              params[:session][:password])
-
     if user.nil?
       flash.now[:error] = "Invalid name/password combination."
       @title = "Sign in"

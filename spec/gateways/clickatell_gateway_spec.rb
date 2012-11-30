@@ -19,6 +19,8 @@ end
   before(:each) do
     @phones = ['+2347777777777']
     @mock_reply = mock('gatewayReply', :body=>'')  # Remember to add stubs for body when something expected
+## Sort of hack because currently all tables are deleted after each test, and this one is needed
+load Rails.root+'spec/support/secret_credentials.rb'
     @gateway = ClickatellGateway.new
   end
 
@@ -26,6 +28,7 @@ end
 
     it 'gives error when parameter is missing' do
       SiteSetting.stub(:clickatell_user_name).and_return(nil)  # Make User_name missing BEFORE .new
+#binding.pry
       @gateway = ClickatellGateway.new
       @gateway.errors.should_not be_nil  # Will have errors even before saving 
       @gateway.errors[0].should match('user_name')
@@ -39,6 +42,7 @@ end
       if @gateway.errors
         puts "*** Errors in gateway initialization may be caused by 'cleaned' initialization"
         puts "*** parameters. Try restarting Spork before looking for other errors."
+        puts "SiteSetting has #{SiteSetting.count} records"
       end
       @gateway.errors.should be_nil
       @gateway.gateway_name.should == 'clickatell'  # this is defined by ClickatellGateway#initialize

@@ -35,14 +35,11 @@ describe Status do
 
   describe 'selecting statuses by category' do
     # CAUTION: BEFORE ALL BLOCK USED 
-    before(:all) do
+    before(:each) do
       @inactive_field = Factory(:status, :active=>false, :on_field=>true).id
       @inactive_home  = Factory(:status, :active=>false, :on_field=>false )
       @active_home = Factory(:status, :active=>true, :on_field=>false).id
       @active_field = Factory(:status, :active=>true, :on_field=>true).id
-    end
-    after(:all) do
-      Status.destroy_all
     end
 
     describe 'statuses_by_category' do

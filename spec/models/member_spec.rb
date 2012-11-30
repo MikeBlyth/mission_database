@@ -989,12 +989,9 @@ describe Member do
   end # determines dates of next home assignment
   
   describe 'mismatched statuses:' do
-    before(:all) do
+    before(:each) do
       @on_field = Factory(:status) # "field" is true by default
       @leave = Factory(:status, :on_field=>false, :leave=>true) # "field" is true by default
-    end
-    after(:all) do
-      Status.delete_all
     end
 
     before(:each) do
