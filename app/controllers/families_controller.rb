@@ -114,7 +114,6 @@ class FamiliesController < ApplicationController
   #   (Family.rb update_member_locations and update_member_status update all the family members
   #   if the _family_ location or status has been changed)
   def update
-   puts "\n**** Params=#{params}, id=#{params[:id]}"
     @family = Family.find(params[:id])
     # Delete :status_id and :residence_location_id if they have not changed, because
     #   changed ones only will be propagated to the dependent family members.    
@@ -135,7 +134,6 @@ class FamiliesController < ApplicationController
       update_one_member(@wife, params[:wife], params[:wife_pers], params[:wife_contact], nil, @error_records)
     end  
     # Update the children
-puts "**** params[:member]=#{params[:member]}"
     children = params[:record].delete(:member) #.nonblank # for now, this is how children are listed (:member)
     if children.any?  
       children.each do |id, child_data|

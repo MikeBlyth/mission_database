@@ -314,9 +314,9 @@ $( "#tabs" ).tabs();
           %br
           = main_form.text_field :sim_id, :class => 'sim_id-input', :title=>'Can be left blank. If used, it must be unique.'
         %td
-          = main_form.label :residence_location_id, "Residence location"
+          = main_form.label :residence_location_id, "Residence location!"
           %br
-          = main_form.select(:residence_location_id, location_choices(@record[:residence_location_id]), {:include_blank => true })    
+          = main_form.select(:residence_location_id, location_choices(@record[:residence_location_id]), {:include_blank => true })
         %td
           = main_form.label :status_id, "Status"
           %br

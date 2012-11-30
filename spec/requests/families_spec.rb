@@ -93,6 +93,7 @@ include SimTestHelper
           
     it "editing family should change all values correctly" do
       @family = factory_family_bare :couple=>true, :child=>true
+#binding.pry
       Factory(:employment_status, :code=>'mk_dependent', :description=>"MK dependent", :child=>true)
 #      y @family.head
       birth_date = Date.new(1980,1,1)
@@ -176,13 +177,13 @@ include SimTestHelper
 
       within ("#tabs-children") do
         child_id = @family.children.first.id.to_s
-        fill_in "member_#{child_id}_first_name", :with => "Andromeda"
-        fill_in "member_#{child_id}_middle_name", :with => "Jo"
-        fill_in "member_#{child_id}_birth_date", :with => child_birth_date.strftime("%F")
-        select "Female", :from=>"member_#{child_id}_sex"
-        fill_in "member_#{child_id}_school", :with => "Homeschool"
-        fill_in "member_#{child_id}_school_grade", :with => "7"
-        select "MK dependent", :from=>"member_#{child_id}_personnel_data_employment_status_id"
+        fill_in "record_member_#{child_id}_first_name", :with => "Andromeda"
+        fill_in "record_member_#{child_id}_middle_name", :with => "Jo"
+        fill_in "record_member_#{child_id}_birth_date", :with => child_birth_date.strftime("%F")
+        select "Female", :from=>"record_member_#{child_id}_sex"
+        fill_in "record_member_#{child_id}_school", :with => "Homeschool"
+        fill_in "record_member_#{child_id}_school_grade", :with => "7"
+        select "MK dependent", :from=>"record_member_#{child_id}_personnel_data_employment_status_id"
       end
 
       click_button "Update"
@@ -298,7 +299,7 @@ include SimTestHelper
       page.find('#wife_contact_email_1').value.should == @wife.primary_contact.email_1
       page.find('#wife_pers_qualifications').value.should == @wife.personnel_data.qualifications
       page.find('.school-input').value.should == @child.school
-      child_status_id = "#member_#{@child.id}_personnel_data_employment_status_id"
+      child_status_id = "#record_member_#{@child.id}_personnel_data_employment_status_id"
       page.find(child_status_id).value.should == @child_status.id.to_s 
       page.find('#record_status_id').value.should == @family.status_id.to_s
       page.find('#current_term_end_date').value.should == @current_term.end_date.strftime("%F")

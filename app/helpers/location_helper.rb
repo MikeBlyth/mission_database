@@ -40,16 +40,11 @@ module LocationHelper
   end
 
   def location_choices(selected=999999)
-  cities = City.where(true).order('name')
-  return "<option value=''></option>" + 
+    cities = City.where(true).order('name')
+    result = "<option value=''></option>" + 
       option_groups_from_collection_for_select(cities, :locations_sorted, 
           :name, :id, :description, selected)
-  #  selections =  Location.select("id, city_id, description")
-  #  hashed_locations = []
-  #  selections.each do | selection |
-  #    hashed_locations << {:id => selection.id, :city=>selection.city.name, :description => selection.description}
-  #  end
-  #  options_for_select_with_grouping(hashed_locations, :city, selected)
+    return result.html_safe
   end
 
 end # Module
