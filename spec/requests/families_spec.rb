@@ -38,59 +38,7 @@ include SimTestHelper
       page.should have_no_selector('#tabs-head')  # Because we're no longer on edit page
     end
 
-# Covered in Families controller spec
-#    it "should catch error in children's data" do
-#      @family = factory_family_bare :couple=>false, :child=>true
-#      Factory(:employment_status, :description=>"MK dependent", :child=>true)
-#      birth_date = Date.new(2080,1,1)
-#      visit edit_family_path(@family)
-#      within ("#tabs-children") do
-#        child_id = @family.children.first.id.to_s
-#        fill_in "member_#{child_id}_birth_date", :with => birth_date.strftime("%F")
-#        select "MK dependent", :from=>"member_#{child_id}_personnel_data_employment_status_id"
-#      end      
-#      click_button "Update"
-##      puts page.driver.body
-##     puts page.find('#errorExplanation h2').to_s
-#      page.should have_selector('li', :content=>"Birth date can't be in future!")
-#      page.should have_selector('#tabs-head')  # Because we're still on edit page
-#    end
 
-# Covered in controller
-#    it "should have blank line for new child" do
-#      @family = factory_family_bare :couple=>false, :child=>false
-#      visit edit_family_path(@family)
-#      page.should have_selector('#member_1000000001_first_name')
-#      fill_in 'member_1000000001_first_name', :with=>'Junior'
-#    end
-# Covered in controller and in "editing family should change all values correctly" below
-#    it "should add new child" do
-#      Factory(:employment_status, :description=>"MK dependent", :code=>"mk_dependent", :child=>true)
-#      @family = factory_family_bare :couple=>false, :child=>false
-#      visit edit_family_path(@family)
-#      page.should have_selector('#member_1000000001_first_name')
-#      fill_in 'member_1000000001_first_name', :with=>'Junior'
-#      fill_in 'member_1000000001_first_name', :with=>'Junior'
-#      fill_in 'member_1000000001_middle_name', :with=>'Z.'
-#      select 'Male', :from=> 'member_1000000001_sex'
-#      fill_in 'member_1000000001_birth_date', :with=>Date.today.strftime("%F")
-#      fill_in 'member_1000000001_school', :with=>'Hillcrest'
-#      fill_in 'member_1000000001_school_grade', :with=>'7'
-#      select('MK dependent')      
-#      click_button "Update"
-
-
-#      m = @family.children.last
-#      m.first_name.should == 'Junior'
-#      m.middle_name.should == 'Z.'
-#      m.sex.should == 'M'
-#      m.birth_date.should == Date.today
-#      m.school.should == 'Hillcrest'
-#      m.school_grade.should == 7
-#      m.employment_status_code.should == 'mk_dependent'
-#      m.last_name.should == @family.last_name
-#    end
-          
     it "editing family should change all values correctly" do
       @family = factory_family_bare :couple=>true, :child=>true
 #binding.pry
@@ -111,8 +59,6 @@ include SimTestHelper
       email_2 = 'secondmail@test.com'
 
       visit edit_family_path(@family)
-
-
 
       within("#tabs-head") do
         fill_in "First name", :with => "Samuel"
@@ -173,7 +119,6 @@ include SimTestHelper
         fill_in "SIM ID", :with => '01234'
         select 'Site', :from=>'Residence location'
       end   
-
 
       within ("#tabs-children") do
         child_id = @family.children.first.id.to_s
@@ -308,5 +253,30 @@ include SimTestHelper
     end            
 
   end # tabbed form
+
+  # Tests requiring JS
+  describe 'Inline editing' do
+    before(:each) do
+      js_test_sign_in(:admin)
+      seed_tables
+    end  
+   
+    it 'is logged in', :js => true do
+      visit families_path
+      page.should have_content("Signed in as")
+#save_and_open_page
+    end
+
+    it 'updates residence location', :js => true do
+      family = Factory(:family)
+      visit families_path
+#binding.pry
+#save_and_open_page
+    end
+
+
+  end
+    
+
 
 end # describe Families

@@ -4,6 +4,7 @@ class SessionsController < ApplicationController
   end
   
   def create
+    flash[:errors] = "No Users!" unless User.count > 0
     user = User.authenticate(params[:session][:name],
                              params[:session][:password])
 

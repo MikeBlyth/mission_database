@@ -42,6 +42,33 @@ puts "SPORK PREFORK ..."
     # Emulate initializer set_clear_dependencies_hook in 
     # railties/lib/rails/application/bootstrap.rb
     ActiveSupport::Dependencies.clear
+
+    # This section needed since JS drivers for RSpec/Capybara don't handle transactions
+#    config.before(:suite) do
+##      DatabaseCleaner.strategy = :transaction
+#      DatabaseCleaner.clean_with(:truncation)
+#    end
+
+#    config.before(:each) do
+#      DatabaseCleaner.strategy = if example.metadata[:js]
+#        :truncation
+#      else
+#        :transaction
+#      end
+#      DatabaseCleaner.start
+#    end
+
+#    config.after(:each) do
+#      DatabaseCleaner.clean
+#    end
+DatabaseCleaner.strategy = :truncation
+config.use_transactional_fixtures = false
+config.before :each do
+  DatabaseCleaner.start
+end
+config.after :each do
+  DatabaseCleaner.clean
+end
   end   # Rspec.configure
 
   # Define a helper to directly sign in a test user
@@ -67,6 +94,18 @@ puts "SPORK PREFORK ..."
       fill_in "Password", :with => @user.password
       click_button "Sign in"
   end
+
+
+  def js_test_sign_in(role=nil)
+    user = Factory(:user, :name=>'HappyUser')
+    user.send("#{role}=", true) if role
+    user.save
+    visit signin_path
+    fill_in "Name",    :with => user.name
+    fill_in "Password", :with => user.password
+    click_button "Sign in"
+  end
+     
 
 #  require 'cover_me'  # This is for CoverMe code coverage
 

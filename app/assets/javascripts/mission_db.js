@@ -292,7 +292,7 @@ $(function() {
 // ******************* MULTISELECT WIDGET 
 // See http://www.erichynds.com/jquery/jquery-ui-multiselect-widget/
 
-$(document).on('as:action_success', '.members-view a.new, .members-view a.edit', function(e, action_link) {
+$(document).on('as:action_success', '.members-view a.new, .members-view a.edit, .groups-view a.new, .groups-view a.edit', function(e, action_link) {
   jQuery(".multiselect").multiselect().multiselectfilter();
 });
 
