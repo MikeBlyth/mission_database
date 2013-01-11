@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.2'
+gem 'rails', '3.2.11'
 #gem "active_scaffold_vho"
 #gem 'active_scaffold_config_list_vho'
 gem 'active_scaffold', :git => 'git://github.com/activescaffold/active_scaffold.git'

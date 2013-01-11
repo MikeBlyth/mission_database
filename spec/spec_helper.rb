@@ -44,10 +44,9 @@ puts "SPORK PREFORK ..."
     ActiveSupport::Dependencies.clear
 
     # This section needed since JS drivers for RSpec/Capybara don't handle transactions
-DatabaseCleaner.strategy = :truncation
-#config.use_transactional_fixtures = false
+    DatabaseCleaner.strategy = :truncation
+    #config.use_transactional_fixtures = false
     config.before(:suite) do
-#      DatabaseCleaner.strategy = :transaction
       DatabaseCleaner.clean_with(:truncation)
     end
 

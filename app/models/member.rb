@@ -61,7 +61,7 @@ class Member < ActiveRecord::Base
   belongs_to :bloodtype 
   belongs_to :education
   belongs_to :ministry
-#*  belongs_to :residence_location, :class_name => "Location"#, :foreign_key => "residence_location_id"
+  belongs_to :residence_location, :class_name => "Location"#, :foreign_key => "residence_location_id"
   belongs_to :work_location, :class_name => "Location"#, :foreign_key => "work_location_id"
   belongs_to :status
 #  has_file :photo, PhotoUploader
