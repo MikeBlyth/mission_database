@@ -111,4 +111,10 @@ describe 'id tag helper (message_id_tag)' do
     
   end # default_sms_gateway
 
+  describe "body_column" do
+    
+    it 'handles message with no body' do
+      body_column(Message.new(:body=>nil), :body).should eq ''
+    end
+  end
 end

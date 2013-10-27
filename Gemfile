@@ -52,7 +52,7 @@ group :test do
 #  gem 'cover_me'
 #  gem "shoulda-matchers"
 
-  gem "selenium-client", ">= 1.2.18"
+  gem "selenium-webdriver", ">= 2.37" # Needs to be updated if Firefox is updated. 2.37 works with Firefox 24
   gem "database_cleaner", ">= 0.5.2"
   gem "launchy"
   gem "factory_girl", "2.0.0.beta1"
