@@ -33,19 +33,20 @@
         %li= link_to 'Include past', set_travel_filter_path(:travel_filter => :all_dates)
     %li= link_to "Edit your user info", edit_user_path(current_user)
     %li= link_to "Sign out", signout_path, :method => :delete       
-  %h5 Change theme (look & feel)
-  -# This little form needs some DRYing & prettification if we go beyond a few themes
-  -# It's in plain HTML as I had trouble getting the Rails helpers to work
-  %form{'accept-charset'=>"UTF-8", 'action'=>"/application/theme", 'method'=>"get"}
-    - @theme = current_user.theme
-    %select{:name=>'theme', :id=>'theme'}
-      %option{:selected => (@theme == 'Gold'), :value => 'Gold'} 
-        Gold
-      %option{:value => 'Blue', :selected=>('selected' if @theme == 'Blue')}
-        Blue
-      %option{:value => 'Flick', :selected => (@theme == 'Flick')} 
-        Flick
-    = submit_tag("Select")        
+  -# Remove Theme control since it's not working :-(
+  -# %h5 Change theme (look & feel)
+  -# -# This little form needs some DRYing & prettification if we go beyond a few themes
+  -# -# It's in plain HTML as I had trouble getting the Rails helpers to work
+  -# %form{'accept-charset'=>"UTF-8", 'action'=>"/application/theme", 'method'=>"get"}
+  -#   - @theme = current_user.theme
+  -#   %select{:name=>'theme', :id=>'theme'}
+  -#     %option{:selected => (@theme == 'Gold'), :value => 'Gold'} 
+  -#       Gold
+  -#     %option{:value => 'Blue', :selected=>('selected' if @theme == 'Blue')}
+  -#       Blue
+  -#     %option{:value => 'Flick', :selected => (@theme == 'Flick')} 
+  -#       Flick
+  -#   = submit_tag("Select")        
   %hr
   %h5 Option Tables
   %ul.links
