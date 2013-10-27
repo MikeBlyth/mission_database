@@ -1,5 +1,5 @@
-require 'sim_test_helper'
-include SimTestHelper
+#require 'sim_test_helper'
+#include SimTestHelper
 include ApplicationHelper
   
 def construct_family

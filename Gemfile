@@ -55,12 +55,13 @@ group :test do
   gem "selenium-webdriver", ">= 2.37" # Needs to be updated if Firefox is updated. 2.37 works with Firefox 24
   gem "database_cleaner", ">= 0.5.2"
   gem "launchy"
+  gem "zeus", "0.13.3.rc2"
   gem "factory_girl", "2.0.0.beta1"
   gem "factory_girl_rails", "1.1.beta1"
   gem "rspec-rails"
   gem 'xpath' # Should not be needed but for now capybara chokes without it.
   gem "capybara", '1.1.2'
-  gem "cucumber-rails", ">=1.1.1"
+  gem "cucumber-rails", "1.3.0"
   gem "autotest"
   gem "redgreen"
   gem "test-unit"#, "1.2.3"

@@ -2,7 +2,7 @@ module FamiliesHelper
 
   # This determines what is shown in the "Members" column in the listing of families. It should show husband,
   # wife, and children by order of age.
-  def members_column(record)
+  def members_column(record, column=nil)
     if record.husband  # This will be true if there is a married couple
       ordered_members = [record.husband, record.wife]
     else  # Single + perhaps kids
